@@ -1,4 +1,0 @@
-Home Router
-============
-
-OpenWRT home router.
