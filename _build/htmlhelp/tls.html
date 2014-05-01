@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>TLS - Transport Layer Security</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="alainwolf.net 3 documentation" href="index.html"/>
+        <link rel="prev" title="Additional Software" href="server-tools.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="fa fa-home"> alainwolf.net</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="server-tools.html">Additional Software</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server-tools.html#useful-tools">Useful Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tools.html#provide-entropy">Provide Entropy</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">TLS - Transport Layer Security</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#openssl-configuration">OpenSSL Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cacert-org">CAcert.org</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-generation">Key Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#certificate-signing-request-csr">Certificate Signing Request (CSR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#combined-csr-and-key-generation">Combined CSR and Key Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-signed-certificates">Install Signed Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#certificate-chains">Certificate Chains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diffie-hellman-dh-key-exchanges-parameters">Diffie-Hellman (DH) Key Exchanges Parameters</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">alainwolf.net</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>TLS - Transport Layer Security</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/tls.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="tls-transport-layer-security">
+<h1>TLS - Transport Layer Security</h1>
+<p>We use OpenSSL to generate TLS (Transport Layer Security) certificates and keys
+(public and private keys).</p>
+<p>Following are recommendations valid for April 2014, using Ubuntu 14.04 LTS
+&#8216;Trusty Thar&#8217; and OpenSSL 1.0.1f 6 Jan 2014.</p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites</h2>
+<p>Enough entropy for key generation and encryption. See <a class="reference internal" href="server-tools.html#increase-entropy"><em>Provide Entropy</em></a>.</p>
+</div>
+<div class="section" id="openssl-configuration">
+<h2>OpenSSL Configuration</h2>
+<p>Default system wide OpenSSL configuration is in the file <cite>/etc/ssl/openssl.cnf</cite>.
+On a typical server it is mostly used for key generation.</p>
+<p>Documentation is available in the online
+[config(5) man page](<a class="reference external" href="https://www.openssl.org/docs/apps/config.html">https://www.openssl.org/docs/apps/config.html</a> &#8220;OpenSSL config&#8221;).
+or as <cite>man config</cite> on your system.</p>
+<p>OpenSSL on a server should behave as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Generate RSA private keys with <strong>4096</strong> bits (default is 2048 bits).</li>
+<li>Generate digital signatures using <strong>SHA-2</strong> as digest (default is SHA-1
+digest).</li>
+<li>Don&#8217;t encrypt private keys, as servers start and run without any users present
+to answer password prompts.</li>
+<li>StartSSL removes all attributes, except the common name from any
+certificate request.</li>
+</ul>
+</div></blockquote>
+<p>Generation of keys, certificate signing requests and certificates is best handled
+on a dedicated desktop system using
+[xca](<a class="reference external" href="http://xca.sourceforge.net/">http://xca.sourceforge.net/</a> &#8220;XCA - X Certificate and key management&#8221;).</p>
+</div>
+<div class="section" id="cacert-org">
+<h2>CAcert.org</h2>
+<p>[CAcert.org](<a class="reference external" href="http://www.cacert.org">http://www.cacert.org</a>) has been dropped from the Ubuntu built-in
+list of trusted certificate authorities (CA) with the release of Ubuntu 13.10.
+Also the Debian project no longer includes CAcert root certificates, since it
+started to use Mozilla&#8217;s list of trusted CA&#8217;s in 2014.</p>
+<p>Steps to include the CAcert root certificate in Ubuntu as trusted CA:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo mkdir -p /usr/share/ca-certificates/cacert.org
+<span class="nv">$ </span><span class="nb">cd</span> /usr/share/ca-certificates/cacert.org
+<span class="nv">$ </span>sudo wget http://www.cacert.org/certs/root.crt
+<span class="nv">$ </span>sudo dpkg-reconfigure ca-certificates
+</pre></div>
+</div>
+</div>
+<div class="section" id="key-generation">
+<h2>Key Generation</h2>
+<dl class="docutils">
+<dt>::</dt>
+<dd>$ export CN=example.com
+$ openssl genrsa -nodes -out /etc/ssl/private/${CN}.key.pem 4096</dd>
+</dl>
+</div>
+<div class="section" id="certificate-signing-request-csr">
+<h2>Certificate Signing Request (CSR)</h2>
+<dl class="docutils">
+<dt>::</dt>
+<dd>$ export CN=example.com
+$ openssl req -out /etc/ssl/${CN}.req.pem -new -key /etc/ssl/private/${CN}.key.pem -sha2</dd>
+</dl>
+</div>
+<div class="section" id="combined-csr-and-key-generation">
+<h2>Combined CSR and Key Generation</h2>
+<dl class="docutils">
+<dt>::</dt>
+<dd>$ export CN=example.com
+$ openssl req -out /etc/ssl/${CN}.req.pem -newkey rsa:4096 -keyout /etc/ssl/private/${CN}.key.pem -nodes -sha2</dd>
+</dl>
+</div>
+<div class="section" id="install-signed-certificates">
+<h2>Install Signed Certificates</h2>
+<blockquote>
+<div>export CN=example.com
+cat &lt;&lt; EOF &gt; /etc/ssl/certs/${CN}.cert.pem
+&#8212;&#8211;BEGIN CERTIFICATE&#8212;&#8211;
+...
+&#8212;&#8211;END CERTIFICATE&#8212;&#8211;
+EOF</div></blockquote>
+</div>
+<div class="section" id="certificate-chains">
+<h2>Certificate Chains</h2>
+<p>Certificates signed by [StartSSL](<a class="reference external" href="https://startssl.com/">https://startssl.com/</a>) are signed by its
+intermediary class 1 or class 2 server or client CA.</p>
+<p>CAcert certificates may be signed be its intermediary &#8220;CAcert Class 3 Root&#8221;</p>
+<p>TLS clients which verify server certificates expect the server to send the
+certificates of any intermediary CA along with its own certificate.</p>
+<p>On servers this is achieved by providing a certificate-chain-file instead of a
+certificate file.</p>
+<p>Here are the steps to generate such certificate-chain-files.</p>
+<p>Download the intermediate CA certificates:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> /etc/ssl/
+<span class="nv">$ </span>sudo wget -O certs/StartCom_Class_1_Server_CA.pem <span class="se">\</span>
+    https://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
+<span class="nv">$ </span>sudo wget -O certs/StartCom_Class_2_Server_CA.pem <span class="se">\</span>
+    https://www.startssl.com/certs/class2/sha2/pem/sub.class2.server.sha2.ca.pem
+<span class="nv">$ </span>sudo wget -O certs/CAcert_Class_3_Root.pem <span class="se">\</span>
+    http://www.cacert.org/certs/class3.crt
+</pre></div>
+</div>
+<p>### StartCom Class 1 Primary Intermediate Server CA ###</p>
+<p>Assuming the certificate is for the domain &#8220;example.com&#8221; and our signed
+certificate is present as <cite>/etc/ssl/certs/example.com.crt</cite>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">export </span><span class="nv">CN</span><span class="o">=</span>example.com
+<span class="nb">cd</span> /etc/ssl/
+sudo cat certs/<span class="k">${</span><span class="nv">CN</span><span class="k">}</span>.crt <span class="se">\</span>
+    certs/StartCom_Class_1_Server_CA.pem <span class="se">\</span>
+    &gt; <span class="k">${</span><span class="nv">CN</span><span class="k">}</span>.chained.crt
+</pre></div>
+</div>
+<p>### StartCom Class 2 Primary Intermediate Server CA ###</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">export </span><span class="nv">CN</span><span class="o">=</span>example.com
+<span class="nb">cd</span> /etc/ssl/
+sudo cat certs/<span class="k">${</span><span class="nv">CN</span><span class="k">}</span>.crt <span class="se">\</span>
+    certs/StartCom_Class_2_Server_CA.pem <span class="se">\</span>
+    &gt; <span class="k">${</span><span class="nv">CN</span><span class="k">}</span>.chained.crt
+</pre></div>
+</div>
+<p>### CAcert Class 3 Root ###</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">export </span><span class="nv">CN</span><span class="o">=</span>example.com
+<span class="nb">cd</span> /etc/ssl/
+sudo cat certs/<span class="k">${</span><span class="nv">CN</span><span class="k">}</span>.crt <span class="se">\</span>
+    certs/CAcert_Class_3_Root.pem <span class="se">\</span>
+    &gt; <span class="k">${</span><span class="nv">CN</span><span class="k">}</span>.chained.crt
+</pre></div>
+</div>
+</div>
+<div class="section" id="diffie-hellman-dh-key-exchanges-parameters">
+<h2>Diffie-Hellman (DH) Key Exchanges Parameters</h2>
+<p>To use perfect forward secrecy, Diffie-Hellman parameters must be set up on the
+server side, otherwise the relevant cipher suites will be silently ignored:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo mkdir -p /etc/ssl/dhparams
+sudo openssl dhparam -out /etc/ssl/dhparams/dh_1024.pem 1024
+sudo openssl dhparam -out /etc/ssl/dhparams/dh_1536.pem 1536
+</pre></div>
+</div>
+<p>[bettercrypto.org](<a class="reference external" href="https://bettercrypto.org">https://bettercrypto.org</a>) and other sources advise against generating these and instead
+using proven and properly checked ones and make references to
+[RFC-3526](<a class="reference external" href="https://www.ietf.org/rfc/rfc3526.txt">https://www.ietf.org/rfc/rfc3526.txt</a> &#8220;More Modular Exponential (MODP) Diffie-Hellman groups for Internet Key Exchange (IKE)&#8221;).</p>
+<p>Unfortunately neither source nor the RFC tells how to get them.</p>
+<p>The bettercrypto.org
+[Git-Repository](<a class="reference external" href="https://github.com/BetterCrypto/Applied-Crypto-Hardening">https://github.com/BetterCrypto/Applied-Crypto-Hardening</a>)
+contains a directory with some files and a readme in the
+[/tools/dhparams](<a class="reference external" href="https://github.com/BetterCrypto/Applied-Crypto-Hardening/tree/master/tools/dhparams">https://github.com/BetterCrypto/Applied-Crypto-Hardening/tree/master/tools/dhparams</a>)
+directory.</p>
+<p>Do:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo mkdir -p /etc/ssl/dhparams
+sudo wget -O /etc/ssl/dhparams/dh_2048.pem <span class="se">\</span>
+    https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group14.pem
+sudo wget -O /etc/ssl/dhparams/dh_3072.pem <span class="se">\</span>
+    https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group15.pem
+sudo wget -O /etc/ssl/dhparams/dh_4096.pem <span class="se">\</span>
+    https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group16.pem
+sudo wget -O /etc/ssl/dhparams/dh_6144.pem <span class="se">\</span>
+    https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group17.pem
+sudo wget -O /etc/ssl/dhparams/dh_8192.pem <span class="se">\</span>
+    https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group18.pem
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="server-tools.html" class="btn btn-neutral" title="Additional Software"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Alain Wolf.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

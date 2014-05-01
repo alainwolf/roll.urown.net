@@ -1,0 +1,256 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Backup &mdash; Home Networking 3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="Home Networking 3 documentation" href="../index.html"/>
+        <link rel="up" title="Home Server" href="index.html"/>
+        <link rel="next" title="TLS - Transport Layer Security" href="server-tls.html"/>
+        <link rel="prev" title="Network" href="network.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> Home Networking</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../home-router/index.html">Home Router</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Home Server</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tools.html">Additional Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">Network</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Backup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html">TLS - Transport Layer Security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mail.html">Mail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nginx/index.html">Nginx Server</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Home Networking</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Home Server</a> &raquo;</li>
+      
+    <li>Backup</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/home-server/backup.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="backup">
+<h1>Backup<a class="headerlink" href="#backup" title="Permalink to this headline">¶</a></h1>
+<p>Backups are done using
+<a class="reference external" href="https://labs.riseup.net/code/projects/backupninja">backupninja</a>.</p>
+<p>Backupninja is wrapper for numerous different backup solutions of which we use
+<a class="reference external" href="http://duplicity.nongnu.org/">duplicity</a>.</p>
+<p>Duplicity is a enhanced combination of usual backup tools and tasks:</p>
+<ul class="simple">
+<li>Creates compressed archives of files like <strong class="command">tar</strong></li>
+<li>Differential transfers to remote storage locations like <strong class="command">rsync</strong></li>
+<li>File encryption with <strong class="command">gpg</strong></li>
+</ul>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Backupninja is in the repository, additionally we install duplicity and a Python library for making SSH connections to the storage host:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install backupninja duplicity python-paramiko
+</pre></div>
+</div>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>There is a helper application to aid in the configuratoion of all this:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ninjahelper
+</pre></div>
+</div>
+<p>The main configuration is stored in <tt class="file docutils literal"><span class="pre">/etc/backupninja.conf</span></tt>, while the different backup tasks are found in the directory <tt class="file docutils literal"><span class="pre">/etc/backup.d</span></tt>.</p>
+<div class="section" id="hwinfo-issue">
+<h3>hwinfo Issue<a class="headerlink" href="#hwinfo-issue" title="Permalink to this headline">¶</a></h3>
+<p>There is currently an <a class="reference external" href="https://labs.riseup.net/code/issues/6388">issue</a> with the system-task of backupnja. The task is using the <a class="reference external" href="http://www.linuxintro.org/wiki/Hwinfo">hwinfo</a> program to collect information on hardware and disk partitions before backup.</p>
+<p>The hwinfo package is no longer available in Ubuntu. It has been removed due to incompatibilities with Ubuntu&#8217;s current hardware management.</p>
+<p>Disable the tasks <strong>partitions</strong> and <strong>hardware</strong> in
+<tt class="file docutils literal"><span class="pre">/etc/backup.d/10.sys</span></tt>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">packages</span> <span class="o">=</span> yes
+<span class="nv">partitions</span> <span class="o">=</span> no
+<span class="nv">dosfdisk</span> <span class="o">=</span> yes
+<span class="nv">hardware</span> <span class="o">=</span> no
+<span class="nv">luksheaders</span> <span class="o">=</span> no
+<span class="nv">lvm</span> <span class="o">=</span> yes
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="what-how-and-where-to-backup">
+<h2>What how and where to backup<a class="headerlink" href="#what-how-and-where-to-backup" title="Permalink to this headline">¶</a></h2>
+<p>The file <tt class="file docutils literal"><span class="pre">/etc/backup/d.90.dup</span></tt> has all the meat.</p>
+<p>Duplicity encrypts all backup-files before transferring to the remote storage:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">sign</span> <span class="o">=</span> no
+<span class="nv">password</span> <span class="o">=</span> ********
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Safe the password in a secure location! Without it you can&#8217;t restore anything!</p>
+</div>
+<p>Add more directories here when needed (e.g. after new software has been installed):</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span><span class="nb">source</span><span class="o">]</span>
+<span class="c"># files to include in the backup</span>
+<span class="nv">include</span> <span class="o">=</span> /var/spool/cron/crontabs
+<span class="nv">include</span> <span class="o">=</span> /var/backups
+<span class="nv">include</span> <span class="o">=</span> /etc
+<span class="nv">include</span> <span class="o">=</span> /root
+<span class="nv">include</span> <span class="o">=</span> /home
+<span class="nv">include</span> <span class="o">=</span> /usr/local/*bin
+<span class="nv">include</span> <span class="o">=</span> /var/lib/dpkg/status*
+<span class="nv">include</span> <span class="o">=</span> /var/www
+</pre></div>
+</div>
+<p>Leave the &#8220;files to exclude from the backup&#8221; as they are.</p>
+<p>The backup destination needs a userprofile, which is able to login with its SSH key automatically. The directory system must be existing and the userprofile must have read/write access to it.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>dest<span class="o">]</span>
+<span class="nv">incremental</span> <span class="o">=</span> yes
+<span class="nv">increments</span> <span class="o">=</span> 30
+<span class="nv">keep</span> <span class="o">=</span> 60
+<span class="nv">keepincroffulls</span> <span class="o">=</span> 6
+
+<span class="nv">destdir</span> <span class="o">=</span> /backup/Cortez/BackupNinja2
+<span class="nv">desthost</span> <span class="o">=</span> nas.lan
+<span class="nv">destuser</span> <span class="o">=</span> cortez
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="server-tls.html" class="btn btn-neutral float-right" title="TLS - Transport Layer Security"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="network.html" class="btn btn-neutral" title="Network"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Alain Wolf.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Install Nginx from Source &mdash; Private Networking 3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="Private Networking 3 documentation" href="../../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../../index.html" class="fa fa-home"> Private Networking</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="simple">
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Private Networking</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+    <li>Install Nginx from Source</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/server/nginx/source-install.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="install-nginx-from-source">
+<h1>Install Nginx from Source<a class="headerlink" href="#install-nginx-from-source" title="Permalink to this headline">¶</a></h1>
+<p>This article describes how to install <a class="reference external" href="http://nginx.org/">Nginx</a> by compiling it
+from sourcecode on Ubuntu Server.</p>
+<p>This is a litte bit more complicated then a default install, but allows us to
+use the most current version and install additional 3rd-party modules like
+Google PageSpeed and ngx_cache_purge.</p>
+<div class="section" id="software-package-repository">
+<h2>Software Package Repository<a class="headerlink" href="#software-package-repository" title="Permalink to this headline">¶</a></h2>
+<p>The Nginx project relaeases its own readymade Ubuntu software packages.</p>
+<p>The &#8216;mainline&#8217; releases contain the latest stable code as recommendet for use
+by the project.</p>
+<p>Add these software repositories to the systems package list:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo -s
+<span class="c"># echo &quot;deb http://nginx.org/packages/mainline/ubuntu/ `lsb_release -sc` nginx&quot; \</span>
+    &gt; /etc/apt/sources.list.d/nginx.org-mainline.list
+<span class="c"># echo &quot;deb-src http://nginx.org/packages/mainline/ubuntu/ `lsb_release -sc` nginx&quot; \</span>
+    &gt;&gt; /etc/apt/sources.list.d/nginx.org-mainline.list
+<span class="c"># exit</span>
+</pre></div>
+</div>
+<p>All software packages released by the project are signed with a GPG key.</p>
+<p>Add the signing key to the systems trusted keyring:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>wget -O - http://nginx.org/keys/nginx_signing.key | sudo apt-key add -
+</pre></div>
+</div>
+<p>For working with the source code later, the signing key needs to be added to
+the personal trusted keyring too:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>wget -O - http://nginx.org/keys/nginx_signing.key | <span class="se">\</span>
+    gpg --no-default-keyring --keyring ~/.gnupg/trustedkeys.gpg --import -
+</pre></div>
+</div>
+<p>Update the systems packages list:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-required-software">
+<h2>Install required Software<a class="headerlink" href="#install-required-software" title="Permalink to this headline">¶</a></h2>
+<p>Get essential stuff needed for building packages in general:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install build-essential unzip
+</pre></div>
+</div>
+<p>Get all the stuff needed for building the nginx package:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get build-dep nginx
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-the-source-code">
+<h2>Get the Source Code<a class="headerlink" href="#get-the-source-code" title="Permalink to this headline">¶</a></h2>
+<p>Prepare source code directory:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo mkdir -p /usr/local/src
+<span class="nv">$ </span>sudo chown <span class="nv">$USER</span> /usr/local/src
+<span class="nv">$ </span>sudo chmod u+rwx /usr/local/src
+<span class="nv">$ </span><span class="nb">cd</span> /usr/local/src
+</pre></div>
+</div>
+<p>Get the nginx package source code:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>apt-get <span class="nb">source </span>nginx
+</pre></div>
+</div>
+<p>Download the source code for the ngx_cache_purge module:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>wget -O ngx_cache_purge-2.1.zip https://github.com/FRiCKLE/ngx_cache_purge/archive/2.1.zip
+<span class="nv">$ </span>unzip ngx_cache_purge-2.1.zip
+</pre></div>
+</div>
+<p>Download the source code for the Google pagespeed module:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>wget -O ngx_pagespeed-v1.7.30.4-beta https://github.com/pagespeed/ngx_pagespeed/archive/v1.7.30.4-beta.zip
+<span class="nv">$ </span>unzip ngx_pagespeed-v1.7.30.4-beta
+<span class="nv">$ </span><span class="nb">cd </span>ngx_pagespeed-1.7.30.4-beta/
+<span class="nv">$ </span>wget https://dl.google.com/dl/page-speed/psol/1.7.30.4.tar.gz
+<span class="nv">$ </span>tar -xzvf 1.7.30.4.tar.gz
+<span class="nv">$ </span><span class="nb">cd</span> ..
+</pre></div>
+</div>
+</div>
+<div class="section" id="package-configuration">
+<h2>Package Configuration<a class="headerlink" href="#package-configuration" title="Permalink to this headline">¶</a></h2>
+<p>Open the file <tt class="file docutils literal"><span class="pre">/usr/local/src/nginx-1.7.0/debian/rules</span></tt> with your editor.</p>
+<p>Add the following lines to every <cite>./configure</cite> command in the rules file:</p>
+<div class="highlight-bash"><div class="highlight"><pre>--add-module<span class="o">=</span>/usr/local/src/ngx_pagespeed-1.7.30.4-beta <span class="se">\</span>
+--add-module<span class="o">=</span>/usr/local/src/ngx_cache_purge-2.1
+</pre></div>
+</div>
+<p>Don&#8217;t forget to escape preceeding lines with a backslash <tt class="docutils literal"><span class="pre">\</span></tt>.</p>
+<p>{% include_code Nginx Debian Rules lang:make ./rules %}</p>
+</div>
+<div class="section" id="building-the-software">
+<h2>Building the Software<a class="headerlink" href="#building-the-software" title="Permalink to this headline">¶</a></h2>
+<p>Build the package as follows:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>nginx-1.7.0
+<span class="nv">$ </span>dpkg-buildpackage -rfakeroot -uc -b
+<span class="nv">$ </span><span class="nb">cd</span> ..
+</pre></div>
+</div>
+<p>This is the rigth time to get a nice cup of coffee.</p>
+</div>
+<div class="section" id="package-installation">
+<h2>Package Installation<a class="headerlink" href="#package-installation" title="Permalink to this headline">¶</a></h2>
+<p>Install the package:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo dpkg --install nginx_1.7.0-1~trusty_amd64.deb
+</pre></div>
+</div>
+<p>Nginx is installed and started as system service <cite>nginx</cite> running as user <cite>nginx</cite>.</p>
+<p>Configuration files are found in the <tt class="file docutils literal"><span class="pre">/etc/nginx</span></tt> directory.</p>
+<p>Prevent future releases to automatically overwrite our customized package:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-mark hold nginx
+</pre></div>
+</div>
+</div>
+<div class="section" id="test">
+<h2>Test<a class="headerlink" href="#test" title="Permalink to this headline">¶</a></h2>
+<p>Show version number and available modules:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>nginx -V
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Alain Wolf.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

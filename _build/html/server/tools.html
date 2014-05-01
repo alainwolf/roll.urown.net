@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Additional Software &mdash; Private Networking 3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="Private Networking 3 documentation" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> Private Networking</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="simple">
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Private Networking</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Additional Software</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/server/tools.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="additional-software">
+<h1>Additional Software<a class="headerlink" href="#additional-software" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="automatic-updates">
+<h2>Automatic Updates<a class="headerlink" href="#automatic-updates" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The system must be able to send out mails, for this to work. See <tt class="xref doc docutils literal"><span class="pre">/home-server/mail</span></tt></p>
+</div>
+<p>The <strong>unattended-upgrades</strong> package is used to automatically install updated packages. It is installed if selected during OS installation.</p>
+<p>Check for it with:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>dpkg-query -W -f<span class="o">=</span><span class="s1">&#39;${Status} ${Version}\n&#39;</span> unattended-upgrades
+</pre></div>
+</div>
+<p>If it is not already, install it as follows:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install unattended-upgrades
+</pre></div>
+</div>
+<p>To configure unattended-upgrades, edit
+<tt class="file docutils literal"><span class="pre">/etc/apt/apt.conf.d/50unattended-upgrades</span></tt> and adjust the following to fit your needs:</p>
+<div class="highlight-bash"><div class="highlight"><pre>Unattended-Upgrade::Allowed-Origins <span class="o">{</span>
+        <span class="s2">&quot;Ubuntu trusty-security&quot;</span>;
+//      <span class="s2">&quot;Ubuntu trusty-updates&quot;</span>;
+<span class="o">}</span>;
+
+Unattended-Upgrade::MinimalSteps <span class="s2">&quot;true&quot;</span>;
+Unattended-Upgrade::Mail <span class="s2">&quot;root&quot;</span>;
+Unattended-Upgrade::Remove-Unused-Dependencies <span class="s2">&quot;true&quot;</span>;
+</pre></div>
+</div>
+<p>Another useful package is <strong>apticron</strong>. apticron will configure a cron job to email an administrator information about any packages on the system that have updates available, as well as a summary of changes in each package.</p>
+<p>To install the apticron package, in a terminal enter:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install apticron
+</pre></div>
+</div>
+<p>Once the package is installed edit <tt class="file docutils literal"><span class="pre">/etc/apticron/apticron.conf</span></tt>, to set the email address and other options:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">EMAIL</span><span class="o">=</span><span class="s2">&quot;root@example.com&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="useful-tools">
+<h2>Useful Tools<a class="headerlink" href="#useful-tools" title="Permalink to this headline">¶</a></h2>
+<p>Some useful tools are not installed by default.</p>
+<ul class="simple">
+<li>htop</li>
+<li>MultiTail</li>
+</ul>
+<p>To install these run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install htop multitail
+</pre></div>
+</div>
+</div>
+<div class="section" id="provide-entropy">
+<span id="increase-entropy"></span><h2>Provide Entropy<a class="headerlink" href="#provide-entropy" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is absolutely necessary for generation of encryption keys and
+encryption of communication!</p>
+</div>
+<ul class="simple">
+<li><strong>Pollinate</strong> seeds the pseudo random number generator by connecting to one or
+more Pollen (entropy-as-a-service) servers over an (optionally) encrypted
+connection and retrieve a random seed over HTTP or HTTPS. It is intended to
+supplement the <tt class="file docutils literal"><span class="pre">/etc/init.d/urandom</span></tt> init script.</li>
+<li><strong>haveged</strong> uses HAVEGE (HArdware Volatile Entropy Gathering and Expansion) to
+maintain a 1M pool of random bytes used to fill <cite>/dev/random</cite> whenever the
+supply of random bits in <tt class="file docutils literal"><span class="pre">dev/random</span></tt> falls below the low water mark of the
+device.</li>
+</ul>
+<p>To install these run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install pollinate haveged
+</pre></div>
+</div>
+<p><em>haveged</em> is installed as services and automatically started. <em>pollinate</em> is
+started once every time the server starts up.</p>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Alain Wolf.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

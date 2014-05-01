@@ -1,0 +1,51 @@
+=====================
+Additional Software
+=====================
+
+Useful Tools
+=============
+Some useful tools are not installed by default.
+
+* htop
+* MultiTail
+
+To install these run::
+
+    $ sudo apt-get install htop multitail 
+
+.. _increase-entropy:
+
+Provide Entropy
+================
+
+.. warning::
+   This is absolutely necessary for generation of encryption keys and 
+   encryption of communication!
+
+* **Pollinate** seeds the pseudo random number generator by connecting to one or
+  more Pollen (entropy-as-a-service) servers over an (optionally) encrypted 
+  connection and retrieve a random seed over HTTP or HTTPS. It is intended to 
+  supplement the :file:`/etc/init.d/urandom` init script.
+
+* **haveged** uses HAVEGE (HArdware Volatile Entropy Gathering and Expansion) to 
+  maintain a 1M pool of random bytes used to fill `/dev/random` whenever the 
+  supply of random bits in :file:`dev/random` falls below the low water mark of the 
+  device.
+
+To install these run::
+
+   $ sudo apt-get install pollinate haveged
+
+*haveged* is installed as services and automatically started. *pollinate* is 
+started once every time the server starts up.
+
+
+.. _my-reference-label:
+
+Section to cross-reference
+===========================
+
+This is the text of the section.
+
+It refers to the section itself, see :ref:`my-reference-label`.
+

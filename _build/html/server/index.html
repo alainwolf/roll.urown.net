@@ -1,0 +1,197 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Private Server &mdash; Private Networking 3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="Private Networking 3 documentation" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> Private Networking</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="simple">
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Private Networking</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Private Server</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/server/index.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="private-server">
+<h1>Private Server<a class="headerlink" href="#private-server" title="Permalink to this headline">¶</a></h1>
+<p>Your private server does everything the router is too small to do. Can be an old laptop or desktop computer, a NAS device, a RaperryPi, as long as it runs Ubuntu Server.</p>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Additional Software</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#automatic-updates">Automatic Updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#useful-tools">Useful Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#provide-entropy">Provide Entropy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network.html">Network</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network.html#interface-configuration">Interface Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="backup.html">Backup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#what-how-and-where-to-backup">What how and where to backup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="server-tls.html">TLS - Transport Layer Security</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#openssl-configuration">OpenSSL Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#cacert-org">CAcert.org</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#generation-of-keys-and-csrs">Generation of Keys and CSRs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#csr-for-multiple-domain-names">CSR for Multiple Domain-Names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#csr-with-wild-card-domain-names">CSR with Wild-Card Domain Names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#submit-certificate-request">Submit Certificate Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#server-certificate-chains">Server Certificate Chains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#ocsp-stapling-certificate-chains">OCSP Stapling Certificate Chains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls.html#diffie-hellman-dh-key-exchanges-parameters">Diffie-Hellman (DH) Key Exchanges Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mail.html">Mail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nginx/index.html">Nginx Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nginx/source-install.html">Install Nginx from Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nginx/config.html">Nginx Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nginx/php.html">PHP in Nginx</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Recommended reading:
+<a class="reference external" href="https://help.ubuntu.com/14.04/serverguide/index.html">Ubuntu Server Guide</a></p>
+</div>
+
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Alain Wolf.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
