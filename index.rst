@@ -16,7 +16,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
    
-   services
+   about
    desktop/index
    router/index
    server/index

@@ -5,7 +5,7 @@ Automatic Updates
 -----------------
 
 .. note::
-   The system must be able to send out mails, for this to work. See :doc:`/home-server/mail`
+   The system must be able to send out mails, for this to work. See :doc:`/server/mail`
 
 
 The **unattended-upgrades** package is used to automatically install updated packages. It is installed if selected during OS installation.
