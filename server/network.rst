@@ -2,7 +2,7 @@ Network
 ========
 
 .. note::
-   The IP addresses shown here, are documentation examples. You need to use your own addresses. See :doc:`/home-router/index` for network and IP configuration.
+   The IP addresses shown here, are documentation examples. You need to use your own addresses. See :doc:`/router/index` for network and IP configuration.
 
 
 We have dual-Stack IPv4 and IPv6 on our internal network (LAN).
