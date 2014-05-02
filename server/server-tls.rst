@@ -13,6 +13,7 @@ Prerequisites
 
 Enough entropy for key generation and encryption. See :ref:`_increase-entropy`.
 
+
 CAcert.org
 ----------
 `CAcert <http://www.cacert.org>`_ has been dropped from the Ubuntu built-in 
@@ -64,70 +65,85 @@ We want OpenSSL to behave as follows:
    its website, when the request is submitted. You need Class 2 verification for
    wildcard domain certificates.
 
-.. warning::
+.. note::
     Everything from here on is done as user **root** and from the
-    :file:`/etc/ssl` directory.
+    :file:`/etc/ssl` directory. Also the evironment variables **OPENSSL_CONF**
+    (pointing to our configuration file) and **CN** (containing your our domain
+    name) must be set until all work described in this chapter is done.
 
 ::
 
     $ cd /etc/ssl
     $ sudo -s
+    $ export OPENSSL_CONF=/etc/ssl/opensssl-server.conf
+    $ export CN=example.com
 
-
-Move the default :file:`/etc/ssl/opensssl.conf` file out of the way::
-
-    $ mv openssl.cnf openssl.cnf-original
-
-Create a new :file:`/etc/ssl/opensssl.conf` file in your editor::
+Create a new :file:`/etc/ssl/opensssl-server.conf` file with the following 
+contents::
 
     #
-    # OpenSSL configuration for generation of certificate requests.
+    # OpenSSL configuration for generation of server certificate requests.
     #
 
-    # This definition chokes if CN isn't defined.
-    CN              = $ENV::CN
-    HOME            = .
-    RANDFILE        = $ENV::HOME/.rnd
+    # OpensSSL chokes if the environment variable $CN isn't defined.
+    # Usage instructions:
+    #   'export CN=example.com; openssl req -new -out ${CN}.req.pem'
+ 
+    CN                          = $ENV::CN
+    HOME                        = .
+    RANDFILE                    = $ENV::HOME/.rnd
+    oid_section                 = new_oids
 
     ####################################################################
+    [ new_oids ]
+    xmppAddr                    = 1.3.6.1.5.5.7.8.5
+    SRVName                     = 1.3.6.1.5.5.7.8.7
+
     [ req ]
-    default_bits            = 4096
-    default_keyfile         = ${HOME}/private/${CN}.key.pem
-    encrypt_key             = no
-    string_mask             = utf8only
-    default_md              = sha256
-    distinguished_name      = req_distinguished_name
+    default_bits                = 4096
+    default_keyfile             = ${HOME}/private/${CN}.key.pem
+    encrypt_key                 = no
+    string_mask                 = utf8only
+    default_md                  = sha256
+    distinguished_name          = req_distinguished_name
     req_extensions = v3_req 
 
     [ req_distinguished_name ]
-    countryName                     = Country Name (2 letter code)
-    countryName_default             = CH
-    countryName_min                 = 2
-    countryName_max                 = 2
+    countryName                 = Country Name (2 letter code)
+    countryName_default         = CH
+    countryName_min             = 2
+    countryName_max             = 2
 
-    stateOrProvinceName             = State or Province Name (full name)
-    stateOrProvinceName_default     = Zurich
+    stateOrProvinceName         = State or Province Name (full name)
+    stateOrProvinceName_default = Zurich
 
-    localityName                    = Locality Name (eg, city)
-    localityName_default            = Zurich
+    localityName                = Locality Name (eg, city)
+    localityName_default        = Zurich
 
-    organizationName                = Organization Name (eg, company)
-    organizationName_default        = ${CN}
+    organizationName            = Organization Name (eg, company)
+    organizationName_default    = ${CN}
 
-    commonName                      = Common Name (FQDN Server Name)
-    commonName_max                  = 64
-    commonName_default              = ${CN}
+    commonName                  = Common Name (FQDN Server Name)
+    commonName_max              = 64
+    commonName_default          = ${CN}
 
-    emailAddress                    = Email Address
-    emailAddress_max                = 64
-    emailAddress_default            = hostmaster@${CN}
+    emailAddress                = Email Address
+    emailAddress_max            = 64
+    emailAddress_default        = hostmaster@${CN}
 
     [ v3_req ]
-    subjectAltName = @alt_names
+    basicConstraints            = CA:FALSE
+    keyUsage                    = digitalSignature,keyEncipherment,keyAgreement
+    extendedKeyUsage            = serverAuth,clientAuth
+    subjectKeyIdentifier        = hash
+    subjectAltName              = @subj_alt_names
 
-    [ alt_names ]
-    DNS.0 = ${CN}
-    DNS.1 = *.${CN}
+    [ subj_alt_names ]
+    DNS.0                       = ${CN}
+    DNS.1                       = *.${CN}
+    otherName.0                 = xmppAddr;FORMAT:UTF8,UTF8:${CN}
+    otherName.1                 = SRVName;IA5STRING:_xmpp-client.${CN}
+    otherName.2                 = SRVName;IA5STRING:_xmpp-server.${CN}
 
 
 Generation of Keys and CSRs 
@@ -135,7 +151,6 @@ Generation of Keys and CSRs
 
 Create a new key and CSR::
 
-    $ export CN=example.com
     $ openssl req -new -out ${CN}.req.pem
     Generating a 4096 bit RSA private key
     ..........................................................................
@@ -161,9 +176,8 @@ Create a new key and CSR::
 
 An alternative command which supplies subject fields on the command-line::
 
-    $ export CN=example.com
-    $ openssl req -new -out alainwolf_ch.csr \
-        -subj "/C=CH/ST=Zurich/L=Zurich/O=My Company Name/CN=${CN}/emailAddress=webmaster@example.com"
+    $ openssl req -new -out ${CN}.req.pem \
+        -subj "/C=CH/ST=Zurich/L=Zurich/O=My Company Name/CN=${CN}/emailAddress=webmaster@${CN}"
     $ chmod 600 private/${CN}.key.pem
 
 
@@ -175,7 +189,7 @@ CSR for Multiple Domain-Names
 If services for other domains are hosted, certificates should contains them too.
 
 .. warning::
-   You CA will only allow certificates containing *commonNames* and 
+   Your CA will only allow certificates containing *commonNames* and 
    *subjectAltNames* for domains you previously have validated with them.
 
 Edit the :file:`/etc/ssl/openssl.cnf` file. Add all the required domain-names 
@@ -193,7 +207,6 @@ for the server in the section called
 
 Save and close the file and create the CSR as before::
 
-    $ export CN=example.com
     $ openssl req -config ${CN}.cnf -out ${CN}.req.pem -new
     $ sudo chmod 600 private/${CN}.key.pem
 
@@ -203,8 +216,6 @@ Submit Certificate Request
 Copy the CSR to clipboard and paste it into the appropriate form on the website 
 of the certificate authority::
 
-    $ export CN=example.com
-    $ cd /etc/ssl
     $ cat ${CN}.req.pem
     -----BEGIN CERTIFICATE REQUEST-----
     ...
@@ -214,8 +225,6 @@ After signing, the certificate authority will either offer you a file-download
 of the certificate or display its contents in PEM format. 
 Install the signed certificate::
 
-    $ export CN=example.com
-    $ cd /etc/ssl
     cat << EOF > certs/${CN}.cert.pem
     -----BEGIN CERTIFICATE-----
     ...
@@ -273,7 +282,6 @@ Here are the steps to generate such certificate-chain-files.
 
 Download the intermediate CA certificates::
 
-    $ cd /etc/ssl/
     $ wget -O certs/StartCom_Class_1_Server_CA.pem \
         https://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
     $ wget -O certs/StartCom_Class_2_Server_CA.pem \
@@ -288,21 +296,18 @@ certificate.
 
 For StartCom Class 1 Primary Intermediate Server CA::
 
-    $ export CN=example.com
     $ cat certs/${CN}.crt \
           certs/StartCom_Class_1_Server_CA.pem \
         > certs/${CN}.chained.crt
 
 For StartCom Class 2 Primary Intermediate Server CA::
 
-    $ export CN=example.com
     $ cat certs/${CN}.crt \
           certs/StartCom_Class_2_Server_CA.pem \
         > certs/${CN}.chained.crt
 
 For CAcert Class 3 Root::
 
-    $ export CN=example.com
     $ cat certs/${CN}.crt \
           certs/CAcert_Class_3_Root.pem \
         > certs/${CN}.chained.crt
