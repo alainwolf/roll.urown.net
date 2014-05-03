@@ -75,10 +75,10 @@ We want OpenSSL to behave as follows:
 
     $ cd /etc/ssl
     $ sudo -s
-    $ export OPENSSL_CONF=/etc/ssl/opensssl-server.conf
+    $ export OPENSSL_CONF=/etc/ssl/openssl-server.cnf
     $ export CN=example.com
 
-Create a new :file:`/etc/ssl/opensssl-server.conf` file with the following 
+Create a new :file:`/etc/ssl/openssl-server.cnf` file with the following 
 contents::
 
     #
@@ -289,28 +289,26 @@ Download the intermediate CA certificates::
     $ wget -O certs/CAcert_Class_3_Root.pem \
         http://www.cacert.org/certs/class3.crt
 
-Assuming the certificate is for the domain "example.com" and our signed 
-certificate is present as `/etc/ssl/certs/example.com.crt`. Use one of the 
-commands below, depending on the intermediate signing autority of your 
-certificate.
+Use one of the commands below, depending on the intermediate signing autority of
+your certificate.
 
 For StartCom Class 1 Primary Intermediate Server CA::
 
-    $ cat certs/${CN}.crt \
+    $ cat certs/${CN}.cert.pem \
           certs/StartCom_Class_1_Server_CA.pem \
-        > certs/${CN}.chained.crt
+        > certs/${CN}.chained.cert.pem
 
 For StartCom Class 2 Primary Intermediate Server CA::
 
-    $ cat certs/${CN}.crt \
+    $ cat certs/${CN}.cert.pem \
           certs/StartCom_Class_2_Server_CA.pem \
-        > certs/${CN}.chained.crt
+        > certs/${CN}.chained.cert.pem
 
 For CAcert Class 3 Root::
 
-    $ cat certs/${CN}.crt \
+    $ cat certs/${CN}.cert.pem \
           certs/CAcert_Class_3_Root.pem \
-        > certs/${CN}.chained.crt
+        > certs/${CN}.chained.cert.pem
 
 
 OCSP Stapling Certificate Chains
