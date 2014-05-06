@@ -14,6 +14,8 @@ Contents:
    server-tls
    mail
    nginx/index
+   mariadb
+   owncloud-server
 
 
 Recommended reading: 

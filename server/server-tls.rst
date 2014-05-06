@@ -399,3 +399,109 @@ Now that we are done here, exit your root session::
     $ exit
     $ cd
 
+Ciphers Suite Selection
+-----------------------
+
+Cipher suites wich support forward secrecy (FS)::
+
+    EDH:EECDH 
+
+Select the ones using RSA authentication. As our certificates use RSA keys, 
+nothing else would work::
+
+    EDH+aRSA:EECDH+aRSA
+
+Remove weak export-grade ciphers::
+
+    EDH+aRSA:EECDH+aRSA!EXP
+
+
+Remove all wich use SHA1 to sign packets::
+
+    EDH+aRSA:EECDH+aRSA:!SHA1
+
+
+bettercrypto.org cipher suite A
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Cipher selection string::
+
+    'EDH+aRSA+AES256:EECDH+aRSA+AES256:!SSLv3'
+
+OpenSSL ciphers list::
+
+    1. DHE-RSA-AES256-GCM-SHA384   TLSv1.2 Kx=DH       Au=RSA  Enc=AESGCM(256) Mac=AEAD
+    2. DHE-RSA-AES256-SHA256       TLSv1.2 Kx=DH       Au=RSA  Enc=AES(256)    Mac=SHA256
+    3. ECDHE-RSA-AES256-GCM-SHA384 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AESGCM(256) Mac=AEAD
+    4. ECDHE-RSA-AES256-SHA384     TLSv1.2 Kx=ECDH     Au=RSA  Enc=AES(256)    Mac=SHA384
+
+
+bettercrypto.org cipher suite B
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Cipher selection string::
+
+    'EDH+CAMELLIA:EDH+aRSA:EECDH+aRSA+AESGCM:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH:+CAMELLIA256:+AES256:+CAMELLIA128:+AES128:+SSLv3:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!DSS:!RC4:!SEED:!ECDSA:CAMELLIA256-SHA:AES256-SHA:CAMELLIA128-SHA:AES128-SHA'
+
+OpenSSL ciphers list::
+
+     1. DHE-RSA-AES256-GCM-SHA384       TLSv1.2     Kx=DH       Au=RSA  Enc=AESGCM(256)     Mac=AEAD
+     2. DHE-RSA-AES256-SHA256           TLSv1.2     Kx=DH       Au=RSA  Enc=AES(256)        Mac=SHA256
+     3. ECDHE-RSA-AES256-GCM-SHA384     TLSv1.2     Kx=ECDH     Au=RSA  Enc=AESGCM(256)     Mac=AEAD
+     4. ECDHE-RSA-AES256-SHA384         TLSv1.2     Kx=ECDH     Au=RSA  Enc=AES(256)        Mac=SHA384
+     5. DHE-RSA-AES128-GCM-SHA256       TLSv1.2     Kx=DH       Au=RSA  Enc=AESGCM(128)     Mac=AEAD
+     6. DHE-RSA-AES128-SHA256           TLSv1.2     Kx=DH       Au=RSA  Enc=AES(128)        Mac=SHA256
+     7. ECDHE-RSA-AES128-GCM-SHA256     TLSv1.2     Kx=ECDH     Au=RSA  Enc=AESGCM(128)     Mac=AEAD
+     8. ECDHE-RSA-AES128-SHA256         TLSv1.2     Kx=ECDH     Au=RSA  Enc=AES(128)        Mac=SHA256
+     9. DHE-RSA-CAMELLIA256-SHA         SSLv3       Kx=DH       Au=RSA  Enc=Camellia(256)   Mac=SHA1
+    10. DHE-RSA-AES256-SHA              SSLv3       Kx=DH       Au=RSA  Enc=AES(256)        Mac=SHA1
+    11. ECDHE-RSA-AES256-SHA            SSLv3       Kx=ECDH     Au=RSA  Enc=AES(256)        Mac=SHA1
+    12. DHE-RSA-CAMELLIA128-SHA         SSLv3       Kx=DH       Au=RSA  Enc=Camellia(128)   Mac=SHA1
+    13. DHE-RSA-AES128-SHA              SSLv3       Kx=DH       Au=RSA  Enc=AES(128)        Mac=SHA1
+    14. ECDHE-RSA-AES128-SHA            SSLv3       Kx=ECDH     Au=RSA  Enc=AES(128)        Mac=SHA1
+    15. CAMELLIA256-SHA                 SSLv3       Kx=RSA      Au=RSA  Enc=Camellia(256)   Mac=SHA1
+    16. AES256-SHA                      SSLv3       Kx=RSA      Au=RSA  Enc=AES(256)        Mac=SHA1
+    17. CAMELLIA128-SHA                 SSLv3       Kx=RSA      Au=RSA  Enc=Camellia(128)   Mac=SHA1
+    18. AES128-SHA                      SSLv3       Kx=RSA      Au=RSA  Enc=AES(128)        Mac=SHA1
+
+
+bettercrypto.org website
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Qualsys output::
+
+    1.  TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (0x9f)      DH 4096 bits (p: 512, g: 1, Ys: 512)    FS  256
+    2.  TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 (0x6b)      DH 4096 bits (p: 512, g: 1, Ys: 512)    FS  256
+    3.  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (0xc028)  ECDH 384 bits (eq. 7680 bits RSA)       FS  256
+    4.  TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (0xc030)  ECDH 384 bits (eq. 7680 bits RSA)       FS  256
+    5.  TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA (0x88)    DH 4096 bits (p: 512, g: 1, Ys: 512)    FS  256
+    6.  TLS_DHE_RSA_WITH_AES_256_CBC_SHA (0x39)         DH 4096 bits (p: 512, g: 1, Ys: 512)    FS  256
+    7.  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (0xc014)     ECDH 384 bits (eq. 7680 bits RSA)       FS  256
+    8.  TLS_RSA_WITH_AES_256_CBC_SHA (0x35)                                                         256
+
+RFC Strings to OpenSSL strings conversion::
+
+    1.  TLS_DHE_RSA_WITH_AES_256_GCM_SHA384     DHE-RSA-AES256-GCM-SHA384   
+    2.  TLS_DHE_RSA_WITH_AES_256_CBC_SHA256     DHE-RSA-AES256-SHA256
+    3.  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384   ECDHE-RSA-AES256-SHA384
+    4.  TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384   ECDHE-RSA-AES256-GCM-SHA384
+    5.  TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA   DHE-RSA-CAMELLIA256-SHA
+    6.  TLS_DHE_RSA_WITH_AES_256_CBC_SHA        DHE-RSA-AES256-SHA
+    7.  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA      ECDHE-RSA-AES256-SHA
+    8.  TLS_RSA_WITH_AES_256_CBC_SHA            AES256-SHA         
+
+
+Cipher selection string::
+
+    'DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-CAMELLIA256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES256-SHA:AES256-SHA'
+
+OpenSSL ciphers list::
+
+     1. DHE-RSA-AES256-GCM-SHA384   TLSv1.2 Kx=DH   Au=RSA  Enc=AESGCM(256)   Mac=AEAD
+     2. DHE-RSA-AES256-SHA256       TLSv1.2 Kx=DH   Au=RSA  Enc=AES(256)      Mac=SHA256
+     3. ECDHE-RSA-AES256-GCM-SHA384 TLSv1.2 Kx=ECDH Au=RSA  Enc=AESGCM(256)   Mac=AEAD
+     4. ECDHE-RSA-AES256-SHA384     TLSv1.2 Kx=ECDH Au=RSA  Enc=AES(256)      Mac=SHA384
+     5. DHE-RSA-CAMELLIA256-SHA     SSLv3 Kx=DH     Au=RSA  Enc=Camellia(256) Mac=SHA1
+     6. DHE-RSA-AES256-SHA          SSLv3 Kx=DH     Au=RSA  Enc=AES(256)      Mac=SHA1
+     7. ECDHE-RSA-AES256-SHA        SSLv3 Kx=ECDH   Au=RSA  Enc=AES(256)      Mac=SHA1
+     8. AES256-SHA                  SSLv3 Kx=RSA    Au=RSA  Enc=AES(256)      Mac=SHA1

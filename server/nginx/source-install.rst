@@ -19,11 +19,11 @@ by the project.
 Add these software repositories to the systems package list::
 
     $ sudo -s
-    # echo "deb http://nginx.org/packages/mainline/ubuntu/ `lsb_release -sc` nginx" \
+     echo "deb http://nginx.org/packages/mainline/ubuntu/ `lsb_release -sc` nginx" \
         > /etc/apt/sources.list.d/nginx.org-mainline.list
-    # echo "deb-src http://nginx.org/packages/mainline/ubuntu/ `lsb_release -sc` nginx" \
+    $ echo "deb-src http://nginx.org/packages/mainline/ubuntu/ `lsb_release -sc` nginx" \
         >> /etc/apt/sources.list.d/nginx.org-mainline.list
-    # exit
+    $ exit
 
 
 All software packages released by the project are signed with a GPG key.
@@ -98,10 +98,127 @@ Add the following lines to every `./configure` command in the rules file::
 
     --add-module=/usr/local/src/ngx_pagespeed-1.7.30.4-beta \
     --add-module=/usr/local/src/ngx_cache_purge-2.1
-      
+
 Don't forget to escape preceeding lines with a backslash ``\``.
 
-{% include_code Nginx Debian Rules lang:make ./rules %}
+.. code-block:: make
+   :linenos:
+   :emphasize-lines: 56,57,97,98
+
+    #!/usr/bin/make -f
+
+    #export DH_VERBOSE=1
+    CFLAGS ?= $(shell dpkg-buildflags --get CFLAGS)
+    LDFLAGS ?= $(shell dpkg-buildflags --get LDFLAGS)
+    WITH_SPDY := $(shell printf "Source: nginx\nBuild-Depends: libssl-dev (>= 1.0.1)\n" | \
+        dpkg-checkbuilddeps - >/dev/null 2>&1 && \
+        echo "--with-http_spdy_module")
+
+    %:
+        dh $@ 
+
+    override_dh_auto_configure: configure_debug
+
+    override_dh_strip:
+        dh_strip -Xdebug
+
+    override_dh_auto_build:
+        dh_auto_build
+        mv objs/nginx objs/nginx.debug
+        CFLAGS="" ./configure \
+            --prefix=/etc/nginx \
+            --sbin-path=/usr/sbin/nginx \
+            --conf-path=/etc/nginx/nginx.conf \
+            --error-log-path=/var/log/nginx/error.log \
+            --http-log-path=/var/log/nginx/access.log \
+            --pid-path=/var/run/nginx.pid \
+            --lock-path=/var/run/nginx.lock \
+            --http-client-body-temp-path=/var/cache/nginx/client_temp \
+            --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+            --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+            --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+            --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+            --user=nginx \
+            --group=nginx \
+            --with-http_ssl_module \
+            --with-http_realip_module \
+            --with-http_addition_module \
+            --with-http_sub_module \
+            --with-http_dav_module \
+            --with-http_flv_module \
+            --with-http_mp4_module \
+            --with-http_gunzip_module \
+            --with-http_gzip_static_module \
+            --with-http_random_index_module \
+            --with-http_secure_link_module \
+            --with-http_stub_status_module \
+            --with-http_auth_request_module \
+            --with-mail \
+            --with-mail_ssl_module \
+            --with-file-aio \
+            $(WITH_SPDY) \
+            --with-cc-opt="$(CFLAGS)" \
+            --with-ld-opt="$(LDFLAGS)" \
+            --with-ipv6 \
+            --add-module=/usr/local/src/ngx_pagespeed-1.7.30.4-beta \
+            --add-module=/usr/local/src/ngx_cache_purge-2.1
+        dh_auto_build
+
+    configure_debug:
+        CFLAGS="" ./configure \
+            --prefix=/etc/nginx \
+            --sbin-path=/usr/sbin/nginx \
+            --conf-path=/etc/nginx/nginx.conf \
+            --error-log-path=/var/log/nginx/error.log \
+            --http-log-path=/var/log/nginx/access.log \
+            --pid-path=/var/run/nginx.pid \
+            --lock-path=/var/run/nginx.lock \
+            --http-client-body-temp-path=/var/cache/nginx/client_temp \
+            --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+            --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+            --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+            --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+            --user=nginx \
+            --group=nginx \
+            --with-http_ssl_module \
+            --with-http_realip_module \
+            --with-http_addition_module \
+            --with-http_sub_module \
+            --with-http_dav_module \
+            --with-http_flv_module \
+            --with-http_mp4_module \
+            --with-http_gunzip_module \
+            --with-http_gzip_static_module \
+            --with-http_random_index_module \
+            --with-http_secure_link_module \
+            --with-http_stub_status_module \
+            --with-http_auth_request_module \
+            --with-mail \
+            --with-mail_ssl_module \
+            --with-file-aio \
+            $(WITH_SPDY) \
+            --with-cc-opt="$(CFLAGS)" \
+            --with-ld-opt="$(LDFLAGS)" \
+            --with-ipv6 \
+            --with-debug \
+            --add-module=/usr/local/src/ngx_pagespeed-1.7.30.4-beta \
+            --add-module=/usr/local/src/ngx_cache_purge-2.1
+
+    override_dh_auto_install:
+        dh_auto_install
+        /usr/bin/install -m 644 debian/nginx.conf debian/nginx/etc/nginx/
+        /usr/bin/install -m 644 conf/win-utf debian/nginx/etc/nginx/
+        /usr/bin/install -m 644 conf/koi-utf debian/nginx/etc/nginx/
+        /usr/bin/install -m 644 conf/koi-win debian/nginx/etc/nginx/
+        /usr/bin/install -m 644 conf/mime.types debian/nginx/etc/nginx/
+        /usr/bin/install -m 644 conf/scgi_params debian/nginx/etc/nginx/
+        /usr/bin/install -m 644 conf/fastcgi_params debian/nginx/etc/nginx/
+        /usr/bin/install -m 644 conf/uwsgi_params debian/nginx/etc/nginx/
+        /usr/bin/install -m 644 html/index.html debian/nginx/usr/share/nginx/html/
+        /usr/bin/install -m 644 html/50x.html debian/nginx/usr/share/nginx/html/
+        /usr/bin/install -m 644 debian/nginx.vh.default.conf debian/nginx/etc/nginx/conf.d/default.conf
+        /usr/bin/install -m 644 debian/nginx.vh.example_ssl.conf debian/nginx/etc/nginx/conf.d/example_ssl.conf
+        /usr/bin/install -m 755 objs/nginx  debian/nginx/usr/sbin/
 
 
 Building the Software
