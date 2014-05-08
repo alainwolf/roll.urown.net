@@ -50,11 +50,12 @@ Useful Tools
 Some useful tools are not installed by default.
 
 * htop
+* pwgen
 * MultiTail
 
 To install these run::
 
-    $ sudo apt-get install htop multitail 
+    $ sudo apt-get install htop multitail pwgen
 
 
 .. _increase-entropy:

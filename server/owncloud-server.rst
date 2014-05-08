@@ -89,16 +89,16 @@ files and directories.
 Create a new virtual host environment for a ownCloud server::
 
 	$ cd /var/www
-	$ sudo mkdir -p cloud.example.com/{public_html,log}
-	$ sudo chown -R www-data:www-data cloud.example.com/{public_html,log}
+	$ sudo mkdir -p cloud.example.com/{public_html,log,oc_data}
+	$ sudo chown -R www-data:www-data cloud.example.com/{public_html,log,oc_data}
 
 Copy the files relevant to a local installation::
 
-	$ sudo cp -R owncloud/{config,apps,data} cloud.example.com/public_html/
+	$ sudo cp -R owncloud/{config,apps} cloud.example.com/public_html/
 
 Re-adjust ownerships and access rights::
 
-	$ sudo chown -R www-data:www-data cloud.example.com/public_html/{config,apps,data}
+	$ sudo chown -R www-data:www-data cloud.example.com/public_html/{config,apps}
 
 Create symlinks pointing to all other files in the original installation 
 directory::
@@ -106,10 +106,77 @@ directory::
 	$ sudo ln -s /var/www/owncloud/* /var/www/cloud.example.com/public_html/
 	ln: failed to create symbolic link ‘cloud.example.com/public_html/apps’: File exists
 	ln: failed to create symbolic link ‘cloud.example.com/public_html/config’: File exists
-	ln: failed to create symbolic link ‘cloud.example.com/public_html/data’: File exists
 
 You will get error messages for the files and directories already present, but 
 thats exactly what we want.
+
+
+ownCloud Database
+-----------------
+
+ownCloud needs a database we have to prepare.
+
+In this example we will create a user **owncloud_example** and a database with
+the same name which we later will give to the ownCloud server for use.
+
+Start by creating a secure (more then 128 bits) and hard to guess password for
+the database user::
+
+    $ pwgen --secure 24 1
+    ********
+
+Start database command session::
+    
+    $ mysql -u root -p
+    Enter password: 
+    Welcome to the MariaDB monitor.  Commands end with ; or \g.
+    Your MariaDB connection id is 28
+    Server version: 5.5.37-MariaDB-0ubuntu0.14.04.1 (Ubuntu)
+
+    Copyright (c) 2000, 2014, Oracle, Monty Program Ab and others.
+
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+
+Create a new user for ownCloud, replace the asterisks below with 
+the password created earlier:
+
+.. code-block:: mysql
+
+    > CREATE USER 'owncloud_example'@'localhost' IDENTIFIED BY '********';
+    Query OK, 0 rows affected (0.01 sec)
+
+
+Create the database for ownCloud:
+
+.. code-block:: mysql
+
+    > CREATE DATABASE IF NOT EXISTS owncloud_example;
+    Query OK, 1 row affected (0.01 sec)
+
+
+Now grant the user access to the database:
+
+.. code-block:: mysql
+
+    > GRANT ALL PRIVILEGES ON owncloud_example.* TO 'owncloud_example'@'localhost';
+    Query OK, 0 rows affected (0.00 sec)
+
+    
+Access rights are only acvtivated after the database server has reloaded its privileges table:
+
+.. code-block:: mysql
+
+    > FLUSH PRIVILEGES;
+    Query OK, 0 rows affected (0.00 sec)
+
+Close the session with the database server:
+
+.. code-block:: mysql
+
+    > QUIT
+    Bye
+
 
 Nginx Configuration
 -------------------
@@ -239,3 +306,9 @@ vary on server_name and IP addresses:
         access_log              /var/www/cloud.example.com/log/access.log;
         error_log               /var/www/cloud.example.com/log/error.log;
     }
+
+Activate the new websiten and restart the Nginx server::
+
+    $ sudo ln -s /etc/nginx/sites-available/cloud.example.com.conf /etc/nginx/sites-enabled/
+    $ sudo service nginx restart
+
