@@ -11,26 +11,26 @@ Software Repository
 Add the official owncloud.org Ubuntu package repository hosted on OpenSuse Build
 Service::
 
-    sudo -s
-    echo 'deb http://download.opensuse.org/repositories/isv:/ownCloud:/community/xUbuntu_14.04/ /' \
+    $ sudo -s
+    $ echo 'deb http://download.opensuse.org/repositories/isv:/ownCloud:/community/xUbuntu_14.04/ /' \
     	>> /etc/apt/sources.list.d/owncloud.list
-    exit
+    $ exit
 
 Add the package signing key to the systems trusted packages keyring::
 
-    wget -O - http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key \ | 
+    $ wget -O - http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key \ | 
     	sudo apt-key add -
 
 Update the systems packages list::
 
-    sudo apt-get update
+    $ sudo apt-get update
 
 Installation
 ------------
 
 Install the ownCloud server package::
 
-    sudo apt-get install owncloud 
+    $ sudo apt-get install owncloud 
 
 The ownCloud server PHP scripts will be installed in the 
 :file:`/var/www/owncloud` directory.
@@ -39,7 +39,7 @@ There is also a long list of additional software installed.
 
 Stop the installed Apache service, as we will run ownCloud under Nginx::
 
-    sudo service apache2 stop
+    $ sudo service apache2 stop
     
 The ownCloud package source and the website recommend installation of 
 of `php5-apc <http://php.net/manual/en/book.apc.php>`_ for better 
@@ -57,7 +57,7 @@ For variable cache storage, there is the stripped down
 `APCu <http://pecl.php.net/package/APCu>`_ extension. APCu adds
 support to store PHP variables in shared user space::
 
-    sudo apt-get install php-apcu
+    $ sudo apt-get install php-apcu
 
 The ownCloud package source and the website recommend installation of 
 `FFmpeg <http://www.ffmpeg.org/>`_.
@@ -66,10 +66,17 @@ Since Ubuntu 11.04 ffmpeg has been replaced by `libav <http://www.libav.org/>`_.
 While Ubuntu Desktop systems have this installed by default, server systems need 
 to add it manually::
 
-    sudo apt-get install libav-tools
+    $ sudo apt-get install libav-tools
 
 Create the Nginx configuration for ownCloud as documented in the official 
 `ownCloud Installation Guide <http://doc.owncloud.org/server/6.0/admin_manual/installation/installation_source.html#nginx-configuration>`_.
+
+To properly handle various document and file formats ownCloud needs to be able 
+to read and understand them. This is used for example when creating previews of 
+documents. Therefore its adviable to install LibreOffice and ImageMagick::
+
+    $ sudo apt-get install libreoffice imagemagick
+
 
 
 ownCloud Virtual Hosting

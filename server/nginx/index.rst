@@ -6,6 +6,5 @@ Nginx Server
    
    source-install
    config
-   php
 
 

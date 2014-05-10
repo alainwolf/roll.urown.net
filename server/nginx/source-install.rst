@@ -50,7 +50,7 @@ Install required Software
 
 Get essential stuff needed for building packages in general::
 
-    $ sudo apt-get install build-essential unzip
+    $ sudo apt-get install build-essential devscripts unzip
 
 
 Get all the stuff needed for building the nginx package::
@@ -74,16 +74,18 @@ Get the nginx package source code::
     $ apt-get source nginx
 
 
-Download the source code for the ngx_cache_purge module::
+Download the source code for the 
+`ngx_cache_purge <https://github.com/FRiCKLE/ngx_cache_purge>`_ module::
 
     $ wget -O ngx_cache_purge-2.1.zip https://github.com/FRiCKLE/ngx_cache_purge/archive/2.1.zip
     $ unzip ngx_cache_purge-2.1.zip
 
 
-Download the source code for the Google pagespeed module::
+Download the source code for the 
+`Google pagespeed <https://github.com/pagespeed/ngx_pagespeed>`_ module::
 
-    $ wget -O ngx_pagespeed-v1.7.30.4-beta https://github.com/pagespeed/ngx_pagespeed/archive/v1.7.30.4-beta.zip
-    $ unzip ngx_pagespeed-v1.7.30.4-beta
+    $ wget -O ngx_pagespeed-v1.7.30.4-beta.zip https://github.com/pagespeed/ngx_pagespeed/archive/v1.7.30.4-beta.zip
+    $ unzip ngx_pagespeed-v1.7.30.4-beta.zip
     $ cd ngx_pagespeed-1.7.30.4-beta/
     $ wget https://dl.google.com/dl/page-speed/psol/1.7.30.4.tar.gz
     $ tar -xzvf 1.7.30.4.tar.gz
@@ -219,6 +221,39 @@ Don't forget to escape preceeding lines with a backslash ``\``.
         /usr/bin/install -m 644 debian/nginx.vh.default.conf debian/nginx/etc/nginx/conf.d/default.conf
         /usr/bin/install -m 644 debian/nginx.vh.example_ssl.conf debian/nginx/etc/nginx/conf.d/example_ssl.conf
         /usr/bin/install -m 755 objs/nginx  debian/nginx/usr/sbin/
+
+
+Increase Package Version
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Ubuntu will always remember, that our package was not installed from the 
+official package source, and will therefore always offer to "upgrade" our package 
+to the "newest version", which is essentially the same version we already have. 
+By increasing the version number of our package, we don't get bothered with 
+update notfications::
+
+    $ cd /usr/local/src/nginx-1.7.0
+    $ dch
+
+An editor opens where the package changes can be entered. A new version nummber 
+and your name are already pre-filled::
+
+    nginx (1.7.0-1~trustyubuntu1) UNRELEASED; urgency=medium
+
+      * Added Google pagespeed module
+      * Added ngx_cache_purge module
+
+     -- First Last <user@example.com>  Fri, 26 Apr 2014 13:36:03 +0200
+
+    nginx (1.7.0-1~trusty) trusty; urgency=low
+
+      * 1.7.0
+
+     -- Konstantin Pavlov <thresh@nginx.com>  Thu, 24 Apr 2014 19:30:07 +0400
+
+
+After saving and closing the file the customized package source is ready for 
+building.
 
 
 Building the Software
