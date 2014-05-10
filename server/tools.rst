@@ -44,6 +44,22 @@ Once the package is installed edit :file:`/etc/apticron/apticron.conf`, to set t
     EMAIL="root@example.com"
 
 
+Users and Groups
+----------------
+
+Webservers run as the user **www-data**, with the security benefit, that they 
+can't access anything in the system, unless the user or group **www-data** has 
+been specifically given access-rights. The downside is, server operators can't 
+see whats going on in the :file:`/var/www` directory or publish anything.
+
+To promote your own user-profile on the server to a real webmaster, add it to 
+the **www-data** group::
+
+  $ sudo adduser $USER www-data
+
+You have to logout and back in for the change to take effect.
+
+
 Useful Tools
 ------------
 
