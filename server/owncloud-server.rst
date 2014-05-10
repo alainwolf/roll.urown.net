@@ -25,8 +25,8 @@ Update the systems packages list::
 
     $ sudo apt-get update
 
-Installation
-------------
+ownCloud Package
+----------------
 
 Install the ownCloud server package::
 
@@ -37,10 +37,25 @@ The ownCloud server PHP scripts will be installed in the
 
 There is also a long list of additional software installed.
 
+The package is installed in :file:`/var/www/owncloud` and package updates will 
+be applied there.
+
 Stop the installed Apache service, as we will run ownCloud under Nginx::
 
     $ sudo service apache2 stop
     
+Additional Packages
+-------------------
+
+ownCloud can use a number of software packages to incerease preformance and 
+offer additional features if they are installed::
+
+    $ sudo apt-get install php-apcu libav-tools libreoffice imagemagick
+
+
+APCu - APC User Cache
+^^^^^^^^^^^^^^^^^^^^^
+
 The ownCloud package source and the website recommend installation of 
 of `php5-apc <http://php.net/manual/en/book.apc.php>`_ for better 
 performance.
@@ -55,67 +70,42 @@ package php5-apc is no longer available.
 
 For variable cache storage, there is the stripped down 
 `APCu <http://pecl.php.net/package/APCu>`_ extension. APCu adds
-support to store PHP variables in shared user space::
+support to store PHP variables in shared user space.
 
-    $ sudo apt-get install php-apcu
+
+libav - Open source audio and video processing tools
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The ownCloud package source and the website recommend installation of 
 `FFmpeg <http://www.ffmpeg.org/>`_.
 
 Since Ubuntu 11.04 ffmpeg has been replaced by `libav <http://www.libav.org/>`_. 
 While Ubuntu Desktop systems have this installed by default, server systems need 
-to add it manually::
+to add it manually.
 
-    $ sudo apt-get install libav-tools
 
-Create the Nginx configuration for ownCloud as documented in the official 
-`ownCloud Installation Guide <http://doc.owncloud.org/server/6.0/admin_manual/installation/installation_source.html#nginx-configuration>`_.
+libreoffice and imagemagick
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To properly handle various document and file formats ownCloud needs to be able 
 to read and understand them. This is used for example when creating previews of 
-documents. Therefore its adviable to install LibreOffice and ImageMagick::
-
-    $ sudo apt-get install libreoffice imagemagick
+documents. Therefore its adviable to install LibreOffice and ImageMagick.
 
 
+ownCloud Data Directory
+-----------------------
 
-ownCloud Virtual Hosting
-------------------------
+For better security the ownCloud server administration guide, recommends using a
+data-directory outside of the ownCloud webserver document root directory:
 
-The package is installed in :file:`/var/www/owncloud` and package updates will 
-be applied there.
-
-By our convention, virtual hosts use :file:`/var/www/example.com/public_html` as 
-document root.
-
-For virtual hosts to be able to use their own instance the owncloud scripts we 
-copy the :file:`config`, :file:`apps` and :file:`data` directories to the 
-document root of the virtual host and create symlinks to all other ownCloud 
-files and directories.
-
-Create a new virtual host environment for a ownCloud server::
+Create ownCloud server data-directory and logs::
 
 	$ cd /var/www
-	$ sudo mkdir -p cloud.example.com/{public_html,log,oc_data}
-	$ sudo chown -R www-data:www-data cloud.example.com/{public_html,log,oc_data}
-
-Copy the files relevant to a local installation::
-
-	$ sudo cp -R owncloud/{config,apps} cloud.example.com/public_html/
+	$ sudo mkdir -p cloud.example.com/{log,oc_data}
 
 Re-adjust ownerships and access rights::
 
-	$ sudo chown -R www-data:www-data cloud.example.com/public_html/{config,apps}
-
-Create symlinks pointing to all other files in the original installation 
-directory::
-
-	$ sudo ln -s /var/www/owncloud/* /var/www/cloud.example.com/public_html/
-	ln: failed to create symbolic link ‘cloud.example.com/public_html/apps’: File exists
-	ln: failed to create symbolic link ‘cloud.example.com/public_html/config’: File exists
-
-You will get error messages for the files and directories already present, but 
-thats exactly what we want.
+    $ sudo chown -R www-data:www-data cloud.example.com/{log,oc_data}
 
 
 ownCloud Database
@@ -188,6 +178,9 @@ Close the session with the database server:
 Nginx Configuration
 -------------------
 
+Create the Nginx configuration for ownCloud as documented in the official 
+`ownCloud Installation Guide <http://doc.owncloud.org/server/6.0/admin_manual/installation/installation_source.html#nginx-configuration>`_.
+
 Following is the Web application configuration file 
 :file:`/etc/nginx/owncloud.conf` for the ownCloud server on Nginx:
 
@@ -238,6 +231,29 @@ Following is the Web application configuration file
     }
 
     # Handle PHP scripts
+    location ~ ^(.+?\.php)(/.*)?$ {
+            try_files $1 = 404;
+
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$1;
+            fastcgi_param PATH_INFO $2;
+            fastcgi_param HTTPS on;
+            fastcgi_param MOD_X_ACCEL_REDIRECT_ENABLED on;
+            fastcgi_param PHP_VALUE "post_max_size = 10241M \n upload_max_filesize = 10G";
+            fastcgi_pass php-backend;
+    }
+
+    # Improve performance and allow pause/resume on static file downloads
+    location ~ ^/var/www/cloud.example.com/oc_data {
+        internal;
+        root /;
+    }
+
+    location ~ ^/tmp/oc-noclean/.+$ {
+        internal;
+        root /;
+    }
+
     include /etc/nginx/php-handler.conf;
 
     # Optional: set long EXPIRES header on static assets
