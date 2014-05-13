@@ -1,5 +1,56 @@
-Additional Software
-=====================
+Server Additions
+================
+
+Following is recommended for a long-running system with no interactive users.
+
+
+Suspend & Hibernate
+-------------------
+
+If you run your server on a laptop, it should not power-down, hibernate or 
+suspend, when idle or the lid is closed. In Ubuntu this is handled by *systemd* 
+and its *login-manager*. There is a configuration file called 
+:file:`/etc/systemd/logind.conf` and a man page called :manpage:`logind.conf`.
+
+.. code-block:: nginx
+   :linenos:
+   :emphasize-lines: 20-22,27
+
+    #  This file is part of systemd.
+    #
+    #  systemd is free software; you can redistribute it and/or modify it
+    #  under the terms of the GNU Lesser General Public License as published by
+    #  the Free Software Foundation; either version 2.1 of the License, or
+    #  (at your option) any later version.
+    #
+    # See logind.conf(5) for details
+
+    [Login]
+    #NAutoVTs=6
+    #ReserveVT=6
+    #KillUserProcesses=no
+    #KillOnlyUsers=
+    #KillExcludeUsers=root
+    Controllers=blkio cpu cpuacct cpuset devices freezer hugetlb memory perf_event net_cls net_prio
+    ResetControllers=
+    #InhibitDelayMaxSec=5
+    #HandlePowerKey=poweroff
+    HandleSuspendKey=ignore
+    HandleHibernateKey=ignore
+    HandleLidSwitch=ignore
+    #PowerKeyIgnoreInhibited=no
+    #SuspendKeyIgnoreInhibited=no
+    #HibernateKeyIgnoreInhibited=no
+    #LidSwitchIgnoreInhibited=yes
+    IdleAction=ignore
+    #IdleActionSec=30min
+
+
+Restart of the :command:`systemd-logind` service is required to activate the 
+changes::
+
+    $ sudo restart systemd-logind
+
 
 Automatic Updates
 -----------------
@@ -72,30 +123,3 @@ Some useful tools are not installed by default.
 To install these run::
 
     $ sudo apt-get install htop multitail pwgen
-
-
-.. _increase-entropy:
-
-Provide Entropy
----------------
-
-.. warning::
-   This is absolutely necessary for generation of encryption keys and 
-   encryption of communication!
-
-* **Pollinate** seeds the pseudo random number generator by connecting to one or
-  more Pollen (entropy-as-a-service) servers over an (optionally) encrypted 
-  connection and retrieve a random seed over HTTP or HTTPS. It is intended to 
-  supplement the :file:`/etc/init.d/urandom` init script.
-
-* **haveged** uses HAVEGE (HArdware Volatile Entropy Gathering and Expansion) to 
-  maintain a 1M pool of random bytes used to fill `/dev/random` whenever the 
-  supply of random bits in :file:`dev/random` falls below the low water mark of the 
-  device.
-
-To install these run::
-
-   $ sudo apt-get install pollinate haveged
-
-*haveged* is installed as services and automatically started. *pollinate* is 
-started once every time the server starts up.

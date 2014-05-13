@@ -8,15 +8,17 @@ Contents:
 .. toctree::
    :maxdepth: 2
    
+   entropy
    tools
    network
-   backup
+   server-backup
    server-tls
    mail
    nginx/index
-   php
+   php-fpm
    mariadb
    owncloud-server
+   deluge-server
 
 
 Recommended reading: 

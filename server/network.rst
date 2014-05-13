@@ -38,30 +38,35 @@ Leave the ethernet interface at its default settings::
 
 Add additional static IPv4 and IPv6 addresses for each service and virtual host::
 
-	# wwww.example.com
+	# Port-forwarded connections from firewall-router
 	iface eth0 inet static
 	    address 192.0.2.10/24
 	iface eth0 inet6 static
 	    address 2001:db8::10/64
 
-	# cloud.example.com
+	# www.example.com
 	iface eth0 inet static
 	    address 192.0.2.11/24
 	iface eth0 inet6 static
 	    address 2001:db8::11/64
 
-	# xmpp.example.com
+	# cloud.example.com
 	iface eth0 inet static
 	    address 192.0.2.12/24
 	iface eth0 inet6 static
 	    address 2001:db8::12/64
 
-	# voip.example.com
+	# xmpp.example.com
 	iface eth0 inet static
 	    address 192.0.2.13/24
 	iface eth0 inet6 static
 	    address 2001:db8::13/64
 
+	# voip.example.com
+	iface eth0 inet static
+	    address 192.0.2.14/24
+	iface eth0 inet6 static
+	    address 2001:db8::14/64
 
 Add as many adresses as needed, as long as they are not already defined on other devices or assigned trough autoconfiguration. This gets easier if you reserve a range like **10** to **90** to this server and only assign addresses from that range.
 

@@ -1,5 +1,5 @@
-TLS - Transport Layer Security
-==============================
+Server Certificates and Keys
+============================
 We use OpenSSL to generate TLS (Transport Layer Security) certificates and keys
 (public and private keys).
 
@@ -7,11 +7,13 @@ We use OpenSSL to generate TLS (Transport Layer Security) certificates and keys
    Following are recommendations valid in April 2014, using OpenSSL 1.0.1f under
    Ubuntu 14.04 LTS 'Trusty Thar'.
 
+.. contents:: \ 
+
 
 Prerequisites
----------------
+-------------
 
-Enough entropy for key generation and encryption. See :ref:`_increase-entropy`.
+Enough entropy for key generation and encryption. See :doc:`entropy`.
 
 
 CAcert.org
