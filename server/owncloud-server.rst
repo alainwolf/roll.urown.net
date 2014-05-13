@@ -1,8 +1,7 @@
 ownCloud Server
 ===============
 
-.. toctree::
-   :maxdepth: 2
+.. contents:: \ 
 
 
 Software Repository
@@ -191,9 +190,10 @@ Following is the Web application configuration file
     # Nginx OwnCloud Server Configuration
     # http://doc.owncloud.org/server/6.0/admin_manual/installation/installation_source.html#nginx-configuration
 
-    # Allow file uploads up to 10 GigaBytes
-    # php.ini settings "upload_max_filesize" and "post_max_size" must match this.
-    client_max_body_size 10G;
+    # Allow file uploads up to 16 GigaBytes
+    # php.ini settings "upload_max_filesize", "post_max_size" and "output_buffering"
+    # must match this.
+    client_max_body_size 16G;
 
     # Number and size of the buffers for reading response from FastCGI server
     fastcgi_buffers 64 4K;
@@ -232,31 +232,28 @@ Following is the Web application configuration file
 
     # Handle PHP scripts
     location ~ ^(.+?\.php)(/.*)?$ {
-            try_files $1 = 404;
+        try_files $1 = 404;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$1;
+        fastcgi_param PATH_INFO $2;
 
-            include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME $document_root$1;
-            fastcgi_param PATH_INFO $2;
-            fastcgi_param HTTPS on;
-            fastcgi_param MOD_X_ACCEL_REDIRECT_ENABLED on;
-            fastcgi_param PHP_VALUE "post_max_size = 10241M \n upload_max_filesize = 10G";
-            fastcgi_pass php-backend;
+        # Improve performance and allow pause/resume on static file downloads
+        fastcgi_param MOD_X_ACCEL_REDIRECT_ENABLED on;
+
+        # Allow file uploads up to 10 GigaBytes
+        # Nginx setting "client_max_body_size" must match this.
+        fastcgi_param PHP_VALUE "post_max_size = 16G \n upload_max_filesize = 16G \n output_buffering = 16384";
+
+        fastcgi_pass php-backend;
     }
 
     # Improve performance and allow pause/resume on static file downloads
-    location ~ ^/var/www/cloud.example.com/oc_data {
-        internal;
-        root /;
-    }
-
     location ~ ^/tmp/oc-noclean/.+$ {
         internal;
         root /;
     }
 
-    include /etc/nginx/php-handler.conf;
-
-    # Optional: set long EXPIRES header on static assets
+    # Set long EXPIRES header on static assets
     location ~* ^.+\.(jpg|jpeg|gif|bmp|ico|png|css|js|swf)$ {
         expires 30d;
 
@@ -276,7 +273,7 @@ vary on server_name and IP addresses:
 
 .. code-block:: nginx
    :linenos:
-   :emphasize-lines: 46
+   :emphasize-lines: 40,43-45,49
 
     #
     # cloud.example.com OwnCloud Server
@@ -302,25 +299,28 @@ vary on server_name and IP addresses:
 
         # IPv4 private address
         # Port-forwarded connections from firewall-router
-        listen                  192.0.2.11:443 ssl spdy;
+        listen                  192.0.2.12:443 ssl spdy;
 
         # IPv6 global address
-        listen                  [2001:db8::11]:443 ssl spdy;
+        listen                  [2001:db8::12]:443 ssl spdy;
 
         server_name             cloud.example.com;
 
         # TLS - Transport Layer Security Configuration, Certificates and Keys
-        include                 /etc/nginx/tls.conf;
-        include                 /etc/nginx/ocsp-stapling.conf;
-        ssl_certificate         /etc/ssl/certs/example.com.chained.cert.pem;
-        ssl_certificate_key     /etc/ssl/private/example.com.key.pem;
-        ssl_trusted_certificate /etc/ssl/certs/CAcert_Class_3_Root.OCSP-chain.pem;
+        include                    /etc/nginx/tls.conf;
+        include                    /etc/nginx/ocsp-stapling.conf;
+        ssl_certificate_key      /etc/ssl/certs/example.com.chained.cert.pem;
+        ssl_certificate_key      /etc/ssl/private/example.com.key.pem;
+        ssl_trusted_certificate  /etc/ssl/certs/CAcert_Class_3_Root.OCSP-chain.pem;
 
-        # Common site default settings
-        include                 /etc/nginx/sites-defaults/*.conf;
+        # Web server documents root directory (where owncloud is installed)
+        root                    /var/www/owncloud;
 
-        # Public Documents Root
-        root                    /var/www/cloud.example.com/public_html;
+        # ownCloud data directory (recommended to be outside the server documents root)
+        location ~ ^/var/www/cloud.example.com/oc_data {
+            internal;
+            root /;
+        }
 
         # OwnCloud Server Configuration
         include                 /etc/nginx/owncloud.conf;
@@ -330,7 +330,7 @@ vary on server_name and IP addresses:
         error_log               /var/www/cloud.example.com/log/error.log;
     }
 
-Activate the new websiten and restart the Nginx server::
+Activate the new website and restart the Nginx server::
 
     $ sudo ln -s /etc/nginx/sites-available/cloud.example.com.conf /etc/nginx/sites-enabled/
     $ sudo service nginx restart
