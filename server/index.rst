@@ -19,6 +19,7 @@ Contents:
    mariadb
    owncloud-server
    deluge-server
+   transmission
 
 
 Recommended reading: 

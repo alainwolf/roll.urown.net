@@ -68,6 +68,12 @@ Add additional static IPv4 and IPv6 addresses for each service and virtual host:
 	iface eth0 inet6 static
 	    address 2001:db8::14/64
 
+	# bt.example.com
+	iface eth0 inet static
+	    address 192.0.2.15/24
+	iface eth0 inet6 static
+	    address 2001:db8::15/64
+
 Add as many adresses as needed, as long as they are not already defined on other devices or assigned trough autoconfiguration. This gets easier if you reserve a range like **10** to **90** to this server and only assign addresses from that range.
 
 For easier recognition and administration the last number of any IPv4 and IPv6 address is identical (e.g. 192.0.2.\ **10** and 2001:db8::\ **10**\ ).
@@ -75,4 +81,3 @@ For easier recognition and administration the last number of any IPv4 and IPv6 a
 Restart the network services with::
 
 	$ sudo service networking restart
-
