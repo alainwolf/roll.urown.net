@@ -4,8 +4,8 @@ ownCloud Server
 .. contents:: \ 
 
 
-Software Repository
--------------------
+Software Package Repository
+---------------------------
 
 Add the official owncloud.org Ubuntu package repository hosted on OpenSuse Build
 Service::

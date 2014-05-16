@@ -18,6 +18,7 @@ Contents:
    php-fpm
    mariadb
    owncloud-server
+   prosody
    deluge-server
    transmission
 
