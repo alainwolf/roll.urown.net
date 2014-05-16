@@ -1,7 +1,7 @@
 Server Certificates and Keys
 ============================
-We use OpenSSL to generate TLS (Transport Layer Security) certificates and keys
-(public and private keys).
+We use `OpenSSL <http://openssl.org>`_ to generate :abbr:`TLS (Transport Layer 
+Security)` certificates and keys (public and private keys).
 
 .. warning::
    Following are recommendations valid in April 2014, using OpenSSL 1.0.1f under
@@ -19,11 +19,14 @@ Enough entropy for key generation and encryption. See :doc:`entropy`.
 CAcert.org
 ----------
 `CAcert <http://www.cacert.org>`_ has been dropped from the Ubuntu built-in 
-list of trusted certificate authorities (CA) in February 2014. 
+list of trusted certificate authorities in `February 2014 
+<https://bugs.launchpad.net/ubuntu/+source/ca-certificates/+bug/1258286>`_. 
 Also the Debian project no longer includes CAcert root certificates, since it 
-started to use Mozilla's list of trusted CA's in March 2014.
+started to use Mozilla's list of trusted certificate authorities in `March 2014 
+<https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=718434>`_.
 
-Steps to re-include the CAcert root certificate in Ubuntu as trusted CA::
+Steps to re-include the CAcert root certificate in Ubuntu as trusted 
+:abbr:`CA (Certificate Authority)`::
 
     $ sudo mkdir -p /usr/share/ca-certificates/cacert.org
     $ cd /usr/share/ca-certificates/cacert.org
@@ -42,43 +45,43 @@ OpenSSL Configuration
 Default system wide OpenSSL configuration is in the file 
 :file:`/etc/ssl/openssl.cnf`. 
 
-On a typical server OpenSSL is mostly used for CSR and key generation. However 
-there is a lot of other (useless) stuff in the default configuration and some 
-things have weak or even deprecated settings.
+On a typical server OpenSSL is mostly used for :abbr:`CSR (Certificate Signing 
+Request)` and key generation. However there is a lot of other (useless) stuff in
+the default configuration and some things have weak or even deprecated settings.
 
 We want OpenSSL to behave as follows:
 
- * Generate RSA private keys with **4096** bits (default is 2048 bits).
+ * Create all RSA private keys with **4096** bits (default is 2048 bits).
 
- * Generate digital signatures using **SHA-256** as digest (default is SHA-1).
+ * All digital signatures use **SHA-256** as digest (default is SHA-1).
 
- * Don't encrypt private keys, as servers start and run without any user 
-   interaction to answer password prompts.
+ * Never encrypt the servers private keys, as servers start and run without any 
+   user interaction to answer password prompts (default would encrypt keys).
 
- * Most servers are reachable as **www.exmaple.com** and as **example.com**.
-   If multiple services are provided they most likely use additional
-   subdomains like **mail.example.com**. A wildcard certificate is the easiest 
-   way to secure everything with one certificate.
+ * All certificates can be used by both, servers AND clients 
+   (i.e. SMTP server receiving mail and SMTP client sending mail out).
 
- * CAcert only uses the CN (common name) and if available the SubjectAltNames.
-   All other information in the CSR is discarded.
+ * The certficates include all the expected and needed extensions and 
+   fields to be ready for use in encrypted HTTPS, SMTP, XMPP and VPN (OpenVPN)
+   sessions.
 
- * StartSSL strips everything from the CSR and will ask for domain-names on 
-   its website, when the request is submitted. You need Class 2 verification for
-   wildcard domain certificates.
+ * Certificate siging requests contain the domain-name (**example.com**) and a
+   wildcard (**\*.example.com**). Web servers are usually answering as 
+   **exmaple.com** and **www.example.com**. Also usually every provided service 
+   uses its own hostname or subdomain like **mail.example.com**. A wildcard 
+   certificate is the easiest way to secure everything with only one certificate.
+
+ * The created certificate siging requests don't include anything we don't need.
+   CAcert only uses the CN (common name) and if available the 
+   **SubjectAltNames**. All other information in the CSR is discarded.
+   `StartSSL <https://www.startssl.com>`_ strips everything from the CSR 
+   and will ask for domain-names on its website, when the request is submitted.
 
 .. note::
-    Everything from here on is done as user **root** and from the
-    :file:`/etc/ssl` directory. Also the evironment variables **OPENSSL_CONF**
-    (pointing to our configuration file) and **CN** (containing your our domain
-    name) must be set until all work described in this chapter is done.
+    StartSSL requires you to complete a `Class-2 verification 
+    <https://www.startssl.com/?app=34>`_ (carries a US$ 59.90 fee) of your 
+    identity before they will issue wildcard domain certificates for you.
 
-::
-
-    $ cd /etc/ssl
-    $ sudo -s
-    $ export OPENSSL_CONF=/etc/ssl/openssl-server.cnf
-    $ export CN=example.com
 
 Create a new :file:`/etc/ssl/openssl-server.cnf` file with the following 
 contents::
@@ -147,9 +150,25 @@ contents::
     otherName.1                 = SRVName;IA5STRING:_xmpp-client.${CN}
     otherName.2                 = SRVName;IA5STRING:_xmpp-server.${CN}
 
+Getting Certificates
+--------------------
+
+.. note::
+    Everything from here on is done as user **root** and from the
+    :file:`/etc/ssl` directory. Also the evironment variables **OPENSSL_CONF**
+    (pointing to our configuration file) and **CN** (containing your our domain
+    name) must be set until all work described in this chapter is done.
+
+::
+
+    $ cd /etc/ssl
+    $ sudo -s
+    $ export OPENSSL_CONF=/etc/ssl/openssl-server.cnf
+    $ export CN=example.com
+
 
 Generation of Keys and CSRs 
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create a new key and CSR::
 
@@ -182,11 +201,14 @@ An alternative command which supplies subject fields on the command-line::
         -subj "/C=CH/ST=Zurich/L=Zurich/O=My Company Name/CN=${CN}/emailAddress=webmaster@${CN}"
     $ chmod 600 private/${CN}.key.pem
 
+The key and CSR are saved in files using the :abbr:`PEM (Privacy-enhanced 
+Electronic Mail - Base64 encoded binary data, enclosed between "-----BEGIN 
+CERTIFICATE-----" and "-----END CERTIFICATE-----" strings.)` format.
 
 .. _csr-multiple-domains:
 
 CSR for Multiple Domain-Names
------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If services for other domains are hosted, certificates should contains them too.
 
@@ -214,7 +236,8 @@ Save and close the file and create the CSR as before::
 
 
 Submit Certificate Request
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Copy the CSR to clipboard and paste it into the appropriate form on the website 
 of the certificate authority::
 
@@ -235,15 +258,17 @@ Install the signed certificate::
 
 
 Server Certificate Chains
--------------------------
-Certificates signed by `StartSSL <https://startssl.com/>`_ are signed by its 
-intermediary class 1 or class 2 server or client CA.
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Certificates signed by StartSSL are signed by its intermediary class 1 or class 
+2 server or client CA.
 
 CAcert certificates may be signed be its intermediary "CAcert Class 3 Root"
 
 Connecting TLS clients expect the server to send the certificates of any 
 intermediary CA along with its own server certificate during the handshake.
-::
+
+.. code-block:: text
 
          ......................
          : Server Certificate :   <--- Sent by Server
@@ -255,30 +280,31 @@ intermediary CA along with its own server certificate during the handshake.
                    |
        ..........................
        : Trusted CA Certificate :   <--- Present in Client/Browser Certificate Storge
-       ..........................
+       ..........................        (Don't send)
 
 
 
 On some servers (e.g. Nginx) this is achieved by providing a 
 certificate-chain-file instead of a certificate file.
 
-The chain file has the following form::
+The chain file has the following form:
 
+.. code-block:: text
 
-    -----BEGIN CERTIFICATE-----
+  ................................
+  :                              :
+  :  ..........................  :
+  :  :   PEM encoded Server   :  :
+  :  :       Certificate      :  :
+  :  ..........................  :
+  :                              :
+  :  ..........................  :
+  :  :   PEM encoded inter-   :  :
+  :  :   mediate Certificate  :  :
+  :  ..........................  :
+  :                              :
+  :..............................:
 
-    ..........................
-    :   Server Certificate   :
-    ..........................
-
-    -----END CERTIFICATE-----
-    -----BEGIN CERTIFICATE-----
-
-    ............................
-    : Intermediate Certificate :
-    ............................
-
-    -----END CERTIFICATE-----
 
 Here are the steps to generate such certificate-chain-files.
 
@@ -314,7 +340,8 @@ For CAcert Class 3 Root::
 
 
 OCSP Stapling Certificate Chains
---------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Something similar but the other way around is needed when a server is providing
 OCSP responses on behalf of the client and sends them along its certificate 
 during handshake.
@@ -323,22 +350,23 @@ The server knows about his own certificate, but in order to properly get and
 verify OCSP reponses, he needs to know about any intermediate CA up to and 
 including the top-level signing CA.
 
-The OCSP stapling chain file has the following form::
+The OCSP stapling chain file has the following form:
 
-    -----BEGIN CERTIFICATE-----
+.. code-block:: text
 
-    ..........................
-    :   Root CA Certificate  :
-    ..........................
-
-    -----END CERTIFICATE-----
-    -----BEGIN CERTIFICATE-----
-
-    ...............................
-    : Intermediate CA Certificate :
-    ...............................
-
-    -----END CERTIFICATE-----
+  ................................
+  :                              :
+  :  ..........................  :
+  :  :   PEM encoded Root CA  :  :
+  :  :      Certificate       :  :
+  :  ..........................  :
+  :                              :
+  :  ..........................  :
+  :  :   PEM encoded inter-   :  :
+  :  :   mediate Certificate  :  :
+  :  ..........................  :
+  :                              :
+  :..............................:
 
 
 To create OCSP stapling chain files, do the following:
@@ -363,21 +391,27 @@ CAcert Class 3 Root::
 
 
 Diffie-Hellman (DH) Key Exchanges Parameters
---------------------------------------------
-To use perfect forward secrecy, Diffie-Hellman parameters must be set up on the 
-server side, otherwise the relevant cipher suites will be silently ignored::
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    mkdir -p dhparams
-    openssl dhparam -out dhparams/dh_1024.pem 1024
-    openssl dhparam -out dhparams/dh_1536.pem 1536
+To use perfect forward secrecy, Diffie-Hellman parameters must be set up on the 
+server side, otherwise the relevant cipher suites will be silently ignored.
 
 `bettercrypto.org <https://bettercrypto.org>`_ and other sources advise against 
 generating these and instead using proven and properly checked ones and make 
 references to :rfc:`3526`.
 
-Unfortunately neither source nor the RFC tells how to get them.
+Other sources adivse you to build your own instead of using the predefined ones, 
+as it is unclear where they come from and why they should be better. Some even 
+suggest to create new ones every day or every hour, to further incerease security.
 
-The bettercrypto.org 
+Use the following OpenSSL command to create your own set of DH paramteer files::
+
+    mkdir -p dhparams
+    openssl dhparam -out dhparams/dh_1024.pem 1024
+    openssl dhparam -out dhparams/dh_1536.pem 1536
+
+
+The predefined ones are hard to find. But the bettercrypto.org 
 `Git-Repository <https://github.com/BetterCrypto/Applied-Crypto-Hardening>`_ 
 contains a directory with some files and a readme in the 
 `/tools/dhparams <https://github.com/BetterCrypto/Applied-Crypto-Hardening/tree/master/tools/dhparams>`_
@@ -396,114 +430,79 @@ To get those pre-made dhparam files::
     wget -O dhparams/dh_8192.pem \
         https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group18.pem
 
-Now that we are done here, exit your root session::
+
+Exit Session
+------------
+
+Now that we are done here, exit the root session (the environment variables will
+be discarded)::
 
     $ exit
     $ cd
 
+
 Ciphers Suite Selection
 -----------------------
 
-Cipher suites wich support forward secrecy (FS)::
+This is a topic of endless discussion, mostly because there is no perfect 
+solution.
 
-    EDH:EECDH 
+See the :manpage:`ciphers` manpage and the `BetterCrypto <https://bettercrypto.org>`_ website.
 
-Select the ones using RSA authentication. As our certificates use RSA keys, 
-nothing else would work::
+For our private server with limited public access and as we started this whole 
+project to gain better privacy, secrecy and confidentiality with our personally 
+used services, we a limited but secure set of cipher suites.
 
-    EDH+aRSA:EECDH+aRSA
+.. note::
+    With the following configuration Windows XP clients might not be able to 
+    connect to any of your servers.
 
-Remove weak export-grade ciphers::
+We want our encrypted services to behave as follows:
 
-    EDH+aRSA:EECDH+aRSA!EXP
+All encrypted communication sessions ...
 
+ #. ... are established with perfect forward secrecy (\ **kEDH**\ :\ **kEECDH**)
+ #. ... use RSA key authentication (kEDH\ **+aRSA**\ :kEECDH\ **+aRSA**)
+ #. ... use 128bit AES encryption (kEDH+aRSA+\ **AES128**\ :kEECDH+aRSA+\ **AES128**)
+ #. ... Prefer TLS ciphers over SSL/SHA1 ciphers (kEDH+aRSA+AES128:kEECDH+aRSA+AES128:\ **+SSLv3**)
 
-Remove all wich use SHA1 to sign packets::
+.. code-block:: bash
 
-    EDH+aRSA:EECDH+aRSA:!SHA1
-
-
-bettercrypto.org cipher suite A
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Cipher selection string::
-
-    'EDH+aRSA+AES256:EECDH+aRSA+AES256:!SSLv3'
-
-OpenSSL ciphers list::
-
-    1. DHE-RSA-AES256-GCM-SHA384   TLSv1.2 Kx=DH       Au=RSA  Enc=AESGCM(256) Mac=AEAD
-    2. DHE-RSA-AES256-SHA256       TLSv1.2 Kx=DH       Au=RSA  Enc=AES(256)    Mac=SHA256
-    3. ECDHE-RSA-AES256-GCM-SHA384 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AESGCM(256) Mac=AEAD
-    4. ECDHE-RSA-AES256-SHA384     TLSv1.2 Kx=ECDH     Au=RSA  Enc=AES(256)    Mac=SHA384
+    $ openssl ciphers -v 'kEDH+aRSA+AES128:kEECDH+aRSA+AES128:+SSLv3'
 
 
-bettercrypto.org cipher suite B
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This results in a list of 6 matching ciphers (out of 111), with the ones using 
+SHA1 for message authentication, pushed to the end of the list:
 
-Cipher selection string::
+.. code-block:: text
 
-    'EDH+CAMELLIA:EDH+aRSA:EECDH+aRSA+AESGCM:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH:+CAMELLIA256:+AES256:+CAMELLIA128:+AES128:+SSLv3:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!DSS:!RC4:!SEED:!ECDSA:CAMELLIA256-SHA:AES256-SHA:CAMELLIA128-SHA:AES128-SHA'
-
-OpenSSL ciphers list::
-
-     1. DHE-RSA-AES256-GCM-SHA384       TLSv1.2     Kx=DH       Au=RSA  Enc=AESGCM(256)     Mac=AEAD
-     2. DHE-RSA-AES256-SHA256           TLSv1.2     Kx=DH       Au=RSA  Enc=AES(256)        Mac=SHA256
-     3. ECDHE-RSA-AES256-GCM-SHA384     TLSv1.2     Kx=ECDH     Au=RSA  Enc=AESGCM(256)     Mac=AEAD
-     4. ECDHE-RSA-AES256-SHA384         TLSv1.2     Kx=ECDH     Au=RSA  Enc=AES(256)        Mac=SHA384
-     5. DHE-RSA-AES128-GCM-SHA256       TLSv1.2     Kx=DH       Au=RSA  Enc=AESGCM(128)     Mac=AEAD
-     6. DHE-RSA-AES128-SHA256           TLSv1.2     Kx=DH       Au=RSA  Enc=AES(128)        Mac=SHA256
-     7. ECDHE-RSA-AES128-GCM-SHA256     TLSv1.2     Kx=ECDH     Au=RSA  Enc=AESGCM(128)     Mac=AEAD
-     8. ECDHE-RSA-AES128-SHA256         TLSv1.2     Kx=ECDH     Au=RSA  Enc=AES(128)        Mac=SHA256
-     9. DHE-RSA-CAMELLIA256-SHA         SSLv3       Kx=DH       Au=RSA  Enc=Camellia(256)   Mac=SHA1
-    10. DHE-RSA-AES256-SHA              SSLv3       Kx=DH       Au=RSA  Enc=AES(256)        Mac=SHA1
-    11. ECDHE-RSA-AES256-SHA            SSLv3       Kx=ECDH     Au=RSA  Enc=AES(256)        Mac=SHA1
-    12. DHE-RSA-CAMELLIA128-SHA         SSLv3       Kx=DH       Au=RSA  Enc=Camellia(128)   Mac=SHA1
-    13. DHE-RSA-AES128-SHA              SSLv3       Kx=DH       Au=RSA  Enc=AES(128)        Mac=SHA1
-    14. ECDHE-RSA-AES128-SHA            SSLv3       Kx=ECDH     Au=RSA  Enc=AES(128)        Mac=SHA1
-    15. CAMELLIA256-SHA                 SSLv3       Kx=RSA      Au=RSA  Enc=Camellia(256)   Mac=SHA1
-    16. AES256-SHA                      SSLv3       Kx=RSA      Au=RSA  Enc=AES(256)        Mac=SHA1
-    17. CAMELLIA128-SHA                 SSLv3       Kx=RSA      Au=RSA  Enc=Camellia(128)   Mac=SHA1
-    18. AES128-SHA                      SSLv3       Kx=RSA      Au=RSA  Enc=AES(128)        Mac=SHA1
+    1. DHE-RSA-AES128-GCM-SHA256   TLSv1.2 Kx=DH   Au=RSA Enc=AESGCM(128) Mac=AEAD
+    2. DHE-RSA-AES128-SHA256       TLSv1.2 Kx=DH   Au=RSA Enc=AES(128)    Mac=SHA256
+    3. ECDHE-RSA-AES128-GCM-SHA256 TLSv1.2 Kx=ECDH Au=RSA Enc=AESGCM(128) Mac=AEAD
+    4. ECDHE-RSA-AES128-SHA256     TLSv1.2 Kx=ECDH Au=RSA Enc=AES(128)    Mac=SHA256
+    5. DHE-RSA-AES128-SHA          SSLv3   Kx=DH   Au=RSA Enc=AES(128)    Mac=SHA1
+    6. ECDHE-RSA-AES128-SHA        SSLv3   Kx=ECDH Au=RSA Enc=AES(128)    Mac=SHA1
 
 
-bettercrypto.org website
-^^^^^^^^^^^^^^^^^^^^^^^^
+OpenSSL Strings to RFC strings translation:
 
-Qualsys output::
+.. code-block:: text
 
-    1.  TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (0x9f)      DH 4096 bits (p: 512, g: 1, Ys: 512)    FS  256
-    2.  TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 (0x6b)      DH 4096 bits (p: 512, g: 1, Ys: 512)    FS  256
-    3.  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (0xc028)  ECDH 384 bits (eq. 7680 bits RSA)       FS  256
-    4.  TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (0xc030)  ECDH 384 bits (eq. 7680 bits RSA)       FS  256
-    5.  TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA (0x88)    DH 4096 bits (p: 512, g: 1, Ys: 512)    FS  256
-    6.  TLS_DHE_RSA_WITH_AES_256_CBC_SHA (0x39)         DH 4096 bits (p: 512, g: 1, Ys: 512)    FS  256
-    7.  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (0xc014)     ECDH 384 bits (eq. 7680 bits RSA)       FS  256
-    8.  TLS_RSA_WITH_AES_256_CBC_SHA (0x35)                                                         256
+    1. DHE-RSA-AES128-GCM-SHA256    TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+    2. DHE-RSA-AES128-SHA256        TLS_DHE_RSA_WITH_AES_128_CBC_SHA256
+    3. ECDHE-RSA-AES128-GCM-SHA256  TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+    4. ECDHE-RSA-AES128-SHA256      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+    5. DHE-RSA-AES128-SHA           TLS_DHE_RSA_WITH_AES_128_CBC_SHA
+    6. ECDHE-RSA-AES128-SHA         TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA
 
-RFC Strings to OpenSSL strings conversion::
+Ciphers list in RFC Strings Format as shown on the `Qualys SSL test website
+<https://www.ssllabs.com/ssltest/>`_:
 
-    1.  TLS_DHE_RSA_WITH_AES_256_GCM_SHA384     DHE-RSA-AES256-GCM-SHA384   
-    2.  TLS_DHE_RSA_WITH_AES_256_CBC_SHA256     DHE-RSA-AES256-SHA256
-    3.  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384   ECDHE-RSA-AES256-SHA384
-    4.  TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384   ECDHE-RSA-AES256-GCM-SHA384
-    5.  TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA   DHE-RSA-CAMELLIA256-SHA
-    6.  TLS_DHE_RSA_WITH_AES_256_CBC_SHA        DHE-RSA-AES256-SHA
-    7.  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA      ECDHE-RSA-AES256-SHA
-    8.  TLS_RSA_WITH_AES_256_CBC_SHA            AES256-SHA         
+.. code-block:: text
 
-
-Cipher selection string::
-
-    'DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-CAMELLIA256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES256-SHA:AES256-SHA'
-
-OpenSSL ciphers list::
-
-     1. DHE-RSA-AES256-GCM-SHA384   TLSv1.2 Kx=DH   Au=RSA  Enc=AESGCM(256)   Mac=AEAD
-     2. DHE-RSA-AES256-SHA256       TLSv1.2 Kx=DH   Au=RSA  Enc=AES(256)      Mac=SHA256
-     3. ECDHE-RSA-AES256-GCM-SHA384 TLSv1.2 Kx=ECDH Au=RSA  Enc=AESGCM(256)   Mac=AEAD
-     4. ECDHE-RSA-AES256-SHA384     TLSv1.2 Kx=ECDH Au=RSA  Enc=AES(256)      Mac=SHA384
-     5. DHE-RSA-CAMELLIA256-SHA     SSLv3 Kx=DH     Au=RSA  Enc=Camellia(256) Mac=SHA1
-     6. DHE-RSA-AES256-SHA          SSLv3 Kx=DH     Au=RSA  Enc=AES(256)      Mac=SHA1
-     7. ECDHE-RSA-AES256-SHA        SSLv3 Kx=ECDH   Au=RSA  Enc=AES(256)      Mac=SHA1
-     8. AES256-SHA                  SSLv3 Kx=RSA    Au=RSA  Enc=AES(256)      Mac=SHA1
+    1. TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (0x9e)       DH 1024 bits (p: 128, g: 1, Ys: 128)    FS  128
+    2. TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 (0x67)       DH 1024 bits (p: 128, g: 1, Ys: 128)    FS  128
+    3. TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)   ECDH 256 bits (eq. 3072 bits RSA)       FS  128
+    4. TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (0xc027)   ECDH 256 bits (eq. 3072 bits RSA)       FS  128
+    5. TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x33)          DH 1024 bits (p: 128, g: 1, Ys: 128)    FS  128
+    6. TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)      ECDH 256 bits (eq. 3072 bits RSA)       FS  128
