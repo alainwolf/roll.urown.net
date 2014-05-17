@@ -1,5 +1,5 @@
-Private Server
-==============
+Server
+======
 
 Your private server does everything the router is too small to do. Can be an old laptop or desktop computer, a NAS device, a RaperryPi, as long as it runs Ubuntu Server.
 
@@ -13,13 +13,13 @@ Contents:
    network
    server-backup
    server-tls
+   nsd
    mail
+   mariadb
    nginx/index
    php-fpm
-   mariadb
    owncloud-server
    prosody
-   deluge-server
    transmission
 
 

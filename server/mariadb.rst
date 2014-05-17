@@ -1,5 +1,5 @@
-MariaDB Database Server
-=======================
+Database Server
+===============
 
 Software Installation::
 

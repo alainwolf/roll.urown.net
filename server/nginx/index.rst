@@ -1,5 +1,5 @@
-Nginx Server
-=============
+Web Server
+==========
 
 .. toctree::
    :maxdepth: 2

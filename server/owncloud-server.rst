@@ -1,5 +1,11 @@
-ownCloud Server
-===============
+Cloud Storage
+=============
+
+ownCloud provides universal access to your files via the web, your computer or 
+your mobile devices — wherever you are.
+
+It also provides a platform to easily view & sync your contacts, calendars and 
+bookmarks across all your devices and enables basic editing right on the web.
 
 .. contents:: \ 
 

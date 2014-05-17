@@ -62,7 +62,7 @@ Add additional static IPv4 and IPv6 addresses for each service and virtual host:
 	iface eth0 inet6 static
 	    address 2001:db8::13/64
 
-	# voip.example.com
+	# ns1.example.com
 	iface eth0 inet static
 	    address 192.0.2.14/24
 	iface eth0 inet6 static

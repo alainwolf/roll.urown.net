@@ -1,5 +1,5 @@
-PHP FastCGI Process Manager
-===========================
+Web Applications Server
+=======================
 
 The `PHP FastCGI Process Manager <http://www.php.net/manual/en/install.fpm.php>`_
 or PHP-FPM in short is server running in the background. When a webbrowser 

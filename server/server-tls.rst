@@ -1,5 +1,5 @@
-Server Certificates and Keys
-============================
+Certificates and Keys
+=====================
 We use `OpenSSL <http://openssl.org>`_ to generate :abbr:`TLS (Transport Layer 
 Security)` certificates and keys (public and private keys).
 

@@ -1,5 +1,5 @@
-Prosody IM
-==========
+Instant Messageing
+==================
 
 `Prosody IM <https://prosody.im>`_ is a lightweight and relatively easy to use 
 XMPP instant messageing server.

@@ -1,5 +1,5 @@
-Transmissoin BitTorrent Server
-==============================
+BitTorrent
+==========
 
 `Transmission <http://transmissionbt.com/>`_ takes care of downloading and 
 seeding files in the BitTorrent filesharing network.
