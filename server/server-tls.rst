@@ -51,7 +51,7 @@ the default configuration and some things have weak or even deprecated settings.
 
 We want OpenSSL to behave as follows:
 
- * Create all RSA private keys with **4096** bits (default is 2048 bits).
+ * Create **2048 bit** RSA private keys (default is 1024 bit).
 
  * All digital signatures use **SHA-256** as digest (default is SHA-1).
 
@@ -84,71 +84,63 @@ We want OpenSSL to behave as follows:
 
 
 Create a new :file:`/etc/ssl/openssl-server.cnf` file with the following 
-contents::
+contents.
 
-    #
-    # OpenSSL configuration for generation of server certificate requests.
-    #
+The header of the file:
 
-    # OpensSSL chokes if the environment variable $CN isn't defined.
-    # Usage instructions:
-    #   'export CN=example.com; openssl req -new -out ${CN}.req.pem'
- 
-    CN                          = $ENV::CN
-    HOME                        = .
-    RANDFILE                    = $ENV::HOME/.rnd
-    oid_section                 = new_oids
+.. literalinclude:: config-files/openssl-server.cnf
+    :language: ini
+    :end-before: [ new_oids ]
 
-    ####################################################################
-    [ new_oids ]
-    xmppAddr                    = 1.3.6.1.5.5.7.8.5
-    SRVName                     = 1.3.6.1.5.5.7.8.7
+The following is to make our certficates valid for use with XMPP:
 
-    [ req ]
-    default_bits                = 4096
-    default_keyfile             = ${HOME}/private/${CN}.key.pem
-    encrypt_key                 = no
-    string_mask                 = utf8only
-    default_md                  = sha256
-    distinguished_name          = req_distinguished_name
-    req_extensions = v3_req 
+.. literalinclude:: config-files/openssl-server.cnf
+    :language: ini
+    :start-after: oid_section
+    :end-before: [ req ]
 
-    [ req_distinguished_name ]
-    countryName                 = Country Name (2 letter code)
-    countryName_default         = CH
-    countryName_min             = 2
-    countryName_max             = 2
+Enforce to create 2048 bit keys, set the location and name of private key files, 
+disable password protection of server private keys, use the SHA-256 algoritm to 
+sign our keys.
 
-    stateOrProvinceName         = State or Province Name (full name)
-    stateOrProvinceName_default = Zurich
+.. literalinclude:: config-files/openssl-server.cnf
+    :language: ini
+    :start-after: SRVName
+    :end-before: [ req_extensions ]
 
-    localityName                = Locality Name (eg, city)
-    localityName_default        = Zurich
 
-    organizationName            = Organization Name (eg, company)
-    organizationName_default    = ${CN}
+A certificates has information included what kind of things and services can be
+certified with it. Following is the minimum needed to authenticate and encrypt 
+communications as a client or as server.
 
-    commonName                  = Common Name (FQDN Server Name)
-    commonName_max              = 64
-    commonName_default          = ${CN}
+.. literalinclude:: config-files/openssl-server.cnf
+    :language: ini
+    :start-after: distinguished_name
+    :end-before: [ req_distinguished_name ]
 
-    emailAddress                = Email Address
-    emailAddress_max            = 64
-    emailAddress_default        = hostmaster@${CN}
 
-    [ v3_req ]
-    basicConstraints            = CA:FALSE
-    keyUsage                    = digitalSignature,keyEncipherment,keyAgreement
-    extendedKeyUsage            = serverAuth,clientAuth
-    subjectKeyIdentifier        = hash
-    subjectAltName              = @subj_alt_names
+The identity information included in certificats, cut to the minimum 
+actually used is one line only.
 
-    [ subj_alt_names ]
-    DNS.0                       = ${CN}
-    DNS.1                       = *.${CN}
-    otherName.0                 = xmppAddr;FORMAT:UTF8,UTF8:${CN}
-    otherName.1                 = SRVName;IA5STRING:_xmpp-client.${CN}
-    otherName.2                 = SRVName;IA5STRING:_xmpp-server.${CN}
+.. literalinclude:: config-files/openssl-server.cnf
+    :language: ini
+    :start-after: subjectAltName
+    :end-before: [ subj_alt_names ]
+
+
+Finally the alternative names are defined, which enables the server to present 
+himself under different names and identities. So multiple virtual names and 
+domains can be hosted by the same physical server. Without the needing for 
+multiple keys, certificates and submmission to CAs for every name or domain.
+
+.. literalinclude:: config-files/openssl-server.cnf
+    :language: ini
+    :start-after: = ${CN}
+
+
+The complete configuration file described here is available for 
+:download:`download <config-files/openssl-server.cnf>` also.
+
 
 Getting Certificates
 --------------------
@@ -506,3 +498,7 @@ Ciphers list in RFC Strings Format as shown on the `Qualys SSL test website
     4. TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (0xc027)   ECDH 256 bits (eq. 3072 bits RSA)       FS  128
     5. TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x33)          DH 1024 bits (p: 128, g: 1, Ys: 128)    FS  128
     6. TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)      ECDH 256 bits (eq. 3072 bits RSA)       FS  128
+
+There is nothing to do with this ciphersuite-string directly here and now. It is
+here as a reference as we will needed it later in every server-software who 
+relies on OpenSSL for authentication and encryption.
