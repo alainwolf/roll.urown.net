@@ -103,6 +103,7 @@ pygments_style = 'monokai'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+todo_include_todos = True
 
 # -- Options for HTML output ----------------------------------------------
 

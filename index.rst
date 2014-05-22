@@ -6,10 +6,14 @@
 .. highlight:: bash
    :linenothreshold: 5
 
+.. warning::
+   This is an incomplete DRAFT. See ::doc:`todo`
+
 Private Network
 ===============
 
-This guide helps in setting up contemporary digital devices in a way that independence and privacy is maintened.
+This guide helps in setting up contemporary digital devices in a way that
+independence and privacy is maintened.
 
 Contents:
 
@@ -21,7 +25,7 @@ Contents:
    router/index
    server/index
    smartphone/index
-
+   todo
 
 
 Indices and tables
@@ -30,4 +34,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
