@@ -235,8 +235,17 @@ update notfications::
     $ cd /usr/local/src/nginx-1.7.0
     $ dch
 
-An editor opens where the package changes can be entered. A new version nummber 
-and your name are already pre-filled::
+An editor opens where the package changes can be entered. 
+
+The scheme used by Ubuntu software packages is:
+
+.. code-block:: text
+
+    <Upstream Version>-<Debian Version>~Ubuntu<Ubuntu Package Version>
+
+A new version number  and your name are already pre-filled:
+
+.. code-block:: text
 
     nginx (1.7.0-1~trustyubuntu1) UNRELEASED; urgency=medium
 
@@ -265,7 +274,7 @@ Build the package as follows::
     $ dpkg-buildpackage -rfakeroot -uc -b
     $ cd ..
 
-This is the rigth time to get a nice cup of coffee.
+This is the rigth time to  have a break, as it will take a while.
 
 
 Package Installation
