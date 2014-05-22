@@ -10,10 +10,11 @@ Prerequisites
 IP Addresses
 ^^^^^^^^^^^^
 
+.. note:: 
+	In this document we use example IP addresses. Note that none of these
+	will work in real situations.
+
 Dedicated IPv4 and IPv6 addresses for XMPP on the server:
-
-
-
 
 See :doc:`network`.
 
@@ -114,7 +115,7 @@ Main Configuration File
 IP Addresses
 ^^^^^^^^^^^^
 
-.. literalinclude:: prosody/prosody.cfg.lua
+.. literalinclude:: config-files/prosody.cfg.lua
 	:language: lua
 	:start-after: -- blanks. Good luck, and happy Jabbering!
 	:end-before: -- This is a (by default, empty)
@@ -123,7 +124,7 @@ IP Addresses
 Administrators
 ^^^^^^^^^^^^^^
 
-.. literalinclude:: prosody/prosody.cfg.lua
+.. literalinclude:: config-files/prosody.cfg.lua
 	:language: lua
 	:start-after: interfaces = {
 	:end-before: -- Enable use of libevent
@@ -139,7 +140,7 @@ Prosody must be able to read the protected key file::
 
 Certificate and private key for TLS authentication and encryption:
 
-.. literalinclude:: prosody/prosody.cfg.lua
+.. literalinclude:: config-files/prosody.cfg.lua
 	:language: lua
 	:start-after: pidfile =
 	:end-before: -- TLS Client Encrpytion
@@ -147,7 +148,7 @@ Certificate and private key for TLS authentication and encryption:
 
 Force clients to use TLS encrypted connections:
 
-.. literalinclude:: prosody/prosody.cfg.lua
+.. literalinclude:: config-files/prosody.cfg.lua
 	:language: lua
 	:start-after: -- TLS Client Encrpytion
 	:end-before: -- Force certificate authentication for server-to-server
@@ -193,6 +194,7 @@ Restart Server
 
 	$ sudo service prosody restart
 
+
 Add Users
 ---------
 See `Creating Accounts <https://prosody.im/doc/creating_accounts>`_ on the 
@@ -205,9 +207,20 @@ Prosody website.
 	Retype new password: ********
 
 
-Logging and Monitoring
+Monitoring
 ----------------------
+
+.. todo:: Write how to log and monitor.
+
+
+Online Security Test
+^^^^^^^^^^^^^^^^^^^^
+
+On the https://xmpp.net/ website users and server administrators can inspect the 
+security of their XMPP servers.
 
 
 Backup Considerations
 ---------------------
+
+.. todo:: Write which data to backup for Prosody with ninjabackup.
