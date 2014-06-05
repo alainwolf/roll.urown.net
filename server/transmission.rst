@@ -25,7 +25,7 @@ take place on the server instead of the users desktop system.
 Installation
 ------------
 
-Deluge is in the Ubuntu software repository. We install the server only.
+Transmission is in the Ubuntu software repository. We install the server only.
 
 ::
     
@@ -313,4 +313,37 @@ Solution
     $ exit
 
 
+
+Tracker
+-------
+
+`opentracker <https://erdgeist.org/arts/software/opentracker/>`_ is a open and
+free bittorrent tracker project. It aims for minimal resource usage and is
+intended to run at your wlan router. Currently it is deployed as an open and
+free tracker instance. Read our free and open tracker blog and announce your
+torrents there (but do not hesitate to setup your own free trackers!).
+
+
+Installation
+------------
+
+opentracker is currently not in the Ubuntu software packages repository.
+
+To install from source:
+
+Get needed software libraries and stuff to be able to build your own software
+packages on Ubuntu::
+
+    $ sudo apt-get install libowfat-dev build-essential devscripts git autoconf
+
+Get the source code::
+
+    $ cd /usr/local/src
+    $ git clone git://erdgeist.org/opentracker
+ 
+Build::
+
+    $ cd opentracker
+    $ ./configure
+    $ make
 

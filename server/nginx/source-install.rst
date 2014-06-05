@@ -299,3 +299,13 @@ Show version number and available modules::
 
     $ nginx -V
 
+Remove Apache
+-------------
+
+The default webserver on Ubuntu is Apache. If any previously installed package
+also installed the Apache web server as a dependency, it need to be
+uninstalled, as multiple web servers will fight each  other over the HTTP ports
+on the system::
+
+    $ sudo apt-get remove apache2
+    $ sudo apt-get autoremove

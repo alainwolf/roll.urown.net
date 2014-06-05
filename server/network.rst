@@ -81,3 +81,30 @@ For easier recognition and administration the last number of any IPv4 and IPv6 a
 Restart the network services with::
 
 	$ sudo service networking restart
+
+Usefull Commands
+----------------
+
+Add new IP address
+^^^^^^^^^^^^^^^^^^
+
+Here is how to add a new IP addresses on the fly, without restarting the service.
+
+..	note::
+	If the newly addded address is not added in the 
+	:file:`/etc/network/interfaces` it will be lost after system reboot.
+
+Add IPv4 address::
+
+	$ sudo ip addr add 172.20.10.99/24 dev eth0
+
+Add IPv6 address::	
+
+	$ sudo ip addr add 2001:470:26:845::99/64 dev eth0
+
+Show IP addresses
+^^^^^^^^^^^^^^^^^
+
+To show all currently active IP addresses::
+
+	$ ip addr show
