@@ -170,27 +170,6 @@ Create a new key and CSR::
     ........................................................................++
     ................................................................++
     writing new private key to './private/example.com.key.pem'
-    -----
-    You are about to be asked to enter information that will be incorporated
-    into your certificate request.
-    What you are about to enter is what is called a Distinguished Name or a DN.
-    There are quite a few fields but you can leave some blank
-    For some fields there will be a default value,
-    If you enter '.', the field will be left blank.
-    -----
-    Country Name (2 letter code) [CH]:
-    State or Province Name (full name) [Zurich]:
-    Locality Name (eg, city) [Zurich]:
-    Organization Name (eg, company) [example.com]:
-    Common Name (FQDN Server Name) [example.com]:
-    Email Address [hostmaster@example.com]:
-
-    $ chmod 600 private/${CN}.key.pem
-
-An alternative command which supplies subject fields on the command-line::
-
-    $ openssl req -new -out ${CN}.req.pem \
-        -subj "/C=CH/ST=Zurich/L=Zurich/O=My Company Name/CN=${CN}/emailAddress=webmaster@${CN}"
     $ chmod 600 private/${CN}.key.pem
 
 The key and CSR are saved in files using the :abbr:`PEM (Privacy-enhanced 
@@ -300,32 +279,30 @@ The chain file has the following form:
 
 Here are the steps to generate such certificate-chain-files.
 
-Download the intermediate CA certificates::
-
-    $ wget -O certs/StartCom_Class_1_Server_CA.pem \
-        https://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
-    $ wget -O certs/StartCom_Class_2_Server_CA.pem \
-        https://www.startssl.com/certs/class2/sha2/pem/sub.class2.server.sha2.ca.pem
-    $ wget -O certs/CAcert_Class_3_Root.pem \
-        http://www.cacert.org/certs/class3.crt
-
 Use one of the commands below, depending on the intermediate signing autority of
 your certificate.
 
-For StartCom Class 1 Primary Intermediate Server CA::
 
+For **StartCom Class 1** Primary Intermediate Server CA::
+
+    $ wget -O certs/StartCom_Class_1_Server_CA.pem \
+        https://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
     $ cat certs/${CN}.cert.pem \
           certs/StartCom_Class_1_Server_CA.pem \
         > certs/${CN}.chained.cert.pem
 
-For StartCom Class 2 Primary Intermediate Server CA::
+For **StartCom Class 2** Primary Intermediate Server CA::
 
+    $ wget -O certs/StartCom_Class_2_Server_CA.pem \
+        https://www.startssl.com/certs/class2/sha2/pem/sub.class2.server.sha2.ca.pem
     $ cat certs/${CN}.cert.pem \
           certs/StartCom_Class_2_Server_CA.pem \
         > certs/${CN}.chained.cert.pem
 
-For CAcert Class 3 Root::
+For **CAcert Class 3** Root::
 
+    $ wget -O certs/CAcert_Class_3_Root.pem \
+        http://www.cacert.org/certs/class3.crt
     $ cat certs/${CN}.cert.pem \
           certs/CAcert_Class_3_Root.pem \
         > certs/${CN}.chained.cert.pem
@@ -363,19 +340,19 @@ The OCSP stapling chain file has the following form:
 
 To create OCSP stapling chain files, do the following:
 
-For StartCom Class 1 Primary Intermediate Server CA::
+For **StartCom Class 1** Primary Intermediate Server CA::
 
     $ cat certs/StartCom_Certification_Authority.pem \
           certs/StartCom_Class_1_Server_CA.pem \
         > certs/StartCom_Class_1_Server.OCSP-chain.pem
 
-StartCom Class 2 Primary Intermediate Server CA::
+StartCom **Class 2 Primary** Intermediate Server CA::
 
     $ cat certs/StartCom_Certification_Authority.pem \
           certs/StartCom_Class_2_Server_CA.pem \
         > certs/StartCom_Class_2_Server.OCSP-chain.pem
 
-CAcert Class 3 Root::
+**CAcert Class 3** Root::
 
     $ cat certs/root.pem \
           certs/CAcert_Class_3_Root.pem \
@@ -453,14 +430,14 @@ We want our encrypted services to behave as follows:
 
 All encrypted communication sessions ...
 
- #. ... are established with perfect forward secrecy (\ **kEDH**\ :\ **kEECDH**)
- #. ... use RSA key authentication (kEDH\ **+aRSA**\ :kEECDH\ **+aRSA**)
- #. ... use 128bit AES encryption (kEDH+aRSA+\ **AES128**\ :kEECDH+aRSA+\ **AES128**)
- #. ... Prefer TLS ciphers over SSL/SHA1 ciphers (kEDH+aRSA+AES128:kEECDH+aRSA+AES128:\ **+SSLv3**)
+    #. ... are established with perfect forward secrecy (\ **kEDH**\ :\ **kEECDH**)
+    #. ... use RSA key authentication (kEDH\ **+aRSA**\ :kEECDH\ **+aRSA**)
+    #. ... use 128bit AES encryption (kEDH+aRSA+\ **AES128**\ :kEECDH+aRSA+\ **AES128**)
+    #. ... Prefer TLS ciphers over SSL/SHA1 ciphers (kEDH+aRSA+AES128:kEECDH+aRSA+AES128:\ **+SSLv3**)
 
 .. code-block:: bash
 
-    $ openssl ciphers -v 'kEDH+aRSA+AES128:kEECDH+aRSA+AES128:+SSLv3'
+    $ openssl ciphers -v 'kEDH+aRSA+AES128:kEECDH+aRSA+AES128:+SSLv3' | column -t
 
 
 This results in a list of 6 matching ciphers (out of 111), with the ones using 
@@ -502,3 +479,87 @@ Ciphers list in RFC Strings Format as shown on the `Qualys SSL test website
 There is nothing to do with this ciphersuite-string directly here and now. It is
 here as a reference as we will needed it later in every server-software who 
 relies on OpenSSL for authentication and encryption.
+
+
+Monitoring
+----------
+
+All digital certificates contain an expiration date which most client and server
+applications will check before using the certificates contents.
+
+When a web browser encounters an expired certificate, the browser will normally
+present the user with a warning message indicating that the certificate has
+expired.
+
+An expired certificate frustrates users and limits the servers ability to
+seamlessly deliver content to clients.
+
+`SSL Certificate Checker <http://prefetch.net/articles/checkcertificate.html>`_
+(ssl-cert-check), can extract the certificate expiration date from a live server
+or from a PEM encoded X.509 certificate file.  If :file:`ssl-cert-check` finds a
+certificate that will expire within a user defined threshold (e.g., the next
+60-days), an e-mail notification is sent to warn the adminstrator.
+
+Installation
+^^^^^^^^^^^^
+
+::
+
+    $ sudo apt-get ssl-cert-check
+
+Usage
+^^^^^
+
+Usage instructions are provided when called with the `-h` commandline parameter::
+
+    $ ssl-cert-check -h
+    Usage: /usr/bin/ssl-cert-check [ -e email address ] [ -x days ] [-q] [-a] [-b] [-h] [-i] [-n] [-v]
+           { [ -s common_name ] && [ -p port] } || { [ -f cert_file ] } || { [ -c certificate file ] }
+
+      -a                : Send a warning message through E-mail
+      -b                : Will not print header
+      -c cert file      : Print the expiration date for the PEM or PKCS12 formatted certificate in cert file
+      -e E-mail address : E-mail address to send expiration notices
+      -f cert file      : File with a list of FQDNs and ports
+      -h                : Print this screen
+      -i                : Print the issuer of the certificate
+      -k password       : PKCS12 file password
+      -n                : Run as a Nagios plugin
+      -p port           : Port to connect to (interactive mode)
+      -s commmon name   : Server to connect to (interactive mode)
+      -t type           : Specify the certificate type
+      -q                : Don't print anything on the console
+      -v                : Specify a specific protocol version to use (tls, ssl2, ssl3)
+      -V                : Only print validation data
+      -x days           : Certificate expiration interval (eg. if cert_date < days)
+
+
+.. note ::
+  
+    ssl-cert-check uses the OpenSSL :manpage:`s_client` built-in command. As of
+    today this command lacks support for IPv6 and SNI. Therefore we can't check
+    our servers by connecting to them, but have to check our certificate files
+    on disk.
+
+To check a certificate file::
+
+    $ ssl-cert-check -i -q -c /etc/ssl/certs/example.com.cert.pem
+    Host                                            Status       Expires      Days
+    ----------------------------------------------- ------------ ------------ ----
+    FILE:/etc/ssl/certs/example.com.cert.pem        Valid        May 2 2016   699     
+
+
+Automatic daily check
+^^^^^^^^^^^^^^^^^^^^^
+
+To have the server check his certificates every day and notify you by mail in 
+case of the expiration date in less then 30 days, we add a cronjob as follows::
+
+    $ sudo -s
+    $ echo "ssl-cert-check -a -c /etc/ssl/certs/example.com.cert.pem"
+        >> /etc/cron.daily/ssl-cert-check
+    chmod +x /etc/cron.daily/ssl-cert-check
+    $ exit
+
+In case there are more certificates-files to check, just repeat the second line
+above for each file with its path and filename.
