@@ -13,7 +13,7 @@ Contents:
    network
    server-backup
    server-tls
-   nsd
+   dns/index
    mail
    mariadb
    nginx/index

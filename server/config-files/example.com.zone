@@ -1,0 +1,84 @@
+;## example.com
+;##
+
+$ORIGIN example.com.  ; default zone domain
+$TTL 1d               ; default time to live - 1 day
+
+@           SOA   ns1   hostmaster.example.com. (
+                  ; serial number - <YYYY><MM><DD><nn>
+                  2014052702
+                  8h    ; refresh - 20 minutes to 12 hours
+                  15m   ; retry - 3 to 15 minutes
+                  4w    ; expire - 2 to 4 weeks
+                  3h    ; minTTL - 1 hour to 3 hours
+            )
+
+                ; NS    ns1 ; Primary stealth name server
+                  NS    ns2 ; puck.nether.net.
+                  NS    ns3 ; ns2.afraid.org.
+                  NS    ns4 ; ns1.rollernet.us.
+                  NS    ns5 ; ns2.rollernet.us.
+
+                  MX    10    mx1.mail.hostpoint.ch.
+                  MX    10    mx2.mail.hostpoint.ch.
+
+                  SPF   "v=spf1 include:spf.mail.hostpoint.ch -all"
+                  TXT   "v=spf1 include:spf.mail.hostpoint.ch -all"
+
+            A     198.51.100.240
+            AAAA  2001:db8::38
+
+cloud       A     198.51.100.240
+            AAAA  2001:db8::31
+
+home        A     198.51.100.240
+            AAAA  2001:db8::1
+
+ipv4        A     198.51.100.240
+
+ipv6        AAAA  2001:db8::1
+
+mail        A     198.51.100.240
+            AAAA  2001:db8::40
+
+movim       A     198.51.100.240
+            AAAA  2001:db8::37
+
+ns1         A     198.51.100.240
+            AAAA  2001:db8::41
+
+ns2         A     204.42.254.5            ; puck.nether.net.
+            AAAA  2001:418:3f4::5         ; puck.nether.net.
+
+ns3         A     208.43.71.243           ; ns2.afraid.org.
+            AAAA  2607:f0d0:3001:e::2     ; ns2.afraid.org.
+
+ns4         A     208.79.240.3            ; ns1.rollernet.us.
+            AAAA  2607:fe70:0:3::b        ; ns1.rollernet.us.
+
+ns5         A     208.79.241.3            ; ns2.rollernet.us.
+            AAAA  2607:fe70:0:4::b        ; ns2.rollernet.us.
+
+p2p         A     198.51.100.240
+            AAAA  2001:db8::36
+
+voip        A     198.51.100.240
+            AAAA  2001:db8::11
+
+www         A     198.51.100.240
+            AAAA  2001:db8::38
+
+xmpp        A     198.51.100.240
+            AAAA  2001:db8::35
+
+proxy             CNAME xmpp.alainwolf.net.
+sip-proxy         CNAME voip.alainwolf.net.
+turn-server       CNAME voip.alainwolf.net.
+
+_sip._udp                     SRV   0   5   5060 ipv4.alainwolf.net.
+_sips._tcp                    SRV   0   1   5061 sip-proxy.alainwolf.net.
+_xmpp-client._tcp             SRV   0   5   5222 xmpp.alainwolf.net.
+_xmpp-server._tcp             SRV   0   5   5269 xmpp.alainwolf.net.
+_xmpp-server._tcp.conference  SRV   0   5   5269 xmpp.alainwolf.net.
+_xmpp-server._tcp.proxy       SRV   0   5   5269 xmpp.alainwolf.net.
+_xmppconnect                  TXT   "_xmpp-client-xbosh=https://xmpp.alainwolf.net:5281/http-bind"
