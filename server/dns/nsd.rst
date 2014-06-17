@@ -1,3 +1,5 @@
+:orphan:
+
 Domain Name Server - Alternative
 ================================
 

@@ -8,7 +8,7 @@ authenticated and verifieable informamtion.
 .. note::
 
 	Note that DNSSEC and therefore also DANE are implemented very very slowly.
-	As of May 2014 not even all :abbr:`TLD (Top Level Domains)`s are ready for
+	As of May 2014 not even all :abbr:`TLD (Top Level Domains)`\ s are ready for
 	DNSSEC. Less then 10% of the internet domains have implemented DNSEC and
 	secured their records. The same is the case for clients. No major browser,
 	mail- client or messaging application supports anything DNSSEC related out
@@ -52,7 +52,7 @@ To create such a DNS :abbr:`RR (Resource Record)` for our webserver
 *example.com*::
 
 	$ tlsa --create --certificate /etc/ssl/certs/example.com.cert.pem example.com
-	_443._tcp.example.com. IN TLSA 3 0 1 f8df4b2edd791edc98fa856a0ee8a5d4a1387d5a6bef8be7cdfea74e76a2a0e5
+	_443._tcp.example.com. IN TLSA 3 0 1 f8df4b2e...............................76a2a0e5
 
 
 A line will displayed which can be used with cut and paste in zone files.
@@ -65,11 +65,11 @@ follows:
 	Note that the TLSA command above displays a point "." at the end of "_443._tcp.example.com".
 	DO NOT include the point when using the webinterface!
 
-===================== ==== ======================================================================
+===================== ==== =====================================================
 Name                  Type Content                                                               
-===================== ==== ======================================================================
-_443._tcp.example.com TLSA 3 0 1 f8df4b2edd791edc98fa856a0ee8a5d4a1387d5a6bef8be7cdfea74e76a2a0e5
-===================== ==== ======================================================================
+===================== ==== =====================================================
+_443._tcp.example.com TLSA 3 0 1 f8df4b2e...............................76a2a0e5
+===================== ==== =====================================================
 
 .. note::
 	

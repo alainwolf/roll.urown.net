@@ -80,14 +80,28 @@ To check whether the domain is now offcially DNSSEC enabled::
     $ whois exmaple.com | grep DNSSEC
     DNSSEC:signedDelegation
 
-..  Note::
-    
-    DNS Records are signed live by the server when requested and then cached. So
-    the whole procedure did not update the serial number and the slaves don't
-    know nothing about.
 
-Add. delete or change a record to trigger an update from the slaves. So they 
-start serving signed records too.
+Update Slave Servers
+--------------------
+    
+Our other DNS slave servers don't know anything about all of this yet, as
+PowerDNS will sign DNS records only when he is asked for such a record.
+
+The procedure also did not update the serial number, therefore the slaves don't
+know that now would be a good time to ask for updates.
+
+By increasing the serial-number we trick PowerDNS to notify all slaves to get a
+fresh copy of all our domain records.
+
+When the slave servers receive the update-notification, they will in turn
+ask for all records in our domain, by requesting a zone-transfer from our server.
+
+PowerDNS digitally signs every record, during the zone-transfer. Slave servers
+then get signed copies of all records.
+
+To increase the serial number and trigger the update::
+
+    $ sudo pdnssec increase-serial example.com
 
 
 Testing

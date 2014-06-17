@@ -1,3 +1,5 @@
+:orphan:
+
 PowerDNS Web Frontends
 ======================
 
