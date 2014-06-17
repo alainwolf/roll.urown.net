@@ -1,0 +1,104 @@
+External Drives
+===============
+
+Most people store their media files collection on external hard-drives attached
+by USB, FireWire or eSATA. 
+
+`autofs <http://www.kernel.org/pub/linux/daemons/autofs/v5/>`_, the kernel-based
+automounter for Linux can be used to mount external hard-drives::
+
+	$ sudo apt-get install autofs5
+
+The installation creates and starts the system service *autofs* and creates the
+following configuration files:
+
+	*	:file:`/etc/auto.master`
+	*	:file:`/etc/auto.net`
+	*	:file:`/etc/auto.misc`
+	*	:file:`/etc/auto.smb`
+	*	:file:`/etc/default/autofs`
+
+Create the directory, where external USB hard-drives will be mounted into::
+
+	$ sudo mkdir -p /etc/media/usb
+
+Edit the file :file:`/etc/auto.master` and add the following line:
+
+.. code-block:: ini
+
+	/media/usb /etc/auto.usb --timeout=300 --ghost
+
+To identify the exact properties of the external hard-drive to be mounted later,
+make sure the cable is conneccted and it is powered on. The issue the following
+command::
+
+	$ sudo blkid -o list -w /dev/null
+
+This will display a list of all attached file-systems and their various properties:
+
+.. code-block:: text
+
+	device		fs_type		label		mount point		UUID
+	----------------------------------------------------------------------------------------
+	...
+	/dev/sdb1	ext3		MyDrive		(not mounted)	00b0bc8a-57f7-497c-92c9-d1ad42d94432
+	...
+
+
+With the properties now known to us, we are able to create the autofs configuration file :file:`/etc/auto.usb` referenced earlier in the master configuration file.
+
+.. code-block:: text
+
+	MyDrive -fstype=ext3,noatime,nodiratime,sync,users,rw,nodev,noexec,nosuid,context=system_u:object_r:removable_t :/dev/disk/by-uuid/00b0bc8a-57f7-497c-92c9-d1ad42d94432
+
+It should be all on one line.
+
+Finally restart the *autofs* service::
+
+	$ sudo restart autofs
+
+The external hard-drive will be mounted as soon as we access the directory
+:file:`/media/usb/MyDrive` and un-mounted again after 15 minutes of no activity.
+
+
+
+Media Server
+============
+
+`MiniDLNA (aka ReadyDLNA) <http://sourceforge.net/projects/minidlna/>`_ is
+server software with the aim of being fully compliant with DLNA/UPnP-AV clients.
+
+Installation
+------------
+Installation from the Ubuntu software package repository::
+
+	$ sudo apt-get install minidlna
+
+
+Configuration
+-------------
+
+Open the configuration file :file:`/etc/minidlna.conf`.
+
+.. code-block:: text
+
+	media_dir=A,/media/usb/BlackBook/Music
+	media_dir=V,/media/usb/BlackBook/Videos/Movies
+	media_dir=V,/media/usb/BlackBook/Videos/Series
+	media_dir=P,/media/usb/BlackBook/Pictures
+	media_dir=/var/lib/transmission-daemon/downloads
+
+
+Web Monitor
+-----------
+
+MiniDLNA provides a webpage, where the current status of it can be examined.
+
+Add the following block to your internal nginx server configuration:
+
+.. code-block:: nginx
+
+    # MiniDLNA / ReadyMedia
+    location /minidlna {
+        proxy_pass http://localhost:8200/;
+    }

@@ -8,19 +8,21 @@ Contents:
 .. toctree::
    :maxdepth: 2
    
+   install/install
    entropy
    tools
    network
    server-backup
    server-tls
    dns/index
-   mail
    mariadb
+   mail/index
    nginx/index
    php-fpm
    owncloud-server
    prosody
    transmission
+   media
 
 
 Recommended reading: 
