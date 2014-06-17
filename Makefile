@@ -181,6 +181,6 @@ pseudoxml:
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 
 publish:
-	rsync --recursive --update --times --delete --human-readable --stats $(BUILDDIR)/html $(PUBLISH_DEST)
+	rsync --recursive --update --times --delete --human-readable --stats $(BUILDDIR)/html/ $(PUBLISH_DEST)
 	@echo
 	@echo "Publishing finished. The HTML pages are in $(PUBLISH_DEST)."
