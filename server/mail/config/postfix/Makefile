@@ -2,7 +2,7 @@
 # Postfix hashed maps maintenance
 #
 MAPS = aliases.db canonical.db generic.db relay_password.db \
-		sasl_password.db sender_access.db sender_canonical.db 
+		sender_access.db sender_canonical.db 
 
 all: $(MAPS)
 
