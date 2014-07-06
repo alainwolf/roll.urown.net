@@ -5,7 +5,7 @@
 #
 
 # What is my hostname (FQDN)?
-myhostname = server.example.com
+myhostname = mail.example.com
 
 # What is my domainname?
 mydomain = example.com
@@ -19,6 +19,9 @@ append_dot_mydomain = no
 # What characters in a recipient address separate a users from extensions?
 recipient_delimiter = +
 
+# Should I refuse mails with non-standard FROM or RCPT address formats?
+strict_rfc821_envelopes = yes
+
 # What domains do I receive mail for?
 mydestination = server.example.com, server.lan, localhost.lan, localhost
 
@@ -29,10 +32,10 @@ mynetworks_style = host
 relay_domains = 
 
 # Where do I forward messages to root, postmaster or webmaster?
-alias_maps = hash:/etc/aliases
+alias_maps = hash:/etc/postfix/aliases
 
 # Which database do I have to build, when I update alias information?
-alias_database = hash:/etc/aliases
+alias_database = hash:/etc/postifx/aliases
 
 # Which sender addresses I have to change before sending out mail?
 sender_canonical_maps = hash:/etc/postfix/sender_canonical
@@ -46,8 +49,13 @@ notify_classes = resource, software, 2bounce
 # Do I need to notify local users of new mail?
 biff = no
 
-# Whats the size limit of mailboxes?
-mailbox_size_limit = 0
+# What is the maximum message size (in bytes)?
+# 25 Megabytes = 26,214,400 Bytes
+message_size_limit = 26214400
+
+# Whats the size limit of mailboxes (in bytes)?
+# 100 Gigabytes = 107,374,182,400 Bytes
+mailbox_size_limit = 107374182400
 
 # After how long should I notify if mail-delivery is delayed?
 delay_warning_time = 6h
@@ -61,7 +69,7 @@ delay_warning_time = 6h
 inet_protocols = all
 
 # On which interfaces / IP addresses do I listen for inbound connections?
-inet_interfaces = 127.0.0.1, [::1], 192.0.2.40, 2001:db8::40
+inet_interfaces = 127.0.0.1, ::1, 192.0.2.40, 2001:db8::40
 
 # Which IPv4 addres do I use for outbound connections?
 smtp_bind_address = 192.0.2.40
@@ -85,6 +93,7 @@ tls_ssl_options = NO_COMPRESSION
 # What ciphers suites do I use when I am high?
 tls_high_cipherlist = kEDH+aRSA+AES128:kEECDH+aRSA+AES128:+SSLv3
 
+
 # SMTP Client Settings
 #
 
@@ -103,8 +112,11 @@ smtp_sasl_security_options = noanonymous
 #
 smtp_generic_maps = hash:/etc/postfix/generic
 
+# What DNS lookup methods do I use for outgoing SMTP sessions?
+smtp_dns_support_level = DNSSEC
+
 # Is TLS encryption required for outgoing connections?
-smtp_tls_security_level = encrypt
+smtp_tls_security_level = dane
 
 # Where do I find trusted CA certificates to verify SMTP server certificates?
 smtp_tls_CApath = /etc/ssl/certs
@@ -124,7 +136,7 @@ smtpd_tls_cert_file = /etc/ssl/certs/example.com.chained.cert.pem
 smtpd_tls_key_file = /etc/ssl/private/example.com.key.pem
 
 # Is TLS encryption required for incoming connections?
-smtpd_tls_security_level = encrypt
+smtpd_tls_security_level = may
 
 # Do I refuse password authentication over unencrypted connections?
 smtpd_tls_auth_only = yes
@@ -190,14 +202,7 @@ smtpd_recipient_restrictions =
     reject_unverified_recipient
 
 # What restrictins apply to mail content?
-smtpd_data_restrictions =
-    reject_unauth_pipelining
-
-# What checks do I have t perform on mail headers?
-header_checks =
-
-# What checks do I have to perform on mail bodies?
-body_checks =
+smtpd_data_restrictions = reject_unauth_pipelining
 
 
 # Postscreen Settings

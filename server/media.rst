@@ -26,7 +26,7 @@ Edit the file :file:`/etc/auto.master` and add the following line:
 
 .. code-block:: ini
 
-	/media/usb /etc/auto.usb --timeout=300 --ghost
+	/media/usb /etc/auto.usb --timeout=900 --ghost
 
 To identify the exact properties of the external hard-drive to be mounted later,
 make sure the cable is conneccted and it is powered on. The issue the following
@@ -82,10 +82,10 @@ Open the configuration file :file:`/etc/minidlna.conf`.
 
 .. code-block:: text
 
-	media_dir=A,/media/usb/BlackBook/Music
-	media_dir=V,/media/usb/BlackBook/Videos/Movies
-	media_dir=V,/media/usb/BlackBook/Videos/Series
-	media_dir=P,/media/usb/BlackBook/Pictures
+	media_dir=A,/media/usb/MyDrive/Music
+	media_dir=V,/media/usb/MyDrive/Videos/Movies
+	media_dir=V,/media/usb/MyDrive/Videos/Series
+	media_dir=P,/media/usb/MyDrive/Pictures
 	media_dir=/var/lib/transmission-daemon/downloads
 
 

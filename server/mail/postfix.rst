@@ -1,8 +1,10 @@
+.. include:: /template_data.rst
+
 .. warning::
     None of this has been tested yet!
 
-Postfix Mail Server
-===================
+MTA - Mail Transfer Server
+==========================
 
 .. image:: Postfix-logo.*
     :alt: Postfix Logo
@@ -36,13 +38,13 @@ The documentation website has `a page dedicated to main.cf
 configuration paramter.
 
 The whole file, as presented below, is also provided for download at
-:download:`main.cf` here.
+:download:`config/postfix/main.cf` here.
 
 
 General Settings
 ^^^^^^^^^^^^^^^^
 
-.. literalinclude:: main.cf
+.. literalinclude:: config/postfix/main.cf
     :language: ini
     :start-after: # run "sudo service postfix reload"
     :end-before: # TCP/IP Protocols Settings
@@ -51,42 +53,49 @@ General Settings
 TCP/IP Protocols Settings
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: main.cf
+.. literalinclude:: config/postfix/main.cf
     :language: ini
     :start-after: delay_warning_time
     :end-before: # General TLS Settings
 
 
+.. index:: Cipher Suite; Set in Postfix
+
 General TLS Settings
 ^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: main.cf
+Let the server choose the preferred cipher during handshake:
+
+.. literalinclude:: config/postfix/main.cf
     :language: ini
     :start-after: proxy_interfaces
     :end-before: # SMTP Client Settings
 
 
+.. index::
+    single: Internet Protocols; SMTP
+
 SMTP Client Settings
 ^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: main.cf
+.. literalinclude:: config/postfix/main.cf
     :language: ini
     :start-after: tls_high_cipherlist
     :end-before: # SMTP Server Settings
 
 
 SMTP Server Settings
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: main.cf
+.. literalinclude:: config/postfix/main.cf
     :language: ini
     :start-after: smtp_tls_session_cache_database
     :end-before: # SMTP Server Restrictions
 
 SMTP Server Restrictions
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: main.cf
+.. literalinclude:: config/postfix/main.cf
     :language: ini
     :start-after: smtpd_tls_session_cache_database
     :end-before: # Postscreen Settings
@@ -95,25 +104,25 @@ SMTP Server Restrictions
 Postscreen Settings
 ^^^^^^^^^^^^^^^^^^^
 
-90% of todays SMTP connections come from Spambots and Zombies. Postscreen is a
-sort of a SMTP mail server firewall. It attempts to reject as many spambots as
-possible, before they even get to our main SMTP server, where processing takes a
-lot more time and resources, as on the screener. If done well the main SMTP
+90% of todays |SMTP| connections come from Spambots and Zombies. Postscreen is a
+sort of a |SMTP| mail server firewall. It attempts to reject as many spambots as
+possible, before they even get to our main |SMTP| server, where processing takes a
+lot more time and resources, as on the screener. If done well the main |SMTP|
 server has to process only 10% of the connections.
 
 Postscreen is described in detail in a `online readme document 
 <http://www.postfix.org/POSTSCREEN_README.html>`_.
 
-.. literalinclude:: main.cf
+.. literalinclude:: config/postfix/main.cf
     :language: ini
-    :start-after: body_checks
+    :start-after: smtpd_data_restrictions
     :end-before: # Virtual Domain Settings
 
 
 Virtual Domain Settings
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: main.cf
+.. literalinclude:: config/postfix/main.cf
     :language: ini
     :start-after: postscreen_bare_newline_action  
     :end-before: # Unocmment to allow catch-all addresses
@@ -135,106 +144,112 @@ accessible.
 
 If the prefix starts with `hash:` the map is initially is stored as plain text
 in the file referenced, but cached later in a hash-database for faster access. A
-hashed map or database can change anythime while the server is running, unlike
+hashed map or database can change anythme while the server is running, unlike
 configuration values, which are only read on server startup, and changes need a
 restart of the mail server.
+
+It migth get complicated, the more such files are around as they use different
+formats, handling and hashing.
+
+It therefore helps to create a Makefile, so refreshing anything needs just a
+single command-line. Create the :download:`/etc/postfix/Makefile 
+<config/postfix/Makefile>` as follows:
+
+.. literalinclude:: config/postfix/Makefile
+    :language: make
+
+After every change to any of the map files discussed below, their databases need
+to be refreshed as follows::
+
+    $ cd /etc/postfix
+    $ sudo make
 
 
 Alias Map
 ^^^^^^^^^
 
-The file :file:`/etc/aliases` contains information on where mails for certain
-system accounts should be delivered to.
+The file :download:`/etc//postfix/aliases.in <config/postfix/aliases.in>` contains
+information on where mails for certain system accounts should be delivered to.
 
 This is needed for notification and warning mails created by system programs
 (like cronjobs) to reach human beings (like the person responsible for system
-adminitration).
+administration).
 
-..  code-block:: apache
-
-    # See man 5 aliases for format
-    # run "sudo newaliases" after changing this file.
-    root:       hostmaster@example.com
-    postmaster: postmaster@example.com
-    webmaster:  webmaster@example.com
-    www-data:   webmaster@example.com
+.. literalinclude:: config/postfix/aliases.in
+    :language: bash
 
 
-The contents of the file are cached in the database :file:`/etc/aliases.db`.
-Because of that the database must be refreshed after each and every change made
-in :file:`/etc/aliases`::
+The contents of the file are cached in the database
+:file:`/etc/postfix/aliases.db`. Because of that the database must be refreshed
+after each and every change made in :file:`/etc/postfix/aliases.in`::
 
-    $ sudo newaliases
+    $ cd /etc/postfix
+    $ sudo make
 
 
 Canonical Sender Map
 ^^^^^^^^^^^^^^^^^^^^
 
-The :file:`/etc/postfix/sender_canonical` contains information on which sender-
+The file :download:`/etc//postfix/sender_canonical.in
+<config/postfix/sender_canonical.in>` contains information on which sender-
 addresses of outgoing mails need to be changed, before mail is sent out.
 
-This is also needed mostly for system generated mails, as they contain local
-system account-names as senders, which will not be accepted as valid internet-
-mail addresses.
+This is needed mostly for system generated mails, as they contain local system
+account-names as senders, which will not be accepted as valid internet- mail
+addresses.
 
-..  code-block:: apache
-
-    # see man 5 canonical
-    # run "postmap /etc/postfix/sender_canonical" after changing this file.
-    www-data    webmaster@example.com
+.. literalinclude:: config/postfix/sender_canonical.in
+    :language: bash
 
 The contents of the file are cached in the database 
-:file:`/etc/postfix/sender-canonical.db`.
-Because of that the database must be refreshed after each and every change made
-in :file:`/etc/postfix/sender_canonical`::
+:file:`/etc/postfix/sender-canonical.db`. Because of that the database must be 
+refreshed after each and every change made in 
+:file:`/etc/postfix/sender_canonical.in`::
 
-    $ postmap /etc/postfix/sender_canonical
+    $ cd /etc/postfix
+    $ sudo make
 
 
 Canonical Map
 ^^^^^^^^^^^^^
 
-The file :file:`/etc/postfix/canonical` defines a map on which addresses need
-always be changed for sender and recipient in message headers and envelopes.
+The file :download:`/etc//postfix/canonical.in <config/postfix/canonical.in>`
+defines a map on which addresses need always be changed for sender and recipient
+in message headers and envelopes:
 
-..  code-block:: apache
-
-    # see man 5 canonical
-    # run "sudo postmap /etc/postfix/canonical" after changing this file.this file.
-    root        hostmaster@example.com
-    postmaster  postmaster@example.com
-    webmaster   webmaster@example.com
+.. literalinclude:: config/postfix/canonical.in
+    :language: bash
 
 The contents of the file are cached in the database 
 :file:`/etc/postfix/canonical.db`.
 To update the database after changes run the following::
 
-    $ sudo postmap /etc/postfix/canonical
+    $ cd /etc/postfix
+    $ sudo make
 
 
 SMTP Client Credentials
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-The file :file:`/etc/postfix/relay_password` contains a lookup table with one
-username:password entry per remote hostname or domain used by the Postfix SMTP
-client when connecting to other SMTP servers when delivering mail.
+The file :download:`/etc//postfix/relay_password.in
+<config/postfix/relay_password.in>` contains a lookup table with one
+username:password entry per remote hostname or domain used by the Postfix |SMTP|
+client when connecting to other |SMTP| servers when delivering mail.
 
-..  code-block:: apache
-    
-    # Usernames and passwords for use at remote SMTP servers.
-    # run "sudo postmap /etc/postfix/relay_password" after changing this file.this file.
-    smtp.myisp.com server@example.com:********
+.. literalinclude:: config/postfix/relay_password.in
+    :language: bash
 
 To update the cache after any changess::
 
-    $ sudo postmap /etc/postfix/relay_password
+    $ cd /etc/postfix
+    $ sudo make
 
 
 SMTP Generic Maps
 ^^^^^^^^^^^^^^^^^
 
 The file :file:`/etc/postfix/generic` contains a lookup table that perform
-address rewriting in the Postfix SMTP client, typically to transform a locally
+address rewriting in the Postfix |SMTP| client, typically to transform a locally
 valid address into a globally valid address when sending mail across the
 Internet.
 
@@ -319,7 +334,7 @@ domains hosted here:
     query = SELECT 1 FROM virtual_domains WHERE name='%s'    
 
 
-Use the user, password and database defined in :doc:`database`.
+Use the user, password and database defined in :doc:`virtual`.
 
 
 Virtual Mailbox Map
@@ -372,33 +387,76 @@ The official documentation website `provides a manual page
 <http://www.postfix.org/master.5.html>`_ online.
 
 The whole file, as presented below, is also provided for download at
-:download:`master.cf` here.
+:download:`config/postfix/master.cf` here.
 
-The SMTP daemon
-^^^^^^^^^^^^^^^
+.. index::
+    single: Internet Protocols; SMTP
+    
 
-The first daemon specified here is the SMTP daemon **smtpd** which runs on the
-dedicated SMTP TCP port 25, it is enabled by default, but as we use postscreen
+Disable Default SMTP
+^^^^^^^^^^^^^^^^^^^^
+
+The first daemon specified here is the |SMTP| daemon **smtpd** which runs on the
+dedicated |SMTP| TCP port 25, it is enabled by default, but as we use postscreen
 in front of it we comment that out:
 
-.. literalinclude:: master.cf
+.. literalinclude:: config/postfix/master.cf
     :language: bash
-    :lines: 8-11,12,66
+    :lines: 8-11,12
+
 
 Postscreen SMTP Firewall
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 We enable **postscreen** on the second line instead of **smtpd** on the first
-line. This runs a mininmal SMTP subset to perform some compliance tests on
-incoming SMTP client connections. If the client passes all tests he gets
-whitelistet and the connection is passed along to the real SMTP server running
+line. This runs a mininmal |SMTP| subset to perform some compliance tests on
+incoming |SMTP| client connections. If the client passes all tests he gets
+whitelistet and the connection is passed along to the real |SMTP| server running
 behind it. That is what the second line above is for. An **smtpd** daemon that
 takes over connections from **postscreen** only. The **tlsproxy** handles TLS
 encryption for postscreen and **dnsblog** does the DNS blacklist lookups.
 
-.. literalinclude:: master.cf
+.. literalinclude:: config/postfix/master.cf
     :language: bash
-    :lines: 8-11,13-16,66
+    :lines: 8-11,13-15
+
+
+Postfix SMTP Daemon
+^^^^^^^^^^^^^^^^^^^
+
+If the conneting SMTP client has passed all the checks performed by
+**postscreen**, the client IP address is temporarely whitelisted. 
+
+If possible the TCP connection is then handed over to the SMTPD daemon
+internally (that is what the "pass" keyword means). 
+
+Sometimes this is not possible, depeneding on the checks. If the client had to
+start already some message delivery in order to complete a check, the connection
+can not be handed over to a new SMTP server, as this would confuse the SMTP
+client who is already in the middle of a message delivery. In this case,
+**postscreen** will tell the connecting SMTP client to abort message delivery
+for now and try again later. If the same client connects again later, it will be
+already whitelisted and then the connection is "passed" directly to the postfix
+SMTP daemon.
+
+.. literalinclude:: config/postfix/master.cf
+    :language: bash
+    :lines: 8-11,16-17
+
+The SMTP daemon will use Amavis as proxy by forwarding the SMTP client
+connection to the Amavis daemon running on TCP port 10024 on localhost.
+
+
+After-Scan SMTP Reinjection
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When Amvis has performed all scans and checks on a mail-message, it injects the
+message back to postfix on the postfix SMTP server running at TCP port 10025 on
+localhost.
+
+.. literalinclude:: config/postfix/master.cf
+    :language: bash
+    :lines: 8-11,18-33
 
 
 The Submission Daemon
@@ -410,14 +468,24 @@ encrypted connections, allows only authenticated and authorized users, but also
 allows mails to be relayed out on the internet, besides accepting mail to its
 own hosted domains and mailboxes.
 
-In practice, this is another copy of the SMTP daemon running on TCP port 587 instead of port 25 and some command-line options to override the default SMTP daemon settings from :file:`main.cf`.
+In practice, this is another copy of the |SMTP| daemon running on TCP port 587
+instead of port 25 and some command-line options to override the default |SMTP|
+daemon settings from :file:`main.cf`.
 
 It is not enabled by default, we have to remove the comment ('#') symbol at the
 start of the line and the options in the following lines:
 
-.. literalinclude:: master.cf
+.. literalinclude:: config/postfix/master.cf
     :language: bash
-    :lines: 8-11,17-27,66
+    :lines: 8-11,34-44
+
+
+Amavis Daemon
+^^^^^^^^^^^^^
+
+.. literalinclude:: config/postfix/master.cf
+    :language: bash
+    :lines: 8-1,91-98
 
 
 

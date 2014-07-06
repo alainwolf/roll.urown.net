@@ -410,38 +410,167 @@ be discarded)::
     $ cd
 
 
-Ciphers Suite Selection
------------------------
+.. index:: Cipher Suite; Selection of
 
-This is a topic of endless discussion, mostly because there is no perfect 
-solution.
+.. _cipher-suite:
 
-See the :manpage:`ciphers` manpage and the `BetterCrypto <https://bettercrypto.org>`_ website.
+Cipher Suite Selection
+------------------------------
 
-For our private server with limited public access and as we started this whole 
-project to gain better privacy, secrecy and confidentiality with our personally 
-used services, we a limited but secure set of cipher suites.
+..  note::
 
-.. note::
-    With the following configuration Windows XP clients might not be able to 
-    connect to any of your servers.
+    :term:`TL;DR`: this is our official :term:`cipher suite` list string, which 
+    we will use in all our services:
+    **kEDH+aRSA+AES128:kEECDH+aRSA+AES128:+SSLv3**
 
-We want our encrypted services to behave as follows:
+The quest for the perfect :term:`Cipher Suite` list is an endless one, simply
+because there is no perfect solution.
 
-All encrypted communication sessions ...
+For our private servers for mostly personal use and presumably limited public
+interest or commecrial goals, we have the luxury to enforce a more secure, but
+less compatible set of cipher suites.
 
-    #. ... are established with perfect forward secrecy (\ **kEDH**\ :\ **kEECDH**)
-    #. ... use RSA key authentication (kEDH\ **+aRSA**\ :kEECDH\ **+aRSA**)
-    #. ... use 128bit AES encryption (kEDH+aRSA+\ **AES128**\ :kEECDH+aRSA+\ **AES128**)
-    #. ... Prefer TLS ciphers over SSL/SHA1 ciphers (kEDH+aRSA+AES128:kEECDH+aRSA+AES128:\ **+SSLv3**)
+.. note::     
+    Windows XP clients using Internet Explorer will not be able to connect to
+    any of your servers.
+
+Following is the composition of our Cipher suite list using the the OpenSSL
+:manpage:`ciphers (1SSL)` command. The command displays as a list of all cipher
+suites available with the current selection parameters.
+
+::
+
+    $ openssl ciphers -v '<Selection Parameters>' | column -t
+
+.. index:: Perfect Forward Secrecy
+
+Perfect Forward Secrecy
+^^^^^^^^^^^^^^^^^^^^^^^
+
+All our encrypted communications is to be establsihed using :term:`Perfect
+Forward Secrecy`.
+
+In todays OpenSSL the available ciphers suites who are able to provide forward
+secrecy are the ones who use :term:`Diffie-Hellman key exchange`.
+
+To list those, you can use ...
+
+.. parsed-literal::
+    
+    \ **kEDH**\ :\ **kEECDH**
+
+as selection parameter with the OpenSSL :command:`ciphers` command and you will
+get a list of 61 available cipher suites on my [#f1]_ system.
+
+.. index:: Key Authentication
+
+
+RSA Key Authentication
+^^^^^^^^^^^^^^^^^^^^^^
+
+The private keys to our certificates are :term:`RSA` keys. Any other type of key
+authentication would simply not work.
+
+One can select all ciphers suites who use RSA key authentiation with the
+"\ **aRSA**" selection parameter. This will list 43 available cipher suites.
+
+Combined with the earlier "kEDH:kEECDH" parameter like this: 
+
+.. parsed-literal::
+
+    kEDH\ **+aRSA**:kEECDH\ **+aRSA**
+
+The list shrinks to 21 ciphers suites.
+
+
+AES Encryption
+^^^^^^^^^^^^^^
+
+Looking at the current selection, there are many who clearly we don't want to
+use. Like :term:`RC4`, :term:`3DES`, :term:`DES` or some with weak export-grade
+or no encryption at all.
+
+To make things easier we just decide to select AES. Its the most widely trusted
+encryption standard, supported on all plattforms and client software, and as big
+plus, modern CPUs include hardware acceleration for AES with the :term:`Advanced
+Encryption Standard Instruction Set`. OpenSSL lists 58 cipher suites when used
+with the "AES" parameter. Combined with our earlier selections:
+
+.. parsed-literal::
+
+    kEDH+aRSA+\ **AES**\ :kEECDH+aRSA+\ **AES**
+
+Number of matching cipher suites: 12. And they are all suitable, as they provide
+either 128-bit or 256-bit encryption. With this list we already get top
+scores on test-sites like `SSLlabs <https://www.ssllabs.com/>`_.
+
+
+Preferences
+^^^^^^^^^^^
+
+Hower there is still some small room for improvement. Some cipher suites in our
+selection use :term:`SHA-1` for message authentication (:term:`HMAC`).
+
+While SHA-1 is not considered broken or harmful for this specific use, its use
+is no longer recommendet. However if we exclude it, we loose compatibility with
+a lot of client platforms and software. This would include:
+
+ * Android devices less then version 4.4 (before December 2013)
+ * Bing search engine
+ * Firefox browsers less then version 25 (before December 2013)
+ * Google search engine
+ * Internet Explorer less then version 11
+ * Java less then version 8
+ * OpenSSL 0.9.8 (only version 1.0.1)
+ * OS X less then version 10.9.
+ * Safari Browsers up to version 6 
+ * Windows less then version 8 and Windows Mobile less then version 10
+ * Yahoo search engine
+
+So unless you are sure that any of the above list will not be connecting to any
+of your servers, we need to support it.
+
+But we can push it to the end of our list, so that it will only be used, when
+all other options failed already.
+
+.. parsed-literal::
+    
+    kEDH+aRSA+AES:kEECDH+aRSA+AES:\ **+SSLv3**
+
+This give the same list of 12 cipher suites, but the ones using SHA-1 moved to
+the bottom.
+
+Encryption Strenght
+^^^^^^^^^^^^^^^^^^^
+
+And yet still I have one more point to make.
+
+As already mentioned all our selected cipher suites use either 128-bit or
+256-bit encryption. Thats OK for most, some would even be tempted to use only
+256-bit (only to discover that not even the newest Firefox browser would work
+anymore).
+
+If we trust 128-bit encryption, and recent findings predict 128-bit encryption
+to be strong enough for another 30 years or so, then why use 256-bit then?
+
+Bigger is not always better. The time for a handshake between server and client
+increeases dramatically with 256-bit encryption compared to 128-bit. And lets
+not forget the mobile devices, who may not have a CPU with :term:`AES-NI`
+besides being weaker nd smaller on the hardware-side.
+
+So to only select the 29 different 128-bit variants out of the 58 suites with
+AES encryption, one can use "AES\ **128**\ " instead of just "AES" as selection
+parameter:
+
+.. parsed-literal::
+    
+    kEDH+aRSA+AES\ **128**\ :kEECDH+aRSA+AES\ **128**\ :+SSLv3
+
+That gives a list of 6 remaining cipher suites, as shown below:
 
 .. code-block:: bash
 
     $ openssl ciphers -v 'kEDH+aRSA+AES128:kEECDH+aRSA+AES128:+SSLv3' | column -t
-
-
-This results in a list of 6 matching ciphers (out of 111), with the ones using 
-SHA1 for message authentication, pushed to the end of the list:
 
 .. code-block:: text
 
@@ -452,20 +581,8 @@ SHA1 for message authentication, pushed to the end of the list:
     5. DHE-RSA-AES128-SHA          SSLv3   Kx=DH   Au=RSA Enc=AES(128)    Mac=SHA1
     6. ECDHE-RSA-AES128-SHA        SSLv3   Kx=ECDH Au=RSA Enc=AES(128)    Mac=SHA1
 
-
-OpenSSL Strings to RFC strings translation:
-
-.. code-block:: text
-
-    1. DHE-RSA-AES128-GCM-SHA256    TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
-    2. DHE-RSA-AES128-SHA256        TLS_DHE_RSA_WITH_AES_128_CBC_SHA256
-    3. ECDHE-RSA-AES128-GCM-SHA256  TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-    4. ECDHE-RSA-AES128-SHA256      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
-    5. DHE-RSA-AES128-SHA           TLS_DHE_RSA_WITH_AES_128_CBC_SHA
-    6. ECDHE-RSA-AES128-SHA         TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA
-
-Ciphers list in RFC Strings Format as shown on the `Qualys SSL test website
-<https://www.ssllabs.com/ssltest/>`_:
+The same ciphers list in RFC Strings Format as shown on the `Qualys SSL test
+website <https://www.ssllabs.com/ssltest/>`_:
 
 .. code-block:: text
 
@@ -476,9 +593,12 @@ Ciphers list in RFC Strings Format as shown on the `Qualys SSL test website
     5. TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x33)          DH 1024 bits (p: 128, g: 1, Ys: 128)    FS  128
     6. TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)      ECDH 256 bits (eq. 3072 bits RSA)       FS  128
 
-There is nothing to do with this ciphersuite-string directly here and now. It is
-here as a reference as we will needed it later in every server-software who 
-relies on OpenSSL for authentication and encryption.
+
+
+
+
+
+
 
 
 Monitoring
@@ -563,3 +683,8 @@ case of the expiration date in less then 30 days, we add a cronjob as follows::
 
 In case there are more certificates-files to check, just repeat the second line
 above for each file with its path and filename.
+
+.. rubric:: Footnotes
+
+.. [#f1] The number of suites supporting particular features varies between
+         versions of OpenSSL.

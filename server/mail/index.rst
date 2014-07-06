@@ -1,6 +1,23 @@
 Mail Server
 ===========
 
+.. toctree::
+   :maxdepth: 1
+
+   intro
+   virtual
+   mail-scanner
+   dovecot
+   postfix
+   backup_mx
+   vimbadmin
+   rainloop
+   dns
+   backup
+   monitoring
+   testing
+
+
 Prerequesites
 -------------
 
@@ -8,15 +25,12 @@ Prerequesites
  * :doc:`../dns/index`
  * :doc:`../mariadb`
 
-.. toctree::
-   :maxdepth: 2
    
-   database
-   postfix
-   dovecot
-   roundcube
-
 References
 ----------
-Suggested reading:
-`ISPmail tutorial for Debian Wheezy <https://workaround.org/ispmail/wheezy>`_
+
+Other guides:
+
+    *   `ISPmail tutorial <https://workaround.org/ispmail/wheezy>`_
+    *   `DigitalOcean How-To: Postfix, Dovecot, MySQL, and SpamAssasin 
+        <https://www.digitalocean.com/community/tutorials/how-to-configure-a-mail-server-using-postfix-dovecot-mysql-and-spamassasin#Step4:ConfigureDovecot>`_

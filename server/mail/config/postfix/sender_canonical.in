@@ -1,0 +1,4 @@
+# see man 5 canonical
+# run "postmap /etc/postfix/sender_canonical" after changing this file.
+www-data webmaster@example.com
+root server@example.com

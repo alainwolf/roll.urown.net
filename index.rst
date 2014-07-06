@@ -25,6 +25,8 @@ Contents:
    router/index
    server/index
    smartphone/index
+   glossary
+   bibliography
    todo
 
 
@@ -32,5 +34,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

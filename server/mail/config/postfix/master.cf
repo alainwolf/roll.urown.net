@@ -10,11 +10,28 @@
 #               (yes)   (yes)   (yes)   (never) (100)
 # ==========================================================================
 #smtp      inet  n       -       -       -       -       smtpd
-smtp       inet  n       -       -       -       1       postscreen
-smtpd      pass  -       -       -       -       -       smtpd
-dnsblog    unix  -       -       -       -       0       dnsblog
-tlsproxy   unix  -       -       -       -       0       tlsproxy
-submission inet  n       -       -       -       -       smtpd
+smtp       inet  n       -       n       -       1       postscreen
+dnsblog    unix  -       -       n       -       0       dnsblog
+tlsproxy   unix  -       -       n       -       0       tlsproxy
+smtpd      pass  -       -       n       -       -       smtpd
+  -o smtpd_proxy_filter=127.0.0.1:10024
+127.0.0.1:10025 inet n   -       -       -       -       smtpd
+  -o content_filter=
+  -o smtpd_proxy_filter=
+  -o local_recipient_maps=
+  -o smtpd_authorized_xforward_hosts=127.0.0.0/8
+  -o relay_recipient_maps=
+  -o smtpd_restriction_classes=
+  -o smtpd_client_restrictions=
+  -o smtpd_helo_restrictions=
+  -o smtpd_sender_restrictions=
+  -o smtpd_data_restrictions=
+  -o smtpd_recipient_restrictions=permit_mynetworks,reject
+  -o mynetworks=127.0.0.0/8
+  -o strict_rfc821_envelopes=yes
+  -o receive_override_options=no_unknown_recipient_checks,no_header_body_checks
+  -o inet_interfaces=127.0.0.1
+submission inet  n       -       n       -       -       smtpd
   -o syslog_name=postfix/submission
   -o smtpd_tls_security_level=encrypt
   -o smtpd_sasl_auth_enable=yes
@@ -36,7 +53,7 @@ submission inet  n       -       -       -       -       smtpd
 #  -o smtpd_recipient_restrictions=
 #  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
 #  -o milter_macro_daemon_name=ORIGINATING
-#628       inet  n       -       -       -       -       qmqpd
+#628      inet  n       -       -       -       -       qmqpd
 pickup    unix  n       -       -       60      1       pickup
 cleanup   unix  n       -       -       -       0       cleanup
 qmgr      unix  n       -       n       300     1       qmgr
@@ -70,6 +87,16 @@ scache    unix  -       -       -       -       1       scache
 # Many of the following services use the Postfix pipe(8) delivery
 # agent.  See the pipe(8) man page for information about ${recipient}
 # and other message envelope options.
+# ==========================================================================
+#
+# Amavis.
+#
+amavis    unix  -       -       n       -       6       smtp
+  -o smtp_data_done_timeout=1800
+  -o smtp_send_xforward_command=yes
+  -o disable_mime_output_conversion=yes
+  -o disable_dns_lookups=yes
+#
 # ==========================================================================
 #
 # maildrop. See the Postfix MAILDROP_README file for details.

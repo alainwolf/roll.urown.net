@@ -129,6 +129,10 @@ Administrators
 	:start-after: interfaces = {
 	:end-before: -- Enable use of libevent
 
+.. index:: Cipher Suite; Set in Prosody
+
+Enforce our selected :ref:`cipher-suite`.
+
 
 Certificate and Key
 ^^^^^^^^^^^^^^^^^^^

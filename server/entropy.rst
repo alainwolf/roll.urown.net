@@ -8,7 +8,7 @@ Entropy
 
 Non-interactive systems (like servers) have a higher risk of not having enough 
 random data available. Especially when they have just been installed, just 
-rebooted or not many services have been running yet. See [KAea14]_.
+rebooted or not many services have been running yet. See [KAea14a]_.
 
 This section is to make sure enough random numbers are available at all times.
 
@@ -73,13 +73,3 @@ GNuPG
 ^^^^^
 
 Same is valid for OpenPGP / GnuPG keys.
-
-
-References
-----------
-
-.. [GCJ13] 
-   John Graham-Cumming. `Why secure systems require random numbers <http://blog.cloudflare.com/why-randomness-matters>`_. CloudFlare Blog, September 2013. http://blog.cloudflare.com/why-randomness-matters
-
-.. [KAea14]
-   L. Aaron-Kaplan et al. `Applied Crypto Hardening <https://bettercrypto.org/static/applied-crypto-hardening.pdf#section.3.3>`_ Draft revision: e516f3c. Section 3.3. Random Number Generators, page 68 - 70. March 2014. https://bettercrypto.org/static/applied-crypto-hardening.pdf#section.3.3

@@ -253,11 +253,15 @@ However this should be changed immediately to something more usefull and secure.
         return 403;
     }
 
+.. index:: Cipher Suite; Set in Nginx
+
 TLS - Transport Layer Security
 ------------------------------
 
 Common TLS Settings
 ^^^^^^^^^^^^^^^^^^^
+
+Enforce our :ref:`cipher-suite` on our websites.
 
 .. code-block:: nginx
    :linenos:
@@ -275,7 +279,7 @@ Common TLS Settings
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
     # Cipher suite selection
-    ssl_ciphers 'DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-CAMELLIA256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES256-SHA:AES256-SHA';
+    ssl_ciphers 'kEDH+aRSA+AES128:kEECDH+aRSA+AES128:+SSLv3';
 
     # HSTS - Strict Transport Security
     add_header Strict-Transport-Security max-age=15768000; # six months

@@ -16,7 +16,7 @@ Prerequisites
 IP Addresses
 ^^^^^^^^^^^^
 
-The server will need a dedicated private IPv4 address and a IPv6 address.
+The server will need a dedicated private IPv4 address and global IPv6 address.
 See :doc:`/server/network`.
 
 Troughout this document we will use **192.0.2.41** as IPv4 address and 
@@ -45,14 +45,17 @@ Domain Registration
 ^^^^^^^^^^^^^^^^^^^
 
 You need to register your domain with one of the official DNS registrars. The
-registrar must support **DNSSEC** and allow you to define your own name servers.
+registrar must support **IPv6**, **DNSSEC** and allow you to define your own name servers.
 
 
 Secondary Domain Name Servers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You will need a 3rd-Party providing you with secondary servers. The provider must
-support **IPv6**, **NOTIFY**, **AXFR** and **DNSSEC** on its servers.
+support **IPv6** records, **NOTIFY**, **AXFR** and **DNSSEC** on its servers.
+
+Their DNS servers must be reachable over IPv6 and be able to receive DNS NOTIFY
+messages and transfer zones from the master over IPv6.
 
 
 Software Installation
@@ -82,38 +85,137 @@ The following happens during installation:
     * A system service :file:`/etc/init.d/pdns` is created and started.
 
 
-Configuration
--------------
+DNS Server Database
+-------------------
 
-Only one backend can be active. As we installed the MySQL backend we need to 
-remove the default bind-backend, by deleteing its configuration file.
+All our DNS data will stored in a MySQL database.
+
+
+Remove BIND Backend
+^^^^^^^^^^^^^^^^^^^
+
+By default PowerDNS uses BIND style zone-files to store DNS data.
+
+As only one backend can be active at any time and we installed the MySQL backend,
+we need to remove the default "simple BIND backend". This is done simply by
+deleting its configuration file.
 
 ::
     
     $ sudo rm /etc/powerdns/pdns.d/pdns.simplebind.conf
 
 
-The following settings need to be changed in :file:`/etc/powerdns/pdns.conf`:
-
-.. code-block:: ini
-
-    #################################
-    # local-address Local IP address to which we bind
-    #
-    local-address=192.0.2.41
-
-    #################################
-    # local-ipv6    Local IP address to which we bind
-    #
-    local-ipv6=2001:db8::41
-
+Database Server
+^^^^^^^^^^^^^^^
 
 The following setting needs to changed in 
-:file:`/etc/powerdns/pdns.d/pdns.local.gmysql.conf`:
+:download:`/etc/powerdns/pdns.d/pdns.local.gmysql.conf <config/pdns.local.gmysql.conf>`:
 
-.. code-block:: ini
+.. literalinclude:: config/pdns.local.gmysql.conf
+    :language: apache
 
-    gmysql-socket=/var/run/mysqld/mysqld.sock
+
+Preparing the database
+^^^^^^^^^^^^^^^^^^^^^^
+
+Create a new emtpy database called **pdns** on the MySQL server::
+
+    $ mysqladmin -u root -p create pdns
+
+
+Create a database user for PowerDNS-server to access the database::
+
+    $ mysql -u root -p mailserver
+
+
+.. code-block:: mysql
+
+    GRANT SELECT ON pdns.* TO 'pdns'@'127.0.0.1' 
+        IDENTIFIED BY '********';
+
+    FLUSH PRIVILEGES;
+    EXIT;
+
+
+The file :download:`powerdns.sql <config/powerdns.sql>` contains the PowerDNS
+database structure as shown in the PoweDNS documentation 
+`Chapter 4. Basic setup: configuring database connectivity 
+<http://doc.powerdns.com/html/configuring-db-connection.html>`_:
+
+.. literalinclude:: config/powerdns.sql
+    :language: sql
+
+To create this table structures in our new PowerDNS database::
+
+    $ mysql -u root -p pdns < powerdns.sql
+
+
+Configuration
+-------------
+
+The following settings need to be changed in 
+:download:`/etc/powerdns/pdns.conf <config/pdns.conf>`:
+
+Allowed Zone Transfers
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: config/pdns.conf
+    :language: ini
+    :start-after: #only-notify=
+    :end-before: # allow-recursion
+
+
+
+Enable Zone Transfers
+^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: config/pdns.conf
+    :language: ini
+    :start-after: # default-soa-name=
+    :end-before: # disable-tcp
+
+
+Server IP Address
+^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: config/pdns.conf
+    :language: ini
+    :start-after: # load-modules=
+    :end-before: # local-port
+
+
+Act as Master Server
+^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: config/pdns.conf
+    :language: ini
+    :start-after: loglevel=
+    :end-before: # max-queue-length
+
+
+Source Address
+^^^^^^^^^^^^^^
+
+By default PowerDNS will use the last defined IP address as source address to
+send out DNS NOTIFY messages to slaves.
+
+The slave servers, will not accept any NOTIFY messages, if they are not coming
+from the defined master server of a domain. Here is how we tell PowerDNS to use
+its dedicated IPv4 and IPv6 addresses for outgoing connections:
+
+.. literalinclude:: config/pdns.conf
+    :language: ini
+    :start-after: # queue-limit=
+    :end-before: # receiver-threads
+
+
+Server Restart
+--------------
+
+::
+
+    $ sudo service pdns restart
+
 
 
 Import Zone-Files

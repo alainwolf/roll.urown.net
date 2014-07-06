@@ -7,3 +7,4 @@ OpenWRT home router.
    :maxdepth: 2
    
    unbound
+   smtp_mta

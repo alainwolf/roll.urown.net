@@ -56,20 +56,16 @@ Automatic Updates
 -----------------
 
 .. note::
-   The system must be able to send out mails, for this to work. See :doc:`/server/mail`
+   The system must be able to send out mails, for this to work. See 
+   :doc:`/server/mail/index`
 
 
-The **unattended-upgrades** package is used to automatically install updated packages. It is installed if selected during OS installation.
-
-Check for it with::
-
-    $ dpkg-query -W -f='${Status} ${Version}\n' unattended-upgrades
-
+The **unattended-upgrades** package is used to automatically install updated
+packages. It is installed if selected during OS installation.
 
 If it is not already, install it as follows::
 
     $ sudo apt-get install unattended-upgrades
-
 
 To configure unattended-upgrades, edit 
 :file:`/etc/apt/apt.conf.d/50unattended-upgrades` and adjust the following to fit your needs::
@@ -83,14 +79,15 @@ To configure unattended-upgrades, edit
     Unattended-Upgrade::Mail "root";
     Unattended-Upgrade::Remove-Unused-Dependencies "true";
 
- 
+
 Another useful package is **apticron**. apticron will configure a cron job to email an administrator information about any packages on the system that have updates available, as well as a summary of changes in each package.
 
 To install the apticron package, in a terminal enter::
 
     $ sudo apt-get install apticron
 
-Once the package is installed edit :file:`/etc/apticron/apticron.conf`, to set the email address and other options::
+Once the package is installed edit :file:`/etc/apticron/apticron.conf`, to set
+the email address and other options::
 
     EMAIL="root@example.com"
 

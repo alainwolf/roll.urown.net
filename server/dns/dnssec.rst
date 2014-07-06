@@ -14,16 +14,50 @@ made it as easy as possible. See the  `PowerDNS DNSSEC documentation
 <http://doc.powerdns.com/html/powerdnssec-auth.html>`_ for complete coverage.
 
 
-Preparation
------------
+Domain Meta-Data
+----------------
 
-There is only one thing to be done beforehand:
+The MySQL table `domainmetadata` in the PowerDNS database is used to store
+domain-specific configuration settings. 
 
-According to :rfc:`4035`, the :abbr:`TTL (Time to live)` for :abbr:`NS (Name
-Server)` records at the parent should match the :abbr:`DS (Domain Signature)`
-:abbr:`TTL`. PowerDNS will set the :abbr:`DS (Domain Signature)` :abbr:`TTL` to
-86,400 seconds (1 day) so we should change all our :abbr:`NS` records to the
-same :abbr:`TTL`.
+While some things work without it, it is needed for some slave server related
+confiugrations and for DNSSEC purposes.
+
+Unfortunately none of the usage friendly front-ends support this features until
+today, so we have to use some SQL-Fu to set our options::
+
+    $ mysql -u root -p pdns
+
+All these domain-specific options are described in the PowerDNS Manual in 
+`Chapter 15. Per zone settings aka Domain Metadata 
+<http://doc.powerdns.com/html/domainmetadata.html>`_
+
+.. code-block:: mysql
+
+    INSERT INTO `domainmetadata` (
+        `domain_id`, 
+        `kind`, `content`
+        ) VALUES (
+            (SELECT id from domains where name='example.com'),
+            'SOA-EDIT', 'INCEPTION-INCREMENT'
+            );
+
+    INSERT INTO `domainmetadata` (
+        `domain_id`, 
+        `kind`, `content`
+        ) VALUES (
+            (SELECT id from domains where name='example.com'),
+            'ALLOW-AXFR-FROM', 'AUTO-NS'
+            );
+
+    # afraid.org Backup DNS - AXFR Source IP
+    INSERT INTO `domainmetadata` (
+        `domain_id`, 
+        `kind`, `content`
+        ) VALUES (
+            (SELECT id from domains where name='example.com'),
+            'ALLOW-AXFR-FROM', '208.43.71.243'
+            );
 
 
 Securing a Zone
@@ -62,6 +96,7 @@ To get the :abbr:`DS` key information::
     $ sudo pdnssec show-zone exmaple.com
 
 The command will display a bunch of keys.
+
 
 In roder to setup DNSEC at your registrar, he will ask you to provide the
 following information:
