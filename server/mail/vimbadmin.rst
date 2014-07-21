@@ -85,6 +85,75 @@ settings and set the password:
     :emphasize-lines: 9
 
 
+Virtual Mailbox Storage
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Set the system user and groupd ID and the filesystem location for virtual
+mailboxes to match our settings in the section "Mailbox Location" of
+the :doc:`dovecot`:
+
+.. literalinclude:: config/vimbadmin/application.ini
+    :language: ini
+    :start-after: defaults.list_size.multiplier
+    :end-before: ;minimum mailbox password length
+
+
+Password Scheme
+^^^^^^^^^^^^^^^
+
+As the login procedure is handled by Dovecot, one of Dovecots password schemes
+can be selected. This should match our configuration of :doc:`dovecot` in the
+section "Password Scheme".
+
+.. literalinclude:: config/vimbadmin/application.ini
+    :language: ini
+    :start-after: defaults.mailbox.min_password_length
+    :end-before: ; The path to (and initial option(s) if necessary) the Dovecot password generator.
+
+
+Mailbox Archives Storage
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+vimbadmin allows to archive entire mailboxes. We need to adjust the path, where
+those archives are stored:
+
+.. literalinclude:: config/vimbadmin/application.ini
+    :language: ini
+    :start-after: mailboxAliases =
+    :end-before: ; Enable mailbox deletion on the file system
+
+
+Mail-Server Defaults
+^^^^^^^^^^^^^^^^^^^^
+
+Default configuration settings for new accounts include the server settings for
+accessing the mailboxand submitting mail messages:
+
+The SMTP server needs to be changed to reflect a :term:`Submission` server
+instead of the legacy SMTP server.
+
+Also POP3, IMAP and Webmail access needs adjustments to server names and
+encryption protocols used.
+
+.. literalinclude:: config/vimbadmin/application.ini
+    :language: ini
+    :start-after: defaults.export_settings.allowed_subnet[] = "192.168."
+    :end-before: ;; Identity
+
+
+
+Identity
+^^^^^^^^
+
+At least the domain names have to be adjusted to your own one here:
+
+.. literalinclude:: config/vimbadmin/application.ini
+    :language: ini
+    :start-after: server.webmail.user  = "%m"
+    :end-before: ;; Skinning
+    :emphasize-lines: 7,9,11,14,21
+
+
 Database
 --------
 
@@ -104,9 +173,44 @@ And set the privileges, after creating a secure password with
     FLUSH PRIVILEGES;
     QUIT;
 
+We wont use the :file:`.htaccess` file with NGinx, but the script doesn't run
+without it:
+
+::
+
+    $ cp $INSTALL_PATH/public/.htaccess.dist $INSTALL_PATH/public/.htaccess
 
 Now the tables can be created.
 
 ::
 
+    $ cd $INSTALL_PATH
     $ ./bin/doctrine2-cli.php orm:schema-tool:create
+    ATTENTION: This operation should not be executed in a production environment.
+
+    Creating database schema...
+    Database schema created successfully!
+
+
+Nginx Configuration
+-------------------
+
+Create a new web-application configuration file 
+:download:`/etc/nginx/webapps/vimbadmin.conf <config/nginx/vimbadmin.conf>`
+
+.. literalinclude:: config/nginx/vimbadmin.conf
+    :language: nginx
+
+
+Include the new web-application in your server configuration:
+
+.. code-block:: nginx
+
+        # ViMbAdmin - Virtual Mailbox Administration
+        include             webapps/vimbadmin.conf;
+
+
+Restart the Nginx webserver::
+
+    $ sudo service nginx restart
+
