@@ -10,8 +10,12 @@ Contents:
 .. toctree::
    :maxdepth: 2
    
+   tails
+   ca
+   xca
    keepassx
    transmission
+   media
 
 
 Recommended reading: 
