@@ -102,3 +102,27 @@ Add the following block to your internal nginx server configuration:
     location /minidlna {
         proxy_pass http://localhost:8200/;
     }
+
+Troubleshooting
+---------------
+
+Inotify watches
+^^^^^^^^^^^^^^^
+
+Inotify is a method how the media server gets notfied, if any changes in the
+media file directories happen. If the media collection is large, you might get
+the following error in the logs:
+
+.. code-block:: text
+
+
+	WARNING: Inotify max_user_watches [8192] is low or close to the number of
+	used watches [1253] and I do not have permission to increase this limit.
+	Please do so manually by writing a higher value into
+	/proc/sys/fs/inotify/max_user_watches.
+
+To increase the value from 8192 to a vlue eight times as high::
+
+	$ sudo -s 
+	$ echo 65536 > /proc/sys/fs/inotify/max_user_watches
+	$ exit
