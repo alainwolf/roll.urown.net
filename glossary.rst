@@ -34,6 +34,16 @@ Glossary
         encryption and decryption if the :term:`Advanced Encryption Standard`
         (AES) is used by an application.
 
+    Bayesian Filter
+    Bayesian Filtering
+    Bayesian Spam Filter
+        A `Bayesian spam filter
+        <https://en.wikipedia.org/wiki/Bayesian_spam_filtering>`_ (after Rev.
+        Thomas Bayes) is a statistical technique of e-mail filtering. In its
+        basic form, it makes use of a naive Bayes classifier on bag of words
+        features to identify spam e-mail, an approach commonly used in text
+        classification.
+
     Cipher Suite 
         A cipher suite is a standardized collection of key exchange algorithms,
         encryption algorithms (ciphers) and Message authentication codes
