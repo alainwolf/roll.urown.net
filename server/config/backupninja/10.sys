@@ -1,0 +1,16 @@
+packages = yes
+partitions = no
+dosfdisk = yes
+hardware = no
+luksheaders = no
+lvm = yes
+
+# packagesfile = /var/backups/dpkg-selections.txt
+# selectionsfile = /var/backups/debconfsel.txt
+# partitionsfile = /var/backups/partitions.__star__.txt
+# hardwarefile = /var/backups/hardware.txt
+# luksheadersfile = /var/backups/luksheader.__star__.bin
+
+# If vservers = yes in /etc/backupninja.conf then the following variables can
+# be used:
+# vsnames = all | <vserver1> <vserver2> ... (default = all)

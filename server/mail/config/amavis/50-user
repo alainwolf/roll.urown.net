@@ -1,0 +1,27 @@
+use strict;
+
+#
+# Place your configuration directives here.  They will override those in
+# earlier files.
+#
+# See /usr/share/doc/amavisd-new/ for documentation and examples of
+# the directives you can use in this file
+#
+
+$sa_spam_subject_tag = undef;
+$spam_quarantine_to  = undef;
+$sa_tag_level_deflt  = undef;
+
+# Prevent spams from automatically rejected by mail-server
+$final_spam_destiny  = D_PASS;
+
+# We need to provide list of domains for which filtering need to be done
+@lookup_sql_dsn = (
+    ['DBI:mysql:database=vimbadmin;host=127.0.0.1;port=3306',
+     'vimbadmin',
+     '********']);
+
+$sql_select_policy = 'SELECT domain FROM domain WHERE CONCAT("@",domain) IN (%k)';
+
+#------------ Do not modify anything below this line -------------
+1;  # ensure a defined return

@@ -7,7 +7,7 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
 
-PUBLISH_DEST   = "cortez.lan:/var/www/alainwolf.net/public_html/"
+PUBLISH_DEST   = "cortez.urown.net:/var/www/roll.urown.net/public_html/"
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
@@ -20,7 +20,7 @@ PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
-RSYNCOPTS       = --recursive --update --times --delete --human-readable --stats
+RSYNCOPTS       = --recursive --update --times --delete --itemize-changes --human-readable --stats
 
 .PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
 
@@ -48,7 +48,7 @@ help:
 	@echo "  pseudoxml  to make pseudoxml-XML files for display purposes"
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
-	@echo "  publish       to upload the standalone HTML files to the webserver"
+	@echo "  publish    to upload the standalone HTML files to the webserver"
 
 clean:
 	rm -rf $(BUILDDIR)/*
@@ -181,6 +181,6 @@ pseudoxml:
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 
 publish:
-	rsync --recursive --update --times --delete --human-readable --stats $(BUILDDIR)/html/ $(PUBLISH_DEST)
+	rsync --recursive --update --times --delete --human-readable --itemize-changes --stats $(BUILDDIR)/html/ $(PUBLISH_DEST)
 	@echo
 	@echo "Publishing finished. The HTML pages are in $(PUBLISH_DEST)."

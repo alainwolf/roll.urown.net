@@ -1,3 +1,7 @@
+.. image:: Transmission-logo.*
+    :alt: ownCloud Logo
+    :align: right
+
 BitTorrent
 ==========
 
@@ -20,6 +24,69 @@ way. While there is no noticable difference, behind the scenes all transfers
 take place on the server instead of the users desktop system.
 
 .. contents:: \ 
+  :local: 
+
+
+Preparations
+------------
+
+IP Address
+^^^^^^^^^^
+
+Add IPv4 and IPV6 network adresses for the keyserver::
+
+    $ sudo ip addr add 192.0.2.36/24 dev eth0
+    $ sudo ip addr add 2001:db8::36/64 dev eth0
+
+
+Also add them to the file :file:`/etc/network/interfaces` to make them
+persistent across system restarts:
+
+.. code-block:: ini
+
+    # bt.example.com - BitTorrent Server
+    iface eth0 inet static
+        address 192.0.2.36/24
+    iface eth0 inet6 static
+        address 2001:db8::36/64
+
+
+DNS Records 
+^^^^^^^^^^^
+
+============================ ==== ================================ ======== ===
+Name                         Type Content                          Priority TTL
+============================ ==== ================================ ======== ===
+bt                           A    |publicIPv4|                              300
+bt                           AAAA |BitTorrentServerIPv6|
+_443._tcp.bt                 TLSA 3 0 1 f8df4b2e..........76a2a0e5
+============================ ==== ================================ ======== ===
+
+Check the "Add also reverse record" when adding the IPv6 entry.
+
+
+Firewall Rules
+^^^^^^^^^^^^^^
+
+IPv4 NAT port forwarding:
+
+======== ========= ========================= ==================================
+Protocol Port No.  Forward To                Description
+======== ========= ========================= ==================================
+UDP      51413     |BitTorrentServerIPv4|    BitTorrent NAT UDP Port forwarding
+TCP      51413     |BitTorrentServerIPv4|    BitTorrent NAT TCP Port forwarding
+======== ========= ========================= ==================================
+
+Allowed IPv6 connections:
+
+======== ========= ========================= ==================================
+Protocol Port No.  Destination               Description
+======== ========= ========================= ==================================
+UDP      51413     |BitTorrentServerIPv6|    Allow BitTorrent UDP
+TCP      51413     |BitTorrentServerIPv6|    Allow BitTorrent TCP
+TCP      80        |BitTorrentServerIPv6|    Allow HTTP to Transmission Web-UI
+TCP      443       |BitTorrentServerIPv6|    Allow HTTPS to Transmission Web-UI
+======== ========= ========================= ==================================
 
 
 Installation
@@ -50,127 +117,143 @@ Directory for Incomplete Downloads
 ::
 
     $ sudo mkdir -p /var/lib/transmission-daemon/downloads/.incomplete
-    $ sudo chown -R debian-transmission:debian-transmission /var/lib/transmission-daemon/downloads/.incomplete
-
-
-Blocklist
----------
-
-::
-
-    $ sudo mkdir -p /var/www/bt.example.com/{log,public_html}
-    $ sudo mkdir -p /var/www/bt.example.com/public_html/blocklist
-    $ sudo chown -R www-data:www-data /var/www/bt.example.com
-
-::
-
-    $ sudo wget -O /etc/cron.daily/update-torrent-blocklist \
-          https://raw.githubusercontent.com/walshie4/Ultimate-Blocklist/master/UpdateList.sh
-    $ sudo editor /etc/cron.daily/update-torrent-blocklist
-
-::
-
-    #-----CONFIG-----
-    LIST="list.txt" #This is the name of the final list file
-    PATH_TO_LIST="/var/www/bt.example.com/public_html/blocklist/" #This is the path to the final list file
-    #---END CONFIG---
-
-::
-
-    $ sudo chmod +x /etc/cron.daily/update-torrent-blocklist
+    $ sudo chown -R debian-transmission:debian-transmission \
+        /var/lib/transmission-daemon/downloads/.incomplete
 
 
 Configuration
 -------------
 
-Before changing anything in the configuration the daemon shoulf be shut down.
+The configuration file cannot be changed while the daemon is running.
 
 ::
 
     $ sudo stop transmission-daemon
 
-Then open :file:`/etc/transmission-daemon/settings.json` and change the 
-following lines:
+Then open :download:`/etc/transmission-daemon/settings.json 
+<config-files/etc/transmission-daemon/settings.json>` and change the  following 
+lines:
 
-.. code-block:: json
-   :linenos:
-   :emphasize-lines: 9-12,20,23-24,38,47,53-54
+.. literalinclude:: config-files/etc/transmission-daemon/settings.json
+    :language: json
+    :linenos:
+    :emphasize-lines: 9-10,20,23-24,38,47,53-54
 
-    {
-        "alt-speed-down": 50, 
-        "alt-speed-enabled": false, 
-        "alt-speed-time-begin": 540, 
-        "alt-speed-time-day": 127, 
-        "alt-speed-time-enabled": false, 
-        "alt-speed-time-end": 1020, 
-        "alt-speed-up": 50, 
-        "bind-address-ipv4": "192.0.2.15", 
-        "bind-address-ipv6": "2001:db8::15", 
-        "blocklist-enabled": true, 
-        "blocklist-url": "https://bt.example.com/blocklist/list.txt", 
-        "cache-size-mb": 4, 
-        "dht-enabled": true, 
-        "download-dir": "/var/lib/transmission-daemon/downloads", 
-        "download-limit": 100, 
-        "download-limit-enabled": 0, 
-        "download-queue-enabled": true, 
-        "download-queue-size": 5, 
-        "encryption": 2, 
-        "idle-seeding-limit": 30, 
-        "idle-seeding-limit-enabled": false, 
-        "incomplete-dir": "/var/lib/transmission-daemon/downloads/.incomplete", 
-        "incomplete-dir-enabled": true, 
-        "lpd-enabled": false, 
-        "max-peers-global": 200, 
-        "message-level": 2, 
-        "peer-congestion-algorithm": "", 
-        "peer-id-ttl-hours": 6, 
-        "peer-limit-global": 200, 
-        "peer-limit-per-torrent": 50, 
-        "peer-port": 51413, 
-        "peer-port-random-high": 65535, 
-        "peer-port-random-low": 49152, 
-        "peer-port-random-on-start": false, 
-        "peer-socket-tos": "default", 
-        "pex-enabled": true, 
-        "port-forwarding-enabled": true, 
-        "preallocation": 1, 
-        "prefetch-enabled": 1, 
-        "queue-stalled-enabled": true, 
-        "queue-stalled-minutes": 30, 
-        "ratio-limit": 2, 
-        "ratio-limit-enabled": false, 
-        "rename-partial-files": true, 
-        "rpc-authentication-required": true, 
-        "rpc-bind-address": "127.0.0.1", 
-        "rpc-enabled": true, 
-        "rpc-password": "{0286d69a37a92c1faeb593e5533c18e56985597eR/Xlj4wL", 
-        "rpc-port": 9091, 
-        "rpc-url": "/transmission/", 
-        "rpc-username": "transmission", 
-        "rpc-whitelist": "127.0.0.1", 
-        "rpc-whitelist-enabled": true, 
-        "scrape-paused-torrents-enabled": true, 
-        "script-torrent-done-enabled": false, 
-        "script-torrent-done-filename": "", 
-        "seed-queue-enabled": false, 
-        "seed-queue-size": 10, 
-        "speed-limit-down": 100, 
-        "speed-limit-down-enabled": false, 
-        "speed-limit-up": 100, 
-        "speed-limit-up-enabled": false, 
-        "start-added-torrents": true, 
-        "trash-original-torrent-files": false, 
-        "umask": 18, 
-        "upload-limit": 100, 
-        "upload-limit-enabled": 0, 
-        "upload-slots-per-torrent": 14, 
-        "utp-enabled": true
-    }
 
+Download Automation
+-------------------
+
+With the help of the `FlexGet <http://flexget.com/>`_ add-on, Transmission can
+start downloading new files as soon as they are available.
+
+FlexGet monitors RSS feeds, websites and similar sources and passes newly
+discovered Torrents who meet the configurable selection criteria to Transmission
+for downloading.
+
+
+FlexGet Installation
+^^^^^^^^^^^^^^^^^^^^
+
+FlexGet is a Python script and installed via the *Python package installation
+program* ``pip``::
+
+    $ sudo apt-get install python-pip
+
+If you already installed Python packages with ``pip`` before, make sure
+everything is up-to- date, as they are not managed by Ubuntu software updates::
+
+    $ sudo -H pip list --outdated | sed 's/(.*//g' | xargs sudo -H pip install -U
+
+
+Install the FlexGet package::
+
+    $ sudo -H pip install --upgrade flexget
+
+
+For fetching feeds from webservers which use TLS::
+
+    $ sudo -H pip install requests[security]
+
+
+To work with Transmission FlexGet uses an additional Python package::
+
+    $ sudo -H pip install --upgrade transmissionrpc
+
+
+FlexGet Configuration
+^^^^^^^^^^^^^^^^^^^^^
+
+Configuration is saved in the users home directory in a YAML file. In our case
+its the Transmission daemon home directory: `/var/lib/transmission/daemon`::
+
+    $ sudo mkdir -p /var/lib/transmission-daemon/flexget/
+    $ touch /var/lib/transmission-daemon/flexget/config.yml
+    $ sudo chown -R debian-transmission:debian-transmission \
+        /var/lib/transmission-daemon/flexget 
+
+
+.. note::
+
+    The configuration file is in YAML format, which means, indentation is not
+    just for the looks, has to be two spaces and not tabs.
+
+
+The configuration file format and options are described in the 
+`FlexGet Wiki <http://flexget.com/wiki/Configuration>`_
+
+:download:`/var/lib/transmission-daemon/flexget/config.yml 
+<config-files/flexget/config.yml>`:
+
+.. literalinclude:: config-files/flexget/config.yml
+    :language: yaml
+    :linenos:
+
+
+In the example above we let FlexGet check for new downloads every hour, using
+the schedule `plug-in <http://flexget.com/wiki/Plugins/Daemon/scheduler>`_.
+
+The task itself consists of checking the 
+`RSS release feed <https://tails.boum.org/torrents/rss/>`_ of the 
+`Tails project <https://tails.boum.org/>`_ by the 
+`RSS plugin <http://flexget.com/wiki/Plugins/rss>`_ and  submit new Torrents 
+found there to the Transmission daemon using the 
+`Transmission plugin <http://flexget.com/wiki/Plugins/transmission>`_.
+
+To let FlexGet check the configuration file for errors::
+
+    $ sudo -Hu debian-transmission flexget check
+
+
+To do a test run of the tasks::
+
+    $ sudo -Hu debian-transmission flexget --test --debug-warnings execute
+
+
+System Service (Ubuntu Upstart)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:download:`/etc/init/flexget.conf <config-files/etc/init/flexget.conf>`:
+
+.. literalinclude:: config-files/etc/init/flexget.conf
+    :language: bash
+    :linenos:
+
+::
+
+    $ sudo init-checkconf /etc/init/flexget.conf
+    File /etc/init/flexget.conf: syntax ok
+
+::
+
+    $ sudo initctl reload-configuration
+    $ sudo start flexget
+
+
+Web Interface
+-------------
 
 Nginx Configuration
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 :file:`/etc/nginx/sites-available/bt.example.com.conf`
 

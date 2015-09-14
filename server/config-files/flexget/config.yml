@@ -1,0 +1,27 @@
+schedules:
+  # Run all task once an hour
+  - tasks: '*'
+    interval:
+      hours: 1
+templates:
+  torrent:
+    transmission:
+      username: transmission
+      password: ********
+      ratio: -1
+tasks:
+  Tails:
+    # Download new Tails releases
+    template: torrent
+    rss: https://tails.boum.org/torrents/rss/index.rss
+    accept_all: yes
+  Ubuntu:
+    # Download Ubuntu releases
+    template: torrent
+    html: 
+      url: http://www.ubuntu.com/download/alternative-downloads
+      title_from: url
+    regexp:
+      accept:
+      - iso$
+      rest: reject

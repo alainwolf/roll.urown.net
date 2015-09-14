@@ -1,7 +1,11 @@
-What is this about
-==================
+About
+=====
 
-  Your documents, audio, video and e-books, calendar, addressbooks, tasks, notes, bookmarks, news.
+What
+----
+
+Your documents, audio, video and e-books, calendar, addressbooks, tasks, notes,
+bookmarks, news.
   
   * Create websites, blogs
   * Mail
@@ -12,10 +16,18 @@ What is this about
   * Access to from anywhere
   * Synchonized accross all devices.
 
-Essentially what you already get today from, Google, Facebook, Twitter, Skype, phone company, cable-tv provider, web-hoster.
+Essentially what you already get today from big internet companies, cable-tv
+providers, web-hosters, phone and mobile companies.
+
+Why
+---
 
 You never loose control over your data and everything is encrypted ...
  * when stored on any device
  * when transferred over a network
 
 
+How
+---
+
+Using open-source products on your own devices instead of commercial services.

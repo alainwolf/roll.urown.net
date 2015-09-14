@@ -36,8 +36,8 @@ Mail Server Database
 Preparing the database
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Create and store a password for postfix to access the database in
-:doc:`/desktop/keepassx`.
+:doc:`Create and store a password </desktop/secrets/passphrases>` for 
+postfix to access the database.
 
 Create the mail-server database::
 

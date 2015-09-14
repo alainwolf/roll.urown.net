@@ -147,3 +147,69 @@ http://dnssec-debugger.verisignlabs.com/
 http://viewdns.info/dnssec/
 
 http://www.nabber.org/projects/dnscheck/
+
+
+Backup Domain Keys
+------------------
+
+A DNSSEC zone uses one or more *Key signing key (KSK)* and corresponding *zone
+signing key (ZSK)*. Each of the ZSK and KSK has a public key and private key.
+
+::
+
+    $ sudo -sH
+    $ mkdir -p ~/dnssec-keys
+    $ cd ~/dnssec-keys
+
+List all zones (and check for errors)::
+
+    $  pdnssec check-all-zones
+
+Proceed as follows for each domain (or zone)::
+
+    $ export ZONE=example.com
+
+Show DNSSEC properties of the zone, maybe back them up too::
+
+    $ pdnssec show-zone $ZONE > $ZONE.dnssec.txt
+    $ cat $ZONE.dnssec.txt
+
+
+Export Key Signing Keys (KSK)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Look at lines starting with "ID = <NUMBER> (KSK) ...".
+There is at least one active, but there might be more::
+
+    $ grep '(KSK)' $ZONE.dnssec.txt
+    $ export KEY_ID=<NUMBER>
+
+Export each of these KSK private a keys::
+
+    $ pdnssec export-zone-key $ZONE $KEY_ID > ${ZONE}_ID${KEY_ID}.ksk
+
+Export the corresponding public keys::
+
+    $ pdnssec export-zone-dnskey $ZONE $KEY_ID > ${ZONE}_ID${KEY_ID}.ksk.pub
+
+If there are multiple KSK repeat until you have them all::
+
+    $ export KEY_ID=<NUMBER>
+    $ ...
+
+
+Export Zone Signing Keys (ZSK)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now repeat these steps for the KSK private and public keys::
+
+    $ grep '(ZSK)' $ZONE.dnssec.txt
+    $ export KEY_ID=<NUMBER>
+    $ pdnssec export-zone-key $ZONE $KEY_ID > ${ZONE}_ID${KEY_ID}.zsk
+    $ pdnssec export-zone-dnskey $ZONE $KEY_ID > ${ZONE}_ID${KEY_ID}.zsk.pub
+
+
+
+
+
+

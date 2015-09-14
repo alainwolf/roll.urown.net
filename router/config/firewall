@@ -1,0 +1,683 @@
+
+config rule
+	option name 'DHCP Renew'
+	option src 'wan'
+	option proto 'udp'
+	option dest_port '68'
+	option target 'ACCEPT'
+	option family 'ipv4'
+
+config rule
+	option name 'Ping'
+	option src 'wan'
+	option proto 'icmp'
+	option icmp_type 'echo-request'
+	option family 'ipv4'
+	option target 'ACCEPT'
+
+config rule
+	option name 'DHCPv6'
+	option src 'wan'
+	option proto 'udp'
+	option src_ip 'fe80::/10'
+	option src_port '547'
+	option dest_ip 'fe80::/10'
+	option dest_port '546'
+	option family 'ipv6'
+	option target 'ACCEPT'
+
+config rule
+	option name 'ICMPv6'
+	option src 'wan'
+	option proto 'icmp'
+	list icmp_type 'echo-request'
+	list icmp_type 'echo-reply'
+	list icmp_type 'destination-unreachable'
+	list icmp_type 'packet-too-big'
+	list icmp_type 'time-exceeded'
+	list icmp_type 'bad-header'
+	list icmp_type 'unknown-header-type'
+	list icmp_type 'router-solicitation'
+	list icmp_type 'neighbour-solicitation'
+	list icmp_type 'router-advertisement'
+	list icmp_type 'neighbour-advertisement'
+	option limit '1000/sec'
+	option family 'ipv6'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Forward ICMPv6'
+	option src 'wan'
+	option dest '*'
+	option proto 'icmp'
+	list icmp_type 'echo-request'
+	list icmp_type 'echo-reply'
+	list icmp_type 'destination-unreachable'
+	list icmp_type 'packet-too-big'
+	list icmp_type 'time-exceeded'
+	list icmp_type 'bad-header'
+	list icmp_type 'unknown-header-type'
+	option limit '1000/sec'
+	option family 'ipv6'
+	option target 'ACCEPT'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'DNS'
+	option family 'ipv6'
+	option dest_ip '2001:db8:26:845::41'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest_port '1194'
+	option proto 'udp'
+	option name 'OpenVPN'
+
+config rule
+	option target 'ACCEPT'
+	option _name 'XMPP Clients'
+	option src 'wan'
+	option proto 'tcp'
+	option dest 'lan'
+	option dest_ip '2001:db8:26:845::35'
+	option dest_port '5222'
+	option family 'ipv6'
+
+config rule
+	option target 'ACCEPT'
+	option _name 'XMPP Servers'
+	option src 'wan'
+	option proto 'tcp'
+	option dest 'lan'
+	option dest_ip '2001:db8:26:845::35'
+	option dest_port '5269'
+	option family 'ipv6'
+
+config rule
+	option target 'ACCEPT'
+	option _name 'XMPP File-Transfer'
+	option src 'wan'
+	option proto 'tcp'
+	option dest 'lan'
+	option dest_ip '2001:db8:26:845::35'
+	option family 'ipv6'
+	option dest_port '49152'
+
+config rule
+	option target 'ACCEPT'
+	option _name 'XMPP BOSH HTTP'
+	option src 'wan'
+	option proto 'tcp'
+	option dest 'lan'
+	option dest_ip '2001:db8:26:845::35'
+	option family 'ipv6'
+	option dest_port '5280-5281'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTP'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::30'
+	option dest_port '80'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTPS'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::30'
+	option dest_port '443'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTP to cloud'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::31'
+	option dest_port '80'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTPS cloud'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::31'
+	option dest_port '443'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTP to mitome.ch'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::32'
+	option dest_port '80'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTPS to mitome.ch'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::32'
+	option dest_port '443'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTP to subcomms.net'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::33'
+	option dest_port '80'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTPS to subcomms.net'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::33'
+	option dest_port '443'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTP to FISR'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::34'
+	option dest_port '80'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTPS to FISR'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::34'
+	option dest_port '443'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTP to Deluge'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::36'
+	option dest_port '80'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTPS to Deluge'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8:26:845::36'
+	option dest_port '443'
+
+config rule
+	option target 'ACCEPT'
+	option dest 'lan'
+	option family 'ipv6'
+	option proto 'tcp'
+	option name 'HTTP alainwolf.net'
+	option dest_ip '2001:db8:26:845::38'
+	option dest_port '80'
+	option src '*'
+
+config rule
+	option target 'ACCEPT'
+	option dest 'lan'
+	option family 'ipv6'
+	option proto 'tcp'
+	option src '*'
+	option name 'HTTPS alainwolf.net'
+	option dest_ip '2001:db8:26:845::38'
+	option dest_port '443'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTP WebMail'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8::40'
+	option dest_port '80'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'HTTPS WebMail'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8::40'
+	option dest_port '443'
+
+config rule
+	option target 'ACCEPT'
+	option dest 'lan'
+	option family 'ipv6'
+	option proto 'tcp'
+	option src '*'
+	option dest_ip '2001:db8:26:845::39'
+	option dest_port '8082'
+	option name 'HTTPS Electrum Server'
+	option enabled '0'
+
+config rule
+	option target 'ACCEPT'
+	option name 'TCP SSL Electrum Server'
+	option family 'ipv6'
+	option proto 'tcp'
+	option src '*'
+	option dest 'lan'
+	option dest_ip '2001:db8:26:845::39'
+	option dest_port '50002'
+	option enabled '0'
+
+# SMTP to MTA (IPv4)
+config rule
+	option name 'SMTP to MTA (IPv4)'
+	option family 'ipv4'
+	option proto 'tcp'
+	option src '*'
+	option dest 'lan'
+	option dest_ip '192.0.2.40'
+	option dest_port '25'
+	option target 'ACCEPT'
+
+# SMTP to MTA (IPv6)
+config rule
+	option name 'SMTP to MTA (IPv6)'
+	option family 'ipv6'
+	option proto 'tcp'
+	option src '*'
+	option dest 'lan'
+	option dest_ip '2001:db8::40'
+	option dest_port '25'
+	option target 'ACCEPT'
+
+# SMTP from MTA (IPv4)
+config rule
+	option name 'SMTP from MTA (IPv4)'
+	option family 'ipv4'
+	option proto 'tcp'
+	option src 'lan'
+	option dest '*'
+	option src_ip '192.0.2.40'
+	option dest_port '25'
+	option target 'ACCEPT'
+
+# SMTP from MTA (IPv6)
+config rule
+	option name 'SMTP from MTA (IPv6)'
+	option family 'ipv6'
+	option proto 'tcp'
+	option src 'lan'
+	option dest '*'
+	option src_ip '2001:db8::40'
+	option dest_port '25'
+	option target 'ACCEPT'
+
+# Block all other SMTP
+config rule
+	option _name 'Block all other SMTP'
+	option proto 'tcp'
+	option src '*'
+	option dest '*'
+	option dest_port '25'
+	option target 'REJECT'
+
+# SUBMISSION Mail
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'SUBMISSION Mail'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_port '587'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'IMAP Mail'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8::40'
+	option dest_port '143'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'IMAPS Mail'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8::40'
+	option dest_port '993'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'POP3 Mail'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8::40'
+	option dest_port '110'
+
+config rule
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest 'lan'
+	option name 'POP3S Mail'
+	option family 'ipv6'
+	option proto 'tcp'
+	option dest_ip '2001:db8::40'
+	option dest_port '995'
+
+config rule
+	option _name 'Block IRC on he.net'
+	option proto 'tcp'
+	option dest_port '6667'
+	option target 'REJECT'
+	option family 'ipv6'
+	option dest 'wan'
+	option src '*'
+
+config rule
+	option _name 'Block Microsoft RPC Servers'
+	option dest_port '135'
+	option target 'REJECT'
+	option dest 'wan'
+	option src '*'
+	option proto 'tcp udp'
+
+config rule
+	option target 'REJECT'
+	option dest 'wan'
+	option src '*'
+	option proto 'tcp udp'
+	option dest_port '137-139'
+	option name 'Block NetBIOS Servers'
+
+config rule
+	option dest_port '445'
+	option target 'REJECT'
+	option dest 'wan'
+	option src '*'
+	option proto 'tcp udp'
+	option name 'Block Windows Shares'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '53'
+	option dest_ip '192.0.2.41'
+	option dest_port '53'
+	option name 'DNS'
+
+# HTTP Port Forwarding
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '80'
+	option dest_port '80'
+	option name 'HTTP'
+	option dest_ip '192.0.2.30'
+
+# HTTPS Port Forwarding
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '443'
+	option dest_port '443'
+	option name 'HTTPS'
+	option dest_ip '192.0.2.30'
+
+# SMTP Port Forwarding
+config redirect
+	option name 'SMTP Port Forwarding'
+	option proto 'tcp'
+	option src 'wan'
+	option src_dport '25'
+	option dest 'lan'
+	option dest_ip '192.0.2.40'
+	option dest_port '25'
+	option target 'DNAT'
+
+# IMAP Port Forwarding
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '143'
+	option dest_ip '192.0.2.40'
+	option dest_port '143'
+	option name 'IMAP Port Forwarding'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '993'
+	option dest_ip '192.0.2.40'
+	option dest_port '993'
+	option name 'IMAPS Mail'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '110'
+	option dest_ip '192.0.2.40'
+	option dest_port '110'
+	option name 'POP3 Mail'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '995'
+	option dest_ip '192.0.2.40'
+	option dest_port '995'
+	option name 'POP3S Mail'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '587'
+	option dest_ip '192.0.2.40'
+	option dest_port '587'
+	option name 'SUBMISSION Mail'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option dest_ip '192.0.2.35'
+	option dest_port '5222'
+	option _name 'XMPP Clients'
+	option src_dport '5222'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option dest_ip '192.0.2.35'
+	option dest_port '5269'
+	option _name 'XMPP Servers'
+	option src_dport '5269'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option dest_ip '192.0.2.35'
+	option _name 'XMPP File-Transfers'
+	option src_dport '49152'
+	option dest_port '49152'
+
+config redirect
+	option target 'DNAT'
+	option proto 'tcp'
+	option src 'wan'
+	option dest 'lan'
+	option dest_ip '192.0.2.35'
+	option _name 'XMPP BOSH HTTP'
+	option src_dport '5280-5281'
+	option dest_port '5280-5281'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '8333'
+	option dest_ip '192.0.2.39'
+	option dest_port '8333'
+	option name 'Bitcoin Network'
+	option enabled '0'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '8333'
+	option dest_ip '192.0.2.39'
+	option dest_port '18333'
+	option name 'Bitcoin Test Network'
+	option enabled '0'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '8082'
+	option dest_ip '192.0.2.39'
+	option dest_port '8082'
+	option name 'Electrum Server HTTPS'
+	option enabled '0'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '50002'
+	option dest_ip '192.0.2.39'
+	option dest_port '50002'
+	option name 'Electrum Server TCP SSL'
+	option enabled '0'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '51413'
+	option dest_ip '192.0.2.36'
+	option dest_port '51413'
+	option name 'Transmission BitTorrent'
+	option enabled '0'
+
+config defaults
+	option syn_flood '1'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+
+config zone
+	option name 'lan'
+	option network 'lan'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+
+config zone
+	option name 'wan'
+	option network 'wan henet'
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option masq '1'
+	option mtu_fix '1'
+
+config zone
+	option name 'vpn'
+	option network 'vpn'
+	option input 'ACCEPT'
+	option forward 'ACCEPT'
+	option output 'ACCEPT'
+
+config forwarding
+	option src 'lan'
+	option dest 'vpn'
+
+config forwarding
+	option src 'lan'
+	option dest 'wan'
+
+config forwarding
+	option src 'vpn'
+	option dest 'lan'
+
+config forwarding
+	option src 'vpn'
+	option dest 'wan'
+
+config include
+	option path '/etc/firewall.user'
+

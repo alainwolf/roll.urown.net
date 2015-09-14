@@ -1,5 +1,3 @@
-.. include:: /template_data.rst
-
 .. index::
     single: Internet Protocols; IMAP
     single: Internet Protocols; POP
@@ -51,9 +49,10 @@ Main Configuration
 ------------------
 
 The main configuration file
-:download:`/etc/dovecot/dovecot.conf <config/dovecot/dovecot.conf>` has a 
-limited amount of settings, as most things are included from indivdual files in 
-the :file:`/etc/dovecot/conf.d` directory.
+:download:`/etc/dovecot/dovecot.conf 
+</server/config-files/etc/dovecot/dovecot.conf>` has a limited amount of 
+settings, as most things are included from individual files in the 
+:file:`/etc/dovecot/conf.d` directory.
 
 
 .. index::
@@ -66,7 +65,7 @@ Services
 
 Dovecot can provide a number of mail services. We activate |IMAP| and |LMTP|.
 
-.. literalinclude:: config/dovecot/dovecot.conf
+.. literalinclude:: /server/config-files/etc/dovecot/dovecot.conf
     :language: bash
     :start-after: # --sysconfdir=/etc --localstatedir=/var
     :end-before: # A comma separated list of IPs or hosts
@@ -79,7 +78,7 @@ Dovecot would bind to all available addresses, to change that, we remove the
 comment hashtag and set the IP address the |IMAP| server should listen to
 connections:
 
-.. literalinclude:: config/dovecot/dovecot.conf
+.. literalinclude:: /server/config-files/etc/dovecot/dovecot.conf
     :language: ini
     :start-after: protocols = imap lmtp
     :end-before: # Base directory where to store runtime data.
@@ -91,7 +90,7 @@ Database Connection
 Dovecot can use our mailserver database to validate domains, mailboxes and
 authenticate users. The configuration is set in the file 
 :download:`/etc/dovecot/dovecot-sql.conf.ext
-<config/dovecot/dovecot-sql.conf.ext>`.
+</server/config-files/etc/dovecot/dovecot-sql.conf.ext>`.
 
 
 Type of Database
@@ -99,7 +98,7 @@ Type of Database
 
 What type of database or server to use:
 
-.. literalinclude:: config/dovecot/dovecot-sql.conf.ext
+.. literalinclude:: /server/config-files/etc/dovecot/dovecot-sql.conf.ext
     :language: ini
     :lines: 30-33
 
@@ -109,7 +108,7 @@ Database Server Login
 
 How to connect to the database server and what username and password to use:
 
-.. literalinclude:: config/dovecot/dovecot-sql.conf.ext
+.. literalinclude:: /server/config-files/etc/dovecot/dovecot-sql.conf.ext
     :language: ini
     :lines: 34,70
 
@@ -122,7 +121,7 @@ Password Scheme
 
 How are passwords stored (hashed) in the password database:
 
-.. literalinclude:: config/dovecot/dovecot-sql.conf.ext
+.. literalinclude:: /server/config-files/etc/dovecot/dovecot-sql.conf.ext
     :language: ini
     :lines: 72,78
 
@@ -135,7 +134,7 @@ Database Query
 
 The MySQL query to retrieve username and (hashed) password for a mail-address.
 
-.. literalinclude:: config/dovecot/dovecot-sql.conf.ext
+.. literalinclude:: /server/config-files/etc/dovecot/dovecot-sql.conf.ext
     :language: ini
     :lines: 80-84, 110
 
@@ -145,123 +144,30 @@ The MySQL query to retrieve username and (hashed) password for a mail-address.
     single: LMTP
     single: AUTH
 
+
 Services
 --------
 
 The file :download:`/etc/dovecot/conf.d/10-master.conf
-<config/dovecot/10-master.conf>` defines the properties of the services Dovecot
+</server/config-files/etc/dovecot/conf.d/10-master.conf>` defines the properties of the services Dovecot
 provides to other hosts.
 
 We use Dovecot to provide the following services:
 
     * |IMAP| - for MUA to access their mailbox
-    * |LMTP| - Delivery of mail to local mailboxes
+    * |LMTP| & |LDA| - Delivery of mail to local mailboxes
     * AUTH - let other services (i.e. |MSA| or |XMPP|) authenticate users by 
       Dovecot.
 
+
 IMAP Settings
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
 
 The |IMAP| service configuration can be left at its defaults.
 
 
-LMTP Settings
-^^^^^^^^^^^^^^^^
-
-To allow our |MTA| Postfix to deliver mails to mailboxes trough the Dovecot
-|LMTP| service:
-
-.. literalinclude:: config/dovecot/10-master.conf
-    :language: ini
-    :lines: 48-53
-
-AUTH Settings
-^^^^^^^^^^^^^
-
-Other services can use Dovecot for user authentication instead of maintaining
-their own user-database. A registred user on our mail server can use the same
-username and password with other services.
-
-To allow our |MSA| Postfix to use the user authentication service, the UNIX
-socket that Postifx will access, needs specific access rights:
-
-.. literalinclude:: config/dovecot/10-master.conf
-    :language: ini
-    :lines: 77, 97-102
-
-
-Transport Layer Security
-------------------------
-
-See also the `Dovecot SSL configuration
-<http://wiki2.dovecot.org/SSL/DovecotConfiguration>`_ in the Dovecot wiki.
-
-The file :download:`/etc/dovecot/conf.d/10-ssl.conf
-<config/dovecot/10-ssl.conf>` contains settings for TLS protocol settings,
-certificates and keys.
-
-We enforce encryption and server authentication on all connections:
-
-.. literalinclude:: config/dovecot/10-ssl.conf
-    :language: ini
-    :lines: 5-6
-
-Where the servers certificate and private key are stored:
-
-.. literalinclude:: config/dovecot/10-ssl.conf
-    :language: ini
-    :lines: 14-15
-
-..  note::
-    Note the "**<**" character in front of the filenames. Dovecot will fail with
-    errors about unreadable :term:`PEM encoded` key files, if they are omitted.
-
-
-Diffie-Hellmann Paramters
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Encryption strenght of session keys negotiated by :term:`Diffie-Hellman key 
-exchange`.
-
-Dovecot creates its own :term:`DH parameters` and also refesehes them
-periodically. There is no need to provide a :term:`DH parameters` file, as with
-some other servers.
-
-.. literalinclude:: config/dovecot/10-ssl.conf
-    :language: ini
-    :lines: 47-48
-
-
-SSL & TLS Protocol Versions
+LMTP - Local Mail Transport
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. literalinclude:: config/dovecot/10-ssl.conf
-    :language: ini
-    :lines: 50-52
-
-
-.. index:: Cipher Suite; Set in Dovecot
-
-
-Set our selected :ref:`cipher-suite`.
-
-.. literalinclude:: config/dovecot/10-ssl.conf
-    :language: ini
-    :lines: 53-55
-
-
-Let the server choose the cipher-suite during handhake.
-
-.. literalinclude:: config/dovecot/10-ssl.conf
-    :language: ini
-    :lines: 57-58
-
-
-Local-Delivery
---------------
-
-Local delivery happens when mails are sent between serves in the same
-domain. Here are some uses-cases:
 
 *   When the |MTA| server has accepted a message from the Internet he uses an
     |LDA| to send it to the server who holds the recipients mailbox.
@@ -274,32 +180,140 @@ domain. Here are some uses-cases:
     transaction (registraion confirmation, password-reset). The web server uses
     |LMTP| to send it to the |MTA|.
 
+To allow our |MTA| Postfix to deliver mails to mailboxes trough the Dovecot
+|LMTP| service:
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-master.conf
+    :language: ini
+    :lines: 48-53
+
+The configuration file :download:` /etc/dovecot/conf.d/20-lmtp.conf 
+</server/config-files/etc/dovecot/conf.d/20-lmtp.conf>` holds settings specific 
+to the |LMTP| service.
+
+We load the Dovecot :term:`Sieve` plugin.
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/20-lmtp.conf
+    :language: ini
+    :start-after: #lmtp_rcpt_check_quota = no
+
+
+LDA - Local Delivery Agent
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Local delivery happens when mails are to be delivered to a mailbox of the local 
+system. Here are some uses-cases:
+
 The file :download:`/etc/dovecot/conf.d/15-lda.conf 
-<config/dovecot/15-lda.conf>` is used to set-up local delivery.
+</server/config-files/etc/dovecot/conf.d/15-lda.conf>` is used to set-up local 
+delivery.
 
 The name and domain of our server is only availabel in our local LAN and not
 valid on the Internet. We therefore need to override the server-name and the
 postmaster mail address to values which are valid and recognizible, as these
 will be inserted in the header of messages.
 
-.. literalinclude:: config/dovecot/15-lda.conf
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/15-lda.conf
     :language: ini
     :lines: 4-11
 
 We load the Dovecot :term:`Sieve` plugin.
 
-.. literalinclude:: config/dovecot/15-lda.conf
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/15-lda.conf
     :language: ini
     :start-after: lda_mailbox_autosubscribe = yes
+
+
+AUTH Settings
+^^^^^^^^^^^^^
+
+Other services can use Dovecot for user authentication instead of maintaining
+their own user-database. A registred user on our mail server can use the same
+username and password with other services.
+
+To allow our |MSA| Postfix to use the user authentication service, the UNIX
+socket that Postifx will access, needs specific access rights:
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-master.conf
+    :language: ini
+    :lines: 77, 97-102
+
+
+Transport Layer Security
+------------------------
+
+See also the `Dovecot SSL configuration
+<http://wiki2.dovecot.org/SSL/DovecotConfiguration>`_ in the Dovecot wiki.
+
+The file :download:`/etc/dovecot/conf.d/10-ssl.conf
+</server/config-files/etc/dovecot/conf.d/10-ssl.conf>` contains settings 
+for TLS protocol settings, certificates and keys.
+
+We enforce encryption and server authentication on all connections:
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-ssl.conf
+    :language: ini
+    :lines: 5-6
+
+Where the servers certificate and private key are stored:
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-ssl.conf
+    :language: ini
+    :lines: 14-15
+
+..  note::
+    Note the "**<**" character in front of the filenames. Dovecot will fail with
+    errors about unreadable :term:`PEM encoded` key files, if they are omitted.
+
+
+Diffie-Hellmann Parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Encryption strenght of session keys negotiated by :term:`Diffie-Hellman key 
+exchange`.
+
+Dovecot creates its own :term:`DH parameters` and also refesehes them
+periodically. There is no need to provide a :term:`DH parameters` file, as with
+some other servers.
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-ssl.conf
+    :language: ini
+    :lines: 47-48
+
+
+SSL & TLS Protocol Versions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-ssl.conf
+    :language: ini
+    :lines: 50-52
+
+
+.. index:: Cipher Suite; Set in Dovecot
+
+
+Set our selected :ref:`cipher-suite`.
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-ssl.conf
+    :language: ini
+    :lines: 53-55
+
+
+Let the server choose the cipher-suite during handhake.
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-ssl.conf
+    :language: ini
+    :lines: 57-58
 
 
 Authentication
 --------------
 
 The file :download:`/etc/dovecot/conf.d/10-auth.conf
-<config/dovecot/10-auth.conf>` defines how users logins are processed.
+</server/config-files/etc/dovecot/conf.d/10-auth.conf>` defines how users logins 
+are processed.
 
-.. literalinclude:: config/dovecot/10-auth.conf
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-auth.conf
     :language: ini
     :start-after: #auth_ssl_username_from_cert = no
     :end-before: ## 
@@ -308,24 +322,25 @@ Disable login for system users and enable the MySQL user database, by commenting
 out the first line with a hashtag and activating the *auth- sql.conf.ext* line
 with a exclamation mark:
 
-.. literalinclude:: config/dovecot/10-auth.conf
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-auth.conf
     :language: bash
     :start-after: # <doc/wiki/UserDatabase.txt>
 
 The now included file 
-:download:`/etc/dovecot/conf.d/auth-sql.conf.ext <config/dovecot/auth-sql.conf.ext>`
-contains references to the database configuration file.
+:download:`/etc/dovecot/conf.d/auth-sql.conf.ext 
+</server/config-files/etc/dovecot/auth-sql.conf.ext>` contains references to the 
+database configuration file.
 
 First where (hashed) paswords are retrieved for authenticating users:
 
-.. literalinclude:: config/dovecot/auth-sql.conf.ext
+.. literalinclude:: /server/config-files/etc/dovecot/auth-sql.conf.ext
     :language: bash
     :start-after: # <doc/wiki/AuthDatabase.SQL.txt>
     :end-before: # "prefetch" user database 
 
 And how other used properties, like mailbox directory, are retrieved:
 
-.. literalinclude:: config/dovecot/auth-sql.conf.ext
+.. literalinclude:: /server/config-files/etc/dovecot/auth-sql.conf.ext
     :language: bash
     :lines: 32-
 
@@ -341,7 +356,7 @@ The **args** values are translated as follows:
     will be replaces by the domain name (e.g. example.com) and %n will be
     replaced by the user name.
 
- *  **allow_all_users=yes**, is to allow mail delivey, also for mails to users
+ *  **allow_all_users=yes**, is to allow mail delivery, also for mails to users
     not found yet in the database.
 
 This basically means, that mails for **user@example.com** will be stored in the
@@ -352,17 +367,21 @@ Mailbox Locations
 -----------------
 
 In the file 
-:download:`/etc/dovecot/conf.d/10-mail.conf <config/dovecot/10-mail.conf>`
-we set up paramters for our virtual mailboxes.
+:download:`/etc/dovecot/conf.d/10-mail.conf 
+</server/config-files/etc/dovecot/conf.d/10-mail.conf>` we set up parameters for 
+our virtual mailboxes.
 
-.. literalinclude:: config/dovecot/10-mail.conf
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-mail.conf
     :language: bash
     :lines: 31
 
 
-.. literalinclude:: config/dovecot/10-mail.conf
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-mail.conf
     :language: bash
     :lines: 103-108
 
+
+Sieve Mail Filtering
+--------------------
 
 

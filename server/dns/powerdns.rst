@@ -1,3 +1,7 @@
+.. image:: PowerDNS-logo.*
+    :alt: PowerDNS Logo
+    :align: right
+
 PowerDNS
 ========
 
@@ -143,7 +147,7 @@ database structure as shown in the PoweDNS documentation
 <http://doc.powerdns.com/html/configuring-db-connection.html>`_:
 
 .. literalinclude:: config/powerdns.sql
-    :language: sql
+    :language: mysql
 
 To create this table structures in our new PowerDNS database::
 
@@ -227,9 +231,142 @@ providers, you can import them as follows::
     $ zone2sql --zone=example.com.zone \
                --zone-name=example.com \
                --gmysql --transactions --verbose \
-               > alainwolf.net.zone.sql
+               > example.com.zone.sql
     1 domains were fully parsed, containing 49 records
     $ mysql -u root -p pdns < example.com.zone.sql
     Enter password: 
 
 And done. Very easy.
+
+
+Secondary Server
+----------------
+
+Let's assume our master server has the IP address **2001:db8::41** and the new
+slave will have the IP address **2001:db8::42**.
+
+In the real world a DNS slave would be on entirely another subnet.
+
+To set up a PowerDNS as secondary slave DNS server.
+
+Install MariaDB and PowerDNS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+See above. Also add the MySQL tables as above.
+
+Copy the  configuration file from the master and change following things:
+
+
+Slave Server IP Addresses
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: ini
+
+    #################################
+    # local-address Local IP address to which we bind
+    #
+    local-address=192.0.2.42
+
+    #################################
+    # local-ipv6    Local IP address to which we bind
+    #
+    local-ipv6=2001:db8::42
+
+
+Setup PowerDNS as a Slave
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: ini
+
+    #################################
+    # master    Act as a master
+    #
+    master=no
+
+
+.. code-block:: ini
+
+    #################################
+    # slave Act as a slave
+    #
+    slave=yes
+
+
+Restart the slave server::
+
+    $ sudo service pdns restart
+
+
+Add Domain Record on Slave Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Open a MySQL database server sesssion::
+
+    slave$ mysql -u root -p pdns
+
+ 
+Add the the domain along with the IP address of the master server as follows:
+
+ .. code-block:: mysql
+
+    INSERT INTO `domains` (`name`, `master`, `type`) 
+        VALUES('example.com', '2001:db8::41', 'SLAVE');
+
+
+Add Slave Record on Master Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Open a MySQL database server sesssion::
+
+    master$ mysql -u root -p pdns
+
+
+Add a NS record and IP addresses of the new slave to the domain:
+
+ .. code-block:: mysql
+
+    INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
+        VALUES(
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.com'),
+            'example.com', 
+            'NS', 
+            'ns2.example.com'
+    );
+    INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
+        VALUES(
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.com'),
+            'ns2.example.com', 
+            'A', 
+            '192.0.2.42'
+    );
+    INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
+        VALUES(
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.com'),
+            'ns2.example.com', 
+            'AAAA', 
+            '2001:db8::42'
+    );
+
+
+Delete a Domain
+---------------
+
+Let say you want to remove the domain **example.org** completely.
+
+ .. code-block:: mysql
+
+    DELETE FROM `domainmetadata` WHERE `domain_id` = (
+        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+    );
+    DELETE FROM `records` WHERE `domain_id` = (
+        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+    );
+    DELETE FROM `comments` WHERE `domain_id` = (
+        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+    );    
+    DELETE FROM `cryptokeys` WHERE `domain_id` = (
+        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+    );    
+    DELETE FROM `domains` WHERE `name` = "example.org";
+
+This same procedure needs to be done on every master or slave sever.

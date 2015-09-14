@@ -113,10 +113,11 @@ Useful Tools
 
 Some useful tools are not installed by default.
 
-* htop
-* pwgen
-* MultiTail
+* `htop <http://manpages.ubuntu.com/manpages/trusty/en/man1/htop.1.html>`_
+* `pwgen <http://manpages.ubuntu.com/manpages/trusty/man1/pwgen.1.html>`_
+* `MultiTail <http://manpages.ubuntu.com/manpages/trusty/en/man1/multitail.1.html>`_
+* `Molly Guard <http://manpages.ubuntu.com/manpages/trusty/en/man8/molly-guard.8.html>`_
 
 To install these run::
 
-    $ sudo apt-get install htop multitail pwgen
+    $ sudo apt-get install htop multitail pwgen molly-guard

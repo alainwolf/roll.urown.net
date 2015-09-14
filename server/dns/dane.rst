@@ -60,15 +60,10 @@ A line will displayed which can be used with cut and paste in zone files.
 If you use PowerDNS server with the poweradmin web interface, add records as
 follows:
 
-.. warning::
-
-	Note that the TLSA command above displays a point "." at the end of "_443._tcp.example.com".
-	DO NOT include the point when using the webinterface!
-
 ===================== ==== =====================================================
 Name                  Type Content                                                               
 ===================== ==== =====================================================
-_443._tcp.example.com TLSA 3 0 1 f8df4b2e...............................76a2a0e5
+_443._tcp             TLSA 3 0 1 f8df4b2e...............................76a2a0e5
 ===================== ==== =====================================================
 
 .. note::

@@ -1,0 +1,40 @@
+#
+# Tor Relay Configuration
+#
+
+# Identity of the relay
+Nickname RollUrown
+
+# Contact Information (will be published)
+ContactInfo tormaster <tormaster AT example dot com>
+
+# Advertised DNS host name
+Address tor-relay.example.com
+ORPort	tor-relay.example.com:110 NoListen
+DirPort tor-relay.example.com:995 NoListen
+
+# IPv4 private address (port-forwarded from NAT firewall/router)
+OutboundBindAddress 192.0.2.49
+ORPort	192.0.2.49:110 NoAdvertise
+DirPort 192.0.2.49:995 NoAdvertise
+
+# IPv6 global address
+OutboundBindAddress 2001:db8::49
+ORPort	[2001:db8::49]:110 NoAdvertise
+DirPort [2001:db8::49]:995 NoAdvertise
+
+# Traffic Limits
+RelayBandwidthRate 50 MBits
+RelayBandwidthBurst 100 MBits
+
+# Password authentication for control connections
+HashedControlPassword 16:7B79E57C592CE09660D745F88A1317263BB43CE09FBA46CBF31C6C13B0
+
+# Exit policy
+ExitPolicy reject *:* # Reject everything
+
+# Disable local Tor client connections
+SocksPort 0
+
+# Needed by tor-arm for statistics
+DisableDebuggerAttachment 0

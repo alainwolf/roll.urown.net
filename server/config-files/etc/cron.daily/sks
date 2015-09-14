@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# daily cron to cleanup DB's log files.
+
+set -e
+
+[ -r /etc/sks/cron.conf ] && . /etc/sks/cron.conf
+
+# First, remove old diff-1.2.3.4.txt files
+# those files hold differences discovered during recon
+# eventhing that hasn't been touched in the last 2 weeks
+# is probably old and the result of a host that changed IP.
+
+[ -d /var/spool/sks ] || exit 0
+
+find /var/spool/sks -type f -name 'diff-*.txt' -mtime +14 | xargs --no-run-if-empty rm -f
+
+[ -d /var/spool/sks/failed_messages ] || exit 0
+
+# Also remove failed messages
+find /var/spool/sks/failed_messages -type f -name 'msg-*.ready' -mtime +14 | xargs --no-run-if-empty rm -f
+
+[ "$REMOVE_DB_LOGS" = "no" ] && exit 0
+
+clean_directory() {
+	dir=$1
+	if [ -d "$dir" ]
+	then
+		db_archive -h $dir -d
+	fi
+	return 0
+}
+
+# The DB directory holds indexes and keys.
+clean_directory /var/lib/sks/DB
+
+# PTree is for the hashes used with the reconciliation algorithm. (I think)
+clean_directory /var/lib/sks/PTree
+
+
+exit 0

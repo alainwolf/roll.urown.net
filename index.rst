@@ -6,11 +6,13 @@
 .. highlight:: bash
    :linenothreshold: 5
 
-.. warning::
-   This is an incomplete DRAFT. See ::doc:`todo`
 
-Private Network
-===============
+Roll Your Own Network
+=====================
+
+.. warning::
+   This is work in progress, see it as a incomplete DRAFT. See ::doc:`todo`
+
 
 This guide helps in setting up contemporary digital devices in a way that
 independence and privacy is maintened.
@@ -21,10 +23,12 @@ Contents:
    :maxdepth: 2
    
    about
+   conventions
    desktop/index
    router/index
    server/index
    smartphone/index
+   ca/index
    glossary
    bibliography
    todo

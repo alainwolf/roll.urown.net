@@ -32,7 +32,7 @@ we define and create a installation directory:
 
 ::
 
-    $ export INSTALL_PATH=/var/www/server.lan/public_html/vimbadmin
+    $ export INSTALL_PATH=/var/www/vimbadmin
     $ mkdir -p $INSTALL_PATH
     $ sudo chown www-data:www-data $INSTALL_PATH
     $ cd $INSTALL_PATH
@@ -161,8 +161,8 @@ Next we create the MySQL database for ViMbAdmin::
 
     $ mysqladmin -u root -p create vimbadmin
 
-And set the privileges, after creating a secure password with 
-:doc:`/desktop/keepassx`::
+And set the privileges, after creating a :doc:`secure password 
+</desktop/secrets/passphrases>`::
 
     $ mysql -u root -p vimbadmin
 
@@ -196,9 +196,10 @@ Nginx Configuration
 -------------------
 
 Create a new web-application configuration file 
-:download:`/etc/nginx/webapps/vimbadmin.conf <config/nginx/vimbadmin.conf>`
+:download:`/etc/nginx/webapps/vimbadmin.conf 
+</server/config-files/etc/nginx/webapps/vimbadmin.conf>`:
 
-.. literalinclude:: config/nginx/vimbadmin.conf
+.. literalinclude:: /server/config-files/etc/nginx/webapps/vimbadmin.conf
     :language: nginx
 
 
@@ -214,3 +215,20 @@ Restart the Nginx webserver::
 
     $ sudo service nginx restart
 
+
+ViMbAdmin Upgrades
+------------------
+
+
+::
+
+    $ export INSTALL_PATH=/var/www/vimbadmin
+    $ export NEW_VERSION=3.0.12
+    $ cd $INSTALL_PATH
+    $ git fetch
+    $ git checkout $NEW_VERSION
+    $ sudo composer self-update
+    $ sudo composer update
+    $ sudo chown -R www-data:www-data $INSTALL_PATH
+    $ bin/doctrine2-cli.php orm:validate-schema
+    $ bin/doctrine2-cli.php orm:schema-tool:update --force

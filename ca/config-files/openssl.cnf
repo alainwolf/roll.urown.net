@@ -1,0 +1,233 @@
+#
+# OpenSSL configuration for Root Certificate Authority.
+#
+
+# This definition doesn't work if HOME isn't defined.
+HOME            = .                     # Directory for all CA related files
+RANDFILE        = $ENV::HOME/.rnd
+oid_section     = new_oids
+
+
+# XMPP address Support
+[ new_oids ]
+id-on-xmppAddr  = 1.3.6.1.5.5.7.8.5
+SRVName         = 1.3.6.1.5.5.7.8.7
+
+
+# Default Certification Authority
+[ ca ]
+default_ca      = inter_CA            # The default CA section to use
+
+
+# Root Certification Authority
+[ root_CA ]
+dir             = $ENV::HOME            # Directory for all CA related files
+certs           = $dir/certs            # Directory for issued certificates
+crl_dir         = $dir/crl              # Directory where CRLs are prepared
+database        = $dir/index.txt        # Database index for issued certificates.
+new_certs_dir   = $dir/newcerts         # Directory for new certificates.
+certificate     = $dir/root.crt         # The signing CA certificate file
+private_key     = $dir/private/root.key # The signing CA private key
+x509_extensions = inter_ext             # Extensions added to signed certificates
+serial          = $dir/serial           # File with the of urrent serial number
+crlnumber       = $dir/crlnumber        # File with the current CRL number
+crl             = $dir/root.crl         # The CRL file
+name_opt        = ca_default            # Subject Name options
+cert_opt        = ca_default            # Certificate field options
+copy_extensions = copy                  # Include extensions from CSR (subjectAltName)
+crl_extensions  = crl_ext               # Extensions to add to a CRL
+default_days    = 2922                  # Certificates are signed for 8 years
+default_crl_days= 30                    # CRLs are signed for 1 month
+default_md      = sha256                # Don't use SHA1 digest
+preserve        = no                    # Re-order the requests DN
+email_in_dn     = no                    # Remvove mail from requests DN
+policy          = dnPolicy              # Root DN Policy
+
+
+# Intermediate Certification Authority
+[ inter_CA ]
+dir             = $ENV::HOME            # Directory for all CA related files
+certs           = $dir/certs            # Directory for issued certificates
+serial          = $dir/serial           # File with the current serial number
+database        = $dir/index.txt        # Database index for issued certificates.
+new_certs_dir   = $dir/newcerts         # Directory for new certificates.
+certificate     = $dir/inter.crt        # The signing CA certificate file
+private_key     = $dir/private/inter.key # The signing CA private key
+x509_extensions = server_ext            # Default extensions to use for signed certificates
+crl_dir         = $dir/crl              # Directory where CRLs are prepared
+crl             = $dir/inter.crl        # The CRL file
+crlnumber       = $dir/crlnumber        # File with the current CRL number
+name_opt        = ca_default            # Subject Name options
+cert_opt        = ca_default            # Certificate field options
+copy_extensions = copy                  # Include extensions from CSR (subjectAltName)
+crl_extensions  = crl_ext               # Extensions to add to a CRL
+default_days    = 730                   # Signed certificates are valid for 2 years
+default_crl_days= 30                    # How long before next CRL?
+default_md      = sha256                # Don't use SHA1 digest
+preserve        = no                    # Keep the DN ordering of the request
+email_in_dn     = no                    # Remvove emailAddress from the DN
+policy          = dnPolicy              # Intermediate DN Policy
+
+
+# Distinguished Name Policy
+[ dnPolicy ]
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+id-on-xmppAddr          = optional
+
+
+# Request options (used by the intermediate CA for its own CSR)
+[ req ]
+default_bits        = 3072              # Secure until year 2023
+default_keyfile     = private/inter.key
+encrypt_key         = yes               # Key is password protected
+default_md          = sha256            # Don't use SHA1 digest
+string_mask         = utf8only          # All strings must be UST-8. 
+utf8                = yes
+prompt              = no                # Don't ask questions
+req_extensions      = req_ext
+distinguished_name  = distinguishedName # Distinguished Name section to use
+subjectAltName      = @CA_subjAltName
+
+
+# Request Extensions (used by the root and intermediate CA for its own CSR)
+[ req_ext ]
+subjectKeyIdentifier    = hash
+
+
+# Distinguished Name (DN)
+[ distinguishedName ]
+organizationName        = example.com
+commonName              = Intermediate Authority
+emailAddress            = certmaster@example.com
+
+
+# Root CA Certificate Extensions
+[ root_ext ]
+basicConstraints        = critical, CA:true
+keyUsage                = critical, keyCertSign, cRLSign
+nameConstraints         = @nameConstraints # Section to define allowed domains
+subjectKeyIdentifier    = hash
+subjectAltName          = @CA_subjAltName
+
+
+# Intermediate CA Certificate Extensions
+[ inter_ext ]
+basicConstraints        = critical, CA:true, pathlen:0
+keyUsage                = critical, keyCertSign, cRLSign
+extendedKeyUsage        = critical, serverAuth, clientAuth, emailProtection
+subjectKeyIdentifier    = hash
+subjectAltName          = @CA_subjAltName
+authorityKeyIdentifier  = keyid:always
+issuerAltName           = issuer:copy
+authorityInfoAccess     = @root_InfoAccess
+crlDistributionPoints   = root_crlDist
+
+
+# CRL Certificate Extensions
+[ crl_ext ]
+authorityKeyIdentifier  = keyid:always
+issuerAltName           = issuer:copy # CRL Issuer
+
+
+# OCSP Server Certificate Extensions
+[ OCSP_ext ]
+basicConstraints        = CA:FALSE
+keyUsage                = critical, nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage        = OCSPSigning
+
+
+# Server Certificate Extensions
+[ server_ext]
+basicConstraints        = CA:FALSE
+keyUsage                = critical, digitalSignature, keyEncipherment, keyAgreement
+extendedKeyUsage        = critical, serverAuth, clientAuth
+subjectKeyIdentifier    = hash
+subjectAltName          = @server_subjAltName
+authorityKeyIdentifier  = keyid:always
+issuerAltName           = issuer:copy
+authorityInfoAccess     = @inter_InfoAccess
+crlDistributionPoints   = inter_crlDist
+
+
+# Client Certificate Extensions
+[ client_ext]
+basicConstraints        = CA:FALSE
+keyUsage                = critical, digitalSignature. keyEncipherment
+extendedKeyUsage        = critical, clientAuth
+subjectKeyIdentifier    = hash
+subjectAltName          = host_subjectAltName
+authorityKeyIdentifier  = keyid:always
+issuerAltName           = issuer:copy
+authorityInfoAccess     = @inter_InfoAccess
+crlDistributionPoints   = inter_crlDist
+
+
+# User Certificate Extensions
+[ user_ext]
+basicConstraints        = CA:FALSE
+keyUsage                = critical, digitalSignature, keyEncipherment, dataEncipherment 
+extendedKeyUsage        = critical, clientAuth, emailProtection
+subjectKeyIdentifier    = hash
+subjectAltName          = @user_subjectAltName
+authorityKeyIdentifier  = keyid:always
+issuerAltName           = issuer:copy
+authorityInfoAccess     = @inter_InfoAccess
+crlDistributionPoints   = inter_crlDist
+
+
+# Certificate Authorities Alternative Names
+[ CA_subjectAltName ]
+URI                     = http://ca.example.com/
+email                   = certmaster@example.com
+
+
+# Clients and Servers Alternative Names
+[ host_subjectAltName ]
+URI                     =
+email                   = emailAddress:copy
+otherName               = id-on-xmppAddr;UTF8:id-on-xmppAddr:copy
+
+
+# Users Alternative Names
+[ user_subjectAltName ]
+email                   = emailAddress:copy
+otherName               = id-on-xmppAddr;UTF8:id-on-xmppAddr:copy
+
+
+# Name Constraints
+[ nameConstraints ]
+permitted;DNS.1         = example.com
+permitted;DNS.2         = example.org
+permitted;DNS.3         = .lan
+permitted;DNS.4         = .onion
+permitted;email.1       = .example.com
+permitted;email.2       = .example.org
+
+
+# CRL Download address for the root CA
+[ root_crlDist ]
+fullname                = URI:http://ca.example.com/crl/root.crl
+
+
+# CRL Download address for the intermediate CA
+[ inter_crlDist ]
+fullname                = URI:http://ca.example.com/crl/inter.crl
+
+
+# Certificate download addresses for the root CA
+[ root_InfoAccess ]
+#OCSP;URI                = http://ocsp.example.com/root_ocsp
+caIssuers;URI           = http://ca.example.com/certs/root.crt
+
+
+# Certificate download addresses for the intermediate CA
+[ inter_InfoAccess ]
+#OCSP;URI                = http://ocsp.example.com/inter_ocsp
+caIssuers;URI           = http://ca.example.com/certs/inter.ca.crt
+# EOF

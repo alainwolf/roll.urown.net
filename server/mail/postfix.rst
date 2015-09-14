@@ -1,5 +1,3 @@
-.. include:: /template_data.rst
-
 .. warning::
     None of this has been tested yet!
 

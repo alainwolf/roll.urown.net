@@ -1,10 +1,16 @@
 Web Server
 ==========
 
+.. image:: nginx-logo.*
+    :alt: Nginx Logo
+    :align: right
+
 .. toctree::
    :maxdepth: 2
    
-   source-install
-   config
+   nginx-source-install
+   nginx-config/index
+
+
 
 

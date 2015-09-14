@@ -5,7 +5,7 @@ XCA - X Certificate and key management
     :alt: XCA Logo
     :align: right
 
-`XCA <http://xca.sourceforge.net/xca.html>`_ is intended for creating and
+`XCA application <http://xca.sourceforge.net/xca.html>`_ is intended for creating and
 managing X.509 certificates, certificate requests, RSA, DSA and EC private keys,
 Smartcards and CRLs. 
 
@@ -25,9 +25,15 @@ to backup all your personal, client and server keys and certificates.
 Installation
 ------------
 
-XCA is in the Ubuntu software repository:
+XCA can be installed from the Ubuntu Software-Center:
 
-	`Install XCA <apt://xca>`_
+.. raw:: html
+
+    <p>
+        <a class="reference external" href="apt:xca">
+        <img alt="software-center" src="../_images/scbutton-free-200px.png" />
+        </a>
+    </p>
 
 
 Configuration
@@ -37,7 +43,7 @@ Options reference: `<http://xca.sourceforge.net/xca-12.html>`_.
 
 Open the **File** menu and select **Options**.
 
-We set options to match what we have set for :doc:`server-tls` on the server in
+We set options to match what we have set for :doc:`/server/server-tls` on the server in
 our OpenSSL configuration:
 
  * Remove all the listed mandatory subject entries, except the **commonName**.

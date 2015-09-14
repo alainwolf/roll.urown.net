@@ -1,8 +1,12 @@
+.. image:: ownCloud-logo.*
+    :alt: ownCloud Logo
+    :align: right
+
 Cloud Storage
 =============
 
-ownCloud provides universal access to your files via the web, your computer or 
-your mobile devices — wherever you are.
+`ownCloud <https://owncloud.org/>`_ provides universal access to your files via
+the web, your computer or  your mobile devices — wherever you are.
 
 It also provides a platform to easily view & sync your contacts, calendars and 
 bookmarks across all your devices and enables basic editing right on the web.
@@ -76,6 +80,18 @@ package php5-apc is no longer available.
 For variable cache storage, there is the stripped down 
 `APCu <http://pecl.php.net/package/APCu>`_ extension. APCu adds
 support to store PHP variables in shared user space.
+
+.. note::
+   The version of APCu shipped with PHP on Ubuntu 14.04 LTS is unstable.
+   Download and install the updated version 4.0.7 package from Launchpad.
+
+::
+
+    $ cd downloads
+    $ wget https://launchpad.net/~ondrej/+archive/ubuntu/php5/+build/6149263/+files/php5-apcu_4.0.6-1%2Bdeb.sury.org~utopic%2B1_amd64.deb
+    $ sudo dpkg -i php5-apcu_4.0.6-1+deb.sury.org~utopic+1_amd64.deb
+    $ sudo restart php-fpm
+
 
 
 libav - Open source audio and video processing tools

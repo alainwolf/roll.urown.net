@@ -79,17 +79,14 @@ Nginx HTTP server configuration. With this Nginx will be able to becomes a sort
 of proxy server and request content to be delivered to clients from the PHP-FPM 
 server.
 
-Create the :file:`/etc/nginx/conf.d/php-backend.conf`:
+Create the
+:download:`php-backend.conf </server/nginx/nginx-config/config-files/conf.d/php-backend.conf>`
+configuration file in the :file:`/etc/nginx/conf.d/` directory:
 
-.. code-block:: nginx
-   :linenos:
+.. literalinclude:: /server/nginx/nginx-config/config-files/conf.d/php-backend.conf
+    :language: nginx
+    :linenos:
 
-	#
-	# PHP FastCGI Process Manager (FPM)
-	#
-	upstream php-backend {
-	    server unix:/var/run/php5-fpm.sock;
-	}
 
 Like all other file in the :file:`/etc/nginx/conf.d` directory, it will be 
 automatically included in the main Nginx server configuration.

@@ -1,5 +1,3 @@
-.. include:: /template_data.rst
-
 Spam Filter
 ===========
 

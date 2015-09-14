@@ -7,7 +7,8 @@ Security)` certificates and keys (public and private keys).
    Following are recommendations valid in April 2014, using OpenSSL 1.0.1f under
    Ubuntu 14.04 LTS 'Trusty Thar'.
 
-.. contents:: \ 
+.. contents:: 
+  :local: 
 
 
 Prerequisites
@@ -51,7 +52,7 @@ the default configuration and some things have weak or even deprecated settings.
 
 We want OpenSSL to behave as follows:
 
- * Create **2048 bit** RSA private keys (default is 1024 bit).
+ * Create **3072 bit** RSA private keys (default is 1024 or 2048 bit).
 
  * All digital signatures use **SHA-256** as digest (default is SHA-1).
 
@@ -61,14 +62,14 @@ We want OpenSSL to behave as follows:
  * All certificates can be used by both, servers AND clients 
    (i.e. SMTP server receiving mail and SMTP client sending mail out).
 
- * The certficates include all the expected and needed extensions and 
+ * The certificates include all the expected and needed extensions and 
    fields to be ready for use in encrypted HTTPS, SMTP, XMPP and VPN (OpenVPN)
    sessions.
 
- * Certificate siging requests contain the domain-name (**example.com**) and a
+ * Certificate signing requests contain the domain-name (**example.com**) and a
    wildcard (**\*.example.com**). Web servers are usually answering as 
-   **exmaple.com** and **www.example.com**. Also usually every provided service 
-   uses its own hostname or subdomain like **mail.example.com**. A wildcard 
+   **example.com** and **www.example.com**. Also usually every provided service 
+   uses its own hostname or sub-domain like **mail.example.com**. A wildcard 
    certificate is the easiest way to secure everything with only one certificate.
 
  * The created certificate siging requests don't include anything we don't need.
@@ -99,8 +100,8 @@ The following is to make our certficates valid for use with XMPP:
     :start-after: oid_section
     :end-before: [ req ]
 
-Enforce to create 2048 bit keys, set the location and name of private key files, 
-disable password protection of server private keys, use the SHA-256 algoritm to 
+Enforce to create 3072 bit keys, set the location and name of private key files, 
+disable password protection of server private keys, use the SHA-256 algorithm to 
 sign our keys.
 
 .. literalinclude:: config-files/openssl-server.cnf
@@ -131,7 +132,7 @@ actually used is one line only.
 Finally the alternative names are defined, which enables the server to present 
 himself under different names and identities. So multiple virtual names and 
 domains can be hosted by the same physical server. Without the needing for 
-multiple keys, certificates and submmission to CAs for every name or domain.
+multiple keys, certificates and submission to CAs for every name or domain.
 
 .. literalinclude:: config-files/openssl-server.cnf
     :language: ini
@@ -147,7 +148,7 @@ Getting Certificates
 
 .. note::
     Everything from here on is done as user **root** and from the
-    :file:`/etc/ssl` directory. Also the evironment variables **OPENSSL_CONF**
+    :file:`/etc/ssl` directory. Also the environment variables **OPENSSL_CONF**
     (pointing to our configuration file) and **CN** (containing your our domain
     name) must be set until all work described in this chapter is done.
 
@@ -162,48 +163,112 @@ Getting Certificates
 Generation of Keys and CSRs 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Create a new key and CSR::
+.. note::        
+
+    For `HTTP Public Key Pinning (HPKP)
+    <https://en.wikipedia.org/wiki/HTTP_Public_Key_Pinning>`_  todays Web-
+    servers need **two separate private keys**. One will be active with the
+    certificate from the CA, while a second one is pre-made backup key. Both
+    keys are advertised by the web- server in its HTTP headers as Public-Key-
+    Pins.
+
+
+Create the first key and the CSR::
 
     $ openssl req -new -out ${CN}.req.pem
-    Generating a 4096 bit RSA private key
+    Generating a 3072 bit RSA private key
     ..........................................................................
     ........................................................................++
     ................................................................++
     writing new private key to './private/example.com.key.pem'
-    $ chmod 600 private/${CN}.key.pem
 
-The key and CSR are saved in files using the :abbr:`PEM (Privacy-enhanced 
+
+Create the backup key::
+
+    $ openssl genrsa -out private/${CN}.backup.key.pem 3072
+    Generating a 3072 bit RSA private key
+    ..........................................................................
+    ........................................................................++
+    ................................................................++
+    writing new private key to './private/example.com.backup.key.pem'
+    $ chmod 600 private/${CN}*.key.pem
+
+The keys and the CSR are saved in files using the :abbr:`PEM (Privacy-enhanced 
 Electronic Mail - Base64 encoded binary data, enclosed between "-----BEGIN 
 CERTIFICATE-----" and "-----END CERTIFICATE-----" strings.)` format.
 
 .. _csr-multiple-domains:
 
+
 CSR for Multiple Domain-Names
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If services for other domains are hosted, certificates should contains them too.
+If services for other domains are hosted, you have to add them as additional
+DNS entries to the `[ alt_names ]` section.
 
 .. warning::
    Your CA will only allow certificates containing *commonNames* and 
    *subjectAltNames* for domains you previously have validated with them.
 
-Edit the :file:`/etc/ssl/openssl.cnf` file. Add all the required domain-names 
-for the server in the section called 
-**[ alt_names ]** as follows::
+Assume you want to add **example.net** and **example.org** to your
+**example.com** certificate:
+
+Make a copy of :file:`/etc/ssl/openssl-server.cnf`
+
+ ::
+
+  $ cp openssl-server.cnf openssl-${CN}.cnf
+
+
+Add all the required domain-names in the section called  **[ alt_names ]** as
+follows:
+
+.. code-block:: ini
 
     [ alt_names ]
-    DNS.0 = commonName:copy
-    DNS.1 = www.example.com
+    DNS.0                       = ${CN}
+    DNS.1                       = *.${CN}
+    otherName.0                 = xmppAddr;FORMAT:UTF8,UTF8:${CN}
+    otherName.1                 = SRVName;IA5STRING:_xmpp-client.${CN}
+    otherName.2                 = SRVName;IA5STRING:_xmpp-server.${CN}
     DNS.2 = example.net
-    DNS.3 = www.example.net
-    DNS.4 = other-example.com
-    DNS.5 = www.other-example.com
+    DNS.3 = *.example.net
+    DNS.4 = example.org
+    DNS.5 = *.example.org
 
 
-Save and close the file and create the CSR as before::
+Save and close the file and create keys and CSR as shown before, but point to
+the newly created configuration file::
 
-    $ openssl req -config ${CN}.cnf -out ${CN}.req.pem -new
-    $ sudo chmod 600 private/${CN}.key.pem
+    $ openssl req -config openssl-${CN}.cnf -out ${CN}.req.pem -new
+    $ openssl genrsa -out private/${CN}.backup.key.pem 3072
+    $ sudo chmod 600 private/${CN}*.key.pem 
+
+
+HTTP Public Key Pinning (HPKP)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `HTTP Public Key Pinning (HPKP) pin generation tools
+<https://github.com/hannob/hpkp>`_ help you in generating the correctly
+formatted HTTP headers needed by HPKP.
+
+Its short and sweet shell script, which helps greatly, then doing that by hand
+twice for every website would be painful.
+
+Download and install::
+
+    $ wget -O /usr/local/bin/hpkp-gen \
+        https://raw.githubusercontent.com/hannob/hpkp/master/hpkp-gen
+    $ chmod +x /usr/local/bin/hpkp-gen
+
+
+Create HTTP headers::
+
+    $ hpkp-gen private/${CN}.key.pem.key private/${CN}.backup.key.pem
+
+The displayed line is what needs to be sent by the web-server on every TLS
+connection.
+
 
 
 Submit Certificate Request
@@ -250,7 +315,7 @@ intermediary CA along with its own server certificate during the handshake.
       ............................
                    |
        ..........................
-       : Trusted CA Certificate :   <--- Present in Client/Browser Certificate Storge
+       : Trusted CA Certificate :   <--- Present in Client/Browser Certificate Storage
        ..........................        (Don't send)
 
 
@@ -279,8 +344,8 @@ The chain file has the following form:
 
 Here are the steps to generate such certificate-chain-files.
 
-Use one of the commands below, depending on the intermediate signing autority of
-your certificate.
+Use one of the commands below, depending on the intermediate signing authority
+of your certificate.
 
 
 For **StartCom Class 1** Primary Intermediate Server CA::
@@ -316,7 +381,7 @@ OCSP responses on behalf of the client and sends them along its certificate
 during handshake.
 
 The server knows about his own certificate, but in order to properly get and 
-verify OCSP reponses, he needs to know about any intermediate CA up to and 
+verify OCSP responses, he needs to know about any intermediate CA up to and 
 including the top-level signing CA.
 
 The OCSP stapling chain file has the following form:
@@ -359,49 +424,9 @@ StartCom **Class 2 Primary** Intermediate Server CA::
         > certs/CAcert_Class_3_Root.OCSP-chain.pem
 
 
-Diffie-Hellman (DH) Key Exchanges Parameters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To use perfect forward secrecy, Diffie-Hellman parameters must be set up on the 
-server side, otherwise the relevant cipher suites will be silently ignored.
-
-`bettercrypto.org <https://bettercrypto.org>`_ and other sources advise against 
-generating these and instead using proven and properly checked ones and make 
-references to :rfc:`3526`.
-
-Other sources adivse you to build your own instead of using the predefined ones, 
-as it is unclear where they come from and why they should be better. Some even 
-suggest to create new ones every day or every hour, to further incerease security.
-
-Use the following OpenSSL command to create your own set of DH paramteer files::
-
-    mkdir -p dhparams
-    openssl dhparam -out dhparams/dh_1024.pem 1024
-    openssl dhparam -out dhparams/dh_1536.pem 1536
-
-
-The predefined ones are hard to find. But the bettercrypto.org 
-`Git-Repository <https://github.com/BetterCrypto/Applied-Crypto-Hardening>`_ 
-contains a directory with some files and a readme in the 
-`/tools/dhparams <https://github.com/BetterCrypto/Applied-Crypto-Hardening/tree/master/tools/dhparams>`_
-directory.
-
-To get those pre-made dhparam files::
-
-    wget -O dhparams/dh_2048.pem \
-        https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group14.pem
-    wget -O dhparams/dh_3072.pem \
-        https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group15.pem
-    wget -O dhparams/dh_4096.pem \
-        https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group16.pem
-    wget -O dhparams/dh_6144.pem \
-        https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group17.pem
-    wget -O dhparams/dh_8192.pem \
-        https://git.bettercrypto.org/ach-master.git/blob_plain/HEAD:/tools/dhparams/group18.pem
-
 
 Exit Session
-------------
+^^^^^^^^^^^^
 
 Now that we are done here, exit the root session (the environment variables will
 be discarded)::
@@ -415,7 +440,7 @@ be discarded)::
 .. _cipher-suite:
 
 Cipher Suite Selection
-------------------------------
+----------------------
 
 ..  note::
 
@@ -427,7 +452,7 @@ The quest for the perfect :term:`Cipher Suite` list is an endless one, simply
 because there is no perfect solution.
 
 For our private servers for mostly personal use and presumably limited public
-interest or commecrial goals, we have the luxury to enforce a more secure, but
+interest or commercial goals, we have the luxury to enforce a more secure, but
 less compatible set of cipher suites.
 
 .. note::     
@@ -444,10 +469,11 @@ suites available with the current selection parameters.
 
 .. index:: Perfect Forward Secrecy
 
+
 Perfect Forward Secrecy
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-All our encrypted communications is to be establsihed using :term:`Perfect
+All our encrypted communications is to be established using :term:`Perfect
 Forward Secrecy`.
 
 In todays OpenSSL the available ciphers suites who are able to provide forward
@@ -471,7 +497,7 @@ RSA Key Authentication
 The private keys to our certificates are :term:`RSA` keys. Any other type of key
 authentication would simply not work.
 
-One can select all ciphers suites who use RSA key authentiation with the
+One can select all ciphers suites who use RSA key authentication with the
 "\ **aRSA**" selection parameter. This will list 43 available cipher suites.
 
 Combined with the earlier "kEDH:kEECDH" parameter like this: 
@@ -491,10 +517,18 @@ use. Like :term:`RC4`, :term:`3DES`, :term:`DES` or some with weak export-grade
 or no encryption at all.
 
 To make things easier we just decide to select AES. Its the most widely trusted
-encryption standard, supported on all plattforms and client software, and as big
+encryption standard, supported on all platforms and client software, and as big
 plus, modern CPUs include hardware acceleration for AES with the :term:`Advanced
-Encryption Standard Instruction Set`. OpenSSL lists 58 cipher suites when used
-with the "AES" parameter. Combined with our earlier selections:
+Encryption Standard Instruction Set`. 
+
+.. note::
+
+  To check if your CPU has built-in hardware acceleration for AES encryption use
+  the following command: :code:`grep aes /proc/cpuinfo`
+
+
+OpenSSL lists 58 cipher suites when used with the "AES" parameter. Combined with
+our earlier selections:
 
 .. parsed-literal::
 
@@ -508,11 +542,11 @@ scores on test-sites like `SSLlabs <https://www.ssllabs.com/>`_.
 Preferences
 ^^^^^^^^^^^
 
-Hower there is still some small room for improvement. Some cipher suites in our
-selection use :term:`SHA-1` for message authentication (:term:`HMAC`).
+However there is still some small room for improvement. Some cipher suites in
+our selection use :term:`SHA-1` for message authentication (:term:`HMAC`).
 
 While SHA-1 is not considered broken or harmful for this specific use, its use
-is no longer recommendet. However if we exclude it, we loose compatibility with
+is no longer recommended. However if we exclude it, we loose compatibility with
 a lot of client platforms and software. This would include:
 
  * Android devices less then version 4.4 (before December 2013)
@@ -540,7 +574,8 @@ all other options failed already.
 This give the same list of 12 cipher suites, but the ones using SHA-1 moved to
 the bottom.
 
-Encryption Strenght
+
+Encryption Strength
 ^^^^^^^^^^^^^^^^^^^
 
 And yet still I have one more point to make.
@@ -553,10 +588,23 @@ anymore).
 If we trust 128-bit encryption, and recent findings predict 128-bit encryption
 to be strong enough for another 30 years or so, then why use 256-bit then?
 
+Symmetric Encryption Key Size
+
+============ ==========
+RSA Key Size Safe until
+============ ==========
+20 bits      Year 1928
+40 bits      Year 1958
+56 bits      Year 1982
+112 bits     Year 2020
+128 bits     Year 2030
+256 bits     Year 2030+
+============ ==========
+
 Bigger is not always better. The time for a handshake between server and client
-increeases dramatically with 256-bit encryption compared to 128-bit. And lets
+increases dramatically with 256-bit encryption compared to 128-bit. And lets
 not forget the mobile devices, who may not have a CPU with :term:`AES-NI`
-besides being weaker nd smaller on the hardware-side.
+besides being weaker and smaller on the hardware-side.
 
 So to only select the 29 different 128-bit variants out of the 58 suites with
 AES encryption, one can use "AES\ **128**\ " instead of just "AES" as selection
@@ -594,11 +642,79 @@ website <https://www.ssllabs.com/ssltest/>`_:
     6. TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)      ECDH 256 bits (eq. 3072 bits RSA)       FS  128
 
 
+Other Settings
+--------------
+
+SSL and TLS Versions
+^^^^^^^^^^^^^^^^^^^^
+
+ * Use TLS version 1.2 whenever possible its the preferred most secure,
+   extensible, and modern version 
+ * Support TLS versions 1.1 and 1.0 for older clients
+ * Don't use SSL versions 3 and 2
+ 
+
+Diffie-Hellman (DH) Key Exchange
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To use perfect forward secrecy, Diffie-Hellman parameters must be set up on the 
+server side, otherwise the relevant cipher suites will be silently ignored.
+
+`bettercrypto.org <https://bettercrypto.org>`_ and other sources advise against
+generating those paramter files yourself and instead using proven and properly
+checked ones. Usually those sources mention :rfc:`3526` (a part of IPSec).
+
+Other sources advise you to build your own instead of using the predefined ones, 
+as it is unclear where they come from and why they should be better. Some even 
+suggest to create new ones every day or every hour, to further increase security.
+
+Use the following OpenSSL command to create your own set of DH parameter files::
+
+    cd /etc/openssl/
+    $ sudo mkdir -p dhparams
+    $ sudo openssl dhparam -out dhparams/dh_2048.pem 2048
+    $ sudo openssl dhparam -out dhparams/dh_3072.pem 3072
+    $ sudo openssl dhparam -out dhparams/dh_4096.pem 4096
 
 
+The predefined ones are hard to find. But the bettercrypto.org 
+`Git-Repository <https://github.com/BetterCrypto/Applied-Crypto-Hardening>`_ 
+contains a directory with some files and a readme in the 
+`/tools/dhparams <https://github.com/BetterCrypto/Applied-Crypto-Hardening/tree/master/tools/dhparams>`_
+directory.
+
+.. note::
+  
+    The bit-size should not be smaller than the size of the RSA private key. If
+    you use a 3072-bit RSA key as suggested above, create and use at least a
+    3072-bit DH-parameter file.
 
 
+Elliptic Curve Diffie-Hellmann (ECDH)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+The choice of which elliptic curve (EC) algorithm is used during Diffie Hellmann
+key exchange (DH) is a separate setting in most software configurations.
+
+The used elliptic curve should match the RSA key size, while taking into
+consideration that you get the same strength with smaller bit sizes.
+
+There would be no point in having a strong RSA key and using a weaker key-
+exchange.
+
+============= ============== ==========
+EC DH         RSA DH         Safe until
+============= ============== ==========
+160 bits      1,024 bits     Year 2010
+224 bits      2,048 bits     Year 2030
+256 bits      3,072 bits     Year 2030+
+384 bits      7,680 bits     Year 2030+
+512 bits      15'360 bits    Year 2030+
+============= ============== ==========
+
+256 bit elliptic curve encryption equals 3072 bit RSA encryption. Therefore a
+curve like **secp256r1** (NIST/SECG curve over a 256 bit prime field) should be
+used.
 
 
 Monitoring
@@ -620,6 +736,7 @@ or from a PEM encoded X.509 certificate file.  If :file:`ssl-cert-check` finds a
 certificate that will expire within a user defined threshold (e.g., the next
 60-days), an e-mail notification is sent to warn the adminstrator.
 
+
 Installation
 ^^^^^^^^^^^^
 
@@ -627,10 +744,11 @@ Installation
 
     $ sudo apt-get ssl-cert-check
 
+
 Usage
 ^^^^^
 
-Usage instructions are provided when called with the `-h` commandline parameter::
+Usage instructions are provided when called with the `-h` command-line parameter::
 
     $ ssl-cert-check -h
     Usage: /usr/bin/ssl-cert-check [ -e email address ] [ -x days ] [-q] [-a] [-b] [-h] [-i] [-n] [-v]
@@ -646,7 +764,7 @@ Usage instructions are provided when called with the `-h` commandline parameter:
       -k password       : PKCS12 file password
       -n                : Run as a Nagios plugin
       -p port           : Port to connect to (interactive mode)
-      -s commmon name   : Server to connect to (interactive mode)
+      -s common name    : Server to connect to (interactive mode)
       -t type           : Specify the certificate type
       -q                : Don't print anything on the console
       -v                : Specify a specific protocol version to use (tls, ssl2, ssl3)
@@ -673,7 +791,7 @@ Automatic daily check
 ^^^^^^^^^^^^^^^^^^^^^
 
 To have the server check his certificates every day and notify you by mail in 
-case of the expiration date in less then 30 days, we add a cronjob as follows::
+case of the expiration date in less then 30 days, we add a cron-job as follows::
 
     $ sudo -s
     $ echo "ssl-cert-check -a -c /etc/ssl/certs/example.com.cert.pem"

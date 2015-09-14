@@ -50,8 +50,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Private Networking'
-copyright = '2014, Alain Wolf'
+project = 'Roll Your Own Network'
+copyright = '2014, 2015, roll.urown.net - Creative Commons Attribution-ShareAlike 4.0 International License'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -95,7 +95,8 @@ highlight_language = 'bash'
  
 # The name of the Pygments (syntax highlighting) style to use.
 #pygments_style = 'sphinx'
-pygments_style = 'monokai'
+#pygments_style = 'monokai'
+#pygments_style = '/usr/lib/python3/dist-packages/pygments/styles/monokai.py'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -110,8 +111,9 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #html_theme = 'default'
-
 html_theme = "sphinx_rtd_theme"
+#html_theme = "cc"
+#html_theme = "sphinx-cctemplate"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -121,6 +123,10 @@ html_theme = "sphinx_rtd_theme"
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+#html_theme_path = ["/usr/share/sphinx/themes/"]
+#html_theme_path = [tinkerer.paths.themes, 'themes']
+#html_theme_path = [sphinx_rtd_theme.get_html_theme_path(), '_templates/sphinx-cctemplate']
+#html_theme_path = ['_templates']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -141,7 +147,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -150,11 +156,11 @@ html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-#html_last_updated_fmt = '%b %d, %Y'
+html_last_updated_fmt = '%b %d, %Y'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
-#html_use_smartypants = True
+html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
@@ -190,7 +196,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'private-net'
+htmlhelp_basename = 'roll.urown.net'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -210,8 +216,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'privatenet.tex', 'private-net Documentation',
-   'Alain Wolf', 'manual'),
+  ('index', 'roll.urown.net.tex', 'Roll Your Own Network',
+   'roll.urown.net', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -240,8 +246,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'privatenet', 'private.net Documentation',
-     ['Alain Wolf'], 1)
+    ('index', 'roll.urown.net', 'Roll Your Own Network',
+     ['roll.urown.net'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -254,8 +260,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'privatenet', 'private-net Documentation',
-   'Alain Wolf', 'privatenet', 'Privacy with self-hosted services.',
+  ('index', 'roll.urown.net', 'Roll Your Own Network',
+   'roll.urown.net', 'roll.urown.net', 'How to Roll Your Own Network Services.',
    'Privacy'),
 ]
 
@@ -275,13 +281,13 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = 'private-net'
-epub_author = 'Alain Wolf'
-epub_publisher = 'Alain Wolf'
-epub_copyright = '2014, Alain Wolf'
+epub_title = 'roll.urown.net'
+epub_author = 'roll.urown.net'
+epub_publisher = 'roll.urown.net'
+epub_copyright = '2014, 2015, roll.urown.net'
 
 # The basename for the epub file. It defaults to the project name.
-#epub_basename = 'alainwolf.net'
+#epub_basename = 'roll.urown.net'
 
 # The HTML theme for the epub output. Since the default themes are not optimized
 # for small screen space, using the same theme for HTML and epub output is
@@ -344,3 +350,70 @@ epub_exclude_files = ['search.html']
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
+
+# A string of reStructuredText that will be included at the end of every source
+# file that is read.
+rst_epilog = """
+
+.. |publicDomain|     replace:: example.com
+.. |privateDomain|    replace:: lan
+
+.. |publicIPv4|       replace:: 198.51.100.240
+
+.. |IPv4Subnet|       replace:: 192.0.2.0/24
+.. |IPv6Subnet|       replace:: |IPv6Prefix|/64
+.. |IPv6Prefix|       replace:: 2001:db8:c0de\:\:
+
+.. |SIPserverIPv4|    replace:: 192.0.2.27
+.. |SIPserverIPv6|    replace:: 2001:db8::27
+
+.. |HTTPserverIPv4|   replace:: 192.0.2.30
+
+.. |BitTorrentServerIPv4|   replace:: 192.0.2.36
+.. |BitTorrentServerIPv6|   replace:: 2001:db8:1::36
+
+.. |BOOKserverIPv4|   replace:: 192.0.2.33
+.. |BOOKserverIPv6|   replace:: 2001:db8:1::33
+.. |OPDSserverIPv4|   replace:: 192.0.2.34
+.. |OPDSserverIPv6|   replace:: 2001:db8::34
+
+.. |KeyServerIPv4|    replace:: 192.0.2.37
+.. |KeyServerIPv6|    replace:: 2001:db8::37
+
+.. |BitcoinIPv4|      replace:: 192.0.2.39
+.. |BitcoinIPv6|      replace:: 2001:db8::39
+
+.. |mailserverIPv4|   replace:: 192.0.2.40
+.. |mailserverIPv6|   replace:: 2001:db8::40
+
+.. |DNSMasterIPv6|    replace:: 2001:db8:2::41
+
+.. |TorClientIPv4|    replace:: 192.0.2.48
+.. |TorClientIPv6|    replace:: 2001:db8::48
+.. |TorServerIPv4|    replace:: 192.0.2.49
+.. |TorServerIPv6|    replace:: 2001:db8::49
+
+.. |DNSSlaveAIPv4|    replace:: 198.51.100.41
+.. |DNSSlaveAIPv6|    replace:: 2001:db8:f00d::41
+.. |DNSSlaveBIPv4|    replace:: 203.0.113.41
+.. |DNSSlaveBIPv6|    replace:: 2001:db8:idea::41
+.. |DNSSlaveCIPv4|    replace:: 198.18.249.0.41
+.. |DNSSlaveCIPv6|    replace:: 2001:db8:face::41
+
+.. |XMPPIPv4|         replace:: 192.0.2.35
+.. |XMPPIPv6|         replace:: 2001:db8:face::35
+
+.. |IMAP| replace::    :abbr:`IMAP (Internet Message Access Protocol)`
+.. |LDA| replace::     :abbr:`LDA (Local Delivery Agent)`
+.. |LMTP| replace::    :abbr:`LMTP (Local Mail Delivery Protocol)`
+.. |MDA| replace::     :abbr:`LDA (Mail Delivery Agent)`
+.. |MSA| replace::     :abbr:`MSA (Mail Submission Agent)`
+.. |MTA| replace::     :abbr:`MTA (Message Transfer Agent)`
+.. |MUA| replace::     :abbr:`MUA (Mail User Agent)`
+.. |SMTP| replace::    :abbr:`SMTP (Simple Mail Transport Protocol)`
+.. |TLS| replace::     :abbr:`TLS (Transport Layer Security)`
+.. |XMPP| replace::    :abbr:`XMPP (Extensible Messageing and Presence Protocol)`
+.. |software-center| image:: /scbutton-free-200px.*
+.. |software-center2| image:: /software-center-icon-48.*
+
+"""

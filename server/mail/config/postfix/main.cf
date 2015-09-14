@@ -142,6 +142,7 @@ smtpd_tls_security_level = may
 smtpd_tls_auth_only = yes
 
 # Which SSL and TLS protocols do I accept or reject on incoming connections?
+smtpd_tls_protocols = !SSLv2, !SSLv3
 smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3
 
 # What grade of encryption do I accept on incoming connections?

@@ -1,5 +1,8 @@
-Desktop Computer
-================
+Desktop
+=======
+
+.. image:: Ubuntu-Laptop.*
+    :alt: Ubuntu Laptop
 
 Essentially the computer you usually personally work with, regardless if its a 
 desktop or a notebook computer or even your TV, as long as it runs Ubuntu 
@@ -8,14 +11,23 @@ Desktop or similar.
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    
+   secrets/index
+   gpg
+   monkeysphere
+   firefox
    tails
-   ca
+   luks
    xca
-   keepassx
+   wine
+   owncloud-client
+   im
    transmission
+   calibre
+   acrobat
    media
+   3rd-party-repos
 
 
 Recommended reading: 

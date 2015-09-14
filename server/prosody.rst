@@ -4,6 +4,9 @@ Instant Messageing
 `Prosody IM <https://prosody.im>`_ is a lightweight and relatively easy to use 
 XMPP instant messageing server.
 
+.. contents:: 
+  :local: 
+
 Prerequisites
 -------------
 
@@ -14,7 +17,24 @@ IP Addresses
 	In this document we use example IP addresses. Note that none of these
 	will work in real situations.
 
-Dedicated IPv4 and IPv6 addresses for XMPP on the server:
+
+Add dedicated IPv4 and IPv6 addresses for XMPP on the server::
+
+    $ sudo ip addr add 192.0.2.35/24 dev eth0
+    $ sudo ip addr add 2001:db8::35/64 dev eth0
+
+
+Also add them to the file :file:`/etc/network/interfaces` to make them
+persistent across system restarts:
+
+.. code-block:: ini
+
+    # xmpp.example.com
+    iface eth0 inet static
+        address 192.0.2.35/24
+    iface eth0 inet6 static
+        address 2001:db8::35/64
+
 
 See :doc:`network`.
 
@@ -22,16 +42,87 @@ See :doc:`network`.
 DNS
 ^^^
 
-The following public DNS records are needed:
+The following public DNS host (A and AAAA) records are needed:
 
  * IPv4 host record (A) for **xmpp.example.com** pointing to your (dynamic) 
    public IP address.
  * IPv6 host record (AAAA) for **xmpp.example.com** pointing to the dedicated 
    IPv6 address.
 
+Any file-transfer proxy servers need host records too. 
+
+================ ==== ============================================ ======== ===
+Name             Type Content                                      Priority TTL
+================ ==== ============================================ ======== ===
+xmpp             A    |publicIPv4|                                          300
+xmpp             AAAA |XMPPIPv6|
+proxy            A    |publicIPv4|                                          300
+proxy            AAAA |XMPPIPv6|
+================ ==== ============================================ ======== ===
+
+Check the "Add also reverse record" when adding the first IPv6 entry.
+
+
+To inform clients and other domains servers, how to connect to our domain, the
+following service records (SRV) are added:
+
+============================ ==== ================================= ======== ===
+Name                         Type Content                           Priority TTL
+============================ ==== ================================= ======== ===
+_xmpp-client._tcp            SRV  5 5222 xmpp.example.com
+_xmpp-server._tcp            SRV  5 5269 xmpp.example.com
+_xmpp-server._tcp.conference SRV  5 5269 xmpp.example.com
+============================ ==== ================================= ======== ===
+
+Additional services like "conference" above are added as subdomain
+service records. There is no need for additional host records.
+
+Provide an alternative connection method over HTTPS.
+
+============================ ==== =========================================================== ======== ===
+Name                         Type Content                           Priority TTL
+============================ ==== =========================================================== ======== ===
+_xmppconnect                 TXT  _xmpp-client-xbosh=https://xmpp.example.com:5281/http-bind
+============================ ==== =========================================================== ======== ===
+
+
+TLSA (DANE) records allow connecting clients and servers to verify the TLS certificates of our server:
+
+===================== ==== =====================================================
+Name                  Type Content                                                               
+===================== ==== =====================================================
+_5222._tcp.xmpp       TLSA 3 0 1 f8df4b2e...............................76a2a0e5
+_5269._tcp.xmpp       TLSA 3 0 1 f8df4b2e...............................76a2a0e5
+===================== ==== =====================================================	
+
 
 Firewall/Gateway
 ^^^^^^^^^^^^^^^^
+
+The XMPP daemons listen on TCP ports 5222, 5269 and 5281 for incoming
+connections.
+
+IPv4 NAT port forwarding:
+
+======== ========= ========================= ==================================
+Protocol Port No.  Forward To                Description
+======== ========= ========================= ==================================
+TCP      5000      |XMPPIPv4|                XMPP file transfers proxy
+TCP      5222      |XMPPIPv4|                XMPP client connections
+TCP      5269      |XMPPIPv4|                XMPP server connections
+TCP      5281      |XMPPIPv4|                XMPP BOSH client connections
+======== ========= ========================= ==================================
+
+Allowed IPv6 connections:
+
+======== ========= ========================= ==================================
+Protocol Port No.  Destination               Description
+======== ========= ========================= ==================================
+TCP      5000      |XMPPIPv6|                XMPP file transfers proxy
+TCP      5222      |XMPPIPv6|                XMPP client connections
+TCP      5269      |XMPPIPv6|                XMPP server connections
+TCP      5281      |XMPPIPv6|                XMPP BOSH client connections
+======== ========= ========================= ==================================
 
 
 TLS Certificate and Key
@@ -110,12 +201,12 @@ All configuration files are in the :file:`/etc/prosody` directory.
 Main Configuration File
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-:file:`/etc/prosody/prosody.cfg.lua`.
+:download:`/etc/prosody/prosody.cfg.lua <config-files/etc/prosody/prosody.cfg.lua>`.
 
 IP Addresses
 ^^^^^^^^^^^^
 
-.. literalinclude:: config-files/prosody.cfg.lua
+.. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
 	:language: lua
 	:start-after: -- blanks. Good luck, and happy Jabbering!
 	:end-before: -- This is a (by default, empty)
@@ -124,14 +215,12 @@ IP Addresses
 Administrators
 ^^^^^^^^^^^^^^
 
-.. literalinclude:: config-files/prosody.cfg.lua
+.. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
 	:language: lua
 	:start-after: interfaces = {
 	:end-before: -- Enable use of libevent
 
 .. index:: Cipher Suite; Set in Prosody
-
-Enforce our selected :ref:`cipher-suite`.
 
 
 Certificate and Key
@@ -142,9 +231,10 @@ Prosody must be able to read the protected key file::
 	$ sudo chgrp ssl-cert /etc/ssl/private/example.com.key.pem
 
 
-Certificate and private key for TLS authentication and encryption:
+Certificate and private key for TLS authentication and encryption and enforce
+our selected :ref:`cipher-suite`:
 
-.. literalinclude:: config-files/prosody.cfg.lua
+.. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
 	:language: lua
 	:start-after: pidfile =
 	:end-before: -- TLS Client Encrpytion
@@ -152,7 +242,7 @@ Certificate and private key for TLS authentication and encryption:
 
 Force clients to use TLS encrypted connections:
 
-.. literalinclude:: config-files/prosody.cfg.lua
+.. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
 	:language: lua
 	:start-after: -- TLS Client Encrpytion
 	:end-before: -- Force certificate authentication for server-to-server
@@ -162,22 +252,41 @@ Virtual Host
 ^^^^^^^^^^^^
 
 Create a new virtual host configuration file 
-:file:`/etc/prosody/conf.d/exmaple.com.cfg.lua`:
+:file:`/etc/prosody/conf.d/example.com.cfg.lua`:
 
-.. code-block:: lua
+.. literalinclude:: config-files/etc/prosody/conf.d/example.com.cfg.lua
+	:language: lua
 
 
-	-- Prosody XMPP vitual host example.com
-	VirtualHost "example.com"
+Tor Hidden Service
+^^^^^^^^^^^^^^^^^^
 
-	--
-	-- Components
-	
-	---- Set up a MUC (multi-user chat) room server on conference.example.com:
-	Component "conference.example.com" "muc"
+Add a Tor Hidden Service by editing :file:`/etc/tor/torrc`::
 
-	---- Set up a SOCKS5 bytestream proxy for server-proxied file transfers:
-	Component "proxy.example.com" "proxy65"
+    # Prosody XMPP Hidden Service for xmpp.example.com
+    HiddenServiceDir /var/lib/tor/hidden_services/xmpp-server
+    HiddenServicePort 5000 192.0.2.35:5000
+    HiddenServicePort 5222 192.0.2.35:5222
+    HiddenServicePort 5269 192.0.2.35:5269
+    HiddenServicePort 5280 192.0.2.35:5280
+    HiddenServicePort 5281 192.0.2.35:5281
+
+
+Reload the Tor client::
+
+    $ sudo service tor reload
+
+Read the newly generated \*.onion hostname::
+
+    $ sudo cat /var/lib/tor/hidden_services/xmpp-server/hostname
+    duskgytldkxiuqc6.onion
+
+
+Create a new virtual host configuration file 
+:download:`/etc/prosody/conf.d/duskgytldkxiuqc6.onion.cfg.lua <config-files/etc/prosody/conf.d/duskgytldkxiuqc6.onion.cfg.lua>`:
+
+.. literalinclude:: config-files/etc/prosody/conf.d/duskgytldkxiuqc6.onion.cfg.lua
+	:language: lua
 
 
 Configuration Syntax Check

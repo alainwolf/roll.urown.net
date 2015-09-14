@@ -8,6 +8,7 @@ Mail Server
    virtual
    mail-scanner
    dovecot
+   sieve
    postfix
    backup_mx
    vimbadmin
@@ -18,7 +19,7 @@ Mail Server
    testing
 
 
-Prerequesites
+Prerequisites
 -------------
 
  * :doc:`../server-tls`

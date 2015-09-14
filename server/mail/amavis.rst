@@ -1,5 +1,3 @@
-.. include:: /template_data.rst
-
 .. _amavis2:
 
 Mail Filter
@@ -39,7 +37,7 @@ The installation creates the following items:
  * The directory :file:`/var/lib/amavis`
  * The directory :file:`/usr/share/doc/amavis-new` with documentation and 
    configuration examples.
- * The system service **amavis** (see  :file:`/etc/init.d/amavis`)
+ * The system service **amavis** (see :file:`/etc/init.d/amavis`)
 
 
 Additional Archive Packages
@@ -83,13 +81,27 @@ Mail content scanners are disabled by deafult. To activate them open
 <config/amavis/15-content_filter_mode>` and uncomment the following lines:
 
 .. literalinclude:: config/amavis/15-content_filter_mode
-    :language: ini
+    :language: perl
     :lines: 6-14
 
 .. literalinclude:: config/amavis/15-content_filter_mode
-    :language: ini
+    :language: perl
     :lines: 17-25
 
+Database for Virtual Domains
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Amavis needs to be able to lookup our hosted virtual mail-domains to decide if a
+mail is incoming or outgoing.
+
+We create the :download:`/etc/amavis/conf.d/50-user <config/amavis/50-user>` and 
+define the database server connection there.
+
+Use the same credentials as we defined in the database connection of our 
+:doc:`ViMbAdmin </server/mail/vimbadmin>` configuration.
+
+.. literalinclude:: config/amavis/50-user
+    :language: perl
 
 
 Service Re-Start
@@ -97,7 +109,7 @@ Service Re-Start
 
 Now re-start Amavis::
 
-    $ sudo /etc/init.d/amavis restart
+    $ sudo service amavis restart
 
 
 Reference
