@@ -22,7 +22,7 @@ The complete file is available for :download:`download
     :linenos:
 
 
-Intermediate Configuration Authority
+Intermediate Certification Authority
 ------------------------------------
 
 The complete file is available for :download:`download 
