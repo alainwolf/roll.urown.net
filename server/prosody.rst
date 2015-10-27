@@ -14,8 +14,8 @@ IP Addresses
 ^^^^^^^^^^^^
 
 .. note:: 
-	In this document we use example IP addresses. Note that none of these
-	will work in real situations.
+    In this document we use example IP addresses. Note that none of these
+    will work in real situations.
 
 
 Add dedicated IPv4 and IPv6 addresses for XMPP on the server::
@@ -93,7 +93,7 @@ Name                  Type Content
 ===================== ==== =====================================================
 _5222._tcp.xmpp       TLSA 3 0 1 f8df4b2e...............................76a2a0e5
 _5269._tcp.xmpp       TLSA 3 0 1 f8df4b2e...............................76a2a0e5
-===================== ==== =====================================================	
+===================== ==== =====================================================    
 
 
 Firewall/Gateway
@@ -175,7 +175,8 @@ Installation
 
  ::
 
- 	$ sudo apt-get install prosody
+    $ sudo apt-get install lua-bitop
+    $ sudo apt-get install prosody
 
 
  * The installation creates the user and group **prosody** which will run the 
@@ -188,6 +189,21 @@ Installation
  * A directory structure for configuration files is created in 
    :file:`/etc/prosody`.
  * A system service :command:`prosody` is created and started.
+
+
+Third-party server modules
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A community repository of modules exists at the 
+`prosody-modules <https://modules.prosody.im/>`_ project. 
+
+The easiest way to fetch and install these is currently via Mercurial (hg). 
+Once you have it installed, simply run: 
+
+::
+
+  $ sudo mkdir /usr/local/lib/prosody
+  $ hg clone https://hg.prosody.im/prosody-modules/ /usr/local/lib/prosody/modules
 
 
 Configuration
@@ -207,18 +223,33 @@ IP Addresses
 ^^^^^^^^^^^^
 
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
-	:language: lua
-	:start-after: -- blanks. Good luck, and happy Jabbering!
-	:end-before: -- This is a (by default, empty)
+    :language: lua
+    :start-after: -- blanks. Good luck, and happy Jabbering!
+    :end-before: -- This is a (by default, empty)
+
+
+Additional Modules
+^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
+  :language: lua
+  :start-after: --use_libevent = true;
+  :end-before: -- This is the list of modules Prosody will load on startup.
+
+
+.. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
+  :language: lua
+  :start-after: --"legacyauth"; -- Legacy authentication. Only used by some old clients and bots.
+  :end-before: -- These modules are auto-loaded, but should you want
 
 
 Administrators
 ^^^^^^^^^^^^^^
 
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
-	:language: lua
-	:start-after: interfaces = {
-	:end-before: -- Enable use of libevent
+    :language: lua
+    :start-after: interfaces = {
+    :end-before: -- Enable use of libevent
 
 .. index:: Cipher Suite; Set in Prosody
 
@@ -228,24 +259,24 @@ Certificate and Key
 
 Prosody must be able to read the protected key file::
 
-	$ sudo chgrp ssl-cert /etc/ssl/private/example.com.key.pem
+    $ sudo chgrp ssl-cert /etc/ssl/private/example.com.key.pem
 
 
 Certificate and private key for TLS authentication and encryption and enforce
 our selected :ref:`cipher-suite`:
 
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
-	:language: lua
-	:start-after: pidfile =
-	:end-before: -- TLS Client Encrpytion
+    :language: lua
+    :start-after: pidfile =
+    :end-before: -- TLS Client Encrpytion
 
 
 Force clients to use TLS encrypted connections:
 
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
-	:language: lua
-	:start-after: -- TLS Client Encrpytion
-	:end-before: -- Force certificate authentication for server-to-server
+    :language: lua
+    :start-after: -- TLS Client Encrpytion
+    :end-before: -- Force certificate authentication for server-to-server
 
 
 Virtual Host
@@ -255,7 +286,7 @@ Create a new virtual host configuration file
 :file:`/etc/prosody/conf.d/example.com.cfg.lua`:
 
 .. literalinclude:: config-files/etc/prosody/conf.d/example.com.cfg.lua
-	:language: lua
+    :language: lua
 
 
 Tor Hidden Service
@@ -286,7 +317,7 @@ Create a new virtual host configuration file
 :download:`/etc/prosody/conf.d/duskgytldkxiuqc6.onion.cfg.lua <config-files/etc/prosody/conf.d/duskgytldkxiuqc6.onion.cfg.lua>`:
 
 .. literalinclude:: config-files/etc/prosody/conf.d/duskgytldkxiuqc6.onion.cfg.lua
-	:language: lua
+    :language: lua
 
 
 Configuration Syntax Check
@@ -294,7 +325,7 @@ Configuration Syntax Check
 
 ::
 
-	$ sudo luac -p /etc/prosody/prosody.cfg.lua
+    $ sudo luac -p /etc/prosody/prosody.cfg.lua
 
 If there is no output there are no syntax errors. Otherwise filename and 
 line-number are shown along with a error message.
@@ -305,7 +336,7 @@ Restart Server
 
 ::
 
-	$ sudo service prosody restart
+    $ sudo service prosody restart
 
 
 Add Users
@@ -315,9 +346,9 @@ Prosody website.
 
 ::
 
-	$ sudo prosodyctl adduser <username>@example.com
-	Enter new password: ********
-	Retype new password: ********
+    $ sudo prosodyctl adduser <username>@example.com
+    Enter new password: ********
+    Retype new password: ********
 
 
 Monitoring

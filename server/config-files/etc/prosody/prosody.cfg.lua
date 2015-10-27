@@ -30,6 +30,9 @@ admins = { "admin@example.com" }
 -- For more information see: http://prosody.im/doc/libevent
 --use_libevent = true;
 
+-- These paths are searched in the order specified, and before the default path
+plugin_paths = { "/usr/local/lib/prosody/modules" }
+
 -- This is the list of modules Prosody will load on startup.
 -- It looks for mod_modulename.lua in the plugins folder, so make sure that exists too.
 -- Documentation on modules can be found at: http://prosody.im/doc/modules
@@ -74,6 +77,15 @@ modules_enabled = {
         --"watchregistrations"; -- Alert admins of registrations
         --"motd"; -- Send a message to users when they log in
         --"legacyauth"; -- Legacy authentication. Only used by some old clients and bots.
+
+    -- Community modules 
+    -- https://modules.prosody.im/
+        "blocking"; -- XEP-0191: Allows the client to manage a simple list of blocked JIDs, requires "privacy" module
+        "smacks"; -- XEP-0198: Reliability and fast reconnects for XMPP
+        "carbons"; -- XEP-0280: Message Carbons, allows users to maintain a shared and synchronized view of all conversations across all their online clients and devices.
+        --"mam"; -- XEP-0313: Message Archive Management. 
+        "csi"; -- XEP-0352: Client State Indication
+        "throttle_presence"; -- Cut down on presence traffic when clients indicate they are inactive (using the CSI protocol).
 };
 
 -- These modules are auto-loaded, but should you want

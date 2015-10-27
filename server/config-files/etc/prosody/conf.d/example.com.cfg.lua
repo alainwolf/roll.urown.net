@@ -20,3 +20,6 @@ VirtualHost "example.com"
     -- Set up a SOCKS5 bytestream proxy for server-proxied file transfers:
     --- Also needs host record (A and AAAA) the XMMP IP address.
     Component "proxy.example.com" "proxy65"
+        modules_enabled = {
+          "http_upload";
+        }
