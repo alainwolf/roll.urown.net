@@ -117,7 +117,9 @@ Some useful tools are not installed by default.
 * `pwgen <http://manpages.ubuntu.com/manpages/trusty/man1/pwgen.1.html>`_
 * `MultiTail <http://manpages.ubuntu.com/manpages/trusty/en/man1/multitail.1.html>`_
 * `Molly Guard <http://manpages.ubuntu.com/manpages/trusty/en/man8/molly-guard.8.html>`_
+* Git
+* Mercurial
 
 To install these run::
 
-    $ sudo apt-get install htop multitail pwgen molly-guard
+    $ sudo apt-get install htop multitail pwgen molly-guard git mercurial
