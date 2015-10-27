@@ -367,15 +367,23 @@ rst_epilog = """
 .. |SIPserverIPv4|    replace:: 192.0.2.27
 .. |SIPserverIPv6|    replace:: 2001:db8::27
 
+.. |CAsiteIPv4|         replace:: 192.0.2.28
+.. |CAsiteIPv6|         replace:: 2001:db8:face::28
+
 .. |HTTPserverIPv4|   replace:: 192.0.2.30
+
+.. |BOOKserverIPv4|   replace:: 192.0.2.33
+.. |BOOKserverIPv6|   replace:: 2001:db8:1::33
+
+
+.. |OPDSserverIPv4|   replace:: 192.0.2.34
+.. |OPDSserverIPv6|   replace:: 2001:db8::34
 
 .. |BitTorrentServerIPv4|   replace:: 192.0.2.36
 .. |BitTorrentServerIPv6|   replace:: 2001:db8:1::36
 
-.. |BOOKserverIPv4|   replace:: 192.0.2.33
-.. |BOOKserverIPv6|   replace:: 2001:db8:1::33
-.. |OPDSserverIPv4|   replace:: 192.0.2.34
-.. |OPDSserverIPv6|   replace:: 2001:db8::34
+.. |XMPPIPv4|         replace:: 192.0.2.35
+.. |XMPPIPv6|         replace:: 2001:db8:face::35
 
 .. |KeyServerIPv4|    replace:: 192.0.2.37
 .. |KeyServerIPv6|    replace:: 2001:db8::37
@@ -388,11 +396,6 @@ rst_epilog = """
 
 .. |DNSMasterIPv6|    replace:: 2001:db8:2::41
 
-.. |TorClientIPv4|    replace:: 192.0.2.48
-.. |TorClientIPv6|    replace:: 2001:db8::48
-.. |TorServerIPv4|    replace:: 192.0.2.49
-.. |TorServerIPv6|    replace:: 2001:db8::49
-
 .. |DNSSlaveAIPv4|    replace:: 198.51.100.41
 .. |DNSSlaveAIPv6|    replace:: 2001:db8:f00d::41
 .. |DNSSlaveBIPv4|    replace:: 203.0.113.41
@@ -400,8 +403,16 @@ rst_epilog = """
 .. |DNSSlaveCIPv4|    replace:: 198.18.249.0.41
 .. |DNSSlaveCIPv6|    replace:: 2001:db8:face::41
 
-.. |XMPPIPv4|         replace:: 192.0.2.35
-.. |XMPPIPv6|         replace:: 2001:db8:face::35
+.. |DnsResolverAIPv4|  replace:: 192.0.2.43
+.. |DnsResolverAIPv6|  replace:: 2001:db8::43
+
+.. |TorClientIPv4|    replace:: 192.0.2.48
+.. |TorClientIPv6|    replace:: 2001:db8::48
+.. |TorServerIPv4|    replace:: 192.0.2.49
+.. |TorServerIPv6|    replace:: 2001:db8::49
+
+.. |DnsResolverBIPv4|  replace:: 192.0.2.51
+.. |DnsResolverBIPv6|  replace:: 2001:db8::51
 
 .. |IMAP| replace::    :abbr:`IMAP (Internet Message Access Protocol)`
 .. |LDA| replace::     :abbr:`LDA (Local Delivery Agent)`
