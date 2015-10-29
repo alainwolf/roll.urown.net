@@ -84,6 +84,10 @@ proxy_interfaces = ipv4.example.com
 # General TLS Settings
 #
 
+# Where do I get Diffie-Hellmann key-exchange (DHE) parameters from (for perfect forward secrecy)
+smtpd_tls_dh1024_param_file = /etc/ssl/dhparams/dh_4096.pem
+smtpd_tls_dh512_param_file  = /etc/ssl/dhparams/dh_512.pem
+
 # Should I enable server cipher preferences?
 tls_preempt_cipherlist = yes
 
@@ -151,6 +155,9 @@ smtpd_tls_mandatory_ciphers = high
 # What security grade do I use for ephemeral elliptic-curve Diffie-Hellman (EECDH)
 # key exchange?
 smtpd_tls_eecdh_grade = ultra
+
+# Should I include protocol and cipher used in the "Received:" message headers?
+smtpd_tls_received_header = yes
 
 # Where do I cache incoming SMTP TLS sessions?
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
