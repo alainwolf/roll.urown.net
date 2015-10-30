@@ -660,34 +660,32 @@ Diffie-Hellman (DH) Key Exchange
 To use perfect forward secrecy, Diffie-Hellman parameters must be set up on the 
 server side, otherwise the relevant cipher suites will be silently ignored.
 
-`bettercrypto.org <https://bettercrypto.org>`_ and other sources advise against
-generating those paramter files yourself and instead using proven and properly
-checked ones. Usually those sources mention :rfc:`3526` (a part of IPSec).
-
-Other sources advise you to build your own instead of using the predefined ones, 
-as it is unclear where they come from and why they should be better. Some even 
-suggest to create new ones every day or every hour, to further increase security.
-
-Use the following OpenSSL command to create your own set of DH parameter files::
-
-    cd /etc/openssl/
-    $ sudo mkdir -p dhparams
-    $ sudo openssl dhparam -out dhparams/dh_2048.pem 2048
-    $ sudo openssl dhparam -out dhparams/dh_3072.pem 3072
-    $ sudo openssl dhparam -out dhparams/dh_4096.pem 4096
-
-
-The predefined ones are hard to find. But the bettercrypto.org 
-`Git-Repository <https://github.com/BetterCrypto/Applied-Crypto-Hardening>`_ 
-contains a directory with some files and a readme in the 
-`/tools/dhparams <https://github.com/BetterCrypto/Applied-Crypto-Hardening/tree/master/tools/dhparams>`_
-directory.
-
 .. note::
   
-    The bit-size should not be smaller than the size of the RSA private key. If
-    you use a 3072-bit RSA key as suggested above, create and use at least a
-    3072-bit DH-parameter file.
+    The bit-size of your DH parameters should be equal or greater than the size 
+    of your RSA private key. I.e. if you have a 3072-bit RSA key as suggested 
+    above, create and use at least a 3072-bit DH-parameter file.
+
+
+You should build your own parameter files and re-create them periodically.
+
+The following shell script will do just that::
+
+    #!/bin/sh
+    # Regenerate Diffie-Hellmann key exchange parameters
+    #
+    mkdir -p /etc/ssl/dhparams
+    cd /etc/ssl/dhparams
+    umask 022
+    for dhsize in 512 1024 2048 3072 4096 ; 
+    do
+      nice openssl dhparam -out ${dhsize}.tmp ${dhsize} && \
+        mv ${dhsize}.tmp dh_${dhsize}.pem && \
+          chmod 644 dh_${dhsize}.pem
+    done
+
+
+Let a cron job run this script periodically, to refresh your set.
 
 
 Elliptic Curve Diffie-Hellmann (ECDH)
