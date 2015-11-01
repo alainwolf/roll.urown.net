@@ -5,7 +5,7 @@ Instant Messageing
 XMPP instant messageing server.
 
 .. contents:: 
-  :local: 
+    :local: 
 
 Prerequisites
 -------------
@@ -44,10 +44,10 @@ DNS
 
 The following public DNS host (A and AAAA) records are needed:
 
- * IPv4 host record (A) for **xmpp.example.com** pointing to your (dynamic) 
-   public IP address.
- * IPv6 host record (AAAA) for **xmpp.example.com** pointing to the dedicated 
-   IPv6 address.
+    * IPv4 host record (A) for **xmpp.example.com** pointing to your (dynamic) 
+      public IP address.
+    * IPv6 host record (AAAA) for **xmpp.example.com** pointing to the dedicated 
+      IPv6 address.
 
 Any file-transfer proxy servers need host records too. 
 
@@ -173,22 +173,67 @@ Update the systems packages list::
 Installation
 ------------
 
- ::
+
+LuaExpat
+^^^^^^^^
+
+Unfortunately there is one outdated LUA library in the Ubuntu package repository
+which we need to get from another source: 
+`LuaExpat <https://prosody.im/doc/depends#luaexpat>`_,
+
+We use `LuaRocks <https://luarocks.org/>`_, the package manager for Lua modules,
+to help us with download and installation of LuaExpat.
+
+So first we have to install LuaRocks. LuaRocks is also available from the
+Ubuntu package repository, but outdated as well. 
+
+So here is how we download and install LuaRocks from its sources::
+
+    $ sudo apt-get update
+    $ sudo apt-get install build-essential liblua5.1-0-dev libreadline-dev
+    $ cd /usr/local/src/
+    $ wget https://keplerproject.github.io/luarocks/releases/luarocks-2.2.2.tar.gz
+    $ tar -xzf luarocks-2.2.2.tar.gz
+    $ cd luarocks-2.2.2
+    $ ./configure
+    $ make build
+    $ sudo make install bootstrap
+
+
+Now we can install the LuaExpat package using Luarocks::
+
+    $ sudo luarocks install luaexpat
+
+
+LuaBitop
+^^^^^^^^
+
+Another Lua library we install separetly is the Lua bitop fast bit manipulation
+library. It will be needed by the community-module `http_upload` added later,
+therefore the prosody package installation does not know we need it, and won't
+install it automatically::
 
     $ sudo apt-get install lua-bitop
+
+
+Prosody Installation
+^^^^^^^^^^^^^^^^^^^^
+
+Finally we install the Prosody package::
+
     $ sudo apt-get install prosody
 
 
- * The installation creates the user and group **prosody** which will run the 
-   server.
- * Additionally the group **ssl-cert** is created, with the user **prosody** 
-   added as member
- * The directory :file:`/etc/ssl/private` and the key-file 
-   :file:`/etc/ssl/private/ssl-cert-snakeoil.key` have its group ownership 
-   changed to **ssl-cert** and group read access-rights added.
- * A directory structure for configuration files is created in 
-   :file:`/etc/prosody`.
- * A system service :command:`prosody` is created and started.
+    * The installation creates the user and group **prosody** which will run the 
+      server.
+    * Additionally the group **ssl-cert** is created, with the user **prosody** 
+      added as member
+    * The directory :file:`/etc/ssl/private` and the key-file 
+      :file:`/etc/ssl/private/ssl-cert-snakeoil.key` have its group ownership 
+      changed to **ssl-cert** and group read access-rights added.
+    * A directory structure for configuration files is created in 
+      :file:`/etc/prosody`.
+    * A system service :command:`prosody` is created and started.
 
 
 Third-party server modules
@@ -202,8 +247,8 @@ Once you have it installed, simply run:
 
 ::
 
-  $ sudo mkdir /usr/local/lib/prosody
-  $ hg clone https://hg.prosody.im/prosody-modules/ /usr/local/lib/prosody/modules
+    $ sudo mkdir /usr/local/lib/prosody
+    $ hg clone https://hg.prosody.im/prosody-modules/ /usr/local/lib/prosody/modules
 
 
 Configuration
@@ -232,15 +277,15 @@ Additional Modules
 ^^^^^^^^^^^^^^^^^^
 
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
-  :language: lua
-  :start-after: --use_libevent = true;
-  :end-before: -- This is the list of modules Prosody will load on startup.
+    :language: lua
+    :start-after: --use_libevent = true;
+    :end-before: -- This is the list of modules Prosody will load on startup.
 
 
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
-  :language: lua
-  :start-after: --"legacyauth"; -- Legacy authentication. Only used by some old clients and bots.
-  :end-before: -- These modules are auto-loaded, but should you want
+    :language: lua
+    :start-after: --"legacyauth"; -- Legacy authentication. Only used by some old clients and bots.
+    :end-before: -- These modules are auto-loaded, but should you want
 
 
 Administrators
