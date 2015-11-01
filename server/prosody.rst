@@ -179,7 +179,7 @@ LuaExpat
 
 Unfortunately there is one outdated LUA library in the Ubuntu package repository
 which we need to get from another source: 
-`LuaExpat <https://prosody.im/doc/depends#luaexpat>`_,
+`LuaExpat <https://prosody.im/doc/depends#luaexpat>`_.
 
 We use `LuaRocks <https://luarocks.org/>`_, the package manager for Lua modules,
 to help us with download and installation of LuaExpat.
