@@ -20,7 +20,8 @@ Duplicity is a enhanced combination of usual backup tools and tasks:
 Installation
 ------------
 
-Backupninja is in the repository, additionally we install duplicity and a Python library for making SSH connections to the storage host::
+Backupninja is in the repository, additionally we install duplicity and a Python
+library for making SSH connections to the storage host::
 
     $ sudo apt-get install backupninja duplicity python-paramiko python-pip
     $ sudo pip install paramiko --upgrade
@@ -29,9 +30,9 @@ Backupninja is in the repository, additionally we install duplicity and a Python
 Configuration
 --------------
 
-The main configuration is stored in :download:`/etc/backupninja.conf 
-<config/backupninja/backupninja.conf>`, while the different backup tasks are 
-found in the directory :file:`/etc/backup.d`.
+The main configuration is stored in :download:`/etc/backupninja.conf  
+<config-files/etc//backupninja/backupninja.conf>`, while the different backup 
+tasks are found in the directory :file:`/etc/backup.d`.
 
 There is a helper application to aid in the configuratoion of all this::
 
@@ -40,12 +41,17 @@ There is a helper application to aid in the configuratoion of all this::
 
 hwinfo Issue
 ^^^^^^^^^^^^
-There is currently an `issue <https://labs.riseup.net/code/issues/6388>`_ with the system-task of backupnja. The task is using the `hwinfo <http://www.linuxintro.org/wiki/Hwinfo>`_ program to collect information on hardware and disk partitions before backup. 
 
-The hwinfo package is no longer available in Ubuntu. It has been removed due to incompatibilities with Ubuntu's current hardware management.
+There is currently an `issue <https://labs.riseup.net/code/issues/6388>`_ with
+the system-task of backupnja. The task is using the `hwinfo
+<http://www.linuxintro.org/wiki/Hwinfo>`_ program to collect information on
+hardware and disk partitions before backup.
+
+The hwinfo package is no longer available in Ubuntu. It has been removed due to
+incompatibilities with Ubuntu's current hardware management.
 
 Disable the tasks **partitions** and **hardware** in 
-:download:`/etc/backup.d/10.sys <config/backupninja/10.sys>`:
+:download:`/etc/backup.d/10.sys <config-files/etc//backupninja/10.sys>`:
 
 ..  code-block:: ini
     :emphasize-lines: 2,4
@@ -61,8 +67,8 @@ Disable the tasks **partitions** and **hardware** in
 What how and where to backup
 ----------------------------
 
-The file :download:`/etc/backup.d/90.dup <config/backupninja/90.dup>` has all 
-the meat. 
+The file :download:`/etc/backup.d/90.dup <config-files/etc/backupninja/90.dup>`
+has all  the meat.
 
 Duplicity encrypts all backup-files before transferring to the remote storage:
 
@@ -75,7 +81,8 @@ Duplicity encrypts all backup-files before transferring to the remote storage:
     Safe the password in a secure location! Without it you can't restore 
     anything!
 
-Add more directories here when needed (e.g. after new software has been installed):
+Add more directories here when needed (e.g. after new software has been
+installed):
 
 ..  code-block:: ini
 
