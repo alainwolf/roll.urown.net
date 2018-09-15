@@ -7,7 +7,7 @@ Suggested Reading:
 Prepare Installation Media
 --------------------------
 
-..  :todo::     
+..  :todo::
 
     Write section: Prepare USB stick or CD-ROM for Ubuntu Sever installation.
 
@@ -15,7 +15,7 @@ Prepare Installation Media
 Boot Installation Media
 -----------------------
 
-..  :todo::     
+..  :todo::
 
     Write section: Boot Ubuntu Sever installation media.
 
@@ -199,6 +199,9 @@ installed Ubuntu Server.
 ::
 
     $ ssh <servername>
+
+.. code-block:: text
+
     The authenticity of host 'server (192.0.2.235)' can't be established.
     ECDSA key fingerprint is 1e:34:d6:85:78:17:66:17:ad:62:45:05:fa:18:9d:a7.
     No matching host key fingerprint found in DNS.

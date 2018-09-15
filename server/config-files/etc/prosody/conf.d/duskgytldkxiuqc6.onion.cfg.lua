@@ -6,8 +6,8 @@ VirtualHost "duskgytldkxiuqc6.onion"
     -- Assign this host a certificate for TLS, otherwise it would use the one
     -- set in the global section (if any).
     ssl = {
-        key = "/etc/ssl/private/example.com.key.pem";
-        certificate = "/etc/ssl/certs/example.com.chained.cert.pem";
+        key = "/etc/ssl/private/example.net.key.pem";
+        certificate = "/etc/ssl/certs/example.net.chained.cert.pem";
         }
 
     --

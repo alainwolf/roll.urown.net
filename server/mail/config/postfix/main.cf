@@ -5,10 +5,10 @@
 #
 
 # What is my hostname (FQDN)?
-myhostname = mail.example.com
+myhostname = mail.example.net
 
 # What is my domainname?
-mydomain = example.com
+mydomain = example.net
 
 # What domain name do I append to local sender addresses on outbound mail?
 myorigin = $mydomain
@@ -23,7 +23,7 @@ recipient_delimiter = +
 strict_rfc821_envelopes = yes
 
 # What domains do I receive mail for?
-mydestination = server.example.com, server.lan, localhost.lan, localhost
+mydestination = server.example.net, server.lan, localhost.lan, localhost
 
 # For which clients I will relay mail to other doemains?
 mynetworks_style = host
@@ -78,7 +78,7 @@ smtp_bind_address = 192.0.2.40
 smtp_bind_address6 = 2001:db8::40
 
 # Our Firewall/Gateway is doing NAT. What is my external IPv4 address?
-proxy_interfaces = ipv4.example.com
+proxy_interfaces = ipv4.example.net
 
 
 # General TLS Settings
@@ -136,8 +136,8 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
 
 # TLS certificate and key for incoming connections?
-smtpd_tls_cert_file = /etc/ssl/certs/example.com.chained.cert.pem
-smtpd_tls_key_file = /etc/ssl/private/example.com.key.pem
+smtpd_tls_cert_file = /etc/ssl/certs/example.net.chained.cert.pem
+smtpd_tls_key_file = /etc/ssl/private/example.net.key.pem
 
 # Is TLS encryption required for incoming connections?
 smtpd_tls_security_level = may

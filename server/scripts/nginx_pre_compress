@@ -1,0 +1,176 @@
+#!/bin/bash
+#
+# Pre-compress static web resources
+#
+# To be started by cron every few hours
+#
+# For monitoring use the following command:
+#
+#   journalctl -t ngx_pre_compress -p <level> --no-tail -f
+#
+# while <level> may be any of debug, info, notice or warning
+
+# Exit on errors
+set -e
+# Exit on undefined variable
+set -u
+
+NGINX_USER='www-data'
+NGINX_GROUP='www-data'
+NGINX_CMD='/usr/sbin/nginx'
+GZIP_CMD='/bin/gzip'
+BROTLI_CMD='/usr/bin/brotli'
+# See /etc/nginx/mime.types
+FILETYPES='en html htm shtml css xml js atom rss mml txt wml json doc ps rtf xls ppt run pl docx xlsx pptx'
+
+# Log to syslog
+log()
+{
+    logger -t ngx_pre_compress --priority user.${1} ${2}
+}
+
+# We need to be root
+if [[ ${UID} -gt 0 ]]; then
+    log 'error' "Sorry, need to be root"
+    echo "Sorry, need to be root"
+    exit 1
+fi
+
+# Fix sorting
+LC_ALL=C
+
+# Start
+log 'notice' "Starting pre-compression of files for Nginx."
+
+# Get document root and alias directories from current Nginx configuration
+webdirs=$( ${NGINX_CMD} -qT | \
+                        grep --only-matching --extended-regexp \
+                            "^\s*(root|alias)\s+((/*.)+)" | \
+                        grep --only-matching --extended-regexp \
+                            "(/[a-zA-Z0-9/_\.]+)" | \
+                        sort --unique
+                  )
+total_dirs=0
+total_files=0
+total_br_new=0
+total_gz_new=0
+total_br_updates=0
+total_gz_updates=0
+
+dir_files=0
+dir_br_new=0
+dir_br_updates=0
+dir_gz_new=0
+dir_gz_updates=0
+
+#
+# Create compressed versions
+
+# Walk directories
+for dir in ${webdirs};
+do
+
+    # Is this a directory?
+    if [[ -d ${dir} ]]; then
+
+        log 'info' "Looking for files to pre-compress in ${dir} ..."
+        total_dirs=$((total_dirs+1))
+        dir_files=0
+        dir_br_new=0
+        dir_br_updates=0
+        dir_gz_new=0
+        dir_gz_updates=0
+
+        #echo -n "Searching for "
+
+        # Walk the list of filetypes
+        for filetype in ${FILETYPES};
+        do
+            #echo -n "${filetype} "
+
+            # Find files
+            while IFS= read -r -d '' file;
+            do
+
+                dir_files=$((dir_files+1))
+
+                # Does it have a Brotli companion?
+                if [[ -f "${file}.br" ]]; then
+
+                    # Is it outdated?
+                    if [[ "${file}" -nt "${file}.br" ]]; then
+
+                        # Refresh the Brotli companion
+                        dir_br_updates=$((dir_br_updates+1))
+                        ${BROTLI_CMD} --force --input "${file}" --output "${file}.br"
+
+                        # Set file time, owner, access rights from original
+                        chown --reference="${file}" "${file}.br"
+                        chmod --reference="${file}" "${file}.br"
+                        touch --reference="${file}" "${file}.br"
+                    fi
+                else
+
+                    # Create new Brotli companion
+                    dir_br_new=$((dir_br_new+1))
+                    ${BROTLI_CMD} --input "${file}" --output "${file}.br"
+
+                    # Set file time, owner, access rights from original
+                    chown --reference="${file}" "${file}.br"
+                    chmod --reference="${file}" "${file}.br"
+                    touch --reference="${file}" "${file}.br"
+                fi
+
+                # Does it have a Gzip companion?
+                if [[ -f "${file}.gz" ]]; then
+
+                    # Is it outdated?
+                    if [[ "${file}" -nt "${file}.gz" ]]; then
+
+                        # Refresh the GZip companion
+                        dir_gz_updates=$((dir_gz_updates+1))
+                        ${GZIP_CMD} --keep "${file}"
+
+                        # Set file time, owner, access rights as the original
+                        chown --reference="${file}" "${file}.gz"
+                        chmod --reference="${file}" "${file}.gz"
+                        touch --reference="${file}" "${file}.gz"
+                    fi
+                else
+
+                    # Create a new GZip companion
+                    dir_gz_new=$((dir_gz_new+1))
+                    ${GZIP_CMD} --keep "${file}"
+
+                    # Set file time, owner, access rights as the original
+                    chown --reference="${file}" "${file}.gz"
+                    chmod --reference="${file}" "${file}.gz"
+                    touch --reference="${file}" "${file}.gz"
+                fi
+            done < <(find "${dir}" -type f -name "*.${filetype}" -print0)
+        done
+        #echo
+        log 'info' "Files processed: ${dir_files}"
+        log 'info' "New Brotlis created: ${dir_br_new}"
+        log 'info' "Outdated Brotlis updated: ${dir_br_updates}"
+        log 'info' "New GZips created: ${dir_gz_new}"
+        log 'info' "Outdated GZips updated: ${dir_gz_updates}"
+        total_files=$((total_files+dir_files))
+        total_br_new=$((total_br_new+dir_br_new))
+        total_br_updates=$((total_br_updates+dir_br_updates))
+        total_gz_new=$((total_gz_new+dir_gz_new))
+        total_gz_updates=$((total_gz_updates+dir_gz_updates))
+    else
+        echo "${dir} is not a directory."
+    fi
+done
+log 'info' "Total Directories processed: ${total_dirs}"
+log 'info' "Total Files processed: ${total_files}"
+log 'info' "Total New Brotlis created: ${total_br_new}"
+log 'info' "Total Outdated Brotlis updated: ${total_br_updates}"
+log 'info' "Total New GZips created: ${total_gz_new}"
+log 'info' "Total Outdated GZips updated: ${total_gz_updates}"
+
+# End
+log 'notice' " pre-compression of files for Nginx complete. Have a nice day."
+

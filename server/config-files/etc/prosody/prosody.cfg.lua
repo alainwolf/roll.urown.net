@@ -16,15 +16,15 @@
 -- Settings in this section apply to the whole server and are the default settings
 -- for any virtual hosts
 
- -- Listen on dedicated IP address of xmpp.example.com only
- interfaces = { "192.0.2.35", "2001:db8::35" } 
+ -- Listen on dedicated IP address of xmpp.example.net only
+ interfaces = { "192.0.2.35", "2001:db8::35" }
 
 
 -- This is a (by default, empty) list of accounts that are admins
 -- for the server. Note that you must create the accounts separately
 -- (see http://prosody.im/doc/creating_accounts for info)
--- Example: admins = { "user1@example.com", "user2@example.net" }
-admins = { "admin@example.com" }
+-- Example: admins = { "user1@example.net", "user2@example.net" }
+admins = { "admin@example.net" }
 
 -- Enable use of libevent for better performance under high load
 -- For more information see: http://prosody.im/doc/libevent
@@ -48,7 +48,7 @@ modules_enabled = {
     -- Not essential, but recommended
         "private"; -- Private XML storage (for room bookmarks, etc.)
         "vcard"; -- Allow users to set vCards
-    
+
     -- These are commented by default as they have a performance impact
         --"privacy"; -- Support privacy lists
         --"compression"; -- Stream compression (Debian: requires lua-zlib module to work)
@@ -64,7 +64,7 @@ modules_enabled = {
     -- Admin interfaces
         "admin_adhoc"; -- Allows administration via an XMPP client that supports ad-hoc commands
         --"admin_telnet"; -- Opens telnet console interface on localhost port 5582
-    
+
     -- HTTP modules
         --"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"
         --"http_files"; -- Serve static files from a directory over HTTP
@@ -78,14 +78,15 @@ modules_enabled = {
         --"motd"; -- Send a message to users when they log in
         --"legacyauth"; -- Legacy authentication. Only used by some old clients and bots.
 
-    -- Community modules 
+    -- Community modules
     -- https://modules.prosody.im/
         "blocking"; -- XEP-0191: Allows the client to manage a simple list of blocked JIDs, requires "privacy" module
         "smacks"; -- XEP-0198: Reliability and fast reconnects for XMPP
         "carbons"; -- XEP-0280: Message Carbons, allows users to maintain a shared and synchronized view of all conversations across all their online clients and devices.
-        --"mam"; -- XEP-0313: Message Archive Management. 
+        "mam"; -- XEP-0313: Message Archive Management.
         "csi"; -- XEP-0352: Client State Indication
         "throttle_presence"; -- Cut down on presence traffic when clients indicate they are inactive (using the CSI protocol).
+        "register_web"; -- A web interface to register user accounts.
 };
 
 -- These modules are auto-loaded, but should you want
@@ -96,9 +97,13 @@ modules_disabled = {
     -- "s2s"; -- Handle server-to-server connections
 };
 
+-- Register Web Template files
+register_web_template = "/usr/local/lib/prosody/register-templates/Prosody-Web-Registration-Theme";
+
 -- Disable account creation by default, for security
 -- For more information see http://prosody.im/doc/creating_accounts
 allow_registration = false;
+
 
 -- Debian:
 --   send the server to background.
@@ -111,28 +116,30 @@ daemonize = true;
 --
 pidfile = "/var/run/prosody/prosody.pid";
 
--- These are the SSL/TLS-related settings. If you don't want
--- to use SSL/TLS, you may comment or remove this
+-- Override the address used to connect to a given host with the address of
+-- a hidden service.
+Include "/usr/local/lib/prosody/xmpp-onion-map/onions-map.lua"
+
+-- SSL/TLS-related settings.
 ssl = {
-    options = { 
-                "no_sslv2", 
-                "no_sslv3", 
-                "no_ticket", 
-                "no_compression", 
-                "cipher_server_preference", 
-                "single_dh_use", 
+    options = {
+                "no_sslv2",
+                "no_sslv3",
+                "no_ticket",
+                "no_compression",
+                "cipher_server_preference",
+                "single_dh_use",
                 "single_ecdh_use"
               };
     ciphers = "kEDH+aRSA+AES128:kEECDH+aRSA+AES128:+SSLv3";
-    dhparam = "/etc/ssl/dhparams/dh_1024.pem";
-    key = "/etc/ssl/certs/example.com.key.pem";
-    certificate = "/etc/ssl/certs/example.com.cert.pem";
+    dhparam = "/etc/ssl/dhparams/dh_4096.pem";
+    key = "/etc/ssl/certs/example.net.key.pem";
+    certificate = "/etc/ssl/certs/example.net.cert.pem";
 }
 
 -- TLS Client Encrpytion
 -- Force clients to use encrypted connections? This option will
 -- prevent clients from authenticating unless they are using encryption.
-
 c2s_require_encryption = true
 
 -- Force certificate authentication for server-to-server connections?
@@ -178,11 +185,11 @@ authentication = "internal_plain"
 
 --
 -- XMPP client-to-client file transfer proxy
-proxy65_interfaces { "192.0.2.35", "2001:db8::35" } 
+proxy65_interfaces { "192.0.2.35", "2001:db8::35" }
 --proxy65_ports { 5000 }
 
 
--- BOSH (previously known as 'HTTP binding' or "http-bind") 
+-- BOSH (previously known as 'HTTP binding' or "http-bind")
 bosh_ports = {
     {
         port = 5280;
@@ -192,8 +199,8 @@ bosh_ports = {
         port = 5281;
         path = "http-bind";
         ssl = {
-            key = "/etc/ssl/private/example.com.key.pem";
-            certificate = "/etc/ssl/certs/example.com.chained.cert.pem";
+            key = "/etc/ssl/private/example.net.key.pem";
+            certificate = "/etc/ssl/certs/example.net.chained.cert.pem";
         }
     }
 }
@@ -217,7 +224,7 @@ log = {
 -- You need to add a VirtualHost entry for each domain you wish Prosody to serve.
 -- Settings under each VirtualHost entry apply *only* to that host.
 
-VirtualHost "example.com"
+VirtualHost "example.net"
     enabled = false -- Remove this line to enable this host
 
     -- Assign this host a certificate for TLS, otherwise it would use the one
@@ -225,8 +232,8 @@ VirtualHost "example.com"
     -- Note that old-style SSL on port 5223 only supports one certificate, and will always
     -- use the global one.
     ssl = {
-        key = "/etc/ssl/private/example.com.key.pem";
-        certificate = "/etc/ssl/certs/example.com.chained.cert.pem";
+        key = "/etc/ssl/private/example.net.key.pem";
+        certificate = "/etc/ssl/certs/example.net.chained.cert.pem";
     }
 
 ------ Components ------
@@ -234,11 +241,11 @@ VirtualHost "example.com"
 -- like multi-user conferences, and transports.
 -- For more information on components, see http://prosody.im/doc/components
 
----Set up a MUC (multi-user chat) room server on conference.example.com:
---Component "conference.example.com" "muc"
+---Set up a MUC (multi-user chat) room server on conference.example.net:
+--Component "conference.example.net" "muc"
 
 -- Set up a SOCKS5 bytestream proxy for server-proxied file transfers:
---Component "proxy.example.com" "proxy65"
+--Component "proxy.example.net" "proxy65"
 
 ---Set up an external component (default component port is 5347)
 --
@@ -246,7 +253,7 @@ VirtualHost "example.com"
 -- transports to other networks like ICQ, MSN and Yahoo. For more info
 -- see: http://prosody.im/doc/components#adding_an_external_component
 --
---Component "gateway.example.com"
+--Component "gateway.example.net"
 --  component_secret = "password"
 
 ------ Additional config files ------

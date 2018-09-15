@@ -7,62 +7,61 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   
+
    CyanogenMod
+   f-droid
 
 .. todo::
 	   *Settings*
 
 	   *Device Encryption*
 
-	   *F-Droid*
-	   
 	   *KeePassX*
-	   
+
 	   *Tor*
-	   
+
 	   *OpenVPN*
-	   
+
 	   *OwnCloud*
-	   
+
 	   *DavDroid*
-	   
+
 	   *Firefox*
-	   
+
 	   *Barcode*
-	   
+
 	   *AdBlocker*
-	   
+
 	   *Mail*
-	   
+
 	   *Calendar*
-	   
+
 	   *Tasks*
-	   
+
 	   *Notes*
-	   
+
 	   *ChatSecure*
-	   
+
 	   *VoIP*
-	   
+
 	   *SSH-Server*
-	   
+
 	   *SSH-Client*
-	   
+
 	   *BitCoin*
-	   
+
 	   *NetAlyzer*
-	   
+
 	   *OpenKeyChain*
-	   
+
 	   *News-Reader*
-	   
+
 	   *Maps*
-	   
+
 	   *RedPhone*
-	   
+
 	   *BitTorrent*
-	   
+
 	   *Wake-On-LAN*
-	   
+
 	   *Wrong-PIN-Shutdown*

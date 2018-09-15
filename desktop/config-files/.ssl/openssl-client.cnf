@@ -1,0 +1,50 @@
+#
+# OpenSSL configuration for generation of client certificate requests.
+#
+# To use this configuration as default:
+#    export OPENSSL_CONF=./openssl-client.cnf
+#
+# Environment variables '$CN' and 'emailAddress' **MUST** be defined or else
+# OpenSSL aborts:
+#    export CN=${HOSTNAME}.example.net
+#    export emailAddress=user@example.net
+#
+
+emailAddress         = $ENV::emailAddress
+CN                   = $ENV::CN
+HOME                 = $ENV::HOME/.ssl
+RANDFILE             = $HOME/private/.rnd
+oid_section          = new_oids
+
+[ new_oids ]
+id-on-xmppAddr       = 1.3.6.1.5.5.7.8.5
+
+[ req ]
+default_bits          = 2048
+default_keyfile       = $HOME/private/$CN.key.pem
+encrypt_key           = yes
+default_md            = sha256
+req_extensions        = device_req_ext
+prompt                = no
+distinguished_name    = req_distinguished_name
+string_mask           = utf8only
+utf8                  = yes
+
+[ device_req_ext ]
+keyUsage              = digitalSignature
+extendedKeyUsage      = clientAuth
+subjectKeyIdentifier  = hash
+subjectAltName        = @subj_alt_names
+
+[ req_distinguished_name ]
+countryName           = US
+stateOrProvinceName   = California
+localityName          = Los Angelees
+commonName            = $CN
+name                  = John Doe
+emailAddress          = $emailAddress
+
+[ subj_alt_names ]
+DNS.1                 = $CN
+email                 = $emailAddress
+otherName             = xmppAddr;UTF8:$emailAddress

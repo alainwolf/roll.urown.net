@@ -7,10 +7,7 @@ Web Server
 
 .. toctree::
    :maxdepth: 2
-   
+
    nginx-source-install
    nginx-config/index
-
-
-
-
+   nginx-scripts

@@ -1,0 +1,4 @@
+# Sphinx Doc
+User-agent: *
+Disallow: /_static/
+Disallow: /_sources/

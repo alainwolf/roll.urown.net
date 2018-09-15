@@ -11,7 +11,7 @@ communication, features a versatile key management system as well as access
 modules for all kinds of public key directories.
 
 GnuPG is a complete and free implementation of the OpenPGP standard as defined
-by :RFC:`4880` (also known as 
+by :RFC:`4880` (also known as
 `PGP or Pretty Good Privacy <https://en.wikipedia.org/wiki/Pretty_Good_Privacy>`_).
 
 
@@ -62,7 +62,7 @@ PIN Entry
 passphrase in a secure manner. It works on various graphical desktop
 environments, text- only consoles and terminal sessions.
 
-.. note:: 
+.. note::
 
     PIN Entry version 0.8.3 currently installed from the Ubuntu Software-Center
     disables access to the clipboard for security reasons. Copy or paste of the
@@ -79,17 +79,22 @@ they key is needed.
 Software Installation
 ---------------------
 
-"GNU Privacy Guard Version 2", "GnuPG Agent" and "PIN Entry" can be installed from the Ubuntu 
+"GNU Privacy Guard Version 2", "GnuPG Agent" and "PIN Entry" can be installed from the Ubuntu
 Software-Center:
 
 .. raw:: html
 
         <p>
-            <a class="reference external" 
+            <a class="reference external"
             href="apt:gnupg2,gnupg-agent,pinentry-gtk2,pinentry-curses">
             <img alt="software-center" src="../_images/scbutton-free-200px.png" />
             </a>
         </p>
+
+
+Or by using apt::
+
+    > sudo apt install gnupg2 gnupg-agent pinentry-gtk2 pinentry-curses
 
 
 Configuration
@@ -131,27 +136,45 @@ we download the CA certificate of the SKS key server pool::
 GnuPG Options
 ^^^^^^^^^^^^^
 
-Open the file  :download:`.gnupg/gpg.conf <config-files/gpg.conf>` in you home
+Open the file  :download:`.gnupg/gpg.conf <config-files/gnupg/gpg.conf>` in you home
 directory and change, add or uncomment as follows:
 
-.. literalinclude:: config-files/gpg.conf
-    :language: ini
+.. literalinclude:: config-files/gnupg/gpg.conf
 
-Available configuration options can be found on the `gpg2 man page 
+
+Available configuration options can be found on the `gpg2 man page
 <http://manpages.ubuntu.com/manpages/trusty/en/man1/gpg2.1.html#contenttoc7>`_.
 
 
 GnuPG Agent Options
 ^^^^^^^^^^^^^^^^^^^
 
-Open the file  :download:`.gnupg/gpg-agent.conf <config-files/gpg-agent.conf>`
+Open the file  :download:`.gnupg/gpg-agent.conf <config-files/gnupg/gpg-agent.conf>`
 and change, add or uncomment as follows:
 
-.. literalinclude:: config-files/gpg-agent.conf
-    :language: ini
+.. literalinclude:: config-files/gnupg/gpg-agent.conf
 
-Available configuration options can be found on the `gpg-agent man page 
+
+Available configuration options can be found on the `gpg-agent man page
 <http://manpages.ubuntu.com/manpages/trusty/man1/gpg-agent.1.html#contenttoc4>`_.
+
+
+Shell Login Options
+^^^^^^^^^^^^^^^^^^^
+
+GPG Agent needs the following lines added to your shell configuration file
+:file:`~/.bashrc`::
+
+    #
+    # GPG Agent
+    export GPG_TTY=$(tty)
+
+    # Tell ssh about our GPG Agent
+    unset SSH_AGENT_PID
+    if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+        export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
+    fi
+
 
 
 Related Tools and Options
@@ -164,7 +187,7 @@ Disable Seahorse GnuPG-agent
 By default your GnuPG keys are managed by Seahorse. This can result in problems
 when using GnuPG 2.0 or newer versions.
 
-See the section `Disabling the Seahorse GnuPG-Agent 
+See the section `Disabling the Seahorse GnuPG-Agent
 </desktop/secrets.html#disabling-the-seahorse-gnupg-agent>`_ on how to do this.
 
 
@@ -185,20 +208,20 @@ that they get in the way of each other.
 See the section `Keychain </desktop/secrets.html#keychain>`_ on how to set it up.
 
 
-parcimonie 
+parcimonie
 ^^^^^^^^^^
 
-`parcimonie <http://gaffer.ptitcanardnoir.org/intrigeri/code/parcimonie/>`_ 
+`parcimonie <http://gaffer.ptitcanardnoir.org/intrigeri/code/parcimonie/>`_
 incrementally refreshes a GnuPG keyring in a way that:
 
  * makes it hard to correlate her keyring content to an individual;
- * makes it hard to locate an individual based on an identifying subset of her 
+ * makes it hard to locate an individual based on an identifying subset of her
    keyring content.
 
 .. raw:: html
 
         <p>
-            <a class="reference external" 
+            <a class="reference external"
             href="apt:parcimonie">
             <img alt="software-center" src="../_images/scbutton-free-200px.png" />
             </a>
@@ -207,13 +230,14 @@ incrementally refreshes a GnuPG keyring in a way that:
 Once installed the program will automatically start after login of your desktop
 session.
 
-But there is a problem. parcimonie uses Tor to connec to to key-servers and HKPS
-does not work well over Tor. We therefore have to tell it to use another server.
-Preferably a Tor Hidden Service.
+But there is a problem. parcimonie uses Tor to connect to to key-servers and
+HKPS does not work well over Tor. We therefore have to tell it to use another
+server. Preferably a
+`Tor Hidden Service <https://sks-keyservers.net/overview-of-pools.php>`_.
 
 In your startup programs change the parcimonie command-line to the following:
 
-    ``parcimonie --gnupg-extra-arg "--keyserver=hkp://qdigse2yzvuglcix.onion"``
+    ``parcimonie --gnupg-extra-arg "--keyserver=hkp://jirk5u4osbsr34t5.onion"``
 
 One can also change the :file:`~/.config/autostart/parcimonie.desktop` file
 instead.
@@ -221,10 +245,15 @@ instead.
 And while you are there, disable the "parcimnonie applet" as it doesn't work in
 Ubuntu Desktop.
 
-
 The `parcimonie man page
 <http://manpages.ubuntu.com/manpages/trusty/en/man1/parcimonie.1p.html>`_ has
-addiotinal information.
+additional information.
+
+
+Yubikey Neo
+^^^^^^^^^^^
+
+See :doc:`secrets/yubikey_gpg`.
 
 
 GnuPG Key Manager
@@ -285,14 +314,14 @@ of your servers.
 References
 ----------
 
- * `riseup.net OpenPGP Best Practices 
+ * `riseup.net OpenPGP Best Practices
    <https://help.riseup.net/en/security/message-security/openpgp/best-practices>`_
- 
- * `Ubuntu GNU Privacy Guard How To 
+
+ * `Ubuntu GNU Privacy Guard How To
    <https://help.ubuntu.com/community/GnuPrivacyGuardHowto>`_
- 
+
  * `Gnu Privacy Guard 2.0.x manpage
    <http://manpages.ubuntu.com/manpages/trusty/man1/gpg2.1.html>`_
- 
- * `GnuPG Agent manpage 
+
+ * `GnuPG Agent manpage
    <http://manpages.ubuntu.com/manpages/trusty/man1/gpg-agent.1.html>`_

@@ -1,0 +1,227 @@
+#!/bin/bash
+#
+# OCSP response files creation for stapling in Nginx
+#
+# To be started by cron every few hours
+#
+# For monitoring use the following command:
+#
+#   journalctl -t ngx_ocsp_staples -p <level> --no-tail -f
+#
+# while <level> may be any of debug, info, notice or warning
+#
+
+# Exit on errors
+set -e
+
+CERTS_DIRS='/etc/dehydrated/ec_certs /etc/dehydrated/rsa_certs'
+OPENSSL_CMD='/opt/openssl-1.1.0e/bin/openssl'
+NGINX_CMD='/usr/sbin/nginx'
+OCSP_REQ_OPTIONS='-no_nonce -sha256'
+
+# Log to syslog
+log()
+{
+    logger -t ngx_ocsp_staples --priority user.${1} ${2}
+}
+
+log 'notice' "Starting to create Nginx OCSP repsonse files ..."
+
+# We need to be root
+if [[ ${UID} -gt 0 ]]; then
+    log 'error' "Sorry, need to be root"
+    echo "Sorry, need to be root"
+    exit 1
+fi
+
+# Reload Nginx only on changed repsonse files
+NGINX_RELOAD=false
+
+for certs_dir in ${CERTS_DIRS}; do
+
+    # Walk the certificates directory
+    for cert_dir in ${certs_dir}/*; do
+
+        # Is it a directory?
+        if [[ -d "${cert_dir}" ]]; then
+
+            log 'info' "Getting OCSP repsonse for ${cert_dir} ..."
+
+            cd ${cert_dir}
+
+            timestamp="$( date +%s )"
+            cert_file="cert.pem"
+            issuer_cert_file="chain.pem"
+            ca_cert_file="${issuer_cert_file}"
+            response_file="ocsp_response.der"
+
+            # Do we have a certificate?
+            if [[ -f "${cert_file}" ]]; then
+
+                cert_subject=$( ${OPENSSL_CMD} x509 -in ${cert_file} -noout -subject )
+                log 'info' "Certificate file for ${cert_subject} found."
+
+            else
+
+                log 'warning' "No certificate file in ${cert_dir} found, skipping."
+                continue
+
+            fi
+
+            # Do we have an issuer certficate chain file?
+            if [[ -f "${issuer_cert_file}" ]]; then
+
+                issuer_cert_subject=$(
+                    ${OPENSSL_CMD} x509 -in ${issuer_cert_file} -noout -subject
+                )
+                log 'info' "Issuer certificate file of ${issuer_cert_subject} found."
+
+            else
+
+                log 'warning' "No issuer certificate file for ${cert_subject} found, skipping."
+                continue
+
+            fi
+
+            # Get the OCSP URI
+            ocsp_uri=$(
+                ${OPENSSL_CMD} x509 -in ${cert_file} -noout -ocsp_uri
+            )
+
+            # Get the Hostname out of the URI
+            ocsp_host=$(
+                echo ${ocsp_uri} | sed -e '\,^[hH][tT][tT][pP]://\([^/]*\).*,!d
+                    s//\1/;s/.*@//
+                    s/.*://'
+            )
+
+            # Do we already have an OCSP Response file?
+            if [[ -L "${response_file}" ]]; then
+
+                # Validate it
+                log 'info' "Existing OSCP response file found, validating ..."
+                ocsp_verification=$(
+                    ${OPENSSL_CMD} ocsp \
+                        -issuer ${issuer_cert_file} \
+                        -VAfile ${ca_cert_file} \
+                        -cert ${cert_file} \
+                        -respin ${response_file} \
+                        -no_nonce 2>&1
+                )
+                export RC=$?
+                log 'debug' "OpenSSL returns ${RC}: ${ocsp_verification}"
+
+                if [[ ${RC} -eq 0 ]] ; then
+
+                    # Has it expired?
+                    if [[ ${ocsp_verification} = *'WARNING: Status times invalid'* ]]
+                    then
+                        log 'notice' "OCSP repsonse file has expired, removing ..."
+                        rm ${response_file}
+
+                    else
+
+                        log 'info' "Existing OSCP response file is valid, skipping."
+                        continue
+                    fi
+
+                else
+
+                    log 'notice' "OCSP repsonse file does not validate, removing ..."
+                    rm ${response_file}
+
+                fi
+
+            else
+
+                log 'info' "No previous OCSP repsonse file found."
+
+            fi
+
+            # Don't hammer the OCSP server
+            sleep 5
+
+            # Do the OCSP request
+            log 'notice' "Contacting ${ocsp_host} for validation of ${cert_subject} ..."
+            ocsp_response=$(
+                ${OPENSSL_CMD} ocsp \
+                    -issuer ${issuer_cert_file} \
+                    -CAfile ${ca_cert_file} \
+                    -VAfile ${ca_cert_file} \
+                    -cert ${cert_file} \
+                    -url ${ocsp_uri} \
+                    -header "HOST" "${ocsp_host}" \
+                    ${OCSP_REQ_OPTIONS} \
+                    -respout ocsp_response-${timestamp}.der 2>&1
+                )
+            export RC=$?
+            log 'debug' "OpenSSL returns ${RC}: ${ocsp_response}"
+
+            # Has a new response file been created?
+            if [[ -f "ocsp_response-${timestamp}.der" ]]; then
+
+                # Read, check and verify it
+                log 'info' "New OSCP response file ocsp_response-${timestamp}.der created, validating ..."
+                ocsp_verification=$(
+                    ${OPENSSL_CMD} ocsp \
+                        -issuer ${issuer_cert_file} \
+                        -VAfile ${ca_cert_file} \
+                        -cert ${cert_file} \
+                        -respin ocsp_response-${timestamp}.der \
+                        -no_nonce 2>&1
+                )
+                export RC=$?
+                log 'debug' "OpenSSL returns ${RC}: ${ocsp_verification}"
+                if [[ ${RC} -eq 0 ]] ; then
+
+                    log 'notice' "New OSCP response file for ${cert_subject} is valid, installing..."
+
+                    # Update symlink
+                    ln --force --symbolic ocsp_response-${timestamp}.der \
+                        ${response_file}
+
+                    # Nginx will be reloaded
+                    NGINX_RELOAD=true
+
+                else
+
+                    log 'error' "Created OCSP repsonse file ocsp_response-${timestamp}.der does not validate, skipping."
+                    continue
+
+                fi
+
+            else
+
+                log 'error' "OCSP response file  ocsp_response-${timestamp}.der creation failed, skipping."
+                continue
+
+            fi
+
+        else
+
+            log 'info' "${cert_dir} is not a directory, skipping ..."
+
+        fi
+
+    done
+
+done
+
+# Do we have to reload Nginx?
+if [[ ${NGINX_RELOAD} == true ]]; then
+
+    # Test Server configuration
+    log 'info' "Checking Nginx server configuration ..."
+    ${NGINX_CMD} -tq
+
+    # Restart Nginx
+    log 'notice' "Relaoding Nginx server ..."
+    ${NGINX_CMD} -s reload
+
+else
+
+    log 'info' "Nginx server does not need to reload"
+
+fi
+
+log 'notice' "Nginx OCSP repsonse files creation complete. Have a nice day."

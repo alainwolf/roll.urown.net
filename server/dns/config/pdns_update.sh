@@ -3,7 +3,7 @@
 # PowerDNS Dynamic IP Updates
 
 # Host to query for stored public IP address
-KNOWN_HOST=www.example.com
+KNOWN_HOST=www.example.net
 
 # Router to query for current IP
 ROUTER_IP=192.0.2.1

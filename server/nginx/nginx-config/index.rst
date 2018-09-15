@@ -7,13 +7,13 @@ individual files.
 
 .. toctree::
    :maxdepth: 2
-   
+
    nginx-main
    nginx-http-conf
-   nginx-servers
    nginx-servers-conf
-   nginx-tls-conf
-
+   nginx-extra-conf
+   nginx-servers
+   nginx-csp
 
 
 HTTP Settings
@@ -25,37 +25,34 @@ directory :file:`/etc/nginx/conf.d` are included.
 They are discussed in :doc:`nginx-http-conf`.
 
 
-Servers
--------
+Virtual Servers
+---------------
 
 Nginx can host multiple websites on a single installation. In Nginx a website
 is called a "server". (Apache HTTPd calls them "virtual hosts"). Servers are
 identified by their hostname and or IP address.
 
-Sticking to our modular approach, we define individual servers in the directory 
+Sticking to our modular approach, we define individual servers in the directory
 :file:`/etc/nginx/servers-available`.
 
-On line 50 in the above :file:`/etc/nginx/nginx.conf` servers are loaded from 
-the directory :file:`/etc/nginx/sites-enabled`.
-
-So to activate or disable servers, symbolic links are created or deleted in 
-:file:`/etc/nginx/sites-enabled`, pointing to server definitions in 
+So to activate or disable servers, symbolic links are created or deleted in
+:file:`/etc/nginx/servers-enabled`, pointing to server definitions in
 :file:`/etc/nginx/servers-available`.
 
 To activate a server::
 
-    $ sudo ln -s /etc/nginx/servers-available/example.com.conf \
+    $ sudo ln -s /etc/nginx/servers-available/example.net.conf \
         /etc/nginx/servers-enabled/
     $ sudo service nginx reload
 
 De-Activate::
 
-    $ sudo rm /etc/nginx/servers-enabled/example.com.conf
+    $ sudo rm /etc/nginx/servers-enabled/example.net.conf
     $ sudo service nginx reload
 
 Configuration of individual sites depends heavily on the nature of the website.
 
-As reference we show a simple website who serves static HTML pages in 
+As reference we show a simple website who serves static HTML pages in
 :doc:`nginx-servers`.
 
 

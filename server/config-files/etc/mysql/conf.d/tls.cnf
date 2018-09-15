@@ -1,0 +1,79 @@
+# MariaDB Server version 10.2.6
+
+[mysqld]
+
+#
+# Security Features
+# https://mariadb.com/kb/en/mariadb/securing-mariadb/
+
+#
+# chroot
+#
+#chroot = /var/lib/mysql/
+
+
+#
+# TLS Connections, start the server with the --ssl option.
+# https://mariadb.com/kb/en/mariadb/secure-connections/
+#
+ssl = true
+
+# List of permitted ciphers to use for TLS encryption. Implies --ssl. Limit
+# MariaDB to TLSv1.2 ciphers only with --ssl_cipher=TLSv1.2
+# Default: None
+#ssl-cipher = TLSv1.2
+
+# Path to a PEM file containing list of trusted TLS certificate authorities. The
+# server still verifies the client using any --ssl-ca and --ssl-capath values
+# given to it at startup, or based on any requirements established from GRANT
+# statements.
+# Implies --ssl.
+# Default: None
+ssl-ca = /etc/mysql/ssl/ca-cert.pem
+
+# Name of the TLS certificate file used to establish a secure TLS connection.
+# Implies --ssl.
+# Default: None
+ssl-cert = /etc/mysql/ssl/aiken.example.net.cert.pem
+
+# The TLS key file used to establish a secure TLS connection. Implies --ssl.
+# Default: None
+ssl-key = /etc/mysql/ssl/aiken.example.net.key.pem
+
+
+[client]
+
+#
+# TLS Client Settings
+#
+# TLS Connections, start the client with the --ssl option.
+# https://mariadb.com/kb/en/mariadb/secure-connections/
+#
+ssl = true
+
+# List of permitted ciphers to use for TLS encryption. Implies --ssl. Limit
+# MariaDB to TLSv1.2 ciphers only with --ssl_cipher=TLSv1.2
+# Default: None
+ssl-cipher = TLSv1.2
+
+# Path to a PEM file containing list of trusted TLS certificate authorities. If
+# this and ssl_capath are both unspecified, the client will not authenticate the
+# server certificate.
+# Implies --ssl.
+# Default: None
+ssl-ca = /etc/mysql/ssl/ca-cert.pem
+
+# Name of the TLS certificate file used to establish a secure TLS connection.
+# Implies --ssl.
+# Default: None
+ssl-cert = /etc/mysql/ssl/aiken.example.net.cert.pem
+
+# The TLS key file used to establish a secure TLS connection.
+# Implies --ssl.
+# Default: None
+ssl-key = /etc/mysql/ssl/aiken.example.net.key.pem
+
+# Verify server's "Common Name" in its cert against hostname used when
+# connecting.
+# This option is disabled by default.
+ssl-verify-server-cert  = true

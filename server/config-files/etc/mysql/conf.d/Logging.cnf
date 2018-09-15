@@ -1,0 +1,107 @@
+# MariaDB Server version 10.2.6
+
+[mysqld]
+
+#
+# Server Logs
+# https://mariadb.com/kb/en/mariadb/log-files/
+#
+
+# Basename for all log files and the .pid file. This sets all log file names at
+# once (in 'datadir') and is normally the only option you need for specifying
+# log files. This is especially recommended to be set if you are using
+# replication as it ensures that your log file names are not dependent on your
+# host name. Sets names for
+#	 * log-bin,
+#	 * log-bin-index,
+#	 * relay-log,
+#	 * relay-log-index,
+#	 * general-log-file,
+#	 * --log-slow-query-log-file,
+#	 * --log-error-file,
+#	 * pid-file.
+# Default:
+log-basename = Example
+
+#
+# Error Log
+# https://mariadb.com/kb/en/mariadb/error-log/
+#
+# MariaDB running on Ubuntu 16.04 logs errors in Systemd, as configured in
+# /etc/mysql/conf.d/mysqld_safe_syslog.cnf
+# To view the systemd logs, use journalctl -u mariadb.
+
+# If set to 1 all critical warnings are logged to the error log. If set to 0,
+# warnings are not logged. If set to a number greater than 1, aborted
+# connections and access-denied errors are also logged. If set to 3 also errors
+# and warnings during MyISAM repair and auto recover are logged.
+# Default: 2
+log-warnings = 3
+
+
+#
+# General Query Log
+# https://mariadb.com/kb/en/mariadb/general-query-log/
+#
+
+#
+# Name of the general query log file. If this is not specified, the name is
+# taken from the log-basename setting or from your system hostname with .log as
+# a suffix.
+# Default: ${HOSTNAME}.log in the database directory
+general_log_file = /var/log/mysql/mysql.log
+
+# If set to 0 the general query log is disabled, while if set to 1, the general
+# query log is enabled. If that variable is set to OFF, no logs will be written
+# even if general_query_log is set to 1.
+# Default: 0
+general_log = OFF
+
+
+#
+# Slow Query Log
+# https://mariadb.com/kb/en/mariadb/slow-query-log/
+#
+
+# If set to 0, the slow query log is disabled, while if set to 1 (both global
+# and session variables), the slow query log is enabled.
+# Default: 0
+#slow_query_log = 0
+
+# Name of the slow query log file.
+# Default: ${HOSTNAME}-slow.log in the database directory
+slow_query_log_file	= /var/log/mysql/mariadb-slow.log
+
+# If a query takes longer than this many seconds to execute (microseconds can be
+# specified too), the Slow_queries status variable is incremented and, if
+# enabled, the query is logged to the slow query log.
+# Default: 10.000000
+long_query_time = 2.500000
+
+# The slow query log will log every this many queries. The default is 1, or
+# every query, while setting it to 20 would log every 20 queries, or five
+# percent. Aims to reduce I/O usage and excessively large slow query logs.
+# Default: 1
+log_slow_rate_limit = 1000
+
+# Controls information to be added to the slow query log. Options are added in a
+# comma-delimited string.
+# Default: query_plan
+#log_slow_verbosity = query_plan
+
+# Queries that don't use an index, or that perform a full index scan where the
+# index doesn't limit the number of rows, will be logged to the slow query log
+# (regardless of time taken). The slow query log needs to be enabled for this to
+# have an effect.
+# Default: OFF
+#log-queries-not-using-indexes = ON
+
+# Log slow OPTIMIZE, ANALYZE, ALTER and other administrative statements to the
+# slow log if it is open.
+# Default: ON
+#log_slow_admin_statements = ON
+
+
+#
+# Binary Log
+# See BinLog.cnf

@@ -1,3 +1,5 @@
+:orphan:
+
 Network
 ========
 
@@ -9,11 +11,12 @@ We have dual-Stack IPv4 and IPv6 on our internal network (LAN).
 
 The IPv6 addresses are globally routed official internet addresses assigned to us by our IPv6 internet provider.
 
-The IPv4 addresses are 
-`private network <https://en.wikipedia.org/wiki/Private_network>`_ 
+The IPv4 addresses are
+`private network <https://en.wikipedia.org/wiki/Private_network>`_
 addresses.
 
 The router supplies most of the relevant settings by autoconfiguration, and we like to keep it that way. The only exception are additional fixed IP addresses for hosted services.
+
 
 Interface Configuration
 -----------------------
@@ -44,31 +47,31 @@ Add additional static IPv4 and IPv6 addresses for each service and virtual host:
     iface eth0 inet6 static
         address 2001:db8::10/64
 
-    # www.example.com
+    # www.example.net
     iface eth0 inet static
         address 192.0.2.11/24
     iface eth0 inet6 static
         address 2001:db8::11/64
 
-    # cloud.example.com
+    # cloud.example.net
     iface eth0 inet static
         address 192.0.2.12/24
     iface eth0 inet6 static
         address 2001:db8::12/64
 
-    # xmpp.example.com
+    # xmpp.example.net
     iface eth0 inet static
         address 192.0.2.13/24
     iface eth0 inet6 static
         address 2001:db8::13/64
 
-    # ns1.example.com
+    # ns1.example.net
     iface eth0 inet static
         address 192.0.2.14/24
     iface eth0 inet6 static
         address 2001:db8::14/64
 
-    # bt.example.com
+    # bt.example.net
     iface eth0 inet static
         address 192.0.2.15/24
     iface eth0 inet6 static
@@ -86,20 +89,21 @@ Restart the network services with::
 Usefull Commands
 ----------------
 
+
 Add new IP address
 ^^^^^^^^^^^^^^^^^^
 
 Here is how to add a new IP addresses on the fly, without restarting the service.
 
 ..  note::
-    If the newly addded address is not added in the 
+    If the newly addded address is not added in the
     :file:`/etc/network/interfaces` it will be lost after system reboot.
 
 Add IPv4 address::
 
     $ sudo ip addr add 192.0.2.99/24 dev eth0
 
-Add IPv6 address::  
+Add IPv6 address::
 
     $ sudo ip addr add 2001:db8:26:845::99/64 dev eth0
 

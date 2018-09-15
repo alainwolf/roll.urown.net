@@ -12,9 +12,9 @@ keys on all clients.
 
 ::
 
-    sshfp -s server.example.com
-    # server.example.com SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2
-    server.example.com IN SSHFP 1 1 5E677..............................21447
+    sshfp -s server.example.net
+    # server.example.net SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2
+    server.example.net IN SSHFP 1 1 5E677..............................21447
 
 
 If you use PowerDNS server with the poweradmin web interface, add records as
@@ -23,5 +23,5 @@ follows:
 ===================== ===== ============================================
 Name                  Type  Content                                                               
 ===================== ===== ============================================
-server.example.com    SSHFP 1 1 5E677..............................21447
+server.example.net    SSHFP 1 1 5E677..............................21447
 ===================== ===== ============================================

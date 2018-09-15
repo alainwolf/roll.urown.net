@@ -14,6 +14,9 @@ Log notice file /var/log/tor/tor-relay.log
 # Unix domain socket for control connections
 ControlSocket /var/run/tor-relay/control
 
+# TCP control port for control connections
+ControlPort 9051
+
 # Location and file name for Tor’s cookie file
 CookieAuthFile /var/run/tor-relay/control.authcookie
 
@@ -27,9 +30,9 @@ Nickname RollUrown
 ContactInfo tormaster <tormaster AT example dot com>
 
 # Advertised DNS host name
-Address tor-relay.example.com
-ORPort	tor-relay.example.com:110 NoListen
-DirPort tor-relay.example.com:995 NoListen
+Address tor-relay.example.net
+ORPort	tor-relay.example.net:110 NoListen
+DirPort tor-relay.example.net:995 NoListen
 
 # IPv4 private address (port-forwarded from NAT firewall/router)
 OutboundBindAddress 192.0.2.49

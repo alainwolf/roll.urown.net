@@ -1,0 +1,13 @@
+/home/*/.beagle
+/home/*/.cache
+/home/*/.eve/ResFiles
+/home/*/.local/share/keybase/fs
+/home/*/.local/share/keybase/keybase.leveldb
+/home/*/.local/share/keybase/kbfs_block_cache
+/home/*/.local/share/keybase/kbfs_sync_cache
+/home/*/.local/share/Trash
+/home/*/.thumbnails
+/home/*/.Trash
+/home/*/Downloads
+/home/*/Music
+/home/*/Videos

@@ -1,12 +1,12 @@
 Main Configuration File
 =======================
 
-The main configuration file is :file:`/etc/nginx/nginx.conf`.
+The main configuration file is :download:`/etc/nginx/nginx.conf </server/config-files/etc/nginx/nginx.conf>`.
 
-A downloadable version is available 
+A downloadable version is available
 :download:`here <config-files/nginx.conf>`
 
-.. literalinclude:: config-files/nginx.conf
+.. literalinclude:: /server/config-files/etc/nginx/nginx.conf
     :language: nginx
     :linenos:
 

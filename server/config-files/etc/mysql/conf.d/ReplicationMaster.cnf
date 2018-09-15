@@ -1,0 +1,29 @@
+# MariaDB Server version 10.2.6
+
+[mysqld]
+
+#
+# Replication Master
+# https://mariadb.com/kb/en/mariadb/standard-replication/
+#
+
+# Used to identify master and slave servers in replication. The server_id must
+# be unique for each server in the replicating group. If 0 a slave will not
+# connect to a master, and a master will refuse all slave connections.
+# Default: 0
+# Range: 0 to 4,294,967,295
+server-id = 1
+
+# The host name or IP address the slave reports to the master when it registers.
+# If left unset, the slave will not register itself.
+report_host = Aiken
+
+# The increment for all AUTO_INCREMENT values on the server. Intended for use in
+# master-to-master replication.
+# Default: 1
+#auto_increment_increment = 2
+
+# The offset for all AUTO_INCREMENT values on the server. Intended for use in
+# master-to-master replication.
+# Default: 1
+#auto_increment_offset	= 1

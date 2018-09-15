@@ -1,3 +1,5 @@
+:orphan:
+
 Conventions
 ===========
 
@@ -8,12 +10,12 @@ documentation **should NOT be used**!
 Domains Names
 -------------
 
-The public domain "example.com"
+The public domain "example.net"
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The public internet domain for services available to the world outside is always
-called *example.com*. This domain has been reserved for documentation purpose by
-IANAA and can not be used for your own services. 
+called *example.net*. This domain has been reserved for documentation purpose by
+IANAA and can not be used for your own services.
 See `IANA-managed Reserved Domains <https://www.iana.org/domains/reserved>`_.
 
 Instead you should come up with your own domain name and register it yourself.
@@ -35,7 +37,7 @@ Also don't use "**local**"" as your local domain, as this will create problems
 with mDNS, who uses "**local**"" already for service-discovery on local networks.
 
 
-We use two categories of hostnames. 
+We use two categories of hostnames.
 
 Machines Hostnames
 ------------------
@@ -104,7 +106,7 @@ time.lan    Time server
 Public Global Hosts
 ^^^^^^^^^^^^^^^^^^^
 
-Webserver who host your website to the public need to be reachable globally. 
+Webserver who host your website to the public need to be reachable globally.
 
 All public hostnames resolve to the same single public (and dynamic) IPv4
 address, but have their own IPv6 address.
@@ -112,21 +114,21 @@ address, but have their own IPv6 address.
 ================= ==============================================================
 Hostname          Description
 ================= ==============================================================
-gw.example.com    Internet-Gateway, Firewall and WiFi router, WAN Interface
-vpn.example.com   VPN server
-dns0.example.com  Domain name server, hidden master.
-dns1.example.com  Secondary domain name server, slave, other location / network.
-dns2.example.com  Secondary domain name server, slave, other location / network.
-dns3.example.com  Secondary domain name server, slave, other location / network.
-mail.example.com  Mail server
-web.example.com   Web-Server
-cloud.example.com Cloud server
-xmpp.example.com  XMPP instant messaging server.
-sip.example.com   SIP VoIP server
-books.example.com Calibre books library server.
-media.example.com DLNA gateway
-bt.example.com    BitTorrent Tracker
-btc.example.com   BitCoin server
+gw.example.net    Internet-Gateway, Firewall and WiFi router, WAN Interface
+vpn.example.net   VPN server
+dns0.example.net  Domain name server, hidden master.
+dns1.example.net  Secondary domain name server, slave, other location / network.
+dns2.example.net  Secondary domain name server, slave, other location / network.
+dns3.example.net  Secondary domain name server, slave, other location / network.
+mail.example.net  Mail server
+web.example.net   Web-Server
+cloud.example.net Cloud server
+xmpp.example.net  XMPP instant messaging server.
+sip.example.net   SIP VoIP server
+books.example.net Calibre books library server.
+media.example.net DLNA gateway
+bt.example.net    BitTorrent Tracker
+btc.example.net   BitCoin server
 ================= ==============================================================
 
 There can be more, but sometimes they are just aliases, running on the same IP
@@ -154,11 +156,11 @@ should never be used in real IP networks. Regardless if that network is private
 or not.
 
 You can choose your private network address freely as long as it is in the range
-private network address space by :rfc:`1918`. 
-See `Private Network <https://en.wikipedia.org/wiki/Private_network>`_ on 
+private network address space by :rfc:`1918`.
+See `Private Network <https://en.wikipedia.org/wiki/Private_network>`_ on
 Wikipedia.
 
-However I advise against using any of the very common 192.160.0.0/24 or similat
+However I advise against using any of the very common 192.168.0.0/24 or similar
 subnets, which everyone uses or which are the default setting in many router
 devices. Chances are, that you end up being in a private subnet in a friends
 house or coffe-shop and can connect to you VPN at home, as both use the same
@@ -171,23 +173,29 @@ organziations.
 
 Use a random /24 block out of the 172.16.0.0/12 blocks and tell your friends to
 do the same (with another random block of their own). That way you will have
-little chances of beeing stuck between two private networks and can connect
-different households by VPN easely.
+little chances of being stuck between two private networks and can connect
+different households by VPN easily.
 
 ================= ============
-192.160.0.0/24     Avoid
-192.160.1.0/24     Avoid
-192.160.100.0/24   Avoid
+192.168.0.0/24     Avoid
+192.168.1.0/24     Avoid
+192.168.2.0/24     Avoid
+192.168.100.0/24   Avoid
 10.0.0/8           Avoid
-172.16.0.0/24      
-     ...           Best 
+172.16.0.0/24
+     ...           Best
 172.31.255.0/24
 ================= ============
+
 
 Here is Linux command-line to find a random /24 subnet in the 172.16.0.0/12
 block::
 
-    $ echo 172.$((RANDOM%16+16)).$((RANDOM%255+0)).0/24
+    $ echo 172.$((RANDOM%16+16)).$((RANDOM%255)).0/24
+
+Use the following to find a random /24 subnet in the 192.168.0.0/20 block::
+
+    $ echo 192.168.$((RANDOM%255+4)).$((RANDOM%255)).0/24
 
 
 ================ ============ ==================================================
@@ -225,30 +233,30 @@ Name                   Address           Comments
 home.\ |publicDomain|  |publicIPv4|      Single Dynamic Public Address
 www.\ |publicDomain|   |HTTPserverIPv4|  Web server
 mail.\ |privateDomain| |mailserverIPv4|
-mail.\ |publicDomain|  |mailserverIPv6|  
-sip.\ |publicDomain|   |SIPserverIPv4| 
-sip.\ |publicDomain|   |SIPserverIPv6| 
+mail.\ |publicDomain|  |mailserverIPv6|
+sip.\ |publicDomain|   |SIPserverIPv4|
+sip.\ |publicDomain|   |SIPserverIPv6|
 ====================== ================= =======================================
 
 
-|BOOKserverIPv4| 
+|BOOKserverIPv4|
 
-|BOOKserverIPv6| 
+|BOOKserverIPv6|
 
-|OPDSserverIPv4| 
+|OPDSserverIPv4|
 
-|OPDSserverIPv6| 
+|OPDSserverIPv6|
 
-|DNSMasterIPv6| 
+|DNSMasterIPv6|
 
-|DNSSlaveAIPv6| 
+|DNSSlaveAIPv6|
 
-|DNSSlaveBIPv6| 
+|DNSSlaveBIPv6|
 
-|DNSSlaveCIPv6| 
+|DNSSlaveCIPv6|
 
-|DNSSlaveAIPv4| 
+|DNSSlaveAIPv4|
 
-|DNSSlaveBIPv4| 
+|DNSSlaveBIPv4|
 
-|DNSSlaveCIPv4| 
+|DNSSlaveCIPv4|

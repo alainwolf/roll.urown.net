@@ -5,8 +5,8 @@
 Web Browser
 ===========
 
-`Mozilla Firefox <https://www.mozilla.org/en-US/firefox/desktop/>`_ is default 
-web browser in Ubuntu and therefore already installed. 
+`Mozilla Firefox <https://www.mozilla.org/en-US/firefox/desktop/>`_ is default
+web browser in Ubuntu and therefore already installed.
 
 .. contents::
 
@@ -48,7 +48,7 @@ Select "Tell sites that I do not want to be tracked" under "Tracking":
 
 History settings:
 
- * Select "Use custom settings for history". 
+ * Select "Use custom settings for history".
  * Untick "Always use private browsing mode"
  * Untick "Remember my browsing and download history"
  * Untick "Remember search and form history"
@@ -63,7 +63,7 @@ History settings:
 
 Click the "Show Cookies..." Button:
 
-You will see already an awful lot of cookies in the list, even on a freshly installed system after just a few minutes of browsing the web: 
+You will see already an awful lot of cookies in the list, even on a freshly installed system after just a few minutes of browsing the web:
 
 .. image:: Firefox-Preferences-Privacy-History-Cookies.*
     :alt: Mozilla Firefox - Preferences - Privacy - History - Cookies
@@ -71,14 +71,14 @@ You will see already an awful lot of cookies in the list, even on a freshly inst
 
 Click the "Remove All Cookies" Button and close the dialog.
 
-Click the "Settings..." Button beisdes the checkmark "Clear history when Firefox 
+Click the "Settings..." Button beisdes the checkmark "Clear history when Firefox
 closes":
 
 .. image:: Firefox-Preferences-Privacy-History-Clear.*
     :alt: Mozilla Firefox - Preferences - Privacy - History - Settings for Clearing History
     :scale: 75%
 
-Don't worry about these rather restricting cookie-settings, as they will be 
+Don't worry about these rather restricting cookie-settings, as they will be
 managed by some extensions we will install later on.
 
 
@@ -99,42 +99,33 @@ So Firefox borwser will no longer phone home.
 After all these changes it might be time to restart Firefox.
 
 
-Security and Privacy Extensions 
+Security and Privacy Extensions
 -------------------------------
 
-There are various `add-ons for Firefox 
-<https://addons.mozilla.org/en-US/firefox/>`_ which enhance security and 
+There are various `add-ons for Firefox
+<https://addons.mozilla.org/en-US/firefox/>`_ which enhance security and
 privacy.
 
 
-Adblock Edge
-^^^^^^^^^^^^
+uBlock Origin
+^^^^^^^^^^^^^
 
-`Adblock Edge <https://addons.mozilla.org/en-US/firefox/addon/adblock-edge/>`_
-is a fork of the Adblock Plus extension for blocking advertisements on the web, 
-without the sponsored ads whitelist contained in Adblock Plus.
+`uBlock Origin <https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/>`_
+is an efficient ad blocker: easy on memory and CPU footprint, and yet can load
+and enforce thousands more filters than other popular blockers out there.
 
 
 DNSSEC TLSA Validator
 ^^^^^^^^^^^^^^^^^^^^^
 
-`DNSSEC TLSA Validator 
-<https://addons.mozilla.org/en-US/firefox/addon/dnssec-validator/>`_ allows you
-to check the existence and validity of :term:`DNSSEC` and :term:`TLSA` records 
-related to the domain of the website you visit. 
+`DNSSEC TLSA Validator <https://addons.mozilla.org/en-US/firefox/addon/dnssec-validator/>`_
+allows you to check the existence and validity of :term:`DNSSEC` and :term:`TLSA`
+records related to the domain of the website you visit.
 
 Colored icons in the browser address bar, indicate if a websites can be trusted,
 by relying on digitally signed information provided by the owner of the websites
 domain, without involvment of third-parties, like certificate authorities,
 browser vendors et al.
-
-
-.. Ghostery
-.. ^^^^^^^^
-..
-.. `Ghostery <https://addons.mozilla.org/en-US/firefox/addon/ghostery/>`_ protects
-.. your privacy by blocking third-party cookies and content which might be used for
-.. tracking accross multiple sites you visit.
 
 
 Privacy Badger
@@ -157,19 +148,19 @@ support HTTPS as well as HTTP. This includes connections to third-party sites
 which may provide embedded content on a visited website.
 
 HTTPS-Everywhere is published by the `Electronic Frontier Foundation
-<https://www.eff.org/>`_ which maintains `a list 
-<https://www.eff.org/https-everywhere/atlas/>`_ of major websites supporting 
+<https://www.eff.org/>`_ which maintains `a list
+<https://www.eff.org/https-everywhere/atlas/>`_ of major websites supporting
 HTTPS.
 
 
 Perspectives
 ^^^^^^^^^^^^
-`Perspectives <https://addons.mozilla.org/en-US/firefox/addon/perspectives/>`_ 
+`Perspectives <https://addons.mozilla.org/en-US/firefox/addon/perspectives/>`_
 can ..
 
  * Provide a second-layer of security to detect attacks due to a compromised or
    malicious certificate authority.
- 
+
  * Securely determine the validity of “self-signed” certificates that have not
    been signed by a certificate authority, avoiding the “scary” Firefox security
    error when it is safe to do so.
@@ -188,18 +179,52 @@ Visit the `Perspectives Project <http://www.perspectives-project.org>`_ for more
 information how this works.
 
 
-.. SSL Version Control 
-.. ^^^^^^^^^^^^^^^^^^^
+Decentraleyes
+^^^^^^^^^^^^^
 
-.. `SSL Version Control 
-.. <https://addons.mozilla.org/en-US/firefox/addon/ssl-version-control/>`_ turns 
-.. off SSLv3 by default, and adds a simple preference to set the minimum SSL 
-.. version that Firefox will accept (in Tools / Add-ons). Since the `Poodle-Attack 
-.. <https://en.wikipedia.org/wiki/POODLE>`_ SSLv3 is considered as insecure, and 
-.. will be `disabled soon 
-.. <https://blog.mozilla.org/security/2014/10/14/the-poodle-attack-and-the-end-of-ssl-3-0/>`_.
-.. In the meantime, you can use this extension to turn off SSLv3 in your copy of 
-.. Firefox. SSL Version Control is published by Mozilla.
+`Decentraleyes <https://addons.mozilla.org/en-US/firefox/addon/decentraleyes/>`_
+protects you against tracking through "free", centralized, content delivery. It
+prevents a lot of requests from reaching networks like Google Hosted Libraries,
+and serves local files to keep sites from breaking. Complements regular content
+blockers.
+
+Blocked services:
+
+    * Google Hosted Libraries
+    * Microsoft Ajax CDN
+    * CDNJS (Cloudflare)
+    * jQuery CDN (MaxCDN)
+    * jsDelivr (MaxCDN)
+    * Yandex CDN
+    * Baidu CDN
+    * Sina Public Resources
+    * UpYun Libraries.
+
+Bundles ressources:
+
+    * AngularJS
+    * Backbone.js
+    * Dojo
+    * Ember.js
+    * Ext Core
+    * jQuery
+    * jQuery UI
+    * Modernizr
+    * MooTools
+    * Prototype
+    * Scriptaculous
+    * SWFObject
+    * Underscore.js
+    * Web Font Loader
+
+
+Self-Destructing Cookies
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `Self-Destructing Cookies <https://addons.mozilla.org/en-US/firefox/addon/self-destructing-cookies/>`_
+extension gets rid of a site's cookies and LocalStorage as soon as you close its
+tabs. This way it protects your browser from trackers and zombie-cookies.
+Trustworthy services can be whitelisted.
 
 
 Other Useful Extensions
@@ -208,17 +233,15 @@ Other Useful Extensions
 Following are some extensions which are not directly related to privacy and
 security but recommended as useful:
 
-`4or6 <https://addons.mozilla.org/en-US/firefox/addon/4or6/>`_
-- IPv4/IPv6 Protocol Indicator and Configuration Manager.
+`SixOrNot <https://addons.mozilla.org/en-us/firefox/addon/sixornot/>`_
+- IPv4/IPv6 Protocol Indicator.
 
-`Cert Viewer Plus 
-<https://addons.mozilla.org/en-US/firefox/addon/cert-viewer-plus/>`_
-- Certificate viewer enhancements: PEM format view, file export, trust 
+`Cert Viewer Plus <https://addons.mozilla.org/en-US/firefox/addon/cert-viewer-plus/>`_
+- Certificate viewer enhancements: PEM format view, file export, trust
 configuration.
 
-`Context Search 
-<https://addons.mozilla.org/en-US/firefox/addon/context-search/?src=search>`_
-- Expands the context menu's 'Search for' item into a list of installed search 
+`Context Search <https://addons.mozilla.org/en-US/firefox/addon/context-search/?src=search>`_
+- Expands the context menu's 'Search for' item into a list of installed search
 engines, allowing you to choose the engine you want to use for each search.
 
 `GNotifier <https://addons.mozilla.org/en-US/firefox/addon/gnotifier/>`_
@@ -235,7 +258,7 @@ with headings and/or with sections in HTML.
 up one level (directory) in the currently displayed website.
 
 
-Extensions To Disable  
+Extensions To Disable
 ^^^^^^^^^^^^^^^^^^^^^
 
 Ubuntu installs its own extension, which might be disabled:
@@ -252,12 +275,12 @@ as the ones from Google, Yahoo or Microsoft.
 DuckDuckGo
 ^^^^^^^^^^
 
-`DuckDuckGo <https://duckduckgo.com/>`_ is an Internet search engine that 
-emphasizes protecting searchers privacy and avoiding the :term:`filter bubble` 
-of personalized search results. DuckDuckGo gets its results from over one 
+`DuckDuckGo <https://duckduckgo.com/>`_ is an Internet search engine that
+emphasizes protecting searchers privacy and avoiding the :term:`filter bubble`
+of personalized search results. DuckDuckGo gets its results from over one
 hundred `different sources <https://duck.co/help/results/sources>`_.
 
-See `their Firefox help page 
+See `their Firefox help page
 <https://duck.co/help/desktop/firefox>`_ for ways to use it with Firefox.
 
 
@@ -266,29 +289,29 @@ StartPage
 
 `Startpage <https://startpage.com/>`_ puts itself between your browser and the
 Google search engine. The search results are generated by Google, but without
-your computer connecting with Google servers. 
+your computer connecting with Google servers.
 
 Additionally they offer to fetch any website and display it for you,  without
 that any connection between your computer and the target website is made.
 
-See their `"Add to browser" page 
-<https://startpage.com/eng/download-startpage-plugin.html?>`_ for help to add it 
+See their `"Add to browser" page
+<https://startpage.com/eng/download-startpage-plugin.html?>`_ for help to add it
 as search engine.
 
 
 Mycroft Project
 ^^^^^^^^^^^^^^^
 
-The `Mycroft project <http://mycroftproject.com/search-engines.html>`_ is a 
-directory of thousends of search engines, which can be each added to your search 
+The `Mycroft project <http://mycroftproject.com/search-engines.html>`_ is a
+directory of thousends of search engines, which can be each added to your search
 egine list.
 
 
 Search-Engines to Remove
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The following search engines can be removed, by clicking the dropdown list of 
-search engines and choosing the "Manage Search Engines" entry at the bottom of 
+The following search engines can be removed, by clicking the dropdown list of
+search engines and choosing the "Manage Search Engines" entry at the bottom of
 the list:
 
  * Google
@@ -309,16 +332,16 @@ Security Tests
 
 Various pages check your browser for vulnerabilities against current threats.
 
-`How's My SSL? <https://www.howsmyssl.com/>`_ is a cute little website that 
+`How's My SSL? <https://www.howsmyssl.com/>`_ is a cute little website that
 tells you how secure your TLS client is. TLS clients just like the browser
 you're reading this with.
 
-`SSL Labs Client Test <https://www.ssllabs.com/ssltest/viewMyClient.html>`_ 
-shows you the SSL/TLS Capabilities of your Browser and vulnerabilities against 
+`SSL Labs Client Test <https://www.ssllabs.com/ssltest/viewMyClient.html>`_
+shows you the SSL/TLS Capabilities of your Browser and vulnerabilities against
 selected discovered security issues (i.e. FREAK, POODLE).
 
-`Qualys® BrowserCheck <https://browsercheck.qualys.com/>`_ recommends you to 
-scan your browser regularly to stay up to date with the latest versions and 
+`Qualys® BrowserCheck <https://browsercheck.qualys.com/>`_ recommends you to
+scan your browser regularly to stay up to date with the latest versions and
 plugins.
 
 
@@ -338,7 +361,7 @@ XMPP Instant Messaging
 In the appearing dialog input the following string:
 
  ``network.protocol-handler.expose.xmpp``
-  
+
  Set it to ``true``
 
 Select "New" - "String" from the fly-out-menu.
@@ -346,7 +369,7 @@ Select "New" - "String" from the fly-out-menu.
 In the appearing dialog input the following string:
 
  ``network.protocol-handler.app.xmpp``
- 
+
  Set it to ``/usr/bin/purple-url-handler``
 
 

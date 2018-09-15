@@ -8,10 +8,35 @@ Cloud Storage
 `ownCloud <https://owncloud.org/>`_ provides universal access to your files via
 the web, your computer or  your mobile devices — wherever you are.
 
-It also provides a platform to easily view & sync your contacts, calendars and 
+It also provides a platform to easily view & sync your contacts, calendars and
 bookmarks across all your devices and enables basic editing right on the web.
 
-.. contents:: \ 
+.. contents:: \
+
+
+Prerequisites
+-------------
+
+
+DNS Records
+^^^^^^^^^^^
+
+============================ ==== ================================ ======== ===
+Name                         Type Content                          Priority TTL
+============================ ==== ================================ ======== ===
+cloud                        A    |publicIPv4|                              300
+cloud                        AAAA |ownCloudIP6|
+_caldavs._tcp                SRV  0 443 cloud.example.net          10
+_caldavs._tcp                TXT  path=/remote.php/caldav/
+_caldavs._tcp.cloud          SRV  0 443 cloud.example.net          10
+_caldavs._tcp.cloud          TXT  path=/remote.php/caldav/
+_carddavs._tcp               SRV  0 443 cloud.example.net          10
+_carddavs._tcp               TXT  path=/remote.php/carddav/
+_carddavs._tcp.cloud         SRV  0 443 cloud.example.net          10
+_carddavs._tcp.cloud         TXT  path=/remote.php/carddav/
+_443._tcp.cloud              TLSA 3 0 1 f8df4b2e..........76a2a0e5
+============================ ==== ================================ ======== ===
+
 
 
 Software Package Repository
@@ -27,36 +52,38 @@ Service::
 
 Add the package signing key to the systems trusted packages keyring::
 
-    $ wget -O - http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key \ | 
+    $ wget -O - http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key \ |
     	sudo apt-key add -
 
 Update the systems packages list::
 
     $ sudo apt-get update
 
+
 ownCloud Package
 ----------------
 
 Install the ownCloud server package::
 
-    $ sudo apt-get install owncloud 
+    $ sudo apt-get install owncloud
 
-The ownCloud server PHP scripts will be installed in the 
+The ownCloud server PHP scripts will be installed in the
 :file:`/var/www/owncloud` directory.
 
 There is also a long list of additional software installed.
 
-The package is installed in :file:`/var/www/owncloud` and package updates will 
+The package is installed in :file:`/var/www/owncloud` and package updates will
 be applied there.
 
 Stop the installed Apache service, as we will run ownCloud under Nginx::
 
     $ sudo service apache2 stop
-    
+
+
 Additional Packages
 -------------------
 
-ownCloud can use a number of software packages to incerease preformance and 
+ownCloud can use a number of software packages to incerease preformance and
 offer additional features if they are installed::
 
     $ sudo apt-get install php-apcu libav-tools libreoffice imagemagick
@@ -65,19 +92,19 @@ offer additional features if they are installed::
 APCu - APC User Cache
 ^^^^^^^^^^^^^^^^^^^^^
 
-The ownCloud package source and the website recommend installation of 
-of `php5-apc <http://php.net/manual/en/book.apc.php>`_ for better 
+The ownCloud package source and the website recommend installation of
+of `php5-apc <http://php.net/manual/en/book.apc.php>`_ for better
 performance.
 
-Starting with PHP version 5.5 the 
-`Zend Opcache <http://www.php.net/manual/en/book.opcache.php>`_ is 
-integrated and shipped with PHP. Zend Opcache is faster then APC in opcode 
+Starting with PHP version 5.5 the
+`Zend Opcache <http://www.php.net/manual/en/book.opcache.php>`_ is
+integrated and shipped with PHP. Zend Opcache is faster then APC in opcode
 caching.
 
-Ubuntu started to use PHP 5.5 with Release 13.10. The now obsolete 
+Ubuntu started to use PHP 5.5 with Release 13.10. The now obsolete
 package php5-apc is no longer available.
 
-For variable cache storage, there is the stripped down 
+For variable cache storage, there is the stripped down
 `APCu <http://pecl.php.net/package/APCu>`_ extension. APCu adds
 support to store PHP variables in shared user space.
 
@@ -97,19 +124,19 @@ support to store PHP variables in shared user space.
 libav - Open source audio and video processing tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The ownCloud package source and the website recommend installation of 
+The ownCloud package source and the website recommend installation of
 `FFmpeg <http://www.ffmpeg.org/>`_.
 
-Since Ubuntu 11.04 ffmpeg has been replaced by `libav <http://www.libav.org/>`_. 
-While Ubuntu Desktop systems have this installed by default, server systems need 
+Since Ubuntu 11.04 ffmpeg has been replaced by `libav <http://www.libav.org/>`_.
+While Ubuntu Desktop systems have this installed by default, server systems need
 to add it manually.
 
 
 libreoffice and imagemagick
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To properly handle various document and file formats ownCloud needs to be able 
-to read and understand them. This is used for example when creating previews of 
+To properly handle various document and file formats ownCloud needs to be able
+to read and understand them. This is used for example when creating previews of
 documents. Therefore its adviable to install LibreOffice and ImageMagick.
 
 
@@ -122,11 +149,11 @@ data-directory outside of the ownCloud webserver document root directory:
 Create ownCloud server data-directory and logs::
 
 	$ cd /var/www
-	$ sudo mkdir -p cloud.example.com/{log,oc_data}
+	$ sudo mkdir -p cloud.example.net/{log,oc_data}
 
 Re-adjust ownerships and access rights::
 
-    $ sudo chown -R www-data:www-data cloud.example.com/{log,oc_data}
+    $ sudo chown -R www-data:www-data cloud.example.net/{log,oc_data}
 
 
 ownCloud Database
@@ -144,9 +171,9 @@ the database user::
     ********
 
 Start database command session::
-    
+
     $ mysql -u root -p
-    Enter password: 
+    Enter password:
     Welcome to the MariaDB monitor.  Commands end with ; or \g.
     Your MariaDB connection id is 28
     Server version: 5.5.37-MariaDB-0ubuntu0.14.04.1 (Ubuntu)
@@ -156,7 +183,7 @@ Start database command session::
     Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 
-Create a new user for ownCloud, replace the asterisks below with 
+Create a new user for ownCloud, replace the asterisks below with
 the password created earlier:
 
 .. code-block:: mysql
@@ -180,7 +207,7 @@ Now grant the user access to the database:
     > GRANT ALL PRIVILEGES ON owncloud_example.* TO 'owncloud_example'@'localhost';
     Query OK, 0 rows affected (0.00 sec)
 
-    
+
 Access rights are only acvtivated after the database server has reloaded its privileges table:
 
 .. code-block:: mysql
@@ -199,10 +226,10 @@ Close the session with the database server:
 Nginx Configuration
 -------------------
 
-Create the Nginx configuration for ownCloud as documented in the official 
+Create the Nginx configuration for ownCloud as documented in the official
 `ownCloud Installation Guide <http://doc.owncloud.org/server/6.0/admin_manual/installation/installation_source.html#nginx-configuration>`_.
 
-Following is the Web application configuration file 
+Following is the Web application configuration file
 :file:`/etc/nginx/owncloud.conf` for the ownCloud server on Nginx:
 
 .. code-block:: nginx
@@ -287,10 +314,10 @@ Following is the Web application configuration file
 Virtual Host Example
 ^^^^^^^^^^^^^^^^^^^^
 
-Next set up a secured virtual host and include the ownCloud configuration. 
+Next set up a secured virtual host and include the ownCloud configuration.
 
-The following would be saved as 
-:file:`/etc/nginx/sites-available/cloud.example.com.conf`. Your mileage may 
+The following would be saved as
+:file:`/etc/nginx/sites-available/cloud.example.net.conf`. Your mileage may
 vary on server_name and IP addresses:
 
 .. code-block:: nginx
@@ -298,7 +325,7 @@ vary on server_name and IP addresses:
    :emphasize-lines: 40,43-45,49
 
     #
-    # cloud.example.com OwnCloud Server
+    # cloud.example.net OwnCloud Server
 
     # Unsecured HTTP Site - Redirect to HTTPS
     server {
@@ -308,12 +335,12 @@ vary on server_name and IP addresses:
         listen                  192.0.2.11:80;
 
         # IPv6 global address
-        listen                  [2001:db8::11]:80;
+        listen                  [2001:db8::29]:80;
 
-        server_name             cloud.example.com;
+        server_name             cloud.example.net;
 
         # Redirect to HTTPS
-        return                  301 https://cloud.example.com$request_uri;
+        return                  301 https://cloud.example.net$request_uri;
     }
 
     # Secured HTTPS Site
@@ -324,22 +351,22 @@ vary on server_name and IP addresses:
         listen                  192.0.2.12:443 ssl spdy;
 
         # IPv6 global address
-        listen                  [2001:db8::12]:443 ssl spdy;
+        listen                  [2001:db8::29]:443 ssl spdy;
 
-        server_name             cloud.example.com;
+        server_name             cloud.example.net;
 
         # TLS - Transport Layer Security Configuration, Certificates and Keys
         include                    /etc/nginx/tls.conf;
         include                    /etc/nginx/ocsp-stapling.conf;
-        ssl_certificate_key      /etc/ssl/certs/example.com.chained.cert.pem;
-        ssl_certificate_key      /etc/ssl/private/example.com.key.pem;
+        ssl_certificate_key      /etc/ssl/certs/example.net.chained.cert.pem;
+        ssl_certificate_key      /etc/ssl/private/example.net.key.pem;
         ssl_trusted_certificate  /etc/ssl/certs/CAcert_Class_3_Root.OCSP-chain.pem;
 
         # Web server documents root directory (where owncloud is installed)
         root                    /var/www/owncloud;
 
         # ownCloud data directory (recommended to be outside the server documents root)
-        location ~ ^/var/www/cloud.example.com/oc_data {
+        location ~ ^/var/www/cloud.example.net/oc_data {
             internal;
             root /;
         }
@@ -348,12 +375,12 @@ vary on server_name and IP addresses:
         include                 /etc/nginx/owncloud.conf;
 
         # Access and Error Logging Configuration
-        access_log              /var/www/cloud.example.com/log/access.log;
-        error_log               /var/www/cloud.example.com/log/error.log;
+        access_log              /var/www/cloud.example.net/log/access.log;
+        error_log               /var/www/cloud.example.net/log/error.log;
     }
 
 Activate the new website and restart the Nginx server::
 
-    $ sudo ln -s /etc/nginx/sites-available/cloud.example.com.conf /etc/nginx/sites-enabled/
+    $ sudo ln -s /etc/nginx/sites-available/cloud.example.net.conf /etc/nginx/sites-enabled/
     $ sudo service nginx restart
 

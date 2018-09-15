@@ -1,0 +1,73 @@
+# Templated service file for redis-server(1)
+#
+# Each instance of redis-server requires its own configuration file:
+#
+#   $ cp /etc/redis/redis.conf /etc/redis/redis-myname.conf
+#   $ chown redis:redis /etc/redis/redis-myname.conf
+#
+# Ensure each instance is using their own database:
+#
+#   $ sed -i -e 's@^dbfilename .*@dbfilename dump-myname.rdb@' /etc/redis/redis-myname.conf
+#
+# We then listen exlusively on UNIX sockets to avoid TCP port collisions:
+#
+#   $ sed -i -e 's@^port .*@port 0@' /etc/redis/redis-myname.conf
+#   $ sed -i -e 's@^\(# \)\{0,1\}unixsocket .*@unixsocket /var/run/redis-myname/redis-server.sock@' /etc/redis/redis-myname.conf
+#
+# ... and ensure we are logging, etc. in a unique location:
+#
+#   $ sed -i -e 's@^logfile .*@logfile /var/log/redis/redis-server-myname.log@' /etc/redis/redis-myname.conf
+#   $ sed -i -e 's@^pidfile .*@pidfile /var/run/redis-myname/redis-server.pid@' /etc/redis/redis-myname.conf
+#
+# We can then start the service as follows, validating we are using our own
+# configuration:
+#
+#   $ systemctl start redis-server@myname.service
+#   $ redis-cli -s /var/run/redis-myname/redis-server.sock info | grep config_file
+#
+#  -- Chris Lamb <lamby@debian.org>  Mon, 09 Oct 2017 22:17:24 +0100
+[Unit]
+Description=Advanced key-value store (%I)
+After=network.target
+Documentation=http://redis.io/documentation, man:redis-server(1)
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/redis-server /etc/redis/redis-%i.conf
+ExecStop=/bin/kill -s TERM $MAINPID
+PIDFile=/var/run/redis-%i/redis-server.pid
+TimeoutStopSec=0
+Restart=always
+User=redis
+Group=redis
+RuntimeDirectory=redis-%i
+RuntimeDirectoryMode=2755
+
+UMask=007
+PrivateTmp=yes
+LimitNOFILE=65535
+PrivateDevices=yes
+ProtectHome=yes
+ReadOnlyDirectories=/
+ReadWriteDirectories=-/var/lib/redis
+ReadWriteDirectories=-/var/log/redis
+ReadWriteDirectories=-/var/run/redis-%i
+
+NoNewPrivileges=true
+CapabilityBoundingSet=CAP_SETGID CAP_SETUID CAP_SYS_RESOURCE
+MemoryDenyWriteExecute=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+# redis-server can write to its own config file when in cluster mode so we
+# permit writing there by default. If you are not using this feature, it is
+# recommended that you replace the following lines with "ProtectSystem=full".
+ProtectSystem=true
+ReadWriteDirectories=-/etc/redis
+
+[Install]
+WantedBy=multi-user.target

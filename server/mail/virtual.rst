@@ -108,7 +108,7 @@ Adding a Mailbox
             ENCRYPT (
                 '********', CONCAT('$6$', SUBSTRING(SHA(RAND()), -16))
             ), 
-            'email1@example.com'
+            'email1@example.net'
     );
 
 The above encrypts the password with 512-bit SHA-2 before it is stored in the

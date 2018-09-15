@@ -1,0 +1,61 @@
+# MariaDB Server version 10.2.6
+
+[mysqld]
+
+# MyISAM Storage Engine Configuration
+# See https://mariadb.com/kb/en/mariadb/myisam-storage-engine/
+
+#
+# Debian/Ubuntu Defaults
+#
+
+# Size of the buffer for the index blocks used by MyISAM tables and shared for
+# all threads. If you don't use MyISAM tables, you can set key-buffer-size to a
+# very low value, like 64K.
+# Default: 134217728 (128M)
+key_buffer_size = 64K
+key_cache_block_size = 512
+key_cache_file_hash_size = 128
+
+# MyISAM recovery mode. Multiple options can be selected, comma-delimited. Using
+# no argument is equivalent to specifying DEFAULT, while specifying "" is
+# equivalent to OFF. If enabled each time the server opens a MyISAM table, it
+# checks whether it has been marked as crashed, or wasn't closed properly. If
+# so, mysqld will run a check and then attempt to repair the table, writing to
+# the error log beforehand.
+# Default: BACKUP,QUICK
+#myisam_recover_options = BACKUP
+
+# Size in bytes of the buffer allocated when creating or sorting indexes on a
+# MyISAM table.
+# Default: 134217720 (128MB)
+myisam_sort_buffer_size = 4M
+
+# If set to AUTO, MariaDB allows concurrent INSERTs and SELECTs for MyISAM
+# tables with no free blocks in the data. If set to NEVER, concurrent inserts
+# are disabled. If set to ALWAYS, concurrent inserts are permitted for all
+# MyISAM tables, even those with holes, in which case new rows are added at the
+# end of a table if the table is being used by another thread. If the --skip-new
+# option is used when starting the server, concurrent_insert is set to NEVER.
+# Default: AUTO
+#concurrent_insert = ALWAYS
+
+# Size in bytes of the buffer used when reading rows from a MyISAM table in
+# sorted order after a key sort. Larger values improve ORDER BY performance,
+# although rather increase the size by SESSION where the need arises to avoid
+# excessive memory use.
+# Default: 262144 (256K)
+#read_rnd_buffer_size = 1M
+
+# If set, external locking for MyISAM tables is disabled.
+# Default: ON
+#skip-external-locking = ON
+
+#
+# Segmented Key Cache
+# https://mariadb.com/kb/en/mariadb/segmented-key-cache/
+
+# The number of segments in a key cache.
+# Default: 0
+# key_cache_segments = 0
+

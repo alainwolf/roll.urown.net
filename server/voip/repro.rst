@@ -42,7 +42,7 @@ to :file:`/etc/network/interface` as well.
 .. code-block:: ini
 
   ...
-  # bt.example.com
+  # bt.example.net
   iface eth0 inet static
       address 192.0.2.15/24
   
@@ -60,15 +60,15 @@ See doc:`server/dns`
 SIP calls are routed over the internet towards its destination in a similar way
 as emails. Therefore DNS plays an important role.
 
-Add the following records to your domain *example.com* using the poweradmin web
+Add the following records to your domain *example.net* using the poweradmin web
 interface:
 
 =========== ======== ========================================== ============ =======
 **Name**    **Type** **Content**                                **Priority** **TTL**
 sip-proxy   A        |publicIPv4|                                          0     300
 sip-proxy   AAAA     |SIPserverIPv6|                                       0   86400
-_sips._tcp  SRV      1 5061 sip-proxy.example.com                          0   86400
-.           NAPTR    0 "s" "SIPS+D2T" "" _sips._tcp.example.com           10   86400
+_sips._tcp  SRV      1 5061 sip-proxy.example.net                          0   86400
+.           NAPTR    0 "s" "SIPS+D2T" "" _sips._tcp.example.net           10   86400
 =========== ======== ========================================== ============ =======
 
 Use your public Internet IPv4 address for the **A** record.

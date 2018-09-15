@@ -1,5 +1,5 @@
-Firewall-Router
-===============
+Router
+======
 
 .. image:: OpenWrt-logo.*
     :alt: OpenWrt Logo
@@ -12,26 +12,48 @@ the limited storage and memory available in home routers.
 
 .. code-block:: text
 
+
+
+	BusyBox v1.28.3 () built-in shell (ash)
+
 	  _______                     ________        __
 	 |       |.-----.-----.-----.|  |  |  |.----.|  |_
 	 |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
 	 |_______||   __|_____|__|__||________||__|  |____|
 	          |__| W I R E L E S S   F R E E D O M
 	 -----------------------------------------------------
-	 BARRIER BREAKER (14.07)
+	 OpenWrt 18.06.0, r7188-b0b5c64c22
 	 -----------------------------------------------------
-	  * 1/2 oz Galliano         Pour all ingredients into
-	  * 4 oz cold Coffee        an irish coffee mug filled
-	  * 1 1/2 oz Dark Rum       with crushed ice. Stir.
-	  * 2 tsp. Creme de Cacao
-	 -----------------------------------------------------
+	Uptime:  02:12:06 up  2:50,  load average: 0.00, 0.00, 0.00
+
+	The list of available packages has been updated 1 hours ago
+	0 packages can be upgraded.
+
+
 
 
 .. toctree::
-   :maxdepth: 2
-   
+   :maxdepth: 1
+
+   install
+   setup
+   network
+   wireless
+   buttons-and-leds
+   wps
    unbound
-   tor-relay
-   smtp_mta
-   ebooks
+   router-mail
    router-backup
+   router-upgrade
+   router-ups
+   firewall/index
+   openvpn
+   bridged-ap
+
+
+.. note::
+   Everything described in this section has been done on NETGEAR router models WNDR3700v2 and WNDR3800. 
+   They might work differently or not all on your device.
+   Please consult the relevant OpenWRT `supported_devices <https://openwrt.org/supported_devices>`_ page four your specific model.
+
+

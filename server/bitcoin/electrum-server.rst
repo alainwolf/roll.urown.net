@@ -8,16 +8,16 @@ Electrum Server
 `Electrum <https://electrum.org/>`_ is a lightweight Bitcoin wallet.
 
 Electrum's focus is speed, with low resource usage and simplifying Bitcoin.
-Startup times are instant because it operates in conjunction with 
-`Electrum Servers <https://github.com/spesmilo/electrum-server/>`_ that handle 
+Startup times are instant because it operates in conjunction with
+`Electrum Servers <https://github.com/spesmilo/electrum-server/>`_ that handle
 the most complicated parts of the Bitcoin system.
 
-Electrum Servers are run by volunteers around the Internet. 
+Electrum Servers are run by volunteers around the Internet.
 
 This document describes how to setup an Electrum Server who will be reachable
 over IPv4, IPv6 and as Hidden Service over the Tor network.
 
-.. contents:: \ 
+.. contents:: \
 
 
 Prerequisites
@@ -139,7 +139,7 @@ Add the following two highlighted lines to our Bitcoin Hidden Service by editing
 .. code-block:: bash
     :emphasize-lines: 5,6
 
-    # BitCoin Full Node & Electrum Server Hidden Service for btc.example.com
+    # BitCoin Full Node & Electrum Server Hidden Service for btc.example.net
     HiddenServiceDir /var/lib/tor/hidden_services/bitcoin
     HiddenServicePort 8333
     HiddenServicePort 18333
@@ -150,7 +150,7 @@ Reload the Tor client::
 
     $ sudo service tor reload
 
-The \*.onion hostname is found in the file 
+The \*.onion hostname is found in the file
 :file:`/var/lib/tor/hidden_services/bitcoin/hostname`::
 
     $ sudo cat /var/lib/tor/hidden_services/bitcoin/hostname
@@ -175,7 +175,7 @@ Software Dependencies
 
 Electrum Server is a Python program and depends on various Python libraries::
 
-    $ sudo apt-get install python-setuptools python-openssl python-leveldb libleveldb-dev 
+    $ sudo apt-get install python-setuptools python-openssl python-leveldb libleveldb-dev
     $ sudo easy_install jsonrpclib irc plyvel
 
 
@@ -192,16 +192,20 @@ directly from the source code repository on GitHub::
 Install
 ^^^^^^^
 
-You can see from the output below, that the next step takes several hours too. 
+You can see from the output below, that the next step takes several hours too.
 Because of the 13 GB database download.
 
 ::
 
     $ cd electrum-server
     $ sudo ./configure
+
+
+.. code-block:: text
+
     Creating config file
-    username for running daemon (default: electrum) 
-    Path for database (default: /var/electrum-server) /var/lib/electrum/electrum-db    
+    username for running daemon (default: electrum)
+    Path for database (default: /var/electrum-server) /var/lib/electrum/electrum-db
     Database not found in /var/lib/electrum/electrum-db.
     Do you want to download it from the Electrum foundry to /var/lib/electrum/electrum-db ? y
     -2015-04-27 20:09- http://foundry.electrum.org/leveldb-dump/electrum-fulltree-100-latest.tar.gz
@@ -211,11 +215,11 @@ Because of the 13 GB database download.
     Length: 14266991234 (13G) [application/x-gzip]
     Saving to: ‘STDOUT’
 
-    100%[=====================================================>] 14'266'991'234  947KB/s   in 2h 3m  
+    100%[=====================================================>] 14'266'991'234  947KB/s   in 2h 3m
 
     2015-04-27 22:12:25 (1.84 MB/s) - written to stdout [14'266'991'234/14'266'991'234]
 
-    rpcuser (from your bitcoin.conf file): 
+    rpcuser (from your bitcoin.conf file):
     rpcpassword (from your bitcoin.conf file): ********
     Configuration written to /etc/electrum.conf.
     Please edit this file to finish the configuration.

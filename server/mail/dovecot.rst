@@ -187,9 +187,8 @@ To allow our |MTA| Postfix to deliver mails to mailboxes trough the Dovecot
     :language: ini
     :lines: 48-53
 
-The configuration file :download:` /etc/dovecot/conf.d/20-lmtp.conf 
-</server/config-files/etc/dovecot/conf.d/20-lmtp.conf>` holds settings specific 
-to the |LMTP| service.
+The configuration file 
+:download:`/etc/dovecot/conf.d/20-lmtp.conf </server/config-files/etc/dovecot/conf.d/20-lmtp.conf>` holds settings specific to the |LMTP| service.
 
 We load the Dovecot :term:`Sieve` plugin.
 
@@ -353,14 +352,14 @@ The **args** values are translated as follows:
     **vmail**.
 
  *  Mailboxes are stored in the directory :file:`/var/vmail/%d/%n/` where **%d**
-    will be replaces by the domain name (e.g. example.com) and %n will be
+    will be replaces by the domain name (e.g. example.net) and %n will be
     replaced by the user name.
 
  *  **allow_all_users=yes**, is to allow mail delivery, also for mails to users
     not found yet in the database.
 
-This basically means, that mails for **user@example.com** will be stored in the
-:file:`/var/vmail/example.com/user` directory.
+This basically means, that mails for **user@example.net** will be stored in the
+:file:`/var/vmail/example.net/user` directory.
 
 
 Mailbox Locations
@@ -381,7 +380,17 @@ our virtual mailboxes.
     :lines: 103-108
 
 
-Sieve Mail Filtering
---------------------
+Sieve Filter Management Server
+------------------------------
+
+The ManageSieve server allows users to manage their own mail filters directly
+on the server.
+
+The ManageSieve server is configured in the file 
+:download:`/etc/dovecot/conf.d/20-managesieve.conf 
+</server/config-files/etc/dovecot/conf.d/20-managesieve.conf>`.
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/20-managesieve.conf
+    :language: bash
 
 

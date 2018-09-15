@@ -1,3 +1,5 @@
+:orphan:
+
 .. image:: tor-logo.*
     :alt: Tor Logo
     :align: right

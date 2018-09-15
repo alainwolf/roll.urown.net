@@ -1,0 +1,225 @@
+x509 Certificate Attributes
+===========================
+
+See :rfc:`5280`.
+
+
+Distinguished Name
+------------------
+
+ * commonName
+ * countryName
+ * localityName
+ * organizationName
+ * organizationUnitName
+ * stateOrProvinceName
+ * emailAddress
+ * name
+ * surname
+ * givenName
+
+
+Subject Alternative Name
+------------------------
+
+ * email (an email address)
+ * URI (uniform resource indicator)
+ * DNS (a DNS domain name)
+ * RID (a registered ID: OBJECT IDENTIFIER)
+ * IP (an IPv4 or IPv6 address)
+ * dirName (a distinguished name)
+ * otherName (arbitrary data associated with an OID)
+
+
+XMPP addresses in Certificates
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+RFC :rfc:`6120` "Extensible Messaging and Presence Protocol (XMPP): Core"
+
+
+Section 13.7.1.2. "Server Certificates" defines what to include in certificates
+for XMPP servers.
+
+Section 13.7.1.3. "Client Certificates" defines how XMPP addresses are to be
+added to client certificates.
+
+Section 13.7.2. "Certificate Validation" describe how these certificates are
+validated by clients and servers.
+
+The RFC defines new OIDs (Object Identifiers) which should be induced as
+attributes in the SubjAltName part of a certificate as OtherName:
+
+ * id-on-xmppAddr
+ * id-on-dnsSRV
+
+Current versions of OpenSSL (1.0.1) don't yet support the xmppAddr OID natively,
+but new OIDs can be defined to the configuration:
+
+.. code-block:: ini
+
+    oid_section             = new_oids
+
+
+    [ new_oids ]
+    id-on-xmppAddr  = 1.3.6.1.5.5.7.8.5
+    id-on-dnsSRV    = 1.3.6.1.5.5.7.8.7
+
+
+Once defined they can be added to client certificates as follows:
+
+.. code-block:: ini
+
+    [ subject_alt_name ]
+    otherName   = id-on-xmppAddr;UTF8:user@example.net
+
+
+For severs:
+
+.. code-block:: ini
+
+    [ subject_alt_name ]
+    otherName   = SRVName;UTF8:_xmpp-client.example.net
+    otherName   = SRVName;UTF8:_xmpp-server.example.net
+    dNSName     =
+    otherName   = id-on-xmppAddr;UTF8:user@example.net
+
+
+
+This should be added to OpenSSL all configurations used for creating requests
+(CSR) and of the CA signing the certificates.
+
+
+
+
+Key Usage
+---------
+
+
+digitalSignature
+^^^^^^^^^^^^^^^^
+
+The public key is of the certificate will be used for verification of digital signatures.
+
+This might be signed content of an email message or a file signature or data requested by a client from server.
+
+This does not include verification of signatures typically issued by CAs, like
+the signatures of certificates and CRLs.
+
+Useful for mail clients, websites and other servers
+
+
+nonRepudiation
+^^^^^^^^^^^^^^
+
+Lately renamed to contentCommitment. The public key of the certificate will be
+used to verify the digital signature of a message by a trusted third party.
+
+The trusted third party might store this as proof, that a particular message has
+been sent by the certificate owner at a particular time.
+
+The idea here is to make it impossible for the sending party to later deny that it had sent a particular message.
+
+Rarely used. We don't know any useful application.
+
+
+keyEncipherment
+^^^^^^^^^^^^^^^
+
+The public key of a certificate can be used to encrypt another key for
+subsequent communication.
+
+This usually happens during a TLS handshake.
+
+The connecting party knows the other party's public key, which allows it to send
+encrypted data which only the owner of the private key of the certificate can
+decipher.
+
+But since this is slow, and keys are big (private keys should be between 2048 to
+4096 bits) the parties agree on a symmetric encryption which works both ways, is
+faster and provides equal security with smaller keys (128 or 256 bits).
+
+This symmetric key is encrypted with the public key of the certificate before it is sent to the other party. As only the certificate owner can decrypt it, the key used for symmetric encryption remains a secret only the two parties know of.
+
+Used by servers who use certificates with RSA keys.
+
+
+dataEncipherment
+^^^^^^^^^^^^^^^^
+
+The public key of the certificate can be used to directly encrypt data, without
+going trough the step of encrypting a symmetric key to be used later for the
+data encryption, as with keyEncipherment.
+
+Since is this is usually slower and needs more resources it is rarely used.
+
+Rarely used.
+
+
+keyAgreement
+^^^^^^^^^^^^
+
+The public key of this certificate can be used for Diffie-Hellman key exchange
+(DHE).
+
+Certificates who use DHE key-pairs use a different approach them RSA
+certificates. But the goal remains the same: Share a key with the other party,
+which then can be used to securely encrypt the actual communication data.
+
+Use by clients or servers who use certificates with DHE keys.
+
+
+keyCertSign
+^^^^^^^^^^^
+
+The public key of this certificate can be used to verify signatures of other certificates.
+
+Mandatory for certificate authorities.
+
+
+cRLSign
+^^^^^^^
+
+The public key of this certificate can be used to verify signatures of
+certificate reudation lists (CRLs).
+
+Mandatory for certificate authorities.
+
+
+encipherOnly
+^^^^^^^^^^^^
+
+The public key of a certificate with DHE keys can be used to send encrypted
+data, while a key agreement between the two parties is in progress.
+
+It excludes the use of digitalSignature and nonRepudiation.
+
+Only used if keyAgreement is also set, thus only useful for certificates with
+DHE keys.
+
+Might be used by websites and other servers who use certificates with DHE keys.
+
+
+Summary
+-------
+
+Recommended Certificate KeyUsage and ExtendedKeyUsage combinations:
+
+============ ======== ================================= ===========================
+Certificate  Key-type KeyUsage                          ExtendedKeyUsage
+============ ======== ================================= ===========================
+CA           DHE      keyCertSign, cRLSign              CA
+CA           ECDHE    keyCertSign, cRLSign              CA
+CA           RSA      keyCertSign, cRLSign              CA
+Mail Client  DHE      digitalSignature, keyAgreement    clientAuth, emailProtection
+Mail Client  ECDHE    digitalSignature, keyAgreement    clientAuth, emailProtection
+Mail Client  RSA      digitalSignature                  clientAuth, emailProtection
+TLS Client   DHE      digitalSignature, keyAgreement    clientAuth
+TLS Client   ECDHE    digitalSignature, keyAgreement    clientAuth
+TLS Client   RSA      digitalSignature                  clientAuth
+TLS Server   DHE      digitalSignature, keyAgreement    clientAuth, serverAuth
+TLS Server   DHE      keyAgreement, encipherOnly        clientAuth, serverAuth
+TLS Server   ECDHE    digitalSignature, keyAgreement    clientAuth, serverAuth
+TLS Server   ECDHE    keyAgreement, encipherOnly        clientAuth, serverAuth
+TLS Server   RSA      digitalSignature, keyEncipherment clientAuth, serverAuth
+============ ======== ================================= ===========================
+

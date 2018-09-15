@@ -49,10 +49,10 @@ The TLSA entry in DNS consists of a service name and a unique identifiable
 information of the server certificate (a hash).
 
 To create such a DNS :abbr:`RR (Resource Record)` for our webserver
-*example.com*::
+*example.net*::
 
-	$ tlsa --create --certificate /etc/ssl/certs/example.com.cert.pem example.com
-	_443._tcp.example.com. IN TLSA 3 0 1 f8df4b2e...............................76a2a0e5
+	$ tlsa --create --certificate /etc/ssl/certs/example.net.cert.pem example.net
+	_443._tcp.example.net. IN TLSA 3 0 1 f8df4b2e...............................76a2a0e5
 
 
 A line will displayed which can be used with cut and paste in zone files.
@@ -72,16 +72,16 @@ _443._tcp             TLSA 3 0 1 f8df4b2e...............................76a2a0e5
 
 Repeat the above for every webserver in your DNS who answers on TLS port 443::
 
-	$ tlsa --create --certificate /etc/ssl/certs/example.com.cert.pem www.example.com
-	$ tlsa --create --certificate /etc/ssl/certs/example.com.cert.pem cloud.example.com
+	$ tlsa --create --certificate /etc/ssl/certs/example.net.cert.pem www.example.net
+	$ tlsa --create --certificate /etc/ssl/certs/example.net.cert.pem cloud.example.net
 
 For creating records of other non-web types of servers, the port number has to be added to TLSA command.
 
 For a XMPP server::
 
-	$ tlsa --create --certificate /etc/ssl/certs/example.com.cert.pem --port 5269 xmpp.example.com
-	$ tlsa --create --certificate /etc/ssl/certs/example.com.cert.pem --port 5222 xmpp.example.com
+	$ tlsa --create --certificate /etc/ssl/certs/example.net.cert.pem --port 5269 xmpp.example.net
+	$ tlsa --create --certificate /etc/ssl/certs/example.net.cert.pem --port 5222 xmpp.example.net
 
 for a mail server::
 
-	$ tlsa --create --certificate /etc/ssl/certs/example.com.cert.pem --port 25 mail.example.com
+	$ tlsa --create --certificate /etc/ssl/certs/example.net.cert.pem --port 25 mail.example.net

@@ -39,7 +39,7 @@ Edit :file:`/etc/unbound/unbound.conf`:
 
         # Allow the domain (and its subdomains) to contain private addresses.
         # local-data statements are allowed to contain private addresses too.
-        # private-domain: "example.com"
+        # private-domain: "example.net"
         private-domain: "lan"
 
     ...
@@ -59,7 +59,7 @@ Edit :file:`/etc/unbound/unbound.conf`:
     ...
 
         # Ignore chain of trust. Domain is treated as insecure.
-        # domain-insecure: "example.com"
+        # domain-insecure: "example.net"
         domain-insecure: "lan."
         domain-insecure: "168.192.in-addr.arpa."    
     ...
@@ -88,12 +88,12 @@ Edit :file:`/etc/unbound/unbound.conf`:
         # local-data: 'mytext.local TXT "content of text record"'
         #
         # You can override certain queries with
-        # local-data: "adserver.example.com A 127.0.0.1"
+        # local-data: "adserver.example.net A 127.0.0.1"
         #
         # You can redirect a domain to a fixed address with
-        # (this makes example.com, www.example.com, etc, all go to 192.0.2.3)
-        # local-zone: "example.com" redirect
-        # local-data: "example.com A 192.0.2.3"
+        # (this makes example.net, www.example.net, etc, all go to 192.0.2.3)
+        # local-zone: "example.net" redirect
+        # local-data: "example.net A 192.0.2.3"
         local-zone: "168.192.in-addr.arpa" nodefault
 
     ...

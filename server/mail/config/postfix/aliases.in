@@ -1,6 +1,6 @@
 # See man 5 aliases for format
 # run "sudo newaliases" after changing this file.
-root:       hostmaster@example.com
-postmaster: postmaster@example.com
-webmaster:  webmaster@example.com
-www-data:   webmaster@example.com
+root:       hostmaster@example.net
+postmaster: postmaster@example.net
+webmaster:  webmaster@example.net
+www-data:   webmaster@example.net

@@ -1,0 +1,43 @@
+#
+# upsd.users - User definitions for NUT upsd
+#
+
+[adminuser]
+    
+    # Administrative user
+    password = ********
+    
+    # Allow changing values of certain variables in the UPS.
+    actions = SET
+
+    # Allow setting the "Forced Shutdown" flag in the UPS. 
+    actions = fsd
+
+    # Allow all instant commands
+    instcmds = ALL
+
+
+[server]
+    
+    # The localhost, master server
+    password = ********
+
+    # Allow required instant commands to act as master.
+    upsmon master
+
+
+[router]
+    # OpenWRT router
+    password = ********
+    
+    # Allow required actions to act as slave.
+    upsmon = slave
+
+
+[monuser]
+
+    # Pretend to be a Synology NAS, so other DiskStations will connect here.
+    password = secret
+
+    # Allow required actions to act as slave.
+    upsmon = slave

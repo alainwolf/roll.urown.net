@@ -82,7 +82,7 @@ persistent across system restarts:
 
 .. code-block:: ini
 
-    # btc.example.com
+    # btc.example.net
     iface eth0 inet static
         address 192.0.2.39/24
     iface eth0 inet6 static
@@ -131,7 +131,7 @@ Tor Hidden Service
 
 Add a Tor Hidden Service by editing :file:`/etc/tor/torrc`::
 
-    # BitCoin Full Node Hidden Service for btc.example.com
+    # BitCoin Full Node Hidden Service for btc.example.net
     HiddenServiceDir /var/lib/tor/hidden_services/bitcoin
     HiddenServicePort 8333
     HiddenServicePort 18333

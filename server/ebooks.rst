@@ -19,12 +19,16 @@ computer and synchronize the library with :doc:`/desktop/owncloud-client` to the
 desktop are instantly abvailable anywhere else.
 
 
+.. contents::
+  :local:
+
+
 Prerequisites
 -------------
 
  * Installed and running :doc:`/server/owncloud-server`
  * Installed :doc:`/desktop/calibre` on a desktop system.
- * Working :doc:`/desktop/owncloud-client` synchronization of the Calibre 
+ * Working :doc:`/desktop/owncloud-client` synchronization of the Calibre
    database and ebook folder.
 
 
@@ -57,10 +61,10 @@ DNS Records
 
 Create TLSA records::
 
-    $ tlsa --create --certificate /etc/ssl/certs/example.com.cert.pem books.example.com
-    _443._tcp.example.com. IN TLSA 3 0 1 f8df4b2e.......................76a2a0e5
-    $ tlsa --create --certificate /etc/ssl/certs/example.com.cert.pem opds.example.com
-    _443._tcp.example.com. IN TLSA 3 0 1 f8df4b2e.......................76a2a0e5
+    $ tlsa --create --certificate /etc/ssl/certs/example.net.cert.pem books.example.net
+    _443._tcp.example.net. IN TLSA 3 0 1 f8df4b2e.......................76a2a0e5
+    $ tlsa --create --certificate /etc/ssl/certs/example.net.cert.pem opds.example.net
+    _443._tcp.example.net. IN TLSA 3 0 1 f8df4b2e.......................76a2a0e5
 
 Add host names and TLSA records as follows:
 
@@ -79,39 +83,65 @@ _443._tcp.opds   TLSA 3 0 1 f8df4b2e.......................76a2a0e5
 Firewall Rules
 ^^^^^^^^^^^^^^
 
-See :doc:`/router/ebooks`.
+See :doc:`/router/index`.
 
 
 Software Installation
 ---------------------
+
 ::
 
-    sudo apt-get install php5-gd php5-sqlite
-    cd $HOME/downloads
-    wget -O cops-1.0.0RC2.zip https://github.com/seblucas/cops/archive/1.0.0RC2.zip
-    sudo mkdir -p /var/www/books.example.net/public_html
-    cd /var/www/books.example.net/public_html
-    unzip $HOME/downloads/cops-1.0.0RC2.zip
-    sudo mv cops-1.0.0RC2 cops
-    sudo cops/cp config_local.php.example cops/config_local.php
+  $ sudo -s
+  $ apt install php-sqlite3
+  $ mkdir -p /var/www/books.example.net
+  $ cd /var/www/books.example.net
+  $ git clone git clone --no-checkout https://github.com/seblucas/cops.gi
+  $ cd cops
+  $ git tag
+  1.0.1
+  1.1.0
+  1.1.1
+  $ git checkout 1.1.1
+  $ cp config_local.php.example config_local.php
+  $ chown -R www-data:www-data /var/www/urown.net/books/cops
+  $ exit
+  $ cd /var/www/urown.net/books/cops
+  $ sudo -u www-data composer install --no-dev --optimize-autoloader
+  $ sudo -u www-data cp config_local.php.example config_local.php
 
 
 COPS Configuration
 ------------------
+
+Edit :file:`config_local.php`:
 
 .. code-block:: php
 
     <?php
         if (!isset($config))
             $config = array();
-      
+
+        /*
+         ***************************************************
+         * Please read config_default.php for all possible
+         * configuration items
+         ***************************************************
+         */
+
         /*
          * The directory containing calibre's metadata.db file, with sub-directories
          * containing all the formats.
          * BEWARE : it has to end with a /
          */
-        $config['calibre_directory'] = '/var/www/owncloud/data/username/files/Calibre/';
-        
+        $config['calibre_directory'] = '/var/lib/nextcloud/data/user/files/Books/';
+
+        /*
+         * SPECIFIC TO NGINX
+         * The internal directory set in nginx config file
+         * Leave empty if you don't know what you're doing
+         */
+        $config['calibre_internal_directory'] = '/Books/';
+
         /*
          * Full URL prefix (with trailing /)
          * useful especially for Opensearch where a full URL is often required
@@ -120,15 +150,15 @@ COPS Configuration
         $config['cops_full_url'] = 'https://books.example.net/';
 
         /*
-         * Catalog's title
+         * Number of recent books to show
          */
-        $config['cops_title_default'] = "example.net eBooks";
+        $config['cops_recentbooks_limit'] = '25';
 
         /*
-         * Catalog's subtitle
+         * Catalog's title
          */
-        $config['cops_subtitle_default'] = "ownCloud Calibre eBooks Library";
-        
+        $config['cops_title_default'] = "Books";
+
         /*
          * Wich header to use when downloading books outside the web directory
          * Possible values are :
@@ -139,18 +169,11 @@ COPS Configuration
         $config['cops_x_accel_redirect'] = "X-Accel-Redirect";
 
         /*
-         * SPECIFIC TO NGINX
-         * The internal directory set in nginx config file
-         * Leave empty if you don't know what you're doing
-         */
-        $config['calibre_internal_directory'] = '/Calibre/';
-
-        /*
          * Default timezone
          * Check following link for other timezones :
          * http://www.php.net/manual/en/timezones.php
          */
-        $config['default_timezone'] = "Europe/Zurich";
+        $config['default_timezone'] = 'Europe/Paris';
 
         /*
          * use URL rewriting for downloading of ebook in HTML catalog
@@ -165,188 +188,129 @@ COPS Configuration
          * 1 : Yes
          * 0 : No
          */
-        $config['cops_author_split_first_letter'] = "0";
+        $config['cops_author_split_first_letter'] = '0';
 
         /*
          * split titles by first letter
          * 1 : Yes
          * 0 : No
          */
-        $config['cops_titles_split_first_letter'] = "0";
+        $config['cops_titles_split_first_letter'] = '0';
 
-        $config['cops_mail_configuration'] = array( "smtp.host"     => "localhost",
-                                                    "smtp.username" => "webmaster@example.net",
-                                                    "smtp.password" => "********",
-                                                    "smtp.secure"   => "",
-                                                    "address.from"  => "webmaster@example.net"
-        );
+        /*
+         * Update Epub metadata before download
+         * 1 : Yes (enable)
+         * 0 : No
+         */
+        $config['cops_update_epub-metadata'] = '1';
+
+        /*
+         * Enable and configure Send To Kindle (or Email) feature.
+         *
+         * Don't forget to authorize the sender email you configured in your
+         * Kindle's  Approved Personal Document E-mail List.
+         */
+        $config['cops_mail_configuration'] = array(
+                    "smtp.host"     => "mail.example.net",
+                    "smtp.username" => "webmaster@example.net",
+                    "smtp.password" => "********",
+                    "smtp.secure"   => "1",
+                    "smtp.port"     => "587",
+                    "address.from"  => "webmaster@example.net",
+                    "subject"       => "[eBook] "
+                );
+
+        /*
+         * Directory to keep resized thumbnails: allow to resize thumbnails only
+         * on first access, then use this cache.
+         * $config['cops_thumbnail_handling'] must be ""
+         * "" : don't cache thumbnail
+         * "/tmp/cache/" (example) : will generate thumbnails in /tmp/cache/
+         * BEWARE : it has to end with a /
+         */
+        $config['cops_thumbnail_cache_directory'] = '/tmp/cache/';
+
+        /*
+         * Which template is used by default :
+         * 'default'
+         * 'bootstrap'
+         */
+        $config['cops_template'] = 'bootstrap';
 
 
-Nginx Virtual Hosts
+
+Nginx Configuration
 -------------------
 
 
-HTML Server
-^^^^^^^^^^^
+Virtual Server
+^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/nginx/servers-available/books.example.net.conf
+    :language: nginx
+
+
+COPS Web Application
+^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/nginx/webapps/cops.conf
+    :language: nginx
+
+
+Content Security Policy
+^^^^^^^^^^^^^^^^^^^^^^^
+
+:doc:`CSP-Builder </server/nginx/nginx-config/nginx-csp>` JSON file
+:file:`/etc/nginx/csp/books.example.net.csp.json`:
+
+.. code-block:: json
+
+  {
+      "base-uri": {
+          "self": true
+      },
+      "default-src": {
+          "self": true
+      },
+      "img-src": {
+          "self": true,
+          "data": true
+      },
+      "script-src": {
+          "self": true,
+          "unsafe-inline": true,
+          "unsafe-eval": true
+      },
+      "style-src": {
+          "self": true,
+          "unsafe-inline": true
+      },
+      "form-action": {
+          "self": true
+      },
+      "frame-ancestors": {
+        "self": true
+      },
+      "plugin-types": [],
+      "block-all-mixed-content": true,
+      "upgrade-insecure-requests": false
+  }
+
+
+Generated Nginx configuration :file:`/etc/nginx/csp/books.example.net.csp,conf`:
 
 .. code-block:: nginx
 
-    #
-    # books.example.net
-    # COPS - Calibre OPDS and HTML Server
-    # https://github.com/seblucas/cops
-    #
+  add_header Content-Security-Policy
+                 "base-uri 'self';
+                  default-src 'self';
+                  form-action 'self';
+                  frame-ancestors 'self';
+                  img-src 'self' data:;
+                  script-src 'self' 'unsafe-inline' 'unsafe-eval';
+                  style-src 'self' 'unsafe-inline';
+                  block-all-mixed-content";
 
-    # Unsecured HTTP Site - Redirect to HTTPS
-    server {
-
-        # Port-forwarded IPv4 private address from firewall-router
-        listen                  192.0.2.30:80;
-
-        # IPv4 private address
-        listen                  192.0.2.33:80;
-
-        # IPv6 global address
-        listen                  [2001:db8::33]:80;
-
-        server_name             books.example.net;
-
-        # Redirect to HTTPS
-        return                  301 https://books.example.net$request_uri;
-    }
-
-    # Secured HTTPS Site
-    server {
-
-        # Port-forwarded IPv4 private address from firewall-router
-        listen                  192.0.2.30:443 ssl spdy;
-
-        # IPv4 private address
-        listen                  192.0.2.33:443 ssl spdy;
-
-        # IPv6 global address
-        listen                  [2001:db8::33]:443 ssl spdy;
-
-        server_name             books.example.net;
-
-        # TLS - Transport Layer Security Configuration, Certificates and Keys
-        include                 /etc/nginx/tls.conf;
-        include                 /etc/nginx/ocsp-stapling.conf;
-        ssl_certificate         /etc/ssl/certs/example.chained.cert.pem;
-        ssl_certificate_key     /etc/ssl/private/example.key.pem;
-        ssl_trusted_certificate /etc/ssl/certs/StartCom_Class_2_Server.OCSP-chain.pem;
-
-        # Safe site defaults
-        include                 /etc/nginx/sites-defaults/sites-security.conf;
-        include                 /etc/nginx/sites-defaults/google-pagespeed.conf;
-        include                 /etc/nginx/sites-defaults/compression.conf;
-
-        # Public Documents Root
-        root                    /var/www/books.example.net/public_html/cops;
-
-        # PHP Server Configuration
-        include                 /etc/nginx/php-handler.conf;
-
-        # # Useful only for Kobo eReader
-        location /download/ {
-          rewrite ^/download/(\d+)/(\d+)/.*\.(.*)$ /fetch.php?data=$1&db=$2&type=$3 last;
-          rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?data=$1&type=$2 last;
-          break;
-        }
-
-        location /Calibre {
-            root /var/www/owncloud/data/username/files;
-            internal;
-        }
-
-        # Temporary Debug Loggin, please remove when done
-        #include /etc/nginx/debug.conf;
-    }
-
-
-OPDS Server
-^^^^^^^^^^^
-
-.. code-block:: nginx
-
-    #
-    # books.example.net
-    # COPS - Calibre OPDS and HTML Server
-    # https://github.com/seblucas/cops
-    #
-
-    # Unsecured HTTP Site - Redirect to HTTPS
-    server {
-
-        # Port-forwarded IPv4 private address from firewall-router
-        listen                  192.0.2.30:80;
-
-        # IPv4 private address
-        listen                  192.0.2.34:80;
-
-        # IPv6 global address
-        listen                  [2001:db8::34]:80;
-
-        server_name             opds.example.net;
-
-        # Redirect to HTTPS
-        return                  301 https://opds.example.net$request_uri;
-    }
-
-    # Secured HTTPS Site
-    server {
-
-        # Port-forwarded IPv4 private address from firewall-router
-        listen                  192.0.2.30:443 ssl spdy;
-
-        # IPv4 private address
-        listen                  192.0.2.34:443 ssl spdy;
-
-        # IPv6 global address
-        listen                  [2001:db8::34]:443 ssl spdy;
-
-        server_name             opds.example.net;
-
-        # TLS - Transport Layer Security Configuration, Certificates and Keys
-        include                 /etc/nginx/tls.conf;
-        include                 /etc/nginx/ocsp-stapling.conf;
-        ssl_certificate         /etc/ssl/certs/example.chained.cert.pem;
-        ssl_certificate_key     /etc/ssl/private/example.key.pem;
-        ssl_trusted_certificate /etc/ssl/certs/StartCom_Class_2_Server.OCSP-chain.pem;
-
-        # Safe site defaults
-        include                 /etc/nginx/sites-defaults/sites-security.conf;
-        include                 /etc/nginx/sites-defaults/google-pagespeed.conf;
-        include                 /etc/nginx/sites-defaults/compression.conf;
-
-        # Public Documents Root
-        root                    /var/www/books.example.net/public_html/cops;
-
-        # PHP Server Configuration
-        include                 /etc/nginx/php-handler.conf;
-
-        # Use OPDS XML as as directory index
-        index feed.php;
-        
-        location = / {
-            index feed.php;
-        }
-
-        # Useful only for Kobo reader
-        location /download/ {
-          rewrite ^/download/(\d+)/(\d+)/.*\.(.*)$ /fetch.php?data=$1&db=$2&type=$3 last;
-          rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?data=$1&type=$2 last;
-          break;
-        }
-
-        location /Calibre {
-            root /var/www/owncloud/data/username/files;
-            internal;
-        }
-
-        # Temporary Debug Loggin, please remove when done
-        #include /etc/nginx/debug.conf;
-    }
 
 
 Backup Considerations

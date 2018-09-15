@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+# Connect to all our virutal servers
+#
+
+# Exit on errors
+set -e
+# Return pipe errors
+set -o pipefail
+# Error on undefined variables
+#set -u
+
+NGINX_CMD='/usr/sbin/nginx'
+OPENSSL_CMD='/opt/openssl-1.1.0e/bin/openssl'
+CURL_CMD='/usr/bin/curl'
+CONNECT_HOST='ip4.urown.net'
+
+# Fix sorting
+LC_ALL=C
+
+# Log to syslog
+log()
+{
+    logger -t ngx_connect --priority user.${1} ${2}
+    echo "${1}: ${2}"
+}
+
+# We need to be root
+if [[ ${UID} -gt 0 ]]; then
+    log 'error' "Sorry, need to be root"
+    echo "Sorry, need to be root"
+    exit 1
+fi
+
+# Get primary virtual server names from Nginx configuration
+VIRTUAL_SERVERS=$( ${NGINX_CMD} -qT | \
+                        grep --only-matching --extended-regexp \
+                            "^\s*server_name\s+((\w|-|\.)+)" | \
+                        grep --only-matching --extended-regexp \
+                            "(\w|-|\.)+$" | \
+                        grep --extended-regexp --invert-match "\.onion$" | \
+                        sort --unique
+                  )
+
+# Walk the list of virtual servers
+for SERVER_NAME in ${VIRTUAL_SERVERS}; do
+
+    #log 'info' "Connecting to ${SERVER_NAME}"
+
+    echo -en "${SERVER_NAME}\t\tECDSA Key:\t\t"
+    sleep 1
+    ${OPENSSL_CMD} s_client -connect ${CONNECT_HOST}:443 -status \
+        -servername ${SERVER_NAME} -crlf -verify 2 \
+        -cipher 'ECDHE-ECDSA-AES128-GCM-SHA256' \
+            2>&1 < /dev/null | fgrep 'OCSP Response Status'||echo -e '    Failed'
+
+    echo -en "${SERVER_NAME}\t\tRSA Key:\t\t"
+    sleep 1
+    ${OPENSSL_CMD} s_client -servername ${SERVER_NAME} -status \
+        -connect ${CONNECT_HOST}:443 -crlf -verify 2 \
+        -cipher 'ECDHE-RSA-AES128-GCM-SHA256' \
+            2>&1 < /dev/null | fgrep 'OCSP Response Status'||echo -e '    Failed'
+    echo
+done

@@ -12,7 +12,7 @@ MTA - Mail Transfer Server
 agent (MTA) that routes and delivers electronic mail on a Linux system. It is
 estimated that around 26% of public mail servers on the internet run Postfix.
 
-.. contents:: \ 
+.. contents:: \
 
 
 Install Software
@@ -28,7 +28,7 @@ The installed version is Postfix version 2.11, released on January 15, 2014.
 Main Configuration
 ---------------------
 
-Postfix uses a number of different configuration files, with the 
+Postfix uses a number of different configuration files, with the
 :file:`/etc/postfix/main.cf` being the most important.
 
 The documentation website has `a page dedicated to main.cf
@@ -108,7 +108,7 @@ possible, before they even get to our main |SMTP| server, where processing takes
 lot more time and resources, as on the screener. If done well the main |SMTP|
 server has to process only 10% of the connections.
 
-Postscreen is described in detail in a `online readme document 
+Postscreen is described in detail in a `online readme document
 <http://www.postfix.org/POSTSCREEN_README.html>`_.
 
 .. literalinclude:: config/postfix/main.cf
@@ -122,7 +122,7 @@ Virtual Domain Settings
 
 .. literalinclude:: config/postfix/main.cf
     :language: ini
-    :start-after: postscreen_bare_newline_action  
+    :start-after: postscreen_bare_newline_action
     :end-before: # Unocmment to allow catch-all addresses
 
 
@@ -150,7 +150,7 @@ It migth get complicated, the more such files are around as they use different
 formats, handling and hashing.
 
 It therefore helps to create a Makefile, so refreshing anything needs just a
-single command-line. Create the :download:`/etc/postfix/Makefile 
+single command-line. Create the :download:`/etc/postfix/Makefile
 <config/postfix/Makefile>` as follows:
 
 .. literalinclude:: config/postfix/Makefile
@@ -199,9 +199,9 @@ addresses.
 .. literalinclude:: config/postfix/sender_canonical.in
     :language: bash
 
-The contents of the file are cached in the database 
-:file:`/etc/postfix/sender-canonical.db`. Because of that the database must be 
-refreshed after each and every change made in 
+The contents of the file are cached in the database
+:file:`/etc/postfix/sender-canonical.db`. Because of that the database must be
+refreshed after each and every change made in
 :file:`/etc/postfix/sender_canonical.in`::
 
     $ cd /etc/postfix
@@ -218,7 +218,7 @@ in message headers and envelopes:
 .. literalinclude:: config/postfix/canonical.in
     :language: bash
 
-The contents of the file are cached in the database 
+The contents of the file are cached in the database
 :file:`/etc/postfix/canonical.db`.
 To update the database after changes run the following::
 
@@ -249,14 +249,12 @@ SMTP Generic Maps
 The file :file:`/etc/postfix/generic` contains a lookup table that perform
 address rewriting in the Postfix |SMTP| client, typically to transform a locally
 valid address into a globally valid address when sending mail across the
-Internet.
-
-..  code-block:: apache
+Internet::
 
     # Lookup table for address rewriting by the Postfix SMTP client
     # run "sudo postmap /etc/postfix/generic" after changing this file.
-    root@server user@example.com
-    user@server user@example.com
+    root@server user@example.net
+    user@server user@example.net
 
 
 This is needed when the local machine does not have its own Internet domain
@@ -268,9 +266,7 @@ Sender Address Verification Map
 
 The file :file:`/etc/postfix/sender_access` contains domain names which often
 are used by spammers to forge sender addresses. Postfix will use this list to
-verify all sender addresses from the domains listed.
-
-..  code-block:: apache
+verify all sender addresses from the domains listed::
 
     # Don't do this when you handle lots of email.
     aol.com     reject_unverified_sender
@@ -286,7 +282,7 @@ In the file :file:`/etc/postfix/postscreen_access.cidr` we define white- and
 blacklists for IP subnets and addresses, which allow us to skip Spambot tests by
 Postscreen and allow or deny connections right away for certain hosts.
 
-Documentation is available 
+Documentation is available
 `here <http://www.postfix.org/postconf.5.html#postscreen_access_list>`_.
 
 .. code-block:: bash
@@ -310,17 +306,17 @@ Documentation is available
     # Link-local IPv6 addresses (RFC 4862 and RFC 4291)
     fe80::/10 permit
 
-    # Global IPv6 subnet assigned to us (example.com)
+    # Global IPv6 subnet assigned to us (example.net)
     2001:db8::/64 permit
 
 
 Virtual Domain Map
 ^^^^^^^^^^^^^^^^^^
 
-We referenced this the file 
-:file:`/etc/postfix/mysql-virtual-mailbox-domains.cf` in the main configuration 
-file :file:`main.cf` above as *virtual_mailbox_domains*. It contains MySQL 
-database server connection information, so Postfix can lookup the virtual 
+We referenced this the file
+:file:`/etc/postfix/mysql-virtual-mailbox-domains.cf` in the main configuration
+file :file:`main.cf` above as *virtual_mailbox_domains*. It contains MySQL
+database server connection information, so Postfix can lookup the virtual
 domains hosted here:
 
 .. code-block:: text
@@ -329,7 +325,7 @@ domains hosted here:
     password = ********
     hosts = localhost
     dbname = mailserver
-    query = SELECT 1 FROM virtual_domains WHERE name='%s'    
+    query = SELECT 1 FROM virtual_domains WHERE name='%s'
 
 
 Use the user, password and database defined in :doc:`virtual`.
@@ -379,9 +375,9 @@ gets his guidelines on what, when and how all these programs have to be started.
 
 Where no command-line options are specified, the program uses relevant
 configuration values from the :file:`main.cf` configuration file. Alternatively
-options can be overridden by command-line parameters like :option:`-o`.
+options can be overridden by command-line parameters like `-o`.
 
-The official documentation website `provides a manual page 
+The official documentation website `provides a manual page
 <http://www.postfix.org/master.5.html>`_ online.
 
 The whole file, as presented below, is also provided for download at
@@ -389,7 +385,7 @@ The whole file, as presented below, is also provided for download at
 
 .. index::
     single: Internet Protocols; SMTP
-    
+
 
 Disable Default SMTP
 ^^^^^^^^^^^^^^^^^^^^
@@ -400,7 +396,7 @@ in front of it we comment that out:
 
 .. literalinclude:: config/postfix/master.cf
     :language: bash
-    :lines: 8-11,12
+    :lines: 8-12
 
 
 Postscreen SMTP Firewall
@@ -423,10 +419,10 @@ Postfix SMTP Daemon
 ^^^^^^^^^^^^^^^^^^^
 
 If the conneting SMTP client has passed all the checks performed by
-**postscreen**, the client IP address is temporarely whitelisted. 
+**postscreen**, the client IP address is temporarely whitelisted.
 
 If possible the TCP connection is then handed over to the SMTPD daemon
-internally (that is what the "pass" keyword means). 
+internally (that is what the "pass" keyword means).
 
 Sometimes this is not possible, depeneding on the checks. If the client had to
 start already some message delivery in order to complete a check, the connection
@@ -483,7 +479,7 @@ Amavis Daemon
 
 .. literalinclude:: config/postfix/master.cf
     :language: bash
-    :lines: 8-1,91-98
+    :lines: 8-11,91-98
 
 
 

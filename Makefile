@@ -7,7 +7,7 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
 
-PUBLISH_DEST   = "cortez.urown.net:/var/www/roll.urown.net/public_html/"
+PUBLISH_DEST   = "lapidus.urown.net:/var/www/urown.net/roll/public_html/"
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)

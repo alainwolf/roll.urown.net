@@ -18,7 +18,7 @@ A Public Key Shelf
 Keyservers play an important role in public key cryptography, as the name
 implies, the public keys need to be distributed publicly.
 
- * The recipient of a signed message needs the public key of the sender in order 
+ * The recipient of a signed message needs the public key of the sender in order
    to verify the signature of the message.
 
  * The sender of an encrypted message needs the public key of the recipient in
@@ -40,8 +40,8 @@ How Can I Trust a Keyserver?
 Since the keyserver plays such an important role we have to put a great deal of
 trust in the keyserver and its operators:
 
- * A keyserver could provide you with his own keys instead of the ones you ask 
-   for and subsequently decrypt your messages sent to them or send you signed 
+ * A keyserver could provide you with his own keys instead of the ones you ask
+   for and subsequently decrypt your messages sent to them or send you signed
    messages with fake signatures.
 
  * By asking the server for specific keys, you also disclose with whom you
@@ -57,13 +57,13 @@ But to mitigate the risk of anyone surveying or controlling this important part
 of the "Web of Trust" keyservers have been organized in `large pools of
 individual keyservers <https://sks-keyservers.net/overview-of-pools.php>`_.
 
-A pool is maintained in DNS. When a OpenPGP client needs to talk to a keyserver 
-he asks for the IP address of the host ``hkps.pool.sks-keyservers.net``. A DNS 
-lookup for this host returns many IPv4 and IPv6 addresses of which the client 
+A pool is maintained in DNS. When a OpenPGP client needs to talk to a keyserver
+he asks for the IP address of the host ``hkps.pool.sks-keyservers.net``. A DNS
+lookup for this host returns many IPv4 and IPv6 addresses of which the client
 will randomly select one to connect to.
 
 The domain *sks-keyservers.net* is `secured
-<http://dnsviz.net/d/sks-keyservers.net/dnssec/>`_ with DNSSEC and therefore can 
+<http://dnsviz.net/d/sks-keyservers.net/dnssec/>`_ with DNSSEC and therefore can
 not by spoofed easily.
 
 The keyservers in the pool are run by organizations and individuals voluntarily
@@ -93,7 +93,7 @@ Requirements
 Storage Space
 ^^^^^^^^^^^^^
 
- * **7 GB** download of a full database dump;
+ * **9 GB** download of a full database dump;
 
  * **17 GB** total after import database import;
 
@@ -105,8 +105,8 @@ Preparations
 SKS Mailing List
 ^^^^^^^^^^^^^^^^
 
-Join the `SKS mailing list <http://lists.nongnu.org/mailman/listinfo/sks-devel>`_ 
-where you can ask for peers and will get notified about software issues and 
+Join the `SKS mailing list <http://lists.nongnu.org/mailman/listinfo/sks-devel>`_
+where you can ask for peers and will get notified about software issues and
 updates of SKS.
 
 
@@ -117,23 +117,21 @@ Rather than starting with an empty database and attempting to populate it by
 syncing with other keyservers (a bad idea because it loads up your peers with
 lots of traffic and will probably fail anyway with deadlocks in the conflict
 resolution system) we'll grab a static dump from an existing SKS server.
-Currently known sources are:
+Currently
+`known sources <https://bitbucket.org/skskeyserver/sks-keyserver/wiki/KeydumpSources>`_ are:
 
- * http://keyserver.mattrude.com/dump/ - Generated daily at 5am UTC
- * ftp://ftp.prato.linux.it/pub/keyring/ - Generated every Wednesday
- * http://keyserver.borgnet.us/dump - Generated every Sunday
+ * https://keyserver.mattrude.com/dump/ generated every day at 8:00 UTC
+ * https://keys.niif.hu/keydump/ generated every Monday
+ * http://stueve.us/keydump/ generated every Saturday
 
+As of February 2018 the archive size is approximately 10G, holding around 5
+million keys in 199 files.
 
-The keydump is about **7GB** as of May 2015, so fetching it will take a long
-time.
-
-My download time was around 5 to 6 hours on a 100Mbit Internet access
-downloading from **keyserver.mattrude.com**.
-
-Thats why we start this first in `screen` session and let it run.
+The download can take several hours. Thats why we start this first in `screen`
+session and let it run.
 
 .. warning::
-    
+
     Don't download from the `current` directory on the server! If the server
     creates new dump files while you are downloading you will have to start over
     again. Use the directory with the latest date.
@@ -143,7 +141,7 @@ fetch all of them.
 
 ::
 
-    $ screen sudo -s
+    $ screen sudo -sH
     $ mkdir -p /var/lib/sks/dump
     $ cd /var/lib/sks/dump
     $ wget --continue \
@@ -154,10 +152,10 @@ fetch all of them.
            --level=1 \
            --cut-dirs=3 \
            --no-host-directories \
-           http://keyserver.mattrude.com/dump/2015-05-01/
+           https://keyserver.mattrude.com/dump/2018-02-13/
 
 
-Proceed to `import the database dump <#database-import>`_, when the download 
+Proceed to `import the database dump <#database-import>`_, when the download
 completes.
 
 
@@ -168,8 +166,8 @@ For security reasons its best to run the daemon with its own unprivileged user
 profile. Create this user on the server system with the following command::
 
     $ sudo adduser --system \
-                --home /var/lib/sks 
-                --shell /bin/bash 
+                --home /var/lib/sks
+                --shell /bin/bash
                 --group \
                 debian-sks
 
@@ -188,14 +186,14 @@ persistent across system restarts:
 
 .. code-block:: ini
 
-    # keyserver.example.com
+    # keyserver.example.net
     iface eth0 inet static
         address 192.0.2.37/24
     iface eth0 inet6 static
         address 2001:db8::37/64
 
 
-DNS Records 
+DNS Records
 ^^^^^^^^^^^
 
 ============================ ==== ================================ ======== ===
@@ -241,7 +239,7 @@ Tor Hidden Service
 
 Add a Tor Hidden Service by editing :file:`/etc/tor/torrc`::
 
-    # SKS OpenPGP Key Server Hidden Service for keyserver.example.com
+    # SKS OpenPGP Key Server Hidden Service for keyserver.example.net
     HiddenServiceDir /var/lib/tor/hidden_services/keyserver
     HiddenServicePort 80 127.0.0.37:80
     HiddenServicePort 443 127.0.0.37:443
@@ -267,24 +265,24 @@ programming language and the Berkeley database libraries.
 
 They can be installed from the Ubuntu software repository::
 
-    $ sudo apt-get install gcc ocaml libdb6.0-dev
+    $ sudo apt-get install gcc ocaml libdb-dev db-util
 
 
-SKS Source Download 
+SKS Source Download
 -------------------
 
-As of April 2015 Ubuntu 14.04 has SKS version 1.1.4 in its repository. Since the
+As of September 2016 Ubuntu 16.04 has SKS version 1.1.5 in its repository. Since the
 servers eligible for inclusion into the SKS server pool need to run version
-1.1.5 we have to install a newer version.
+1.1.6 we install a newer version.
 
-We download the source code from the `SKS project website 
+We download the source code from the `SKS project website
 <https://bitbucket.org/skskeyserver/sks-keyserver/downloads>`_.
 
 
 The source code is signed by the `SKS Keyserver Signing Key  <http://pool.sks-
 keyservers.net/pks/lookup?search=0x41259773973A612A&op=vindex>`_.  The KeyID and
-fingerprint are `published on their website 
-<https://bitbucket.org/skskeyserver/sks-keyserver/src/tip/README.md>`_, 
+fingerprint are `published on their website
+<https://bitbucket.org/skskeyserver/sks-keyserver/src/tip/README.md>`_,
 which is a secure site wit EV certification to Altassian Inc.
 
 Get that in our keyring, so we can verify downloaded source code is legit::
@@ -307,30 +305,56 @@ If everything checks out, sign the SKS key as trusted::
 
     $ gpg2 --lsign-key 0x41259773973A612A
 
+
 Now go ahead to download::
 
-    $ cd /usr/loca/source
-    $ wget https://bitbucket.org/skskeyserver/sks-keyserver/downloads/sks-1.1.5.tgz
-    $ wget https://bitbucket.org/skskeyserver/sks-keyserver/downloads/sks-1.1.5.tgz.asc
+    $ cd /usr/loca/src
+    $ wget https://bitbucket.org/skskeyserver/sks-keyserver/downloads/sks-1.1.6.tgz
+    $ wget https://bitbucket.org/skskeyserver/sks-keyserver/downloads/sks-1.1.6.tgz.asc
+
 
 Verify the downloaded file::
 
-    $ gpg2 --verify sks-1.1.5.tgz.asc
-    gpg: Signature made Mon 05 Mai 2014 21:06:51 CEST
-    gpg:                using RSA key 0x41259773973A612A
+    $ gpg2 --verify sks-1.1.6.tgz.asc
+
+
+.. code-block:: text
+
+    gpg: assuming signed data in `sks-1.1.6.tgz'
+    gpg: Signature made Sun 07 Aug 2016 04:26:45 PM CEST
+    gpg:                using RSA key 41259773973A612A
     gpg: Good signature from "SKS Keyserver Signing Key" [unknown]
     Primary key fingerprint: C90E F143 0B3A C0DF D00E  6EA5 4125 9773 973A 612A
 
 
-Elliptic Curve Crypto Support
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Configuration
+-------------
 
-If you would like to upgrade your sks install to sks 1.1.5+ with ECC support,
-you can apply the patch quick with the following command::
+::
 
-    $ curl -sL \
-        "https://bitbucket.org/skskeyserver/sks-keyserver/commits/40280f59d0f503da1326972757168aa42335573f/raw/" \
-        |patch -p1
+    $ cd /usr/local/src
+    $ tar -xzf sks-1.1.6.tgz
+    $ cd sks-1.1.6
+    $ cp Makefile.local.unused Makefile.local
+
+Edit :file:`Makefile.local` by changing the following lines as highlighted below:
+
+
+.. code-block:: Makefile
+    :linenos:
+    :emphasize-lines: 4,5
+
+    BDBLIB=-L/usr/lib
+    BDBINCLUDE=-I/usr/include
+    PREFIX=/usr/local
+    LIBDB=-ldb-5.3
+    MANDIR=/usr/local/share/man
+    export BDBLIB
+    export BDBINCLUDE
+    export PREFIX
+    export LIBDB
+    export MANDIR
+
 
 
 Build and Install
@@ -338,6 +362,7 @@ Build and Install
 
 ::
 
+   $ cd /usr/local/src/sks-1.1.6
    $ make dep
    $ make all
    $ make install
@@ -428,10 +453,10 @@ is handled by Nginx and sent to SKS as a reverse proxy back-end.
 Server
 ^^^^^^
 
-:download:`/etc/nginx/servers-available/keyserver.example.com.conf 
-<config-files/etc/nginx/servers-available/keyserver.example.com.conf>`
+:download:`/etc/nginx/servers-available/keyserver.example.net.conf
+<config-files/etc/nginx/servers-available/keyserver.example.net.conf>`
 
-.. literalinclude:: config-files/etc/nginx/servers-available/keyserver.example.com.conf
+.. literalinclude:: config-files/etc/nginx/servers-available/keyserver.example.net.conf
     :language: nginx
     :linenos:
 
@@ -439,7 +464,7 @@ Server
 SKS Web Application
 ^^^^^^^^^^^^^^^^^^^
 
-:download:`/etc/nginx/webapps/sks-keyserver.conf 
+:download:`/etc/nginx/webapps/sks-keyserver.conf
 <config-files/etc/nginx/webapps/sks-keyserver.conf>`
 
 .. literalinclude:: config-files/etc/nginx/webapps/sks-keyserver.conf
@@ -454,14 +479,14 @@ Keyservers can be accessed by normal web-browsers, apart from OpenPGP clients.
 Typically you can search for, view, download and upload keys on a rudimentary
 web-interface. They usually look like the web was invented only last week.
 
-Luckily `Matt Rude <https://github.com/mattrude>`_ has created a more modern 
-`OpenPGP Keyserver Website <https://github.com/mattrude/pgpkeyserver-lite>`_ 
+Luckily `Matt Rude <https://github.com/mattrude>`_ has created a more modern
+`OpenPGP Keyserver Website <https://github.com/mattrude/pgpkeyserver-lite>`_
 available from Github::
 
-    $ sudo mkdir -p /var/www/example.com/keyserver/public_html
-    $ cd /var/www/example.com/keyserver/public_html
+    $ sudo mkdir -p /var/www/example.net/keyserver/public_html
+    $ cd /var/www/example.net/keyserver/public_html
     $ sudo git clone https://github.com/mattrude/pgpkeyserver-lite.git
-    $ sudo chown -R www-data:www-data /var/www/example.com/keyserver/public_html
+    $ sudo chown -R www-data:www-data /var/www/example.net/keyserver/public_html
 
 
 Restart Nginx
@@ -469,7 +494,7 @@ Restart Nginx
 
 ::
 
-    $ sudo ln -s /etc/nginx/servers-available/keyserver.example.com /etc/nginx/sites-enabled/
+    $ sudo ln -s /etc/nginx/servers-available/keyserver.example.net /etc/nginx/sites-enabled/
     $ sudo service nginx restart
 
 
@@ -502,8 +527,8 @@ about or assume on what other presumably non-standard TCP port number, he could
 attempt a secure connection.
 
 The problem and and subsequent decision on how this needs to be handled are
-described in `this blog post 
-<http://securityretentive.blogspot.ch/2010/11/quick-clarification-on-hsts-http-strict.html>`_ 
+described in `this blog post
+<http://securityretentive.blogspot.ch/2010/11/quick-clarification-on-hsts-http-strict.html>`_
 by Andy Steingruebl.
 
 
@@ -531,8 +556,8 @@ package repositories::
 sslh configuration
 ^^^^^^^^^^^^^^^^^^
 
-Configuration is stored in the file 
-:download:`/etc/sslh.cfg <config-files/etc/sslh.cfg>`. The installation does not create that, but an example configuration file is provided in 
+Configuration is stored in the file
+:download:`/etc/sslh.cfg <config-files/etc/sslh.cfg>`. The installation does not create that, but an example configuration file is provided in
 :file:`/usr/share/doc/sslh/examples/example.cfg`.
 
 
@@ -551,7 +576,7 @@ Launch it by hand to see of it is working alright:
     $ sudo sslh -F /etc/sslh.cfg --verbose --foreground
 
 
-Then open https://keyserver.example.com:11371/ with your browser.
+Then open https://keyserver.example.net:11371/ with your browser.
 
 Output should look about as follows:
 
@@ -561,7 +586,7 @@ Output should look about as follows:
     ssl addr: 127.0.0.37:https. libwrap service: (null) family 2 2
     listening on:
         192.0.2.37:hkp
-        keyserver.example.com:hkp
+        keyserver.example.net:hkp
     timeout: 2
     on-timeout: http
     listening to 2 addresses
@@ -572,12 +597,12 @@ Output should look about as follows:
     probing for http
     probe http successful
     connecting to 127.0.0.37:hkp family 2 len 16
-    connection from some-client.some.net:43635 to keyserver.example.com:hkp forwarded from localhost:47333 to 127.0.0.37:hkp
+    connection from some-client.some.net:43635 to keyserver.example.net:hkp forwarded from localhost:47333 to 127.0.0.37:hkp
     flushing defered data to fd 4
     client socket closed
     connection closed down
     ...
-    connection from some-other-client.some-other.net:43730 to keyserver.example.com:hkp forwarded from localhost:38496 to 127.0.0.37:https
+    connection from some-other-client.some-other.net:43730 to keyserver.example.net:hkp forwarded from localhost:38496 to 127.0.0.37:https
     flushing defered data to fd 4
     accepted fd 5
     **** writing defered on fd -1
@@ -625,12 +650,13 @@ Start the Service
 Database Import
 ---------------
 
-Lets hope the download of the database dump we `started earlier <#database-dump>`_ 
+Lets hope the download of the database dump we `started earlier <#database-dump>`_
 has completed in the meantime.
 
 If so check that all the pieces have been downloaded correctly by comparing
 their checksums against the list published by the dump provider::
 
+    $ cd /var/lib/sks/dump
     $ md5sum -c metadata-sks-dump.txt
     sks-dump-0000.pgp: OK
     ...
@@ -679,7 +705,7 @@ Start
 
 References
 ----------
- 
+
  * `Matt Rudes Public Keyserver Guides <https://keyserver.mattrude.com/guides/>`_
- * `Ubuntu sks man page <http://manpages.ubuntu.com/manpages/utopic/en/man8/sks.8.html>`_ (Ubuntu Utopic 14.10)
+ * `Ubuntu sks man page <http://manpages.ubuntu.com/manpages/xenial/en/man8/sks.8.html>`_ (Ubuntu Utopic 16.04)
 

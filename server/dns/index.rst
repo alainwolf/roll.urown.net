@@ -3,11 +3,11 @@ Domain Name Server
 
 .. toctree::
    :maxdepth: 2
-   
+
    unbound
    powerdns
    dnssec
-   poweradmin
+   powerdns-admin
    pdns-ip-update
    sshfp
    dane

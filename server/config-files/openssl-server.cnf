@@ -8,8 +8,8 @@ RANDFILE                    = $ENV::HOME/.rnd
 oid_section                 = new_oids
 
 [ new_oids ]
-xmppAddr                    = 1.3.6.1.5.5.7.8.5
-SRVName                     = 1.3.6.1.5.5.7.8.7
+id-on-xmppAddr              = 1.3.6.1.5.5.7.8.5
+id-on-dnsSRV                = 1.3.6.1.5.5.7.8.7
 
 [ req ]
 default_bits                = 3072
@@ -21,8 +21,8 @@ prompt                      = no
 distinguished_name          = req_distinguished_name
 
 [ req_extensions ]
-keyUsage                    = digitalSignature,keyEncipherment,keyAgreement
-extendedKeyUsage            = serverAuth,clientAuth
+keyUsage                    = digitalSignature, keyEncipherment
+extendedKeyUsage            = serverAuth, clientAuth
 subjectKeyIdentifier        = hash
 subjectAltName              = @subj_alt_names
 
@@ -32,6 +32,6 @@ commonName                  = ${CN}
 [ subj_alt_names ]
 DNS.0                       = ${CN}
 DNS.1                       = *.${CN}
-otherName.0                 = xmppAddr;FORMAT:UTF8,UTF8:${CN}
-otherName.1                 = SRVName;IA5STRING:_xmpp-client.${CN}
-otherName.2                 = SRVName;IA5STRING:_xmpp-server.${CN}
+otherName.0                 = id-on-xmppAddr;FORMAT:UTF8,UTF8:${CN}
+otherName.1                 = id-on-dnsSRV;IA5STRING:_xmpp-client.${CN}
+otherName.2                 = id-on-dnsSRV;IA5STRING:_xmpp-server.${CN}

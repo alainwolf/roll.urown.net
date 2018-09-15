@@ -72,7 +72,7 @@ Check the configuration and restart the Web-Server::
 RainLoop Configuration
 ----------------------
 
-Point your webbrowser to `<http://mail.example.com/?admin>`_
+Point your webbrowser to `<http://mail.example.net/?admin>`_
 
 
 ownCloud Integration

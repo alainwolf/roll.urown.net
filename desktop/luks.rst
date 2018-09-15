@@ -5,10 +5,10 @@
 Safe Storage
 ------------
 
-`Linux Unified Key Setup <https://code.google.com/p/cryptsetup/>`_ or LUKS is a 
-disk-encryption standard.
+`Linux Unified Key Setup <https://gitlab.com/cryptsetup/cryptsetup>`_ or LUKS is
+a disk-encryption standard.
 
-See `Create and use encrypted volumes 
+See `Create and use encrypted volumes
 <https://tails.boum.org/doc/encryption_and_privacy/encrypted_volumes/index.en.html>`_
 with Tails.
 

@@ -1,0 +1,59 @@
+# MariaDB Server version 10.2.6
+
+[mysqld]
+
+#
+# Binary Log
+# https://mariadb.com/kb/en/mariadb/binary-log/
+#
+
+# The full path of the binary log file names, excluding the extension. Its value
+# is derived from the rules specified in log_bin system variable.
+# Default: as set by "log_bin"
+#log_bin_basename = /var/log/mysql/mariadb-bin
+log_bin_basename = Aiken
+
+# Whether binary logging is enabled or not. If the --log-bin option is used,
+# log_bin will be set to ON, otherwise it will be OFF. If no name option is
+# given for --log-bin, datadir/'log-basename'-bin or 'datadir'/mysql-bin will be
+# used (the latter if --log-basename is not specified). We strongly recommend
+# you use either --log-basename or specify a filename to ensure that replication
+# doesn't stop if the real hostname of the computer changes. The name option can
+# optionally include an absolute path. If no path is specified, the log will be
+# written to the data directory.
+# Default: OFF
+log_bin	= /var/lib/mysql/Aiken-bin
+
+# File that holds the names for last binlog files.
+# Default: Same name as the binary log files, with the extension .index
+#log_bin_index = /var/log/mysql/Aiken-bin.index
+
+# If the binary log exceeds this size after a write, the server rotates it by
+# closing it and opening a new binary log. Single transactions will always be
+# stored in the same binary log, so the server will wait for open transactions
+# to complete before rotating. This figure also applies to the size of relay
+# logs if max_relay_log_size is set to zero.
+# Default: 1073741824 (1GB)
+max_binlog_size = 100M
+
+# Determines whether replication is row-based, statement-based or mixed. Be
+# careful of changing the binary log format when a replication environment is
+# already running.
+# See https://mariadb.com/kb/en/binary-log-formats/
+# Default: MIXED
+#binlog-format = MIXED
+
+# Number of days after which the binary log will be automatically removed. O
+# means no automatic removal. When using replication, should always be set
+# higher than the maximum lag by any slave.
+# Default: 0
+expire_logs_days = 21
+
+# Number of events after the the binary log file is synchronized to disk. If 0
+# the operating system handles flushing the file to disk. 1 is the safest, but
+# slowest, choice, since the file is flushed after each write. If autocommit is
+# enabled, there is one write per statement, otherwise there's one write per
+# transaction. If the disk has cache backed by battery, synchronization will be
+# fast and a more conservative number can be chosen.
+# Default: 0
+#sync_binlog = 1

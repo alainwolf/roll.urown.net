@@ -5,7 +5,7 @@
 PowerDNS
 ========
 
-.. contents:: \ 
+.. contents:: \
 
 `PowerDNS <https://www.powerdns.com/>`_ is a versatile nameserver which supports
 a large number  of different backends ranging from simple zonefiles to
@@ -23,10 +23,10 @@ IP Addresses
 The server will need a dedicated private IPv4 address and global IPv6 address.
 See :doc:`/server/network`.
 
-Troughout this document we will use **192.0.2.41** as IPv4 address and 
+Troughout this document we will use **192.0.2.41** as IPv4 address and
 **2001:db8::41** as IPv6 address.
 
-Also you need to know your public IPv4 address on your gateway. In this document 
+Also you need to know your public IPv4 address on your gateway. In this document
 we will use **198.51.100.240** as an example address.
 
 
@@ -42,7 +42,7 @@ pass the firewall.
 Database
 ^^^^^^^^
 
-:doc:`/server/mariadb` must be installed and running.
+:doc:`/server/mariadb/index` must be installed and running.
 
 
 Domain Registration
@@ -65,14 +65,14 @@ messages and transfer zones from the master over IPv6.
 Software Installation
 ---------------------
 
-The PowerDNS server software is in the Ubuntu software package repository. We 
+The PowerDNS server software is in the Ubuntu software package repository. We
 install the server and the MySQL database backend.
 
 ::
 
     $ sudo apt-get install pdns-server pdns-backend-mysql
 
-You will be asked for the password of the MySQL root user, so the database can 
+You will be asked for the password of the MySQL root user, so the database can
 be created.
 
 The following happens during installation:
@@ -105,18 +105,18 @@ we need to remove the default "simple BIND backend". This is done simply by
 deleting its configuration file.
 
 ::
-    
+
     $ sudo rm /etc/powerdns/pdns.d/pdns.simplebind.conf
 
 
 Database Server
 ^^^^^^^^^^^^^^^
 
-The following setting needs to changed in 
+The following setting needs to changed in
 :download:`/etc/powerdns/pdns.d/pdns.local.gmysql.conf <config/pdns.local.gmysql.conf>`:
 
 .. literalinclude:: config/pdns.local.gmysql.conf
-    :language: apache
+    :language: ini
 
 
 Preparing the database
@@ -129,22 +129,21 @@ Create a new emtpy database called **pdns** on the MySQL server::
 
 Create a database user for PowerDNS-server to access the database::
 
-    $ mysql -u root -p mailserver
+    $ mysql -u root -p
 
 
 .. code-block:: mysql
 
-    GRANT SELECT ON pdns.* TO 'pdns'@'127.0.0.1' 
+    GRANT SELECT ON pdns.* TO 'pdns'@'127.0.0.1'
         IDENTIFIED BY '********';
-
     FLUSH PRIVILEGES;
     EXIT;
 
 
 The file :download:`powerdns.sql <config/powerdns.sql>` contains the PowerDNS
-database structure as shown in the PoweDNS documentation 
-`Chapter 4. Basic setup: configuring database connectivity 
-<http://doc.powerdns.com/html/configuring-db-connection.html>`_:
+database structure as shown in the PoweDNS documentation
+`Basic setup: configuring database connectivity
+<https://doc.powerdns.com/authoritative/guides/basic-database.html>`_:
 
 .. literalinclude:: config/powerdns.sql
     :language: mysql
@@ -157,8 +156,22 @@ To create this table structures in our new PowerDNS database::
 Configuration
 -------------
 
-The following settings need to be changed in 
+The following settings need to be changed in
 :download:`/etc/powerdns/pdns.conf <config/pdns.conf>`:
+
+REST API
+^^^^^^^^
+
+Create a random string to be used as API key to access the server by
+other apps::
+
+    $ pwgen -cns 64 1
+
+
+.. literalinclude:: config/pdns.conf
+    :language: ini
+    :lines: 50-68
+
 
 Allowed Zone Transfers
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -228,13 +241,13 @@ Import Zone-Files
 If you already have zone files, from previous DNS servers or 3rd-party
 providers, you can import them as follows::
 
-    $ zone2sql --zone=example.com.zone \
-               --zone-name=example.com \
+    $ zone2sql --zone=example.net.zone \
+               --zone-name=example.net \
                --gmysql --transactions --verbose \
-               > example.com.zone.sql
+               > example.net.zone.sql
     1 domains were fully parsed, containing 49 records
-    $ mysql -u root -p pdns < example.com.zone.sql
-    Enter password: 
+    $ mysql -u root -p pdns < example.net.zone.sql
+    Enter password:
 
 And done. Very easy.
 
@@ -304,13 +317,13 @@ Open a MySQL database server sesssion::
 
     slave$ mysql -u root -p pdns
 
- 
+
 Add the the domain along with the IP address of the master server as follows:
 
  .. code-block:: mysql
 
-    INSERT INTO `domains` (`name`, `master`, `type`) 
-        VALUES('example.com', '2001:db8::41', 'SLAVE');
+    INSERT INTO `domains` (`name`, `master`, `type`)
+        VALUES('example.net', '2001:db8::41', 'SLAVE');
 
 
 Add Slave Record on Master Server
@@ -327,23 +340,23 @@ Add a NS record and IP addresses of the new slave to the domain:
 
     INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
         VALUES(
-            (SELECT `id` FROM `domains` WHERE `name` = 'example.com'),
-            'example.com', 
-            'NS', 
-            'ns2.example.com'
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.net'),
+            'example.net',
+            'NS',
+            'ns2.example.net'
     );
     INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
         VALUES(
-            (SELECT `id` FROM `domains` WHERE `name` = 'example.com'),
-            'ns2.example.com', 
-            'A', 
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.net'),
+            'ns2.example.net',
+            'A',
             '192.0.2.42'
     );
     INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
         VALUES(
-            (SELECT `id` FROM `domains` WHERE `name` = 'example.com'),
-            'ns2.example.com', 
-            'AAAA', 
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.net'),
+            'ns2.example.net',
+            'AAAA',
             '2001:db8::42'
     );
 
@@ -363,10 +376,10 @@ Let say you want to remove the domain **example.org** completely.
     );
     DELETE FROM `comments` WHERE `domain_id` = (
         SELECT `id` FROM `domains` WHERE `name` = "example.org"
-    );    
+    );
     DELETE FROM `cryptokeys` WHERE `domain_id` = (
         SELECT `id` FROM `domains` WHERE `name` = "example.org"
-    );    
+    );
     DELETE FROM `domains` WHERE `name` = "example.org";
 
 This same procedure needs to be done on every master or slave sever.

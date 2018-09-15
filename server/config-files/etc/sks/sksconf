@@ -4,7 +4,7 @@
 # You can find more options in sks(8) manpage.
 
 # Set server hostname
-hostname: keyserver.example.com
+hostname: keyserver.example.net
 
 # Set recon binding address
 recon_address: 127.0.0.1 192.0.2.37 2001:db8::37
@@ -22,7 +22,7 @@ hkp_port: 11371
 #use_port_80:
 
 # From address used in synchronization emails used to communicate with PKS
-from_addr: "PGP Key Server Administrator <pgp-public-keys@eample.com>"
+from_addr: "PGP Key Server Administrator <pgp-public-keys@example.net>"
 
 # The PGP ID for the Server Contact
 server_contact:                 0x0123456789ABCDEF

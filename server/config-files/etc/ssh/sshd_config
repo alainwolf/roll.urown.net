@@ -1,0 +1,61 @@
+# SSH server configuration file
+# See the sshd_config(5) manpage for details
+
+# On which TCP ports we listen for SSH client connections
+Port 63508
+
+# On which interfaces and IP addresses we listen for SSH client connections
+#ListenAddress ::
+#ListenAddress 0.0.0.0
+
+# HostKeys for protocol version 2 - by order of preference
+HostKey /etc/ssh/ssh_host_ed25519_key
+HostKey /etc/ssh/ssh_host_rsa_key
+
+
+#
+# Authentication
+#
+
+# Root login is not allowed for auditing reasons.
+# Regular user logins combined with "sudo" ensures a clear audit track.
+PermitRootLogin no
+#PermitRootLogin without-password
+
+# Only public key based logins are allowed -password based logins are disabled.
+AuthenticationMethods publickey
+
+# Don't allow challenge-response passwords
+ChallengeResponseAuthentication no
+
+# Disable tunneled clear text passwords
+PasswordAuthentication no
+
+# Enable PAM authentication
+# If enabled, make sure that 'PasswordAuthentication' and
+# 'ChallengeResponseAuthentication' are both set to 'no'.
+UsePAM yes
+
+# Don't print /etc/motd when a user logs in
+PrintMotd no
+
+
+#
+# Ciphers suite selections
+#
+
+# Key Exchange
+KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+
+# Symmetric ciphers
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com
+
+# Message authentication
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+# Secure File Transfer Protocol
+Subsystem sftp /usr/lib/openssh/sftp-server

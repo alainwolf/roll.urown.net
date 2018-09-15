@@ -6,22 +6,23 @@ Tor Relay
 =========
 
 The Tor network relies on volunteers to donate bandwidth. The more people who
-run relays, the faster the Tor network will be. 
+run relays, the faster the Tor network will be.
 
 If you have at least 2 megabits per second for both upload and download, you can
 help out Tor by configuring your Tor to be a relay too.
 
 .. warning::
-    
+
     Its not advised to run a Tor **Exit Node** on Internet connections used for
     other tasks like providing mail and web services or surfing the web etc.
     This guide describes the setup of a *non-exit-Relay*.
 
 
-.. contents:: 
+.. contents::
     :depth: 1
     :local:
     :backlinks: top
+
 
 Prerequisites
 -------------
@@ -38,16 +39,16 @@ Add IPv4 and IPV6 network adresses for the Tor relay::
 Also add them to the file :file:`/etc/network/interfaces` to make them
 persistent across system restarts:
 
-.. code-block:: ini
+.. code-block:: bash
 
-    # tor-relay.example.com
+    # tor-relay.example.net
     iface eth0 inet static
         address 192.0.2.49/24
     iface eth0 inet6 static
         address 2001:db8::49/64
 
 
-DNS Records 
+DNS Records
 ^^^^^^^^^^^
 
 ================ ==== ============================================ ======== ===
@@ -86,7 +87,7 @@ Service Files
 -------------
 
 Stop any running tor services::
-    
+
     $ sudo service tor stop
 
 Create copies of the installed Tor init.d script, service defaults:
@@ -99,7 +100,7 @@ SysV Init Script
 
     $ sudo cp /etc/init.d/tor /etc/init.d/tor-relay
 
-Change the copied file 
+Change the copied file
 :download:`/etc/init.d/tor-relay <config-files/init.d/tor-relay>` as follows:
 
 .. literalinclude:: config-files/init.d/tor-relay
@@ -121,8 +122,8 @@ SysV Defaults
 AppArmor Profile
 ^^^^^^^^^^^^^^^^
 
-Change the file 
-:download:`/etc/apparmor.d/local/system_tor <config-files/apparmor.d/local/system_tor>` 
+Change the file
+:download:`/etc/apparmor.d/local/system_tor <config-files/apparmor.d/local/system_tor>`
 as follows:
 
 .. literalinclude:: config-files/apparmor.d/local/system_tor
@@ -132,7 +133,7 @@ as follows:
 Make AppArmor re-read its configuration to activate the new profile::
 
     $ sudo service apparmor recache
-    $ sudo service apparmor restart 
+    $ sudo service apparmor restart
 
 
 Data Directory
@@ -143,15 +144,15 @@ Data Directory
     $ sudo -u debain-tor mkdir /var/lib/tor-relay
 
 
-Tor Relay Configuration 
+Tor Relay Configuration
 -----------------------
 
-Configuration is stored in the file 
+Configuration is stored in the file
 :download:`/etc/tor/tor-relay <config-files/tor-relay>`.
 
-See ``man tor`` or the 
-`Tor-stable manual <https://www.torproject.org/docs/tor-manual.html.en>`_ 
-for reference of all possible configuration options. 
+See ``man tor`` or the
+`Tor-stable manual <https://www.torproject.org/docs/tor-manual.html.en>`_
+for reference of all possible configuration options.
 
 .. literalinclude:: config-files/tor-relay
     :language: bash
@@ -180,7 +181,7 @@ Bandwidth Limits
 Decide on how much bandwidth of your Internet connection you would like to
 donate to the Tor network.
 
-See the 
+See the
 `Rate Limiting FAQ entry <https://www.torproject.org/docs/faq.html.en#BandwidthShaping>`_
 on the Tor project website.
 
@@ -213,12 +214,12 @@ Start the Relay Server
     $ sudo service tor restart
 
 It can take up to an hour until your new relay is visible on the Tor network.
-Check the `Tor Atlas <https://atlas.torproject.org/>`_ or 
-`Tor Globe <https://globe.torproject.org/>`_ websites to see the current status 
+Check the `Tor Atlas <https://atlas.torproject.org/>`_ or
+`Tor Globe <https://globe.torproject.org/>`_ websites to see the current status
 of your relay.
 
-It will take several days until your new relay starts picking up traffic. 
-Read `The lifecycle of a new relay 
+It will take several days until your new relay starts picking up traffic.
+Read `The lifecycle of a new relay
 <https://blog.torproject.org/blog/lifecycle-of-a-new-relay>`_ about how and why.
 
 .. image:: relay-stats.*
@@ -229,52 +230,229 @@ Read `The lifecycle of a new relay
 Monitoring the Relay
 --------------------
 
+`Nyx <https://nyx.torproject.org/>`_ (previously known as arm) is a command-line
+monitor for Tor. With this you can get detailed real-time information about your
+relay such as bandwidth usage, connections, logs, and much more:
+
+ * Bandwidth Graph;
+ * Event Log;
+ * Connections;
+ * Configuration Editor:
+ * Torrc;
+ * Interpreter;
+ * ... and more!
+
+
 Installation
 ^^^^^^^^^^^^
 
-The `Anonymizing Relay Monitor (arm) <http://www.atagar.com/arm>`_ is a terminal
-status monitor for Tor, intended for command-line aficionados, ssh connections,
-and anyone with a TTY terminal. This works much like ``htop`` does for system
-usage, providing real time statistics for:
+Install Nyx::
 
- * Bandwidth, CPU, and memory usage;
- * Relay's current configuration;
- * Logged events;
- * Connection details:
-
-   - IP;
-   - Hostname;
-   - Fingerprint;
-   - Consensus data;
-
- * etc.
-
-Install arm::
-
-    $ sudo apt-get install tor-arm
+    $ sudo pip install nyx
 
 
 Configuration
 ^^^^^^^^^^^^^
 
-Configuration is stored in the file :file:`~/.arm/armrc` in your home directory.
-Uncompress and copy the sample configuration file::
+Like many terminal applications Nyx can be customized through a configuration
+file. By default :file:`~/.nyx/nyxrc`, though you can specify one with nyx
+"--config /path/to/nyxrc".
 
-    $ mkdir ~/.arm
+::
+
+    $ mkdir ~/.nyx
+    $ echo 'show_bits true' >> ~/.nyx/config
+    $ sudo chown -R _tor-relay ~/.nyx
+
+
+Running Nyx
+^^^^^^^^^^^
+
+Nyx needs access to the Tor socket file :file:`/run/tor-instances/relay/control`
+it is therefore best run as the Tor user::
+
+    $ sudo -u _tor-relay /usr/local/bin/nyx --socket /run/tor-instances/relay/control
+
+
+
+Web Interface for Tor Relays
+----------------------------
+
+`The Onion Box <https://github.com/ralphwetzel/theonionbox>`_ is a web based
+status monitor for Tor relays.
+
+It provides a web interface to connect to a Tor relay and monitor aspects of
+it's operation in real time.
+
+Additionally it fetches longterm statistical data, like bandwidth, consensus
+weight and probability of middle, guard, exit node probability about your node
+from `Onionoo <http://onionoo.torproject.org/>`_, the Tor network status
+protocol.
+
+The Onion Box is written in Python.
+
+
+Prerequisites
+^^^^^^^^^^^^^
+
+::
+
+    $ sudo apt install virtualenv
+
+Installation
+^^^^^^^^^^^^
+
+Download the app::
+
+    $ cd /usr/local/src/
+    $ git clone --no-checkout https://github.com/ralphwetzel/theonionbox.git
+    $ cd theonionbox
+    $ git tag
+    v3.0.1
+    v3.0.2
+    v3.0.3
+    $ git checkout v3.0.3
+
+Create a virtual environment for the Python application and activate it::
+
+    $ sudo -su theonionbox
+    $ virtualenv tobenv
+    $ source tobenv/bin/activate
+
+Setup and install::
+
+    (tobenv)$ tobenv/bin/pip install --no-cache-dir apscheduler requests PySocks six
+    (tobenv)$ tobenv/bin/python ./setup.py build
+    (tobenv)$ tobenv/bin/python ./setup.py install
+
+
+Configuration
+^^^^^^^^^^^^^
+
+Create and edit the file
+:file:`/usr/local/lib/theonionbox/theonionbox/config/theonionbox.cfg`:
 
 .. code-block:: ini
 
-    # Startup options
-    startup.interface.socket /var/run/tor-relay/control
-    startup.controlPassword ********
+    [config]
+    ## v4.0 will only support version = 2
+    protocol = 2
+
+    [TheOnionBox]
+    host = 127.0.0.49
+    port = 8080
+    message_level = DEBUG
+
+    [Tor]
+    control = socket
+    socket = /run/tor-instances/relay/control
+    ttl = -1
+    tor_preserve_ERR = yes
+    tor_preserve_WARN = yes
+    tor_preserve_NOTICE = yes
+
+    [MyRelay]
+    control = socket
+    host = tor-relay.example.net
+    socket = /run/tor-instances/relay/control
+    nick = <Nickname of you relay>
+    fp = <$Fingerprint of you relay>
 
 
-Running Arm
-^^^^^^^^^^^
+Alternatively you can copy the sample file
+:file:`theonionbox/config/theonionbox.example`.
 
-Arm needs access to the Tor configuration file :file:`/etc/tor/torrc` and the data directory :file:`/var/lib/tor` it is therefore best run as the Tor user::
 
-    $ sudo -u debian-tor arm
+Test
+^^^^
+
+::
+
+    (tobenv)$ tobenv/bin/python theonionbox/theonionbox.py
+            19:20:58.538 The Onion Box: WebInterface to monitor your Tor operations.
+            19:20:58.540 Version v4.0.0rc1 (stamp 20171102|221357)
+            19:20:58.549 Operating with configuration from 'config/theonionbox.cfg'
+            19:20:58.678 Temperature sensor information located in file system. Expect to get a chart!
+            19:20:58.678 Uptime information located. Expect to get a readout!
+            19:21:08.785 Ready to listen on http://127.0.0.49:8080/
+
+
+Use CTRL-C to terminate.
+
+
+Systemd Service
+^^^^^^^^^^^^^^^
+
+Create :file:`/etc/systemd/theonionbox.service`:
+
+.. code-block:: ini
+
+    # Run The Onion Box as background service
+    # https://github.com/ralphwetzel/theonionbox/
+
+    [Unit]
+    Description=The Onion Box
+    Documentation=https://github.com/ralphwetzel/theonionbox/wiki
+    After=network.target
+
+    [Service]
+    Type=simple
+    User=theonionbox
+    WorkingDirectory=/usr/local/lib/theonionbox/theonionbox/
+    ExecStart=/usr/local/lib/theonionbox/tobenv/bin/python /usr/local/lib/theonionbox/theonionbox/theonionbox.py --mode=service
+    Restart=on-failure
+
+    [Install]
+    WantedBy=multi-user.target
+
+
+Reload Systemd::
+
+    $ sudo systemctl --daemon-reload
+
+
+Start the service::
+
+    $ sudo systemctl start theonionbox.service
+
+
+Update
+^^^^^^
+
+Activate the virtual environment for the Python application::
+
+    $ cd /usr/local/lib/theonionbox
+    $ sudo -Hsu theonionbox
+    $ source tobenv/bin/activate
+
+Upgrade the app::
+
+    (tobenv)$ sudo git fetch --tags
+    v3.0.1
+    v3.0.2
+    v3.0.3
+    v3.1.0
+    v3.1.1
+    v4.0.0
+    (tobenv)$ git checkout v4.0.0
+
+
+Upgrade Python packages::
+
+    (tobenv)$ pip --no-cache-dir install --upgrade pscheduler requests PySocks six
+
+
+Rebuild and re-install::
+
+    (tobenv)$ tobenv/bin/python ./setup.py build
+    (tobenv)$ tobenv/bin/python ./setup.py install
+    (tobenv)$ exit
+    $ exit
+
+
+Restart::
+
+    $ sudo systemctl restart theonionbox.service
 
 
 Backup Considerations

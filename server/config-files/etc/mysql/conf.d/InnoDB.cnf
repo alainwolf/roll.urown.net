@@ -1,0 +1,151 @@
+# MariaDB Server version 10.2.6
+
+[mysqld]
+
+# InnoDB Storage Engine Configuration
+
+#
+# Debian/Ubuntu Defaults
+#
+
+# Size in bytes of each log file in the log group. Larger values mean less disk
+# I/O due to less flushing checkpoint activity, but also slower recovery from a
+# crash. The combined size can be no more than 512GB.
+# See https://www.percona.com/blog/2011/07/09/how-to-change-innodb_log_file_size-safely/
+# Default: 50331648 (48M)
+#innodb_log_file_size = 50M
+
+# Size in bytes of the buffer for writing InnoDB log files to disk. Increasing
+# this means larger transactions can run without needing to perform disk I/O
+# before committing.
+# Default: 16777216 (16MB)
+#innodb_log_buffer_size	= 8M
+
+# If set to ON, new InnoDB tables are created with data and indexes stored in
+# their own .ibd file. If set to OFF, the default, new tables are created in the
+# system tablespace. Compression is only available with per table storage. Note
+# that this value is also used when a table is re-created with an ALTER TABLE
+# which requires a table copy.
+# Default: ON
+#innodb_file_per_table = ON
+
+# Maximum .ibd files MariaDB can have open at the same time. Only applies to
+# systems with multiple InnoDB tablespaces, and is separate to the table cache
+# and open_files_limit.
+# Default: See https://mariadb.com/kb/en/mariadb/xtradbinnodb-server-system-variables/#innodb_file_per_table
+#innodb_open_files	= 400
+
+# Limit on I/O activity for InnoDB background tasks, including merging data from
+# the insert buffer and flushing pages. Should be set to around the number of
+# I/O operations per second that system can handle, based on the type of drive/s
+# being used.
+# Default: 200
+innodb_io_capacity	= 400
+
+# Adjusting this variable can give performance improvements, but behavior
+# differs widely on different filesystems, and changing from the default has
+# caused problems in some situations.
+# See https://mariadb.com/kb/en/mariadb/xtradbinnodb-server-system-variables/#innodb_flush_sync
+# Default: not set
+innodb_flush_method	= O_DIRECT
+
+#
+# InnoDB Buffer Pool
+# https://mariadb.com/kb/en/mariadb/xtradbinnodb-buffer-pool/
+#
+
+# InnoDB buffer pool size in bytes.
+# Default: 134217728 (128MB)
+innodb_buffer_pool_size	= 8G
+
+# If innodb_buffer_pool_size is set to more than 1GB,
+# innodb_buffer_pool_instances divides the InnoDB buffer pool into this many
+# instances.  Each instance should ideally be at least 1GB in size.
+# Default: 8 if innodb_buffer_pool_size is higher then 1G, else 1
+innodb_buffer_pool_instances = 8
+
+# Time in milliseconds an inserted block must stay in the old sublist after its
+# first access before it can be moved to the new sublist. '0' means "no delay".
+# Setting a non-zero value can help prevent full table scans clogging the buffer
+# pool.
+# Default: 1000ms
+#innodb_old_blocks_time = 1000
+
+# Percentage of the buffer pool to use for the old block sublist.
+# Default: 37%
+#innodb_old_blocks_pct = 37
+
+# Whether to record pages cached in the buffer pool on server shutdown, which
+# reduces the length of the warmup the next time the server starts.
+# Default: ON
+#innodb_buffer_pool_dump_at_shutdown = ON
+
+# Specifies whether the buffer pool is automatically warmed up when the server
+# starts by loading the pages held earlier.
+# Default: ON
+#innodb_buffer_pool_load_at_startup = ON
+
+# The file that holds the buffer pool list of page numbers set by
+# innodb_buffer_pool_dump_at_shutdown and innodb_buffer_pool_dump_now.
+# Default: ib_buffer_pool
+# innodb_buffer_pool_filename =	ib_buffer_pool
+
+# Dump only the hottest N% of each buffer pool.
+# Default: 25
+innodb_buffer_pool_dump_pct = 100
+
+
+#
+# InnoDB Change Buffering
+# See https://mariadb.com/kb/en/mariadb/xtradbinnodb-change-buffering/
+#
+
+# Sets how InnoDB change buffering is performed.
+# Default: all
+#innodb_change_buffering = all
+
+
+# Maximum size of the XtraDB/InnoDB Change Buffer as a percentage of the total
+# buffer pool.
+# Default: 25
+#innodb_change_buffer_max_size = 25
+
+
+#
+# Optimizations for Flash Cards (SSD)
+#
+
+# Determines whether flushing a page from the buffer pool will flush other dirty
+# pages in the same group of pages (extent). In high write environments, if
+# flushing is not aggressive enough, it can fall behind resulting in higher
+# memory usage, or if flushing is too aggressive, cause excess I/O activity. SSD
+# devices, with low seek times, would be less likely to require dirty neighbor
+# flushing to be set.
+# Default: 1
+innodb_flush_neighbors = 0
+
+# Size in bytes of the page size for all InnoDB tablespaces. The default, 16k,
+# is suitable for most uses, but a smaller page size might work more effectively
+# in a situation  with SSD storage, which usually has smaller block sizes.
+# WARNING: Can not be changed even with restart with existing DBs in place.
+# Default: 16384 (16k)
+#innodb_page_size = 8k
+
+
+#
+# UTF8 Multibyte (4 Bytes) Support
+#
+
+# (Depractated) If set to ON, tables that use dynamic and compressed row formats
+# (which require "innodb_file_format" to be "barracuda" and
+# "innodb_file_per_table" to be "true") are permitted to have index key prefixes
+# up to 3072 bytes. If not set, the limit is 767 bytes.
+# Default: ON
+#innodb_large_prefix = ON
+
+# (Depractated) File format for new InnoDB tables. Can either be Antelope, the
+# default and the original format, or Barracuda, which supports compression.
+# Note that this value is also used when a table is re-created with an ALTER
+# TABLE which requires a table copy.
+# Default: Barracuda
+#innodb_file_format = Barracuda

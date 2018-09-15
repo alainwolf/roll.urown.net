@@ -5,7 +5,7 @@ Backup
     :alt: backupninja Logo
     :align: right
 
-Backups are done using 
+Backups are done using
 `backupninja <https://labs.riseup.net/code/projects/backupninja>`_.
 
 Backupninja is wrapper for numerous different backup solutions of which we use
@@ -17,51 +17,61 @@ Duplicity is a enhanced combination of usual backup tools and tasks:
 * Differential transfers to remote storage locations like :command:`rsync`
 * File encryption with :command:`gpg`
 
+
 Installation
 ------------
+
+
+Install duplicity from Python Packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. note::
+
+    If you install a newer version then make sure to remove all previous
+    configurations, as they may lead to unpredictable results.
+
+Remove already installed packages::
+
+    $ sudo apt purge duplicity
+    $ apt-get remove python-crypto python-paramiko python-pip duplicity
+
+
+Install building requirements::
+
+    $ sudo apt-get install build-essential libssl-dev libffi-dev python-dev librsync-dev
+
+
+Install pip (python package installer)::
+
+    $ sudo -i
+    $ wget https://bootstrap.pypa.io/get-pip.py
+    $ python get-pip.py
+
+
+Install required Python packages and duplicity::
+
+    $ pip install --upgrade pycrypto cryptography paramiko duplicity
+
+
+Install Backupninja from Ubuntu Packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Backupninja is in the repository, additionally we install duplicity and a Python
 library for making SSH connections to the storage host::
 
-    $ sudo apt-get install backupninja duplicity python-paramiko python-pip
-    $ sudo pip install paramiko --upgrade
+    $ sudo apt-get install backupninja
 
 
 Configuration
 --------------
 
-The main configuration is stored in :download:`/etc/backupninja.conf  
-<config-files/etc//backupninja/backupninja.conf>`, while the different backup 
+The main configuration is stored in :download:`/etc/backupninja.conf
+<config-files/etc//backupninja/backupninja.conf>`, while the different backup
 tasks are found in the directory :file:`/etc/backup.d`.
 
 There is a helper application to aid in the configuratoion of all this::
 
     $ ninjahelper
-
-
-hwinfo Issue
-^^^^^^^^^^^^
-
-There is currently an `issue <https://labs.riseup.net/code/issues/6388>`_ with
-the system-task of backupnja. The task is using the `hwinfo
-<http://www.linuxintro.org/wiki/Hwinfo>`_ program to collect information on
-hardware and disk partitions before backup.
-
-The hwinfo package is no longer available in Ubuntu. It has been removed due to
-incompatibilities with Ubuntu's current hardware management.
-
-Disable the tasks **partitions** and **hardware** in 
-:download:`/etc/backup.d/10.sys <config-files/etc//backupninja/10.sys>`:
-
-..  code-block:: ini
-    :emphasize-lines: 2,4
-
-    packages = yes
-    partitions = no
-    dosfdisk = yes
-    hardware = no
-    luksheaders = no
-    lvm = yes
 
 
 What how and where to backup
@@ -74,12 +84,13 @@ Duplicity encrypts all backup-files before transferring to the remote storage:
 
 ..  code-block:: ini
 
-    sign = no 
+    sign = no
     password = ********
 
 .. warning::
-    Safe the password in a secure location! Without it you can't restore 
+    Safe the password in a secure location! Without it you can't restore
     anything!
+
 
 Add more directories here when needed (e.g. after new software has been
 installed):
@@ -137,20 +148,36 @@ While still working as root::
     $ ssh server@nas.lan rm /backup/BackupNinja/
     $ rm /tmp/testfile
 
+
+Testing
+-------
+
+::
+
+    $ sudo backupninja -t -n -d
+
+
 Working with Backups
 --------------------
 
 Since backups are done by BackupNinja with Duplicity, we have to use the
 duplicity commandline interface to access them. backupninja only helps with
-the backup itself, not with anything else. Reference is the `duplicity man page 
+the backup itself, not with anything else. Reference is the `duplicity man page
 <http://duplicity.nongnu.org/duplicity.1.html>`_.
 
 Since all commands need the backup storage location in duplicity URL format, we
 save that in an reusable environment variable::
 
-    $ sudo -s -H
+    $ sudo -i
     $ export BACKUP_URL=sftp://server@nas.lan/backup/Server/BackupNinja
     $ export ARCHIVE_DIR=/var/cache/backupninja/duplicity
+    $  export PASSPHRASE=********
+
+.. note::
+    Note the space in front of the :file:`export PASSPHRASE=********` command-
+    line. Command-lines which with a space in front of the, will not to be
+    stored in the command-line history.
+
 
 
 Backup Status
@@ -205,7 +232,7 @@ To restore a single file (i.e. :file:`/var/www/owncloud/cron.php`)::
 
     $ cd /
     $ duplicity --archive-dir ${ARCHIVE_DIR} \
-        --file-to-restore var/www/owncloud/cron.php 
+        --file-to-restore var/www/owncloud/cron.php
         ${BACKUP_URL} \
         var/www/owncloud/cron.php
 
@@ -213,32 +240,32 @@ To restore a single file (i.e. :file:`/var/www/owncloud/cron.php`)::
 Restore Databases
 ^^^^^^^^^^^^^^^^^
 
-Backupninja exports the server MariaDB databases to a SQL file per database  in 
-the directory :file:`/var/backups/mysql`. Thats where they are picked up by 
+Backupninja exports the server MariaDB databases to a SQL file per database  in
+the directory :file:`/var/backups/mysql`. Thats where they are picked up by
 duplicity and backed up along with other files.
 
-To restore a database to a given point in the past we nedd to use a combination 
+To restore a database to a given point in the past we nedd to use a combination
 of the commands introduced earlier to fetch the SQL dump file.
 
-In the following example scencario, the upgrade of a Wordpress-Plugin reduced 
-all our carefully carafted wordpress articles to gibberish. The upgrade happened 
+In the following example scencario, the upgrade of a Wordpress-Plugin reduced
+all our carefully carafted wordpress articles to gibberish. The upgrade happened
 on the 20th of February, but was only discovered a few days later.
 The Wordpress database is called **wp_urown_net**.
 
-1. Create a backup catalog of a point in time when the database content was 
+1. Create a backup catalog of a point in time when the database content was
 still readable::
 
     $ duplicity --archive-dir ${ARCHIVE_DIR} \
         list-current-files ${BACKUP_URL} \
         --time 02-19-2015  > ${HOME}/backup-catalog-2015-02-19.txt
 
-2. Search the created backup catalog :file:`backup-catalog-2015-02-19.txt` for 
+2. Search the created backup catalog :file:`backup-catalog-2015-02-19.txt` for
 the database dump file :file:`wp_urown_net.sql` ::
 
     $ grep "wp_urown_net.sql" ${HOME}/backup-catalog-2015-02-19.txt
     Sat Feb 19 01:00:07 2015 var/backups/mysql/sqldump/wp_urown_net.sql
 
-3. Restore the dump-file :file:`wp_urown_net.sql` to our home directory, but 
+3. Restore the dump-file :file:`wp_urown_net.sql` to our home directory, but
 save it under the new name :file:`wp_urown_net-2015-02-19.sql`::
 
     $ duplicity --archive-dir ${ARCHIVE_DIR} \
@@ -251,7 +278,7 @@ save it under the new name :file:`wp_urown_net-2015-02-19.sql`::
 
     $ less ${HOME}/wp_urown_net-2015-02-19.sql
 
-5. Restore the database from the dump-file. All tables in the database will be 
+5. Restore the database from the dump-file. All tables in the database will be
 deleted and recreated with the content of the dump-file::
 
     $ mysql -u root -p wp_urown_net < ${HOME}/wp_urown_net-2015-02-19.sql

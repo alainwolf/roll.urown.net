@@ -5,26 +5,26 @@
 BitTorrent
 ==========
 
-`Transmission <http://transmissionbt.com/>`_ takes care of downloading and 
+`Transmission <http://transmissionbt.com/>`_ takes care of downloading and
 seeding files in the BitTorrent filesharing network.
 
-Installed on a server as long.running service has substantial benefits from 
+Installed on a server as long.running service has substantial benefits from
 running it directly on a personal device.
 
  * No need to keep a system online or running until download completes.
  * Seed files forever, not only while online.
  * File transfers with residential high-speed connection, while on the road.
  * Tranasfers form multiple users don't get in the way of each other.
- * Completed downloads are available immediately to all users who have access to 
+ * Completed downloads are available immediately to all users who have access to
    the server.
  * Web-Interface for access without client software.
 
-On the client side, nothing changes. You use the same client software the same 
-way. While there is no noticable difference, behind the scenes all transfers 
+On the client side, nothing changes. You use the same client software the same
+way. While there is no noticable difference, behind the scenes all transfers
 take place on the server instead of the users desktop system.
 
-.. contents:: \ 
-  :local: 
+.. contents:: \
+  :local:
 
 
 Preparations
@@ -44,14 +44,14 @@ persistent across system restarts:
 
 .. code-block:: ini
 
-    # bt.example.com - BitTorrent Server
+    # bt.example.net - BitTorrent Server
     iface eth0 inet static
         address 192.0.2.36/24
     iface eth0 inet6 static
         address 2001:db8::36/64
 
 
-DNS Records 
+DNS Records
 ^^^^^^^^^^^
 
 ============================ ==== ================================ ======== ===
@@ -95,19 +95,19 @@ Installation
 Transmission is in the Ubuntu software repository. We install the server only.
 
 ::
-    
+
     $ sudo apt-get install transmission-daemon
 
-After the installation there is 
+After the installation there is
  * A new user and group **debian-transmission**.
  * The users home directory is :file:`/home/debian-transmission`, but it doesn't exist.
- * A directory :file:`/var/lib/transmission-daemon` for the downloads, 
+ * A directory :file:`/var/lib/transmission-daemon` for the downloads,
    state-data and configuration.
  * A configuration file :file:`/etc/transmission-daemon/settings.json`.
  * A service configuration file :file:`/etc/default/transmission-daemon`.
- * A Ubuntu Upstart service :file:`/etc/init/transmission-daemon` which will 
+ * A Ubuntu Upstart service :file:`/etc/init/transmission-daemon` which will
    already be running.
- * The daemon is listening on all interfaces on TCP port 9091 and TCP and UDP 
+ * The daemon is listening on all interfaces on TCP port 9091 and TCP and UDP
    ports 51413.
 
 
@@ -130,8 +130,8 @@ The configuration file cannot be changed while the daemon is running.
 
     $ sudo stop transmission-daemon
 
-Then open :download:`/etc/transmission-daemon/settings.json 
-<config-files/etc/transmission-daemon/settings.json>` and change the  following 
+Then open :download:`/etc/transmission-daemon/settings.json
+<config-files/etc/transmission-daemon/settings.json>` and change the  following
 lines:
 
 .. literalinclude:: config-files/etc/transmission-daemon/settings.json
@@ -189,7 +189,7 @@ its the Transmission daemon home directory: `/var/lib/transmission/daemon`::
     $ sudo mkdir -p /var/lib/transmission-daemon/flexget/
     $ touch /var/lib/transmission-daemon/flexget/config.yml
     $ sudo chown -R debian-transmission:debian-transmission \
-        /var/lib/transmission-daemon/flexget 
+        /var/lib/transmission-daemon/flexget
 
 
 .. note::
@@ -198,25 +198,25 @@ its the Transmission daemon home directory: `/var/lib/transmission/daemon`::
     just for the looks, has to be two spaces and not tabs.
 
 
-The configuration file format and options are described in the 
+The configuration file format and options are described in the
 `FlexGet Wiki <http://flexget.com/wiki/Configuration>`_
 
-:download:`/var/lib/transmission-daemon/flexget/config.yml 
+:download:`/var/lib/transmission-daemon/flexget/config.yml
 <config-files/flexget/config.yml>`:
 
 .. literalinclude:: config-files/flexget/config.yml
-    :language: yaml
+    :language: text
     :linenos:
 
 
 In the example above we let FlexGet check for new downloads every hour, using
 the schedule `plug-in <http://flexget.com/wiki/Plugins/Daemon/scheduler>`_.
 
-The task itself consists of checking the 
-`RSS release feed <https://tails.boum.org/torrents/rss/>`_ of the 
-`Tails project <https://tails.boum.org/>`_ by the 
-`RSS plugin <http://flexget.com/wiki/Plugins/rss>`_ and  submit new Torrents 
-found there to the Transmission daemon using the 
+The task itself consists of checking the
+`RSS release feed <https://tails.boum.org/torrents/rss/>`_ of the
+`Tails project <https://tails.boum.org/>`_ by the
+`RSS plugin <http://flexget.com/wiki/Plugins/rss>`_ and  submit new Torrents
+found there to the Transmission daemon using the
 `Transmission plugin <http://flexget.com/wiki/Plugins/transmission>`_.
 
 To let FlexGet check the configuration file for errors::
@@ -255,13 +255,13 @@ Web Interface
 Nginx Configuration
 ^^^^^^^^^^^^^^^^^^^
 
-:file:`/etc/nginx/sites-available/bt.example.com.conf`
+:file:`/etc/nginx/sites-available/bt.example.net.conf`
 
 .. code-block:: nginx
    :linenos:
 
     #
-    # bt.example.com BitTorrent Server
+    # bt.example.net BitTorrent Server
 
     upstream transmission {
         server 127.0.0.1:9091;
@@ -281,10 +281,10 @@ Nginx Configuration
         # IPv6 global address
         listen                  [2001:db8::15]:80;
 
-        server_name             bt.example.com;
+        server_name             bt.example.net;
 
         # Redirect to HTTPS
-        return                  301 https://bt.example.com$request_uri;
+        return                  301 https://bt.example.net$request_uri;
     }
 
     # Secured HTTPS Site
@@ -300,20 +300,20 @@ Nginx Configuration
         # IPv6 global address
         listen                  [2001:db8::15]:443 ssl spdy;
 
-        server_name bt.example.com;
+        server_name bt.example.net;
 
         # TLS - Transport Layer Security Configuration, Certificates and Keys
         include                  /etc/nginx/tls.conf;
         include                  /etc/nginx/ocsp-stapling.conf;
-        ssl_certificate_key      /etc/ssl/certs/example.com.chained.cert.pem;
-        ssl_certificate_key      /etc/ssl/private/example.com.key.pem;
+        ssl_certificate_key      /etc/ssl/certs/example.net.chained.cert.pem;
+        ssl_certificate_key      /etc/ssl/private/example.net.key.pem;
         ssl_trusted_certificate  /etc/ssl/certs/CAcert_Class_3_Root.OCSP-chain.pem;
 
          # Default common website settings
          include                 /etc/nginx/sites-defaults/*.conf;
 
         # Public Documents Root
-        root                    /var/www/bt.example.com/public_html;
+        root                    /var/www/bt.example.net/public_html;
 
         location /transmission/ {
             proxy_http_version 1.1;
@@ -346,8 +346,8 @@ Nginx Configuration
         }
 
          # Logging Configuration
-         access_log              /var/www/bt.example.com/log/access.log;
-         error_log               /var/www/bt.example.com/log/error.log;
+         access_log              /var/www/bt.example.net/log/access.log;
+         error_log               /var/www/bt.example.net/log/error.log;
 
     }
 
@@ -392,7 +392,7 @@ Solution
     $ sudo -s
     $ echo "net.core.rmem_max = 4194304" >> /etc/sysctl.d/60-transmission-daemon.conf
     $ echo "net.core.wmem_max = 1048576" >> /etc/sysctl.d/60-transmission-daemon.conf
-    $ service procps start 
+    $ service procps start
     $ exit
 
 
@@ -423,7 +423,7 @@ Get the source code::
 
     $ cd /usr/local/src
     $ git clone git://erdgeist.org/opentracker
- 
+
 Build::
 
     $ cd opentracker

@@ -1,6 +1,6 @@
 # see man 5 canonical
 # run "sudo postmap /etc/postfix/canonical" after changing this file.this file.
-root hostmaster@example.com
-postmaster postmaster@example.com
-webmaster webmaster@example.com
-www-data webmaster@example.com
+root hostmaster@example.net
+postmaster postmaster@example.net
+webmaster webmaster@example.net
+www-data webmaster@example.net

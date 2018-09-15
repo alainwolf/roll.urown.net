@@ -1,0 +1,104 @@
+#
+# OpenSSL configuration for the MariaDB/MySQL Database Clients and Servers
+# Certification Authority.
+#
+
+#
+# This definition doesn't work if HOME isn't defined.
+CA_HOME                 = .
+RANDFILE                = $ENV::CA_HOME/private/.rnd
+
+#
+# Default Certification Authority
+[ ca ]
+default_ca              = database_ca
+
+#
+# Database Certification Authority
+[ database_ca ]
+dir                     = $ENV::CA_HOME
+certs                   = $dir/certs
+serial                  = $dir/database-ca.serial
+database                = $dir/database-ca.index
+new_certs_dir           = $dir/newcerts
+certificate             = $dir/database-ca.cert.pem
+private_key             = $dir/private/database-ca.key.pem
+default_days            = 368 # Two years
+crl                     = $dir/database-ca.crl
+crl_dir                 = $dir/crl
+crlnumber               = $dir/database-ca.crlnum
+name_opt                = multiline, align
+cert_opt                = no_pubkey
+copy_extensions         = copy
+crl_extensions          = crl_ext
+default_crl_days        = 60
+default_md              = sha256
+preserve                = no
+email_in_dn             = no
+policy                  = cert_policy
+unique_subject          = yes
+
+#
+# Distinguished Name Policy for the CA
+[ ca_policy ]
+organizationName        = supplied
+commonName              = supplied
+
+#
+# Distinguished Name Policy Server and Client Certificates
+[ cert_policy ]
+commonName              = supplied
+
+#
+# CA Request Options
+[ ca_req ]
+default_bits            = 4096
+default_keyfile         = private/mariadatabase-ca.key.pem
+encrypt_key             = yes
+default_md              = sha256
+string_mask             = utf8only
+utf8                    = yes
+prompt                  = no
+req_extensions          = database_ca_req_ext
+distinguished_name      = ca_distinguished_name
+subjectAltName          = @subject_alt_name
+
+#
+# CA Request Extensions
+[ database_ca_req_ext ]
+subjectKeyIdentifier    = hash
+
+#
+# Distinguished Name (DN)
+[ ca_distinguished_name ]
+organizationName        = example.net
+commonName              = example.net Database Clients and Servers Certification Authority
+
+#
+# CA Certificate Extensions
+[ ca_ext ]
+basicConstraints        = critical, CA:true
+keyUsage                = critical, keyCertSign, cRLSign
+subjectKeyIdentifier    = hash
+subjectAltName          = @subject_alt_name
+authorityKeyIdentifier  = keyid:always
+issuerAltName           = issuer:copy
+authorityInfoAccess     = @auth_info_access
+crlDistributionPoints   = crl_dist
+
+#
+# CRL Certificate Extensions
+[ crl_ext ]
+authorityKeyIdentifier  = keyid:always
+issuerAltName           = issuer:copy
+
+#
+# Clients and Servers Certificate Extensions
+[ cert_ext ]
+basicConstraints        = CA:FALSE
+keyUsage                = critical, digitalSignature, keyEncipherment
+extendedKeyUsage        = critical, serverAuth, clientAuth
+subjectKeyIdentifier    = hash
+authorityKeyIdentifier  = keyid:always
+
+# EOF

@@ -1,0 +1,166 @@
+#!/bin/bash
+#
+# SSL Session ticket key rotation
+# for Nginx virtual servers
+#
+# To be started by cron every few hours
+#
+# For monitoring use the following command:
+#
+#   journalctl -t ngx_key_rotation -p <level> --no-tail -f
+#
+# while <level> may be any of debug, info, notice or warning
+#
+# See also:
+# https://github.com/Fleshgrinder/nginx-session-ticket-key-rotation
+#
+
+# Exit on errors
+set -e
+
+NGINX_USER='www-data'
+NGINX_GROUP='www-data'
+KEYS_DIR='/etc/nginx/tls_session_keys'
+KEY_DISCARD=24 # Time until a key will be discarded (in hours)
+KEY_EXPIRE=8 # Time until a fresh key will be created (in hours)
+KEY_SIZE=48 # 80 bytes for AES256 or 48 byte for AES128 encryption
+OPENSSL_CMD='/usr/bin/openssl'
+NGINX_CMD='/usr/sbin/nginx'
+
+# Add default site to servers list
+VIRTUAL_SERVERS="${VIRTUAL_SERVERS} default_server"
+
+# Log to syslog
+log()
+{
+    logger -t ngx_key_rotation --priority user.${1} ${2}
+}
+
+# Create new random key
+generate_key()
+{
+
+    ${OPENSSL_CMD} rand ${KEY_SIZE} > ${1}
+    chown ${NGINX_USER}:${NGINX_GROUP} ${1}
+    chmod 660 ${1}
+}
+
+# Start
+log 'notice' "Starting Nginx TLS/SSL session key rotation."
+
+# We need to be root
+if [[ ${UID} -gt 0 ]]; then
+    log 'error' "Sorry, need to be root"
+    echo "Sorry, need to be root"
+    exit 1
+fi
+
+# Fix sorting
+LC_ALL=C
+
+# Reload Nginx only on keys change
+NGINX_RELOAD=false
+
+# Get primary virtual server names from Nginx configuration
+VIRTUAL_SERVERS=$( ${NGINX_CMD} -qT | \
+                        grep --only-matching --extended-regexp \
+                            "^\s*server_name\s+((\w|-|\.)+)" | \
+                        grep --only-matching --extended-regexp \
+                            "(\w|-|\.)+$" | \
+                        sort --unique
+                  )
+
+# Create the directory for storing the keys
+mkdir -p ${KEYS_DIR}
+chown ${NGINX_USER}:${NGINX_GROUP} ${KEYS_DIR}
+chmod 770 ${KEYS_DIR}
+
+# Walk the list of virtual servers
+for SERVER_NAME in ${VIRTUAL_SERVERS}; do
+
+    log 'debug' "Checking Nginx TLS session keys for ${SERVER_NAME}"
+
+    # Walk trough keys
+    for KEY_NUM in 3 2 1 ; do
+
+        KEYFILE="${KEYS_DIR}/${SERVER_NAME}.${KEY_NUM}.key"
+
+        # Do we already have this key
+        if [[ -f ${KEYFILE} ]]; then
+
+            log 'debug' "Nginx session key ${KEY_NUM} for ${SERVER_NAME} found."
+            KEY_TIME=$( date +'%s' -r ${KEYFILE} )
+            KEY_EXPIRE_TIME=$(  date +%s --date="@$(( ${KEY_TIME} + ( ${KEY_EXPIRE}  * 60 * 60 * ${KEY_NUM} ) ))" )
+            KEY_DISCARD_TIME=$( date +%s --date="@$(( ${KEY_TIME} + ( ${KEY_DISCARD} * 60 * 60 ) ))" )
+
+            # Has it reached its end of life?
+            if [[ ${KEY_TIME} -ge $(( ${KEY_DISCARD_TIME} - 30 )) ]]; then
+                log 'info' "Nginx session key ${KEY_NUM} for ${SERVER_NAME} has reached EOL, removing..."
+                rm ${KEYFILE}
+
+            fi
+
+            # Key number lesser then 3?
+            if [[ ${KEY_NUM} -lt 3 ]]; then
+
+                # Has it reached its expiration time?
+                if [[ $( date +'%s') -ge $(( ${KEY_EXPIRE_TIME} - 30 )) ]]; then
+
+                    log 'info' "Nginx session key ${KEY_NUM} for ${SERVER_NAME} has expired, moving..."
+                    EXP_KEYFILE="${KEYS_DIR}/${SERVER_NAME}.$(( ${KEY_NUM} + 1 )).key"
+                    cp --force --preserve=mode,ownership,timestamps ${KEYFILE} ${EXP_KEYFILE}
+                    RELOAD_NGINX=true
+
+                    # Key number 1?
+                    if [[ ${KEY_NUM} -eq 1 ]]; then
+
+                        log 'info' "Generating fresh Nginx session key ${KEY_NUM} for ${SERVER_NAME} ..."
+                        generate_key ${KEYFILE}
+                        RELOAD_NGINX=true
+
+                    fi
+
+                fi
+
+            fi
+
+        else
+
+            log 'notice' "No Nginx session key ${KEY_NUM} for ${SERVER_NAME} found. Generating ..."
+            generate_key ${KEYFILE}
+            RELOAD_NGINX=true
+
+        fi
+
+    done
+
+    # Do we already have this key
+    if [[ ! -f ${KEYFILE} ]]; then
+
+        log 'warn' "No Nginx session key ${KEY_NUM} for ${SERVER_NAME} found. Generating ..."
+        generate_key ${KEYFILE}
+        RELOAD_NGINX=true
+
+    fi
+
+done
+
+# Cleanup, remove anything older then 48 hours
+#find ${KEYS_DIR} -type f -mmin +$(( ${KEY_DISCARD} * 2 * 60 ))
+
+# Do we have to reload Nginx?
+if [[ ${RELOAD_NGINX} == true ]]; then
+
+    log 'notice' "Nginx server needs to be reloaded ..."
+
+    # Test Server configuration
+    log 'info' "Checking Nginx server configuration ..."
+    ${NGINX_CMD} -tq
+
+    # Restart Nginx
+    log 'info' "Relaoding Nginx server ..."
+    ${NGINX_CMD} -s reload
+
+fi
+
+log 'notice' "Nginx TLS/SSL session key rotation complete. Have a nice day."

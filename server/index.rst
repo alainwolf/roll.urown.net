@@ -12,19 +12,27 @@ Contents:
 
 .. toctree::
    :maxdepth: 1
-   
+
    install/install
    entropy
    ssh-server
    tools
-   network
+   network_systemd
+   firewall
+   server-ups
+   wireguard
    server-backup
    server-tls
+   ciphers
+   letsencrypt
+   monkeysphere
    dns/index
-   mariadb
+   mariadb/index
+   redis
    mail/index
    nginx/index
    php-fpm
+   uwsgi
    owncloud-server
    ebooks
    prosody
@@ -34,7 +42,8 @@ Contents:
    tor/index
    bitcoin/index
    pgp-keyserver
+   fail2ban
 
 
-Recommended reading: 
+Recommended reading:
 `Ubuntu Server Guide <https://help.ubuntu.com/14.04/serverguide/index.html>`_
