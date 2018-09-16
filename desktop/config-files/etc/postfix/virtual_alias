@@ -1,0 +1,8 @@
+#
+# Postfix virtual alias map
+# Regular expression database
+#
+# Please run `sudo postmap /etc/postfix/virtual_alias` after changing this file.
+#
+/.+@.+/ john@example.net
+

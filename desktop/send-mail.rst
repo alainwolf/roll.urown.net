@@ -143,7 +143,9 @@ table with regular expression in the map file
 
 The contents of the file are cached in the database
 :file:`/etc/postfix/virtual_alias.db`. That database needs a refresh every time
-changes have been made to :file:`/etc/postfix/virtual_alias`.
+changes have been made to :file:`/etc/postfix/virtual_alias`:
+
+::
 
     $ cd /etc/postfix
     $ postmap /etc/postfix/virtual_alias
