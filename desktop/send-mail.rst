@@ -12,6 +12,55 @@ computer and fails, the system tries to notify you by mail?
 
 This works only if the system is able to send out mails.
 
+
+Null Client
+-----------
+
+We want our personal computer to send out mails on its own, but not receive any,
+or deliver mails to its local user accounts.
+
+This particular configuration is called a A **null client** and can be described
+as follows:
+
+ * It never receives any mail from the network
+ * It can only send mail out to a mail gateway/smart-host. 
+ * It does not deliver any mail locally. All mails are sent to outside mail accounts.
+
+In the following example, our personal workstation will be called **torres**. 
+We have purchased an set-up our own domain **example.net**. 
+We call our mail-server **mail.example.net**. 
+
+This mail server accepts only mails from registered mail accounts who login with
+their full mail address and password on the SMTP submission server running on
+port 587.
+
+The connection needs to be encrypted by TLS.
+
+Prerequisites
+-------------
+
+Mail-Server Account
+^^^^^^^^^^^^^^^^^^^
+
+Like your desktop mail client any other client, **torres** will need to login 
+(as "torres@example.net"), before being allowed to deliver mails on 
+**mail.example.net**.
+
+We therefore create a mail account for it on our mail server.
+
+Create a mail account password for the mail account **torres@example.net**::
+
+    $ pwgen --secure 32 1
+    ********
+
+`Create a mail account </server/mail/virtual.html#adding-a-mailbox>`_ for your
+workstation on your mail server. You can use the mail servers
+:doc:`/server/mail/vimbadmin` for that.
+
+
+Installation
+------------
+
 To install::
 
     $ sudo apt install postfix mailutils
@@ -19,68 +68,112 @@ To install::
 
 The installation process will ask you a series of questions:
 
+.. note ::
+
+    You can restart this configuration wizard again anytime later with the
+    command::
+
+        $ sudo dpkg-reconfigure postfix
+
+
+Unfortunately the "null client" configuration we need here is not in the list.
+Therefore we have to choose: "No configuration" here.
+
 
 Postfix Configuration
 ---------------------
 
-General type of mail configuration:
 
-    Select **Satellite system**
+Client Authentication
+^^^^^^^^^^^^^^^^^^^^^
 
-System mail name:
+As mentioned before, for the central mail server **mail.example.net**, our
+workstation is just another mail client, which needs to login before being
+allowed to send any mails.
 
-    Insert your favorite domain name (does not really matter for a satellite).
+This is how we tell our workstation to login on the remote server
+**mail.example.net**.
 
-SMTP relay host (blank for none):
-
-    Your regular mail servers hostname (where you have an account and are able to send out mails)::
-
-     [mail.example.net]:587
-
-
-Root and postmaster mail recipient:
-
-    Your own personal mail address.
-
-Other destinations to accept mail for (blank for none)::
-
-    $myhostname, pc, localhost.localdomain, localhost
-
-Force synchronous updates on mail queue?
-
-    **No**
-
-Local networks::
-
-    127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
-
-Mailbox size limit (bytes)::
-
-    51200000
-
-Local address extension character::
-
-    +
-
-Internet protocols to use:
-
-    **All**
-
-Since the mail server we use for sending needs authentication wee need to supply
-the login information.
-
-Create or edit the file :file:`/etc/postfix/relay_password`::
-
-    mail.example.net user@example.net:********
+We store the login password in the file :file:`/etc/postfix/smtp_password`.
 
 The format is
 
-    <mail server hostname> <mail server login user-name>:<mail server login password>
+    <SMTP server> <user-name>:<password>
 
-After that update the relevant postfix database::
+::
 
-    $ sudo postmap relay_password
-
-
+    mail.example.net torres@example.net:********
 
 
+After that update the relevant postfix database and protect it::
+
+    $ sudo postmap /etc/postfix/smtp_password
+    $ sudo chow root:root /etc/postfix/smtp_password*
+    $ sudo chmod 0600 /etc/postfix/smtp_password*
+
+
+Rerouting Local Mails
+^^^^^^^^^^^^^^^^^^^^^
+
+Notification and warning mails created by system programs (like cronjobs) are
+usually sent to local profiles like "root", "webmaster" or other local Unix user
+profiles. Since these are local profiles, their mail address is just a user id,
+there is no "@" and there is no domain part.
+
+Local mail is delivered by storing it in a mailbox the users home directory,
+where it never ever will be found or read, since these "user" accounts are not
+real human users.
+
+We want these mails to be re-routed to mailboxes owned by real humans stored on
+remote mail-servers. To yourself, the owner or the person responsible for this
+computer.
+
+To re-route all mails to one single address, we can use a 
+:term:`regular expression`. Regular expression need to be defined in a map file, 
+for Postfix to interpret it.
+
+So instead of the usual :file:`/etc/aliases` file, we create a virtual alias 
+table with regular expression in the map file 
+:download:`/etc/postfix/virtual_alias <config-files/etc/postfix/virtual_alias>`.
+
+.. literalinclude:: config-files/etc/postfix/virtual_alias
+    :language: ini
+    :linenos:
+
+
+The contents of the file are cached in the database
+:file:`/etc/postfix/virtual_alias.db`. That database needs a refresh every time
+changes have been made to :file:`/etc/postfix/virtual_alias`.
+
+    $ cd /etc/postfix
+    $ postmap /etc/postfix/virtual_alias
+
+
+Main Configuration File
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Fortunately a "null client" needs very little configuration. Just a few of lines
+in the file :download:`/etc/postfix/main.cf <config-files/etc/postfix/main.cf>` 
+are enough:
+
+.. literalinclude:: config-files/etc/postfix/main.cf
+    :language: ini
+    :linenos:
+
+
+
+
+Configuration Check
+^^^^^^^^^^^^^^^^^^^
+
+::
+
+    $ sudo postfix check
+
+
+Reload Postfix
+--------------
+
+::
+
+    sudo systemctl reload-or-restart postfix.service
