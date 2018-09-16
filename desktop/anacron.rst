@@ -78,3 +78,5 @@ This opens an editor, where the following lines need to be added at the bottom::
 	# Run anacron every hour to check for daily/monthly/weekly jobs to run
 	@hourly /usr/sbin/anacron -t /home/user/.anacron/anacrontab -S /home/user/.anacron/spool
 
+ 
+ Also replace username and home directory with your own literal values (shell variables won't work here)
