@@ -19,7 +19,7 @@ Directory Structure
 
 Create anacron directories in the users home directory::
 
-	$ mkdir -p ~/.anacron/cron.{daily,weekly,monthly} ~/.anacron/spool
+    $ mkdir -p ~/.anacron/cron.{daily,weekly,monthly} ~/.anacron/spool
 
 
 This creates the following directory structure:
@@ -38,16 +38,16 @@ Anacron reads the list of jobs from the configuration file
 
 Create and edit the file :file:`~/.anacron/anacrontab` and replace username and home directory with your own literal values (shell variables won't work here)::
 
-	# See anacron(8) and anacrontab(5) for details.
-	MAILTO=user@example.net
-	SHELL=/bin/bash
-	LOGNAME=${USER}
-	PATH=/home/user/bin:/home/user/.local/bin:/usr/local/bin:/bin:/usr/bin
+    # See anacron(8) and anacrontab(5) for details.
+    MAILTO=user@example.net
+    SHELL=/bin/bash
+    LOGNAME=${USER}
+    PATH=/home/user/bin:/home/user/.local/bin:/usr/local/bin:/bin:/usr/bin
 
-	# period  delay  job-id       command
-	1          5     daily-cron   nice run-parts --report /home/user/.anacron/cron.daily
-	7         10     weekly-cron  nice run-parts --report /home/user/.anacron/cron.weekly
-	@monthly  15     monthly-cron nice run-parts --report /home/user/.anacron/cron.monthly
+    # period  delay  job-id       command
+    1          5     daily-cron   nice run-parts --report /home/user/.anacron/cron.daily
+    7         10     weekly-cron  nice run-parts --report /home/user/.anacron/cron.weekly
+    @monthly  15     monthly-cron nice run-parts --report /home/user/.anacron/cron.monthly
 
 
 Run on Login
@@ -56,8 +56,8 @@ Run on Login
 To run anacron on every login edit the file :file:`~/.profile` and add the
 following line at the bottom::
 
-	...
-	/usr/sbin/anacron -t /home/user/.anacron/anacrontab -S /home/user/.anacron/spool
+    ...
+    /usr/sbin/anacron -t /home/user/.anacron/anacrontab -S /home/user/.anacron/spool
 
 
 Run every Hour
@@ -67,16 +67,19 @@ To make anacron check every hour, if there is anything to do, edit the users
 `crontab <http://manpages.ubuntu.com/manpages/xenial/en/man5/crontab.5.html>`_
 file as follows::
 
-	$ crontab -e
+    $ crontab -e
 
 
-This opens an editor, where the following lines need to be added at the bottom::
+This opens an editor, where the following lines need to be added at the bottom:
 
-	...
-	MAILTO=user@example.net
-	...
-	# Run anacron every hour to check for daily/monthly/weekly jobs to run
-	@hourly /usr/sbin/anacron -t /home/user/.anacron/anacrontab -S /home/user/.anacron/spool
+::
+
+    ...
+    MAILTO=user@example.net
+    ...
+    # Run anacron every hour to check for daily/monthly/weekly jobs to run
+    @hourly /usr/sbin/anacron -t /home/user/.anacron/anacrontab -S /home/user/.anacron/spool
+    #
 
  
  Also replace username and home directory with your own literal values (shell variables won't work here)
