@@ -139,44 +139,31 @@ must be installed under the wine environment.
 Python for Windows
 ^^^^^^^^^^^^^^^^^^
 
-`ActiveState Python for Windows 
-<http://www.activestate.com/activepython/downloads>`_
-
-Download the Python version 2.7.x (eg. 2.7.8.10 or newer) for Windows (x86).
-
-Once  `downloaded 
-<http://downloads.activestate.com/ActivePython/releases/2.7.8.10/ActivePython-2.7.8.10-win32-x86.msi>`_, 
-install it in our Adobe Digital Editions wine environment.
-
-.. warning:: 
-
-    Don't just duble-click the downloaded file, as this will install it in your default wine environment instead of the one used by your Adobe DRM software.
-
 Use the following command-line to install it::
     
-    cd Downloads
-    env WINEARCH=win32 WINEPREFIX="${HOME}/.local/share/wineprefixes/adobe_diged" wine start.exe ActivePython-2.7.8.10-win32-x86.msi
+    $ env WINEARCH=win32 WINEPREFIX="${HOME}/.local/share/wineprefixes/adobe_diged" winetricks python26
 
 
 Python Crypto Modules
 ^^^^^^^^^^^^^^^^^^^^^
 
-`PyCrypto 2.1 for 32bit Windows and Python 2.7 
+`PyCrypto 2.6 for 32bit Windows and Python 2.6 
 <http://www.voidspace.org.uk/python/modules.shtml#pycrypto>`_::
 
-    cd Downloads
-    env WINEARCH=win32 WINEPREFIX="${HOME}/.local/share/wineprefixes/adobe_diged" wine pycrypto-2.6.win32-py2.7.exe
+    $ cd Downloads
+    $ wget http://www.voidspace.org.uk/downloads/pycrypto26/pycrypto-2.6.win32-py2.6.exe
+    $ env WINEARCH=win32 WINEPREFIX="${HOME}/.local/share/wineprefixes/adobe_diged" wine pycrypto-2.6.win32-py2.6.exe
 
 
-DeDRM Plugin for Calibre
-^^^^^^^^^^^^^^^^^^^^^^^^
+DeDRM Plug-in for Calibre
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Go to `Apprentice Alf’s Blog <http://apprenticealf.wordpress.com/>`_ and
-download the tools archive :file:`tools_v6.0.9.zip` or newer from the link
-provided: `<http://www.datafilehost.com/d/979ff0c7>`_.
+download the tools archive :file:`DeDRM_tools_6.6.1.zip` or newer from the link
+provided: `<https://github.com/apprenticeharper/DeDRM_tools/releases>`_.
 
-Unzip the downloaded :file:`tools_v6.0.9.zip`.
+Unzip the downloaded :file:`DeDRM_tools_6.6.1.zip`.
 
-Start Calibre and install the plugin by selecting the file :file:`tools_v6.0.9/DeDRM_calibre_plugin/DeDRM_plugin.zip`.
+Start Calibre and install the plug-in by selecting the file :file:`DeDRM_tools_6.6.1/DeDRM_calibre_plugin/DeDRM_plugin.zip`.
 
 
