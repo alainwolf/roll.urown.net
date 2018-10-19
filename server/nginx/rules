@@ -71,7 +71,7 @@ config.status.nginx: config.env.nginx
 		--add-module=${SRC_DIR}/ngx_brotli \
 		--add-module=${SRC_DIR}/ngx_cache_purge-${NCP_VERSION} \
 		--with-openssl=${SRC_DIR}/openssl-${OPENSSL_VERSION} \
-		--with-openssl-opt=enable-tls1_3 \
+		--with-openssl-opt='enable-ec_nistp_64_gcc_128 enable-tls1_3' \
 		--with-cc-opt="$(CFLAGS)" --with-ld-opt="$(LDFLAGS)"
 	touch $@
 
@@ -108,7 +108,7 @@ config.status.nginx_debug: config.env.nginx_debug
 		--add-module=${SRC_DIR}/ngx_brotli \
 		--add-module=${SRC_DIR}/ngx_cache_purge-${NCP_VERSION} \
 		--with-openssl=${SRC_DIR}/openssl-${OPENSSL_VERSION} \
-		--with-openssl-opt=enable-tls1_3 \
+		--with-openssl-opt='enable-ec_nistp_64_gcc_128 enable-tls1_3' \
 		--with-cc-opt="$(CFLAGS) -Wno-missing-field-initializers" --with-ld-opt="$(LDFLAGS)" \
 		--with-debug
 	touch $@
