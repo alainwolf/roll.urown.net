@@ -81,11 +81,11 @@ Client Setup
 After SSH public keys are obtained from BorgBackup clients, they need to be
 setup using ssh forced commands to point to this clients repository as follows::
 
-	command="/usr/local/bin/borg serve --restrict-to-path /volume1/BorgBackup/client.example.net" ssh-ed25519 AAAAC3...
+	command="/usr/local/bin/borg serve --restrict-to-path /volume1/BorgBackup/" ssh-ed25519 AAAAC3...
 
 This way any client-connection authenticated with this SSH key is only allowed
 to issue the borg server command.
-:code:`/usr/local/bin/borg serve --restrict-to-path /volume1/BorgBackup/client.example.net`
+:code:`/usr/local/bin/borg serve --restrict-to-path /volume1/BorgBackup/`
 and nothing else.
 
 
