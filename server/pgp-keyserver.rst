@@ -93,9 +93,9 @@ Requirements
 Storage Space
 ^^^^^^^^^^^^^
 
- * **9 GB** download of a full database dump;
+ * **11 GB** download of a full database dump;
 
- * **17 GB** total after import database import;
+ * **23 GB** total after import database import;
 
 
 Preparations
@@ -120,12 +120,12 @@ resolution system) we'll grab a static dump from an existing SKS server.
 Currently
 `known sources <https://bitbucket.org/skskeyserver/sks-keyserver/wiki/KeydumpSources>`_ are:
 
- * https://keyserver.mattrude.com/dump/ generated every day at 8:00 UTC
+ * ftp://keyserver.mattrude.com/ generated every day at 8:00 UTC
  * https://keys.niif.hu/keydump/ generated every Monday
  * http://stueve.us/keydump/ generated every Saturday
 
-As of February 2018 the archive size is approximately 10G, holding around 5
-million keys in 199 files.
+As of November 2018 the archive size is approximately 11G, holding over 5
+million keys in 90 files.
 
 The download can take several hours. Thats why we start this first in `screen`
 session and let it run.
@@ -701,6 +701,72 @@ Start
 ::
 
     $ sudo service sks start
+
+
+Clustering
+----------
+
+If you have even more disk space available on your server, you can 
+run additional instances.
+
+Copy the database directory::
+
+    $ sudo systemctl stop sks-recon.service sks.service
+    $ sudo cp -r /var/lib/sks /var/lib/sks2
+    $ sudo systemctl start sks-recon.service sks.service
+    $ sudo cp -r /var/lib/sks2 /var/lib/sks3
+    $ sudo sudo chown -R debian-sks:debian-sks /var/lib/sks*
+
+
+It might take a few minutes to copy 23 GB of data.
+
+Copy the configuration directory::
+
+    $ sudo cp -r /etc/sks /etc/sks2
+    $ sudo cp -r /etc/sks2 /etc/sks3
+
+
+Edit the new configuration file :file:`/etc/sks2/sksconf`::
+
+    # Set server hostname
+    hostname: pgpkeys.example.net
+    nodename: sks2
+
+    # Set recon binding address
+    recon_address: 127.0.0.2 ::2
+
+    # Set recon port number
+    recon_port: 11370
+
+    # Set hkp binding address
+    hkp_address: 127.0.0.2 ::2
+
+    # Set hkp port number
+    hkp_port: 11371
+
+
+Edit the new configuration file :file:`/etc/sks3/sksconf`::
+
+    # Set server hostname
+    hostname: pgpkeys.example.net
+    nodename: sks3
+
+    # Set recon binding address
+    recon_address: 127.0.0.3 ::3
+
+    # Set recon port number
+    recon_port: 11370
+
+    # Set hkp binding address
+    hkp_address: 127.0.0.3 ::3
+
+    # Set hkp port number
+    hkp_port: 11371
+
+
+Edit the new membership file :file:`/etc/sks3/membership`::
+
+.. to be continued ..
 
 
 References
