@@ -154,7 +154,7 @@ points Borg to this clients repository.
 Setup environment variables in :file:`/etc/borg/vars.sh`::
 
 	#!/bin/bash
-	export BORG_REPO='ssh://borg-backup@nas.example.net:/volume1/BorgBackup/client.example.net'
+	export BORG_REPO='ssh://borg-backup@nas.example.net/volume1/BorgBackup/client.example.net'
 	export BORG_PASSPHRASE='********'
 	export BORG_RSH='ssh -i /etc/borg/ssh/id_ed25519 -o BatchMode=yes -o VerifyHostKeyDNS=yes'
 	export BORG_BASE_DIR="/var/lib/borg"
@@ -240,7 +240,7 @@ Borg to this clients repository.
 Setup environment variables in :file:`~/.config/borg/vars.sh`::
 
 	#!/bin/bash
-	export BORG_REPO='ssh://borg-backup@nas.example.net:/volume1/BorgBackup/${USER}'
+	export BORG_REPO='ssh://borg-backup@nas.example.net/volume1/BorgBackup/${USER}'
 	export BORG_PASSPHRASE='********'
 	export BORG_RSH='ssh -i ~/.config/borg/ssh/id_ed25519'
 	#export BORG_BASE_DIR="${HOME}"
