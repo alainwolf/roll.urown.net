@@ -6,7 +6,7 @@ BitTorrent
 ==========
 
 `Transmission <http://transmissionbt.com/>`_ takes care of downloading and
-seeding files in the BitTorrent filesharing network.
+seeding files in the BitTorrent file sharing network.
 
 Installed on a server as long.running service has substantial benefits from
 running it directly on a personal device.
@@ -14,13 +14,13 @@ running it directly on a personal device.
  * No need to keep a system online or running until download completes.
  * Seed files forever, not only while online.
  * File transfers with residential high-speed connection, while on the road.
- * Tranasfers form multiple users don't get in the way of each other.
+ * Transfers form multiple users don't get in the way of each other.
  * Completed downloads are available immediately to all users who have access to
    the server.
  * Web-Interface for access without client software.
 
 On the client side, nothing changes. You use the same client software the same
-way. While there is no noticable difference, behind the scenes all transfers
+way. While there is no noticeable difference, behind the scenes all transfers
 take place on the server instead of the users desktop system.
 
 .. contents:: \
@@ -33,7 +33,7 @@ Preparations
 IP Address
 ^^^^^^^^^^
 
-Add IPv4 and IPV6 network adresses for the keyserver::
+Add IPv4 and IPV6 network addresses for the keyserver::
 
     $ sudo ip addr add 192.0.2.36/24 dev eth0
     $ sudo ip addr add 2001:db8::36/64 dev eth0
@@ -170,7 +170,7 @@ Install the FlexGet package::
     $ sudo -H pip install --upgrade flexget
 
 
-For fetching feeds from webservers which use TLS::
+For fetching feeds from web servers which use TLS::
 
     $ sudo -H pip install requests[security]
 

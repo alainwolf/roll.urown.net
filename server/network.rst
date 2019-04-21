@@ -77,7 +77,7 @@ Add additional static IPv4 and IPv6 addresses for each service and virtual host:
     iface eth0 inet6 static
         address 2001:db8::15/64
 
-Add as many adresses as needed, as long as they are not already defined on other devices or assigned trough autoconfiguration. This gets easier if you reserve a range like **10** to **90** to this server and only assign addresses from that range.
+Add as many addresses as needed, as long as they are not already defined on other devices or assigned trough autoconfiguration. This gets easier if you reserve a range like **10** to **90** to this server and only assign addresses from that range.
 
 For easier recognition and administration the last number of any IPv4 and IPv6 address is identical (e.g. 192.0.2.\ **10** and 2001:db8::\ **10**\ ).
 
@@ -86,7 +86,7 @@ Restart the network services with::
     $ sudo service networking restart
 
 
-Usefull Commands
+Useful Commands
 ----------------
 
 
@@ -96,7 +96,7 @@ Add new IP address
 Here is how to add a new IP addresses on the fly, without restarting the service.
 
 ..  note::
-    If the newly addded address is not added in the
+    If the newly added address is not added in the
     :file:`/etc/network/interfaces` it will be lost after system reboot.
 
 Add IPv4 address::
@@ -119,7 +119,7 @@ To show all currently active IP addresses::
 Network Restart
 ^^^^^^^^^^^^^^^
 
-Altough there is a networking service, it can not be restarted. The usual command
+Although there is a networking service, it can not be restarted. The usual command
 `sudo service networking restart` fails with a message like the following::
 
     stop: Job failed while stopping

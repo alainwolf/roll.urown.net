@@ -346,7 +346,7 @@ networks trough the VPN.
 Open Up the Firewall
 ^^^^^^^^^^^^^^^^^^^^
 
-If there is a Firewall, you need to open it up for UPD connections on our
+If there is a Firewall, you need to open it up for UDP connections on our
 chosen WireGuard port. Do this on all hosts.
 
 Allow Incoming WireGuard Connections::

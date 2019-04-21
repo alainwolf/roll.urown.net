@@ -94,8 +94,8 @@ password on every system.
 
 Step 11 of 24: Home directory encryption:
 
-Don't encrypt your homw directory on the server. There will be no gain, but much
-pain. Your account on the server, will only be used for server-administratoion
+Don't encrypt your home directory on the server. There will be no gain, but much
+pain. Your account on the server, will only be used for server-administration
 and you will never store any documents or data containing personal information
 there.
 

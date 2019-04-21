@@ -56,7 +56,7 @@ Perfect Forward Secrecy
 All our encrypted communications is to be established using :term:`Perfect
 Forward Secrecy`.
 
-In todays OpenSSL the available ciphers suites who are able to provide forward
+In today's OpenSSL the available ciphers suites who are able to provide forward
 secrecy are the ones who use :term:`Diffie-Hellman key exchange`.
 
 Also we place the EC variant first, as it uses smaller keys and is faster.
@@ -252,7 +252,7 @@ AES Encryption Strength
 -----------------------
 
 As already mentioned the selected AES cipher suites use either 128-bit or
-256-bit encryption. Thats OK for most, some would even be tempted to use only
+256-bit encryption. That's OK for most, some would even be tempted to use only
 256-bit (only to discover that not even the newest Firefox browser would work
 anymore).
 
@@ -322,7 +322,7 @@ However there is still some small room for improvement. Some cipher suites in
 our selection use :term:`SHA-1` for message authentication (:term:`HMAC`).
 
 While SHA-1 is not considered broken or harmful for this specific use, its use
-is no longer recommended. However if we exclude it, we loose compatibility with
+is no longer recommended. However if we exclude it, we lose compatibility with
 a lot of client platforms and software. This would include:
 
  * Android devices less then version 4.4 (before December 2013)

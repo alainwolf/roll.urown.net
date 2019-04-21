@@ -239,7 +239,7 @@ Other Settings
 Restart SSH Server
 ^^^^^^^^^^^^^^^^^^
 
-After the new host keys and sevrer configurations are in place, restart the SSH
+After the new host keys and server configurations are in place, restart the SSH
 server::
 
     $ sudo systemctl reload ssh
@@ -349,7 +349,7 @@ for publishing in DNS::
     server.example.net. IN SSHFP 1 2 466b................................e409
 
 The first line shows the SHA-1 fingerprint and the second line the SHA-256
-fingeprint of our RSA key.
+fingerprint of our RSA key.
 
 
 If you use PowerDNS server with the  :doc:`Poweradmin web interface

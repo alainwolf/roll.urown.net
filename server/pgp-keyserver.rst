@@ -175,7 +175,7 @@ profile. Create this user on the server system with the following command::
 IP Address
 ^^^^^^^^^^
 
-Add IPv4 and IPV6 network adresses for the keyserver::
+Add IPv4 and IPV6 network addresses for the keyserver::
 
     $ sudo ip addr add 192.0.2.37/24 dev eth0
     $ sudo ip addr add 2001:db8::37/64 dev eth0

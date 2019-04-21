@@ -180,7 +180,7 @@ TBD ...
 Keys and Certificates File Permissions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Private keys must be carefully protected, thats why in most cases the private
+Private keys must be carefully protected, that's why in most cases the private
 key files are owned by the root user and have strict file permissions, to not
 allow access to anyone else. Most servers start with root privileges to open IP
 ports lower then 1024 and read their certificate and private keys. They lower
@@ -189,7 +189,7 @@ their privileges after that and run under their own dedicated user and group.
 Some servers (e.g. Prosody) have a different approach. Their user profile is
 part of the ssl-cert group. The ssl-cert group is given read access to private keys and certificate files. That way such a server never needs to be started or run with root privileges to begin with.
 
-Dehydrated does not currently allow read-acccess to the ssl-cert group.
+Dehydrated does not currently allow read-access to the ssl-cert group.
 
 ::
 
@@ -210,7 +210,7 @@ TBD ...
 Test-Run
 --------
 
-Make sure the line CA contains the LetsEnrypt staging server:
+Make sure the line CA contains the Letsencrypt staging server:
 
 
 .. code-block:: ini

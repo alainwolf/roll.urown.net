@@ -30,7 +30,7 @@ Prerequisites
 IP Address
 ^^^^^^^^^^
 
-Add IPv4 and IPV6 network adresses for the Tor relay::
+Add IPv4 and IPV6 network addresses for the Tor relay::
 
     $ sudo ip addr add 192.0.2.49/24 dev eth0
     $ sudo ip addr add 2001:db8::49/64 dev eth0
@@ -141,7 +141,7 @@ Data Directory
 
 ::
 
-    $ sudo -u debain-tor mkdir /var/lib/tor-relay
+    $ sudo -u debian-tor mkdir /var/lib/tor-relay
 
 
 Tor Relay Configuration
@@ -284,7 +284,7 @@ status monitor for Tor relays.
 It provides a web interface to connect to a Tor relay and monitor aspects of
 it's operation in real time.
 
-Additionally it fetches longterm statistical data, like bandwidth, consensus
+Additionally it fetches long term statistical data, like bandwidth, consensus
 weight and probability of middle, guard, exit node probability about your node
 from `Onionoo <http://onionoo.torproject.org/>`_, the Tor network status
 protocol.

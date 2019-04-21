@@ -2,11 +2,11 @@ PHP FastCGI
 ===========
 
 The `PHP FastCGI Process Manager <http://www.php.net/manual/en/install.fpm.php>`_
-or PHP-FPM in short is server running in the background. When a webbrowser
-requests a webpage which is made by a PHP script, the web server (Nginx in our
+or PHP-FPM in short is server running in the background. When a web browser
+requests a web page which is made by a PHP script, the web server (Nginx in our
 case) will forward the request to the PHP-FPM server who will process it.
 PHP-FPM then sends the script output back to webserver. At last the webserver
-forwards the output back to the webbrowser.
+forwards the output back to the web browser.
 
 Install PHP-FPM
 ---------------
@@ -34,7 +34,7 @@ Change the following in :file:`/etc/php/7.0/php.ini`:
 php-fpm.conf
 ^^^^^^^^^^^^
 
-The global PHP-FPM configuraton is stored in :file:`/etc/php5/fpm/php-fpm.conf`.
+The global PHP-FPM configuration is stored in :file:`/etc/php5/fpm/php-fpm.conf`.
 Nothing needs to be changed there.
 
 

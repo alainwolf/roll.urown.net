@@ -29,7 +29,7 @@ Edit the file :file:`/etc/auto.master` and add the following line:
 	/media/usb /etc/auto.usb --timeout=900 --ghost
 
 To identify the exact properties of the external hard-drive to be mounted later,
-make sure the cable is conneccted and it is powered on. The issue the following
+make sure the cable is connected and it is powered on. The issue the following
 command::
 
 	$ sudo blkid -o list -w /dev/null
@@ -92,7 +92,7 @@ Open the configuration file :file:`/etc/minidlna.conf`.
 Web Monitor
 -----------
 
-MiniDLNA provides a webpage, where the current status of it can be examined.
+MiniDLNA provides a web page, where the current status of it can be examined.
 
 Add the following block to your internal nginx server configuration:
 
@@ -109,7 +109,7 @@ Troubleshooting
 Inotify watches
 ^^^^^^^^^^^^^^^
 
-Inotify is a method how the media server gets notfied, if any changes in the
+Inotify is a method how the media server gets notified, if any changes in the
 media file directories happen. If the media collection is large, you might get
 the following error in the logs:
 
@@ -121,7 +121,7 @@ the following error in the logs:
 	Please do so manually by writing a higher value into
 	/proc/sys/fs/inotify/max_user_watches.
 
-To increase the value from 8192 to a vlue eight times as high::
+To increase the value from 8192 to a value eight times as high::
 
 	$ sudo -s 
 	$ echo 65536 > /proc/sys/fs/inotify/max_user_watches

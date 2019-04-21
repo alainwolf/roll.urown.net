@@ -72,7 +72,7 @@ We want OpenSSL to behave as follows:
    uses its own hostname or sub-domain like **mail.example.net**. A wildcard
    certificate is the easiest way to secure everything with only one certificate.
 
- * The created certificate siging requests don't include anything we don't need.
+ * The created certificate signing requests don't include anything we don't need.
    CAcert only uses the CN (common name) and if available the
    **SubjectAltNames**. All other information in the CSR is discarded.
    `StartSSL <https://www.startssl.com>`_ strips everything from the CSR
@@ -93,7 +93,7 @@ The header of the file:
     :language: ini
     :end-before: [ new_oids ]
 
-The following is to make our certficates valid for use with XMPP:
+The following is to make our certificates valid for use with XMPP:
 
 .. literalinclude:: config-files/openssl-server.cnf
     :language: ini
@@ -126,7 +126,7 @@ communications as a client or as server.
     :end-before: [ req_distinguished_name ]
 
 
-The identity information included in certificats, cut to the minimum
+The identity information included in certificates, cut to the minimum
 actually used is one line only.
 
 .. literalinclude:: config-files/openssl-server.cnf
@@ -516,7 +516,7 @@ seamlessly deliver content to clients.
 (ssl-cert-check), can extract the certificate expiration date from a live server
 or from a PEM encoded X.509 certificate file.  If :file:`ssl-cert-check` finds a
 certificate that will expire within a user defined threshold (e.g., the next
-60-days), an e-mail notification is sent to warn the adminstrator.
+60-days), an e-mail notification is sent to warn the administrator.
 
 
 Installation
@@ -555,7 +555,7 @@ Usage instructions are provided when called with the `-h` command-line parameter
       -q                : Don't print anything on the console
       -v                : Specify a specific protocol version to use (tls, ssl2, ssl3)
       -V                : Only print validation data
-      -x days           : Certificate expiration interval (eg. if cert_date < days)
+      -x days           : Certificate expiration interval (e.g. if cert_date < days)
 
 
 .. note ::

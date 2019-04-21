@@ -32,7 +32,7 @@ example.
 IP Address
 ^^^^^^^^^^
 
-Add IPv4 and IPV6 network adresses for the Tor client::
+Add IPv4 and IPV6 network addresses for the Tor client::
 
     $ sudo ip addr add 192.0.2.48/24 dev eth0
     $ sudo ip addr add 2001:db8::48/64 dev eth0
@@ -68,7 +68,7 @@ Make sure the service you want to hide is reachable on a TCP port, preferably on
 *localhost* (e.g **::1** or **127.0.0.1**).
 
 For our SSH daemon example we add the following lines to the SSH server
-configuraiton file :file:`/etc/ssh/sshd_config`:
+configuration file :file:`/etc/ssh/sshd_config`:
 
 .. code-block:: bash
 
