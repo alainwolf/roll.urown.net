@@ -5,7 +5,7 @@ Server
     :alt: Ubuntu NUC
 
 Your private server does everything the router is too small to do. Can be an old
-laptop or desktop computer, a NAS device, a RaperryPi, as long as it runs Ubuntu
+laptop or desktop computer, a NAS device, a RaspberryPi, as long as it runs Ubuntu
 Server.
 
 Contents:

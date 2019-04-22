@@ -39,7 +39,7 @@ Desktop Software
 ----------------
 
 Install the following software from the Ubuntu software repository on your
-Ubuntu desktop computer, to prepare the CynogenMod installation to your device.
+Ubuntu desktop computer, to prepare the CyanogenMod installation to your device.
 
  * `Heimdall Flash <apt://heimdall-flash-frontend>`_ to transfer and install
    :term:`firmware` images (flash) to the Android device.
@@ -90,7 +90,7 @@ choose items to be installed or updated:
 	    :alt: Android SDK Manager
 
 
- 1. Deselect all except the **Android SDK Plattform-tools**.
+ 1. Deselect all except the **Android SDK Platform-tools**.
 
  2. Click on the **Install 1 package...** button.
 
@@ -120,7 +120,7 @@ therefore installed in a separate small partition beneath the Android system.
 Like the CyanogenMod firmware you need the recovery image tailored to your device.
 
 The following example is for Samsung Galaxy S4 LTE international (jfltexx) and
-CynogenMod 12.1 (Android 5.1)::
+CyanogenMod 12.1 (Android 5.1)::
 
 	$ cd ~/Downloads
 	$ mkdir -p Android/jfltexx/CM/12.1
@@ -132,10 +132,10 @@ CynogenMod 12.1 (Android 5.1)::
 Firmware Image
 ^^^^^^^^^^^^^^
 
-The CynogenMod firmware image must have been built to match your device exactly.
+The CyanogenMod firmware image must have been built to match your device exactly.
 
 The following example is for Samsung Galaxy S4 LTE international (jfltexx) and
-CynogenMod 12.1 (Android 5.1)::
+CyanogenMod 12.1 (Android 5.1)::
 
 	$ cd ~/Downloads/Android/jfltexx/CM/12.1
 	$ wget https://download.cyanogenmod.org/get/jfltexx-snapshot.zip
@@ -157,7 +157,7 @@ store.
 So if you still need Google apps and services, you need to download the package
 relevant to the Android version installed.
 
-The following example is for CynogenMod 12.1 (Android 5.1)::
+The following example is for CyanogenMod 12.1 (Android 5.1)::
 
 	$ cd ~/Downloads/Android/jfltexx/CM/12.1
 	$ wget https://github.com/opengapps/arm/releases/download/20151225/open_gapps-arm-5.1-nano-20151225.zip
@@ -203,7 +203,7 @@ Install Firmware
  2. Press and hold the **Volume Up** + **Home** + **Power** buttons
     simultaneously until the display turns on.
 
- The CyanoGen recovery menu will be displayed. You can navigate by touch or the
+ The CyanogenMod recovery menu will be displayed. You can navigate by touch or the
  volume up and down buttons.
 
 3. Select **Apply update**

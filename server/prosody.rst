@@ -1,4 +1,4 @@
-Instant Messageing
+Instant Messaging
 ==================
 
 .. image:: prosody-logo.*
@@ -6,13 +6,13 @@ Instant Messageing
     :align: right
 
 `Prosody IM <https://prosody.im>`_ is a lightweight and relatively easy to use
-XMPP instant messageing server.
+XMPP instant messaging server.
 
 .. contents::
     :local:
 
 
-Topologoy
+Topology
 ---------
 
 XMPP server domain: example.net
@@ -327,7 +327,7 @@ Ubuntu 14.04 'Trusty Thar' has currently
 `0.9.1 <https://prosody.im/doc/release/0.9.1>`_ in its package repository.
 
 The latest version as of May 2014 is
-`0.9.4 <https://prosody.im/doc/release/0.9.4>`_. Notable `immprovements for
+`0.9.4 <https://prosody.im/doc/release/0.9.4>`_. Notable `improvements for
 security and encryption <http://blog.prosody.im/prosody-0-9-2-released/>`_
 where introduced in version `0.9.2 <https://prosody.im/doc/release/0.9.2>`_.
 
@@ -396,7 +396,7 @@ Now we can install the LuaExpat package using Luarocks::
 LuaBitop
 ^^^^^^^^
 
-Another Lua library we install separetly is the Lua bitop fast bit manipulation
+Another Lua library we install separately is the Lua bitop fast bit manipulation
 library. It will be needed by the community-module `http_upload` added later,
 therefore the prosody package installation does not know we need it, and won't
 install it automatically::
@@ -531,14 +531,14 @@ our selected :ref:`cipher-suite`:
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
     :language: lua
     :start-after: Include "/usr/local/lib/prosody/xmpp-onion-map/onions-map.lua"
-    :end-before: -- TLS Client Encrpytion
+    :end-before: -- TLS Client Encryption
 
 
 Force clients to use TLS encrypted connections:
 
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
     :language: lua
-    :start-after: -- TLS Client Encrpytion
+    :start-after: -- TLS Client Encryption
     :end-before: -- Force certificate authentication for server-to-server
 
 
@@ -589,7 +589,7 @@ Prosody Onions-Map
 **mod_onions** is a Prosody Plugin to interconnect XMPP servers trough Tor by
 mapping tor hidden service addresses to XMPP server names.
 
-The map file is `maintened on GitHub <https://modules.prosody.im/mod_onions.html>`_
+The map file is `maintained on GitHub <https://modules.prosody.im/mod_onions.html>`_
 
 To install the map file::
 
@@ -685,7 +685,7 @@ On-Line Test
 At the `IM Observatory <https://xmpp.net/>`_ website users and server
 administrators can inspect the security of their XMPP servers.
 
-The poeple behind the Android XMPP client 
+The people behind the Android XMPP client 
 `conversations <https://conversations.im>`_ set up the 
 `XMPP Compliance Tester <https://compliance.conversations.im/>`_ 
 website.

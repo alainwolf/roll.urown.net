@@ -77,7 +77,7 @@ strongly recommended to run this in a screen session::
     $ sudo -u bitcoin \
         bitcoind -conf=/etc/bitcoin/bitcoin.conf \
                  -datadir=/var/lib/bitcoind \
-                 -daemon -server -disbalewallet \
+                 -daemon -server -disablewallet \
                  –reindex
 
 

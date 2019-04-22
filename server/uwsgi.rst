@@ -73,7 +73,7 @@ After installation completes, there will be ...
     * :file:`/etc/init.d/uwsgi-emperor`
     * :file:`/etc/default/uwsgi` and
     * :file:`/etc/default/uwsgi-emperor`
- * logorotate scripts
+ * logrotate scripts
 	* :file:`/etc/logrotate.d/uwsgi`
 	* :file:`/etc/logrotate.d/uwsgi-emperor`
  * Defaults and samples in :file:`/usr/share/uwsgi/`
@@ -125,7 +125,7 @@ Place the following lines outside of any virtual server configuration:
 	}
 
 
-This is the general idea, it may vary accroding to instructions of the app.
+This is the general idea, it may vary according to instructions of the app.
 
 
 References

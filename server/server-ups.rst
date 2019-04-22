@@ -119,9 +119,9 @@ Here is what happens step-by-step in case of main power loss:
 
         #. UPS waits for the "Shutdown Delay" time to pass. This is to give all system enough time to properly shut down.
 
-        #. UPS device cuts power on all outlets. 
+        #. UPS device cuts power on all outlets.
 
-    #. All connected systems loose power.
+    #. All connected systems lose power.
 
 #. Main power supply has been restored:
 
@@ -146,7 +146,7 @@ Configuration
 -------------
 
 
-nut.conf 
+nut.conf
 ^^^^^^^^
 
 This file tells the installed Network UPS Tools in which mode it should run.
@@ -276,7 +276,7 @@ manpage for more possible options.
 Securing Configuration Files
 ----------------------------
 
-Secure the configuration files, to protect the various access crontrols and
+Secure the configuration files, to protect the various access controls and
 credentials.
 
 ::

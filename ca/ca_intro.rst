@@ -1,4 +1,4 @@
-Public vs. Private CA 
+Public vs. Private CA
 =====================
 
 When to use Public CAs?
@@ -80,7 +80,7 @@ CAs private key is only used once to sign the intermediate CAs certificate and
 then stored away in its safe place.
 
 After that, certificates for persons and devices can be signed by the
-intermediate CA with its own private key. 
+intermediate CA with its own private key.
 
 In case the intermediates private key gets stolen or lost or otherwise
 compromised, you can just discard it and create a new intermediate CA, without
@@ -130,7 +130,7 @@ and stored safely. Save it on a encrypted USB Storage key or Smartcard and store
 that USB key in a safe location. Depending on your safety requirements, a bank-
 safe or other trusted third-party is recommended. In the best of all cases, you
 won't need to access the root key again for the next five years. Access to this
-key is only needed if you loose control over the intermediate signing key or if
+key is only needed if you lose control over the intermediate signing key or if
 you need to make substantial changes to your Certificate Authority.
 
 

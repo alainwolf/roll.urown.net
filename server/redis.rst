@@ -303,7 +303,7 @@ Make a copy of the pre-installed service file :file:`/lib/systemd/system/redis-s
 .. note::
 
     On some systems I discovered an additional service file 
-    :file:`/etc/systemd/system/redis.service`. Please remove it, if thats the case.
+    :file:`/etc/systemd/system/redis.service`. Please remove it, if that's the case.
 
 
 Edit the file :file:`/etc/systemd/system/redis-server.service`, as follows:

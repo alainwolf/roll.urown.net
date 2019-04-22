@@ -13,7 +13,7 @@ mydomain = example.net
 # What domain name do I append to local sender addresses on outbound mail?
 myorigin = $mydomain
 
-# Do I have to append a dot and my domain-name (.$mydomain) to adresses?
+# Do I have to append a dot and my domain-name (.$mydomain) to addresses?
 append_dot_mydomain = no
 
 # What characters in a recipient address separate a users from extensions?

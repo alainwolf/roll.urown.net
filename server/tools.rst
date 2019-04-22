@@ -124,7 +124,7 @@ the email address and other options::
 Users and Groups
 ----------------
 
-Webservers run as the user **www-data**, with the security benefit, that they
+Web servers run as the user **www-data**, with the security benefit, that they
 can't access anything in the system, unless the user or group **www-data** has
 been specifically given access-rights. The downside is, server operators can't
 see whats going on in the :file:`/var/www` directory or publish anything.

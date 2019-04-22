@@ -22,7 +22,7 @@ providers, web-hosters, phone and mobile companies.
 Why
 ---
 
-You never loose control over your data and everything is encrypted ...
+You never lose control over your data and everything is encrypted ...
  * when stored on any device
  * when transferred over a network
 

@@ -174,7 +174,7 @@ address is identical (e.g. 192.0.2.\ **10** and 2001:db8::\ **10**\ ).
     [Network]
     ...
 
-    ; Port-forwarded HTTP/HTTS connections from firewall/router
+    ; Port-forwarded HTTP/HTTPS connections from firewall/router
     Address=192.0.2.10/24
     Address=2001:db8::10/64
 
@@ -200,7 +200,7 @@ address is identical (e.g. 192.0.2.\ **10** and 2001:db8::\ **10**\ ).
 Legacy Network Leftovers
 ------------------------
 
-It is recommneded to alter the traditional Ubuntu configuration
+It is recommended to alter the traditional Ubuntu configuration
 :file:`/etc/network/interfaces` to the bare minimum, to not interfere with
 systemd-networkd service::
 
@@ -223,7 +223,7 @@ Restart the network services with::
 
 
 
-Usefull Commands
+Useful Commands
 ----------------
 
 
@@ -262,7 +262,7 @@ Restart the network services with::
 
     $ systemctl restart systemd-networkd
 
-Altough there is a networking service, it can not be restarted. The usual
+Although there is a networking service, it can not be restarted. The usual
 command `sudo service networking restart` fails with a message like the
 following::
 

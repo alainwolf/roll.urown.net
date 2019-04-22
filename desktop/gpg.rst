@@ -289,7 +289,7 @@ Usage manual::
 Backup Your Keys!
 -----------------
 
-Backup is very important. If you loose your private key or the passhprase for
+Backup is very important. If you lose your private key or the passhprase for
 it, everything encrypted will not be recoverable.
 
 Backups of your private keys and key-rings should be stored on a encrypted USB

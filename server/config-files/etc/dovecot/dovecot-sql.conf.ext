@@ -98,7 +98,7 @@ default_pass_scheme = SHA512-CRYPT
 # 
 # Note that these can be used only as input to SQL query. If the query outputs
 # any of these substitutions, they're not touched. Otherwise it would be
-# difficult to have eg. usernames containing '%' characters.
+# difficult to have e.g. usernames containing '%' characters.
 #
 # Example:
 #   password_query = SELECT userid AS user, pw AS password \
