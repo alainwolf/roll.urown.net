@@ -8,9 +8,9 @@ Creating the Root CA
 Directories and Files
 ---------------------
 
-The certificate authority uses a specific directory structure to safe keys,
-signed certificates, singing requests and revocation lists. The directory
-structure is defind within the OpenSSL configuration file.
+The certificate authority uses a specific directory structure to save keys,
+signed certificates, signing requests and revocation lists. The directory
+structure is defined within the OpenSSL configuration file.
 
 ::
 
