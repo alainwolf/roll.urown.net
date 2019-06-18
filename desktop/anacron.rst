@@ -82,4 +82,5 @@ This opens an editor, where the following lines need to be added at the bottom:
     #
 
  
- Also replace username and home directory with your own literal values (shell variables won't work here)
+Also replace username and home directory with your own literal values (shell
+variables won't work here)

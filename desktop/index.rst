@@ -20,18 +20,24 @@ Contents:
    borg-backup
    monkeysphere
    firefox
+   thunderbird
    tails
    luks
    xca
    wine
-   owncloud-client
+   nextcloud-client
+   signal-desktop
+   gajim
    im
-   transmission
+   transmission-remote
    calibre
    acrobat
+   electrum
    media
    3rd-party-repos
+   toolbox/index
+
 
 
 Recommended reading:
-`Ubuntu Desktop Guide <https://help.ubuntu.com/14.04/ubuntu-help/index.html>`_
+`Ubuntu Desktop Guide <https://help.ubuntu.com/18.04/ubuntu-help/index.html>`_

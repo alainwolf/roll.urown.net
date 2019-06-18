@@ -101,9 +101,9 @@ Installation
 
 Add the PPA, update and install::
 
-	$ sudo add-apt-repository ppa:costamagnagianfranco/borgbackup
-	$ sudo apt update
-	$ sudo apt install borgbackup
+    $ sudo add-apt-repository ppa:costamagnagianfranco/borgbackup
+    $ sudo apt update
+    $ sudo apt install borgbackup
 
 
 System Configuration Backup
@@ -126,24 +126,24 @@ Configuration
 
 Add configuration and keys directory::
 
-	$ sudo mkdir -p /etc/borg/{keys,ssh}
+    $ sudo mkdir -p /etc/borg/{keys,ssh}
 
 
 Add cache and security directories::
 
-	$ sudo mkdir -p /var/lib/borg/{cache,security}
+    $ sudo mkdir -p /var/lib/borg/{cache,security}
 
 
 Create SSH private and public key::
 
-	$ sudo ssh-keygen -t ed25519 -C "BorgBackup@$(hostname)" -f /etc/borg/ssh/id_ed25519
-	$ sudo chmod 0600 /etc/borg/ssh/id_ed25519
-	$ sudo cat /etc/borg/ssh/id_ed25519.pub
+    $ sudo ssh-keygen -t ed25519 -C "BorgBackup@$(hostname)" -f /etc/borg/ssh/id_ed25519
+    $ sudo chmod 0600 /etc/borg/ssh/id_ed25519
+    $ sudo cat /etc/borg/ssh/id_ed25519.pub
 
 
 Install the public key on the backup server::
 
-	$ sudo ssh-copy-id -i /etc/borg/ssh/id_ed25519.pub borg-backup@nas.example.net
+    $ sudo ssh-copy-id -i /etc/borg/ssh/id_ed25519.pub borg-backup@nas.example.net
 
 
 The backup server needs then to
@@ -151,23 +151,20 @@ The backup server needs then to
 with this specific Borg client by defining a ssh forced command, that
 points Borg to this clients repository.
 
-Setup environment variables in :file:`/etc/borg/vars.sh`::
+Setup environment variables in :file:`/etc/borg/vars.sh`:
 
-	#!/bin/bash
-	export BORG_REPO='ssh://borg-backup@nas.example.net/volume1/BorgBackup/client.example.net'
-	export BORG_PASSPHRASE='********'
-	export BORG_RSH='ssh -i /etc/borg/ssh/id_ed25519 -o BatchMode=yes -o VerifyHostKeyDNS=yes'
-	export BORG_BASE_DIR="/var/lib/borg"
-	export BORG_CONFIG_DIR="/etc/borg"
-	export BORG_CACHE_DIR="/var/lib/borg/cache"
-	export BORG_SECURITY_DIR="/var/lib/borg/security"
-	export BORG_KEYS_DIR="/etc/borg/keys"
-	export BORG_KEY_FILE="/etc/borg/keys/client.example.net.key"
+.. literalinclude:: config-files/etc/borg/vars.sh
 
 
 Change permissions (as it contains the repository password)::
 
-	$ sudo chmod 0700 /etc/borg/vars.sh
+    $ sudo chmod 0700 /etc/borg/vars.sh
+
+
+Create a list of directories to exclude from backups and save them in the file
+:file:`/etc/borg/exclude`:
+
+.. literalinclude:: config-files/etc/borg/exclude
 
 
 Initialization
@@ -175,9 +172,9 @@ Initialization
 
 Before a backup can be made a repository has to be initialized::
 
-	$ sudo -i
-	$ source /etc/borg/vars.sh
-	$ borg init --encryption=keyfile-blake2
+    $ sudo -i
+    $ source /etc/borg/vars.sh
+    $ borg init --encryption=keyfile-blake2
 
 
 After the initialization a key file is found at
@@ -190,7 +187,18 @@ The System Backup Script
 
 Let's create a script to be run every day:
 
-.. literalinclude:: config-files/etc/cron.daily/borg-sys-backup
+.. literalinclude:: config-files/etc/borg/borg-sys-backup
+
+
+.. note::
+
+    You can remove the ":file:`--verbose`" switch after some time. You then will
+    only get a mail message, when something unexpected was happening.
+
+
+Make it executable for root only::
+
+    $ sudo chmod 0764 /etc/borg/borg-sys-backup
 
 
 System Backup Schedule
@@ -202,34 +210,39 @@ system backups are scheduled to run by **anacron** instead of the usual **cron**
 Anacron will run the backup job once a day, whenever the computer is turned on
 and not running on battery.
 
-Save this in :file:`/etc/cron.daily/borg-sys-backup` and make it executable::
+Link this this to :file:`/etc/borg/borg-sys-backup`::
 
-	$ chmod 0700 /etc/cron.daily/borg-sys-backup
+    $ sudo ln -s /etc/borg/borg-sys-backup /etc/cron.daily/borg-sys-backup
+
 
 
 User Data Backup
 ----------------
 
+
+Configuration
+^^^^^^^^^^^^^
+
 Add configuration and keys directory::
 
-	$ mkdir -p ~/.config/borg/{keys,ssh,security}
-	$ chmod -R 0700 ~/.config/borg
+    $ mkdir -p ~/.config/borg/{keys,ssh,security}
+    $ chmod -R 0700 ~/.config/borg
 
 
 Add cache directory::
 
-	$ mkdir -p ~/.cache/borg
+    $ mkdir -p ~/.cache/borg
 
 Create SSH private and public keys for use with Borg::
 
-	$ ssh-keygen -t ed25519 -f ~/.config/borg/ssh/id_ed25519
-	$ chmod 0600 ~/.config/borg/ssh/id_ed25519
-	$ cat ~/.config/borg/ssh/id_ed25519.pub
+    $ ssh-keygen -t ed25519 -f ~/.config/borg/ssh/id_ed25519
+    $ chmod 0600 ~/.config/borg/ssh/id_ed25519
+    $ cat ~/.config/borg/ssh/id_ed25519.pub
 
 
 Install the public key on the backup server::
 
-	$ ssh-copy-id -i ~/.config/borg/ssh/id_ed25519.pub borg-backup@nas.example.net
+    $ ssh-copy-id -i ~/.config/borg/ssh/id_ed25519.pub borg-backup@nas.example.net
 
 
 The backup server needs then to
@@ -237,23 +250,20 @@ The backup server needs then to
 with this specific Borg client by defining a ssh forced command, that points
 Borg to this clients repository.
 
-Setup environment variables in :file:`~/.config/borg/vars.sh`::
+Setup environment variables in :file:`~/.config/borg/vars.sh`:
 
-	#!/bin/bash
-	export BORG_REPO='ssh://borg-backup@nas.example.net/volume1/BorgBackup/${USER}'
-	export BORG_PASSPHRASE='********'
-	export BORG_RSH='ssh -i ~/.config/borg/ssh/id_ed25519'
-	#export BORG_BASE_DIR="${HOME}"
-	#export BORG_CONFIG_DIR="${HOME}/.config/borg"
-	#export BORG_CACHE_DIR="${HOME}/.cache/borg"
-	#export BORG_SECURITY_DIR="${HOME}/.config/borg/security"
-	#export BORG_KEYS_DIR="${HOME}/.config/borg/keys"
-	export BORG_KEY_FILE="${HOME}/.config/borg/keys/${USER}.key"
+.. literalinclude:: /desktop/config-files/borg/vars.sh
 
 
 Change permissions (as it contains the repository password)::
 
-	$ sudo chmod 0700 ~/.config/borg/vars.sh
+    $ chmod 0700 ~/.config/borg/vars.sh
+
+
+Create a list of directories to exclude from backups and save them in the
+:file:`~/.config/borg/exclude`:
+
+.. literalinclude:: config-files/borg/exclude
 
 
 Initialization
@@ -261,8 +271,8 @@ Initialization
 
 Before a backup can be made a repository has to be initialized::
 
-	$ source ~/.config/borg/vars.sh
-	$ borg init --encryption=keyfile-blake2
+    $ source ~/.config/borg/vars.sh
+    $ borg init --encryption=keyfile-blake2
 
 
 After the initialization a key file is found at
@@ -279,9 +289,15 @@ Let's create a script to be run every day:
 .. literalinclude:: config-files/borg/borg-backup
 
 
+.. note::
+
+    You can remove the ":file:`--verbose`" switch after some time. You then will
+    only get a mail message, when something unexpected was happening.
+
+
 Save this in :file:`~/.config/borg/borg-backup` and make it executable::
 
-	$ chmod 0700 ~/.config/borg/borg-backup
+    $ chmod 0700 ~/.config/borg/borg-backup
 
 
 User Backup Schedule
@@ -290,7 +306,30 @@ User Backup Schedule
 Place a symbolic link to the daily user backup script in to the daily directory
 :file:`~/.anacron/cron.daily`::
 
-	$ ln -s ~/.config/borg/borg-backup ~/.anacron/cron.daily/
+    $ ln -s ~/.config/borg/borg-backup ~/.anacron/cron.daily/
+
+
+Restore
+-------
+
+Show available archives in your repository::
+
+    $ source ~/.config/borg/vars.sh
+    $ borg info
+    $ borg list
+
+
+Mounting Borg Backup Repositories
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Mount one of your available archives in your repository::
+
+    $ source ~/.config/borg/vars.sh
+    $ mkdir /tmp/borg-mount/
+    $ borg mount \
+        ${BORG_REPO}::${USER}-$(hostname)-2019-02-29T00:05:01 \
+        /tmp/borg-mount/
+    $ ls /tmp/borg-mount/
 
 
 Reference

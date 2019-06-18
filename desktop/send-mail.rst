@@ -83,6 +83,19 @@ Therefore we have to choose: "No configuration" here.
 Postfix Configuration
 ---------------------
 
+Make a copy of the sample configuration file::
+
+    $ sudo cp /etc/postfix/main.cf.proto /etc/postfix/main.cf
+
+
+Set the group for postfix to run tasks in :file:`/etc/postfix/main.cf`::
+
+    # setgid_group: The group for mail submission and queue management
+    # commands.  This must be a group name with a numerical group ID that
+    # is not shared with other accounts, not even with the Postfix account.
+    #
+    setgid_group = postdrop
+
 
 Client Authentication
 ^^^^^^^^^^^^^^^^^^^^^
@@ -98,7 +111,7 @@ We store the login password in the file :file:`/etc/postfix/smtp_password`.
 
 The format is
 
-    <SMTP server> <user-name>:<password>
+    `<SMTP server> <user-name>:<password>`
 
 ::
 
@@ -108,7 +121,7 @@ The format is
 After that update the relevant postfix database and protect it::
 
     $ sudo postmap /etc/postfix/smtp_password
-    $ sudo chow root:root /etc/postfix/smtp_password*
+    $ sudo chown root:root /etc/postfix/smtp_password*
     $ sudo chmod 0600 /etc/postfix/smtp_password*
 
 
@@ -148,7 +161,7 @@ changes have been made to :file:`/etc/postfix/virtual_alias`:
 ::
 
     $ cd /etc/postfix
-    $ postmap /etc/postfix/virtual_alias
+    $ sudo postmap /etc/postfix/virtual_alias
 
 
 Main Configuration File

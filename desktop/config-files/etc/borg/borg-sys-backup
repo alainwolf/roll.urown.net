@@ -2,10 +2,11 @@
 # System Backup Script for BorgBackup
 
 # Setup environment variables
+# shellcheck source=vars.sh
 source /etc/borg/vars.sh
 
 # some helpers and error handling:
-info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
+info() { printf "\\n%s %s\\n\\n" "$( date )" "$*" >&2; }
 trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
 
 info "Starting backup"
@@ -13,36 +14,22 @@ info "Starting backup"
 # Backup the most important directories into an archive named after
 # the machine this script is currently running on:
 
-borg create                         \
-    --verbose                       \
-    --filter AME                    \
-    --list                          \
-    --stats                         \
-    --show-rc                       \
-    --compression lz4               \
-    --exclude-caches                \
-    --exclude '/dev'                \
-    --exclude '/home/*/.cache/*'    \
-    --exclude '/lost+found'         \
-    --exclude '/mnt'                \
-    --exclude '/proc'               \
-    --exclude '/run'                \
-    --exclude '/snap'               \
-    --exclude '/sys'                \
-    --exclude '/var/cache/*'        \
-    --exclude '/var/lib/container'  \
-    --exclude '/var/lib/lxcfs'      \
-    --exclude '/var/lib/ooni'       \
-    --exclude '/var/run'            \
-    --exclude '/var/run'            \
-    --exclude '/var/tmp/*'          \
-                                    \
-    ::'{hostname}-{now}'            \
-    /etc                            \
-    /opt                            \
-    /usr/local                      \
-    /var                            \
-    /boot                           \
+borg create                             \
+    --verbose                           \
+    --filter AME                        \
+    --list                              \
+    --stats                             \
+    --show-rc                           \
+    --compression lz4                   \
+    --exclude-caches                    \
+    --exclude-from /etc/borg/exclude    \
+                                        \
+    ::'{hostname}-{now}'                \
+    /etc                                \
+    /opt                                \
+    /usr/local                          \
+    /var                                \
+    /boot                               \
 
 backup_exit=$?
 

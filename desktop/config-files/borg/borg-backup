@@ -2,11 +2,12 @@
 # Automated User Data Backup Script for BorgBackup
 
 # Setup environment variables
+# shellcheck source=vars.sh
 source ~/.config/borg/vars.sh
 
 # some helpers and error handling:
 info() {
-    printf "\n%s %s\n\n" "$( date )" "$*" >&2;
+    printf "\\n%s %s\\n\\n" "$( date )" "$*" >&2;
     /usr/bin/notify-send --icon=deja-dup --urgency=normal "BorgBackup" "$*";
 }
 trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
