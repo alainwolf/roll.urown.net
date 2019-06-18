@@ -15,7 +15,7 @@ ngx_cache_purge.
 
 ..  note::
     All the following steps are also available as
-    :download:`downloadable</server/scripts/nginx-source-install.sh>` shell
+    :download:`downloadable </server/scripts/nginx-source-install.sh>` shell
     script.
 
 
@@ -64,8 +64,7 @@ Get all the stuff needed for building nginx and modules::
         libgd-dev libgeoip-dev libpcre3 libpcre3-dev libxslt1-dev libxml2-dev \
         python-dev python2.7 unzip zlib1g-dev
     $ sudo apt build-dep nginx
-
-sudo apt-get install
+    $ sudo apt-get install
 
 
 Set Version Numbers
@@ -73,12 +72,12 @@ Set Version Numbers
 
 Set the `Nginx Changes <https://nginx.org/en/CHANGES>`_ version number::
 
-    $ export NGX_VERSION=1.13.1
+    $ export NGX_VERSION=1.17.0
 
 
 Set the `OpenSSL <https://github.com/openssl/openssl/releases>`_ version::
 
-    $ export OPENSSL_VERSION=1.1.0f
+    $ export OPENSSL_VERSION=1.1.1c
 
 
 Set the
@@ -91,13 +90,13 @@ version::
 Set the
 `Headers-More module <https://github.com/openresty/headers-more-nginx-module/releases>`_ version::
 
-    $ export NHM_VERSION=0.32
+    $ export NHM_VERSION=0.33
 
 
 Set the
 `ngx-fancyindex module <https://github.com/aperezdc/ngx-fancyindex/releases>`_ version::
 
-    $ export FANCYINDEX_VERSION=0.4.1
+    $ export FANCYINDEX_VERSION=0.4.3
 
 
 Get the Source Code

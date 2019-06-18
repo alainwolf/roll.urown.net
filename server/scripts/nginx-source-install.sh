@@ -1,15 +1,15 @@
 #!/bin/bash
 #
 # Install Nginx from source
-# Last update: Sep 12, 2018
+# Last update: June 14, 2019
 #
 # Set version numbers
-export NGX_VERSION="1.15.3"       # Nginx - https://nginx.org/en/CHANGES (Aug 29, 2018)
-export OPENSSL_VERSION="1.1.1"    # OpenSSL - https://www.openssl.org/blog/blog/2018/09/11/release111/ (Sep 11, 2018)
+export NGX_VERSION="1.17.0"       # Nginx - https://nginx.org/en/CHANGES (May 21, 2019)
+export OPENSSL_VERSION="1.1.1c"   # OpenSSL - https://github.com/openssl/openssl/releases (May 28, 2019)
 export FANCYINDEX_VERSION="0.4.3" # Fancy Index Module - https://github.com/aperezdc/ngx-fancyindex/releases (Jul 3, 2018)
 export NCP_VERSION="2.3"          # Nginx Cache Purge Module - https://github.com/FRiCKLE/ngx_cache_purge/releases (Dec 23, 2014)
 export NHM_VERSION="0.33"         # Nginx Headers More Module - https://github.com/openresty/headers-more-nginx-module/releases (Nov 4, 2017)
-export NGINX_DEBIAN_RULES="https://roll.urown.net/_downloads/rules"
+export NGINX_DEBIAN_RULES="https://roll.urown.net/_downloads/9d49aaa527a8924fff40649b3c2183b9/rules"
 export SRC_DIR
 SRC_DIR=$(mktemp -d --suffix=_ngx_src_${NGX_VERSION})
 
@@ -55,6 +55,7 @@ make
 make test
 sudo make install_sw
 /opt/openssl-${OPENSSL_VERSION}/bin/openssl version
+sudo ln --symbolic --force /opt/openssl-${OPENSSL_VERSION} /opt/openssl
 
 # Source Code for Brotli
 cd "$SRC_DIR"
@@ -92,6 +93,7 @@ tar -xzf ngx-fancyindex-${FANCYINDEX_VERSION}.tar.gz
 # Debian Package configuration from roll.urown.net
 wget -O /tmp/nginx_debian_rules "${NGINX_DEBIAN_RULES}"
 cp --backup /tmp/nginx_debian_rules "${SRC_DIR}/nginx-${NGX_VERSION}/debian/rules"
+chmod +x "${SRC_DIR}/nginx-${NGX_VERSION}/debian/rules"
 
 # Package version information
 cd "${SRC_DIR}/nginx-${NGX_VERSION}"
@@ -111,7 +113,7 @@ dpkg-buildpackage -rfakeroot -uc -b
 
 # Ready to install
 cd "$SRC_DIR"
-ls -lth "${SRC_DIR}/*.deb"
+ls -lth ${SRC_DIR}/*.deb
 echo "Done and ready to install, please run:"
 echo "  ********************************************************************************* "
 echo "  sudo dpkg --install ${SRC_DIR}/nginx_${NGX_VERSION}-1~bionicubuntu1_amd64.deb     "
