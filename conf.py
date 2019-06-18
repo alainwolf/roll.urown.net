@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Roll Your Own Network'
-copyright = '2014, 2018, roll.urown.net - Creative Commons Attribution-ShareAlike 4.0 International License'
+copyright = '2014, 2019, roll.urown.net - Creative Commons Attribution-ShareAlike 4.0 International License'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
