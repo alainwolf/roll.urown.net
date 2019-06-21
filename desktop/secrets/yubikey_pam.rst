@@ -19,8 +19,25 @@ all modes of operations alreeady already enabled by default.
 
 ::
 
-    $ sudo -i
-    $ apt install libpam-u2f
+    $ sudo apt install libpam-u2f
+
+
+Yubikey Registration
+---------------------
+
+A mappings file needs to be created and filled with the users registered U2F
+keys. 
+
+There is a command-line tool to help with registration process. Replace
+**USERNAME** with the name of the user, which belongs to the Yubikey::
+
+  $ sudo pamu2fcfg -uUSERNAME >> /etc/u2f_mappings
+
+
+Nothing will happen in your console, but your Yubikey should start to blink as
+it wants to be touched now. Touch it, the command exits, and the file
+:file:`/etc/u2f_mappings` will contain the necessary challenges for the Yubikey
+belonging to that user.
 
 
 Configuration
@@ -28,11 +45,15 @@ Configuration
 
 Create a a new PAM service file :file:`/etc/pam.d/u2f`::
 
-  $ echo "auth sufficient pam_u2f.so authfile=/etc/u2f_mappings debug" > /etc/pam.d/u2f
+  $ echo "auth sufficient pam_u2f.so authfile=/etc/u2f_mappings debug" > sudo tee /etc/pam.d/u2f
 
 
 This tells the PAM module that it can look up information about each users U2F
 keys in the :file:`/etc/u2f_mappings` file.
+
+
+Testing with sudo
+^^^^^^^^^^^^^^^^^
 
 Then we can include the file in other PAM service file. For example for the
 :file:`sudo` command edit the file :file:`/etc/pamd.d/sudo` as follows::
@@ -50,27 +71,24 @@ Then we can include the file in other PAM service file. For example for the
 Make sure line "@include u2f" sits before the "common-auth" include line,
 
 
+Going Live
+^^^^^^^^^^
 
-Registration
-------------
+Open the PAM service file :file:`/etc/pam.d/u2f` again and remove the **debug** string::
 
-The mappings file needs to be created and filled with the users registered U2F
-keys. There is a command-line tool to help with registration process::
-
-  $ pamu2fcfg -uUSERNAME >> /etc/u2f_mappings
-
-Nothing will happen in your console, but your Yubikey should start to blink as
-it wants to be touched now.
+	$ echo "auth sufficient pam_u2f.so authfile=/etc/u2f_mappings" > sudo tee /etc/pam.d/u2f
 
 
+Open the PAM service file :file:`/etc/pam.d/gdm-password` and the following line before the “@include common-auth” line::
 
-
+	@include u2f
+	@include common-auth
 
 
 References
 ----------
 
  * `Yubico developers site: pam-u2f <https://developers.yubico.com/pam-u2f/>`_
- * :file:`/usr/share/doc/libpam-yubico/README.Debian`
- * :file:`/usr/share/doc/libpam-yubico/README.gz`
+ * :file:`/usr/share/doc/libpam-u2f/README.gz`
+ * :file:`/usr/share/doc/libpam-u2f/changelog.Debian.gz`
 

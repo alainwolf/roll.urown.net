@@ -29,7 +29,7 @@ Contents:
    signal-desktop
    gajim
    im
-   transmission-remote
+   transmission-remote-gtk
    calibre
    acrobat
    electrum
