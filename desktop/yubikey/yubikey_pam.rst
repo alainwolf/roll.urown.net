@@ -1,7 +1,7 @@
 Linux Login with Yubikey NEO
 ============================
 
-.. image:: YubiKey-Neo.*
+.. image:: yubikey_neo.*
     :alt: YubiKey NEO
     :align: right
 
@@ -76,7 +76,7 @@ Going Live
 
 Open the PAM service file :file:`/etc/pam.d/u2f` again and remove the **debug** string::
 
-	$ echo "auth sufficient pam_u2f.so authfile=/etc/u2f_mappings" > sudo tee /etc/pam.d/u2f
+	$ echo "auth sufficient pam_u2f.so authfile=/etc/u2f_mappings" | sudo tee /etc/pam.d/u2f
 
 
 Open the PAM service file :file:`/etc/pam.d/gdm-password` and the following line before the “@include common-auth” line::
@@ -88,6 +88,7 @@ Open the PAM service file :file:`/etc/pam.d/gdm-password` and the following line
 References
 ----------
 
+ * `Yubico Support: Ubuntu Linux Login Guide - U2F <https://support.yubico.com/support/solutions/articles/15000011356-ubuntu-linux-login-guide-u2f>`_
  * `Yubico developers site: pam-u2f <https://developers.yubico.com/pam-u2f/>`_
  * :file:`/usr/share/doc/libpam-u2f/README.gz`
  * :file:`/usr/share/doc/libpam-u2f/changelog.Debian.gz`

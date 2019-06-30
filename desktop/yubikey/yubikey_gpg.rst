@@ -1,7 +1,7 @@
 GnuPG with Yubikey NEO
 ======================
 
-.. image:: YubiKey-Neo.*
+.. image:: yubikey_neo.*
     :alt: YubiKey NEO
     :align: right
 
@@ -9,7 +9,7 @@ GnuPG with Yubikey NEO
 Prerequisites
 -------------
 
- * Yubico installed and setup as described in :doc:`yubikey_neo`.
+ * Yubico installed and setup as described in :doc:`index`.
  * Disabled the GPG-Agent of Gnome Keyring Daemon.
  * GnuPG installed and configured as in :doc:`../gpg` (including GPG Agent).
 
@@ -178,10 +178,67 @@ At the `gpg>` prompt enter `keytocard` to start the operation::
 	gpg> keytocard
 
 
+On other Systems
+----------------
 
+Thanks to the Yubikey, our private keys are no longer stored on and tied to a
+personal computer. The Yubikey can be plugged in at any computer system and our
+private keys are ready for use ... Right?
+
+Unfortunately thats not the case. For the following reasons:
+
+#. As shown on the beginning of this guide, additional software, usually not 
+   pre-installed, is used to access the Yubikey or GnuPG Smartcard.
+
+#. Second, the local GnuPG key-rings don't have any knowledge of the public and
+   private keys. The private keys are stored on the Yubikey only and the public
+   keys are nowhere at all.
+
+So to use your PGP keys stored on a Yubikey or GnuPG Smartcard the following
+steps need to be taken:
+
+#. Install required software::
+
+	> sudo apt install pcscd scdaemon
+
+#. Download the corresponding public keys of your private keys and add them to 
+   your local keyring::
+
+ 	> gpg --card-edit
+ 	gpg/card> fetch
+ 	gpg/card> exit
+
+#. Edit key::
+
+	$> gpg --edit-key 0x0123456789ABCDEF
+	Secret key is available.
+
+
+#. Set trust::
+
+	gpg> trust
+
+	Please decide how far you trust this user to correctly verify other users 
+	keys (by looking at passports, checking fingerprints from different sources, 
+	etc.)
+
+	  1 = I don't know or won't say
+	  2 = I do NOT trust
+	  3 = I trust marginally
+	  4 = I trust fully
+	  5 = I trust ultimately
+	  m = back to the main menu
+
+	Your decision? 5
+	Do you really want to set this key to ultimate trust? (y/N) y
+
+The local GnuPG installation has now the means to access your private key stored
+in the Yubikey or GnuPG Smartcard and it knows about your public keys.
 
 
 References
 ----------
 
-* `The GnuPG Smartcard How-To <https://gnupg.org/howtos/card-howto/en/smartcard-howto.html>`_
+ * `GnuPG Howto's: The GnuPG Smartcard How-To <https://gnupg.org/howtos/card-howto/en/smartcard-howto.html>`_
+ 
+ * `Yubico Support: Using Your YubiKey with OpenPGP <https://support.yubico.com/support/solutions/articles/15000006420-using-your-yubikey-with-openpgp>`_

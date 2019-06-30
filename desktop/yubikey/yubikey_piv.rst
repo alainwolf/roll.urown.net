@@ -1,7 +1,7 @@
 YubiKey SmartCard
 =================
 
-.. image:: YubiKey-Neo.*
+.. image:: yubikey_neo.*
     :alt: YubiKey NEO
     :align: right
 
@@ -26,7 +26,7 @@ Additional Software
 
 ::
 
-    > sudo apt install yubikey-piv-manager opensc
+    $> sudo apt install yubikey-piv-manager opensc
 
 
 Setup the Yubikey NEO

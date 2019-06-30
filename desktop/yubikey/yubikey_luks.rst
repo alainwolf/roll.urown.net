@@ -1,8 +1,12 @@
 Yubikey and Full Disk Encryption
 ================================
 
-Yubikey's HMAC-SHA1 challenge-response mode can be used to unlock your encrypted hard disk
-at boot time.
+.. image:: yubikey_neo.*
+    :alt: YubiKey NEO
+    :align: right
+
+Yubikey's HMAC-SHA1 challenge-response mode can be used to unlock your encrypted
+hard disk at boot time.
 
 
 Required Software
@@ -29,8 +33,7 @@ Important Information
 #. The LUKS key-slot to use. By default slot 7 (the last one) will be used.
 
 On my personal computer the physical device holding the encrypted file-system is
-on the **third partition** of a a 512GB Samsung 960 PRO NVMe M.2 SSD known
-as :file:`/dev/nvme0n1`.
+on the **third partition** of a a NVMe M.2 SSD known as :file:`/dev/nvme0n1`.
 
 Thus my device to un-encrypt is :file:`/dev/nvme0n1p3`.
 
