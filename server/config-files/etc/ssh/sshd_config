@@ -59,3 +59,8 @@ AcceptEnv LANG LC_*
 
 # Secure File Transfer Protocol
 Subsystem sftp /usr/lib/openssh/sftp-server
+
+# Remove any existing Unix-domain socket file for local or remote port
+# forwarding before creating a new one. The default is no.
+StreamLocalBindUnlink yes
+

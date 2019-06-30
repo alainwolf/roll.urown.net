@@ -15,6 +15,7 @@ Contents:
 
    secrets/index
    gpg
+   yubikey/index
    send-mail
    anacron
    borg-backup
@@ -25,18 +26,19 @@ Contents:
    luks
    xca
    wine
-   nextcloud-client
-   signal-desktop
-   gajim
    im
    transmission-remote-gtk
    calibre
    acrobat
-   electrum
    media
    3rd-party-repos
    toolbox/index
 
+.. TBD ..
+   nextcloud-client
+   signal-desktop
+   gajim
+   electrum
 
 
 Recommended reading:

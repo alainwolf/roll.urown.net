@@ -16,34 +16,67 @@ by :RFC:`4880` (also known as
 
 
 .. contents::
-    :depth: 1
+    :depth: 2
     :local:
     :backlinks: top
 
 
-Version 1.4 vs. 2.0
--------------------
+Software Installation
+---------------------
 
-Current Ubuntu versions install `GnuPG <https://gnupg.org/>`_ version 1.4.x,
-while the newer version 2.0.x is recommended for desktop systems.
+Current Ubuntu versions install `GnuPG <https://gnupg.org/>`_ version 2.x,
+while versions before Ubuntu 18.04 LTS (bionic) had version 1.4.x pre-installed, 
+but allowed to install newer version 2.x.
 
-Amongst others you get the following notable features not available on the
-classic version.
+.. warning::
 
- * GnuPG Agent
- * PIN-entry
- * Store keys on a :term:`SmartCard`
- * Support for X.509 certificates and keys, besides OpenPGP keys
- * Support for signed and encrypted mails using S/Mime besides OpenPGP mails
- * Directory Manager
+    Throughout this documentation we assume GnuPG version 2.4 or newer is
+    installed.
 
-The versions co-exist nicely, if installed on the same system.
 
-Enigmail requires GnuPG 2.0.
+On Ubuntu 18.04 LTS (bionic) and newer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    $> sudo apt install xloadimage
+
+
+On Ubuntu 16.04 LTS (bionic) and older
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On older Ubunutu versions before 18.04 LTS (bionic) "GNU Privacy Guard Version
+2.x", "GnuPG Agent" and "PIN Entry" needs to be installed manually::
+
+    $> sudo apt install gnupg2 gnupg-agent pinentry-gtk2 pinentry-curses xloadimage
+
+
+Both versions are now available as :file:`/usr/bin/gpg` and :file:`/usr/bin/gpg2`.
+To use version 2.x by default, define a command alias::
+
+    $> echo "alias gpg='/usr/bin/gpg2'" >> ~/.bash_aliases
+    $> source ~/.bash_aliases
+
+
+
+Configuration
+-------------
+
+
+GnuPG
+^^^^^
+
+The available configuration options can be found on the `gpg man page
+<https://manpages.ubuntu.com/manpages/bionic/man1/gpg.1.html#options>`_.
+
+Open the file  :download:`.gnupg/gpg.conf <config-files/gnupg/gpg.conf>` in you home
+directory and change, add or uncomment as follows:
+
+.. literalinclude:: config-files/gnupg/gpg.conf
 
 
 GnuPG Agent
------------
+^^^^^^^^^^^
 
 The "Gnu Privacy Guard Agent" is a service which safely manages your private-keys
 in the background. Any application (e.g. the mail-client singning a message with
@@ -54,100 +87,8 @@ passphrase in a protected environment.
 Additionally GnuPG-Agent also will manage your SSH keys, thus replacing the SSH-
 Agent.
 
-
-PIN Entry
----------
-
-"PIN Entry" is used by "GnuPG Agent" and others to safely ask the user for a
-passphrase in a secure manner. It works on various graphical desktop
-environments, text- only consoles and terminal sessions.
-
-.. note::
-
-    PIN Entry version 0.8.3 currently installed from the Ubuntu Software-Center
-    disables access to the clipboard for security reasons. Copy or paste of the
-    passhrase is not possible. Later versions allow clipboard access to be
-    enabled as option, although it is disabled by default.
-
-
-"GPG Agent" and "PIN Entry" will not only make the handling of your keys more
-secure, but also easier to use. You can set a time, during which you keys will
-stay unlocked so you are not required to enter your passphrease again every time
-they key is needed.
-
-
-Software Installation
----------------------
-
-"GNU Privacy Guard Version 2", "GnuPG Agent" and "PIN Entry" can be installed from the Ubuntu
-Software-Center:
-
-.. raw:: html
-
-        <p>
-            <a class="reference external"
-            href="apt:gnupg2,gnupg-agent,pinentry-gtk2,pinentry-curses">
-            <img alt="software-center" src="../_images/scbutton-free-200px.png" />
-            </a>
-        </p>
-
-
-Or by using apt::
-
-    > sudo apt install gnupg2 gnupg-agent pinentry-gtk2 pinentry-curses
-
-
-Configuration
--------------
-
-
-Default Key for Command-Line
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To let GnuPG know which key you normally use, set the following environment
-variable in the file :file:`${HOME}/.bashrc`:
-
-::
-
-    export GPGKEY=0x0123456789ABCDEF
-
-
-Key Server Certificate
-^^^^^^^^^^^^^^^^^^^^^^
-
-Whenever GnuPG needs a key to check a signature or to encrypt a message and the
-public key is not already in our public key ring, that key is retrieved
-automatically from the key servers. Also keys already in the key-ring must be
-refreshed from the key-servers periodically to see if they have been revoked or
-if there have been new signatures added..
-
-This makes it very easy for 3rd-parties to watch with whom we communicate and
-gives anyone watching our network automatic periodic updates of all the
-contacts in our address-book.
-
-Therefore all communication with the key servers should be encrypted. For this
-we download the CA certificate of the SKS key server pool::
-
-    $ wget -O ~/.gnupg/sks-keyservers.netCA.pem \
-        https://sks-keyservers.net/sks-keyservers.netCA.pem
-
-
-
-GnuPG Options
-^^^^^^^^^^^^^
-
-Open the file  :download:`.gnupg/gpg.conf <config-files/gnupg/gpg.conf>` in you home
-directory and change, add or uncomment as follows:
-
-.. literalinclude:: config-files/gnupg/gpg.conf
-
-
-Available configuration options can be found on the `gpg2 man page
-<http://manpages.ubuntu.com/manpages/trusty/en/man1/gpg2.1.html#contenttoc7>`_.
-
-
-GnuPG Agent Options
-^^^^^^^^^^^^^^^^^^^
+The available configuration options can be found on the `gpg-agent man page
+<https://manpages.ubuntu.com/manpages/bionic/man1/gpg-agent.1.html#options>`_.
 
 Open the file  :download:`.gnupg/gpg-agent.conf <config-files/gnupg/gpg-agent.conf>`
 and change, add or uncomment as follows:
@@ -155,26 +96,50 @@ and change, add or uncomment as follows:
 .. literalinclude:: config-files/gnupg/gpg-agent.conf
 
 
-Available configuration options can be found on the `gpg-agent man page
-<http://manpages.ubuntu.com/manpages/trusty/man1/gpg-agent.1.html#contenttoc4>`_.
+Directory Manager
+^^^^^^^^^^^^^^^^^
+
+Since version 2.1 of GnuPG, dirmngr takes care of accessing the OpenPGP
+keyservers. As with previous versions it is also used as a server for managing
+and downloading certificate revocation lists (CRLs) for X.509 certificates,
+downloading X.509 certificates, and providing access to OCSP providers. Dirmngr
+is invoked internally by gpg, gpgsm, or via the gpg-connect-agent tool.
+
+The available configuration options can be found on the `dirmngr man page
+<https://manpages.ubuntu.com/manpages/bionic/en/man8/dirmngr.8.html#options>`_.
+
+Open the file  :download:`.gnupg/dirmngr.conf <config-files/gnupg/dirmngr.conf>`
+and change, add or uncomment as follows:
+
+.. literalinclude:: config-files/gnupg/dirmngr.conf
 
 
-Shell Login Options
+PIN Entry
+^^^^^^^^^
+
+"PIN Entry" is used by "GnuPG Agent" and others to safely ask the user for a
+passphrase in a secure manner. It works on various graphical desktop
+environments, text-only consoles and terminal sessions.
+
+"GPG Agent" and "PIN Entry" will not only make the handling of your keys more
+secure, but also easier to use. You can set a time, during which you keys will
+stay unlocked so you are not required to enter your passphrase again every time
+they key is needed.
+
+
+Login Shell Options
 ^^^^^^^^^^^^^^^^^^^
 
-GPG Agent needs the following lines added to your shell configuration file
-:file:`~/.bashrc`::
+GnuPG and the GnuPG Agent need the following lines added to your shell
+configuration file :file:`~/.bashrc`::
+
+    # Let GnuPG know which key you normally use
+    export GPGKEY=0x0123456789ABCDEF
 
     #
-    # GPG Agent
-    export GPG_TTY=$(tty)
-
-    # Tell ssh about our GPG Agent
-    unset SSH_AGENT_PID
-    if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-        export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
-    fi
-
+    # GnuPG Agent
+    GPG_TTY=$(tty)
+    export GPG_TTY
 
 
 Related Tools and Options
@@ -184,6 +149,9 @@ Related Tools and Options
 Disable Seahorse GnuPG-agent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Seahorse is a GNOME application for managing encryption keys and passwords in
+the GNOME Keyring. 
+
 By default your GnuPG keys are managed by Seahorse. This can result in problems
 when using GnuPG 2.0 or newer versions.
 
@@ -191,105 +159,151 @@ See the section `Disabling the Seahorse GnuPG-Agent
 </desktop/secrets.html#disabling-the-seahorse-gnupg-agent>`_ on how to do this.
 
 
-Use KeePassX
-^^^^^^^^^^^^
-
-Store your GNU GPG passphrases in KeePassX.
-
-See the section `KeePassX </desktop/secrets.html#keepassx>`_ on how to set it up.
-
-
-Use Keychains
+Use KeePassXC
 ^^^^^^^^^^^^^
 
-Keychain helps with managing different passphrase agents, keys and such, without
-that they get in the way of each other.
+Store your GnuPG passphrases in KeePassXC.
 
-See the section `Keychain </desktop/secrets.html#keychain>`_ on how to set it up.
-
-
-parcimonie
-^^^^^^^^^^
-
-`parcimonie <http://gaffer.ptitcanardnoir.org/intrigeri/code/parcimonie/>`_
-incrementally refreshes a GnuPG keyring in a way that:
-
- * makes it hard to correlate her keyring content to an individual;
- * makes it hard to locate an individual based on an identifying subset of her
-   keyring content.
-
-.. raw:: html
-
-        <p>
-            <a class="reference external"
-            href="apt:parcimonie">
-            <img alt="software-center" src="../_images/scbutton-free-200px.png" />
-            </a>
-        </p>
-
-Once installed the program will automatically start after login of your desktop
-session.
-
-But there is a problem. parcimonie uses Tor to connect to to key-servers and
-HKPS does not work well over Tor. We therefore have to tell it to use another
-server. Preferably a
-`Tor Hidden Service <https://sks-keyservers.net/overview-of-pools.php>`_.
-
-In your startup programs change the parcimonie command-line to the following:
-
-    ``parcimonie --gnupg-extra-arg "--keyserver=hkp://jirk5u4osbsr34t5.onion"``
-
-One can also change the :file:`~/.config/autostart/parcimonie.desktop` file
-instead.
-
-And while you are there, disable the "parcimnonie applet" as it doesn't work in
-Ubuntu Desktop.
-
-The `parcimonie man page
-<http://manpages.ubuntu.com/manpages/trusty/en/man1/parcimonie.1p.html>`_ has
-additional information.
+See the section `KeePassXC </desktop/secrets.html#keepassxc>`_ on how to set it
+up.
 
 
 Yubikey Neo
 ^^^^^^^^^^^
 
-See :doc:`secrets/yubikey_gpg`.
+See :doc:`yubikey/yubikey_gpg`.
 
 
-GnuPG Key Manager
+Enigmail
+^^^^^^^^
+
+See :doc:`thunderbird`.
+
+
+Use local keys on remote systems over SSH
+-----------------------------------------
+
+GnuPG enables you to forward the GnuPG-Agent to a remote system. That means that
+you can keep your secret keys on a local machine (or even a hardware token like
+a :doc:`YubiKey <yubikey/index>` or smartcard), but use them for signing or
+decryption on a remote machine.
+
+This is done by forwarding a special gpg-agent socket to the remote system by
+the local SSH client.
+
+Set up the forwards in the *local* SSH-client configuration. We also need
+to know the location of the socket on the remote system to connect to.
+
+Show the GnuPG-Agent socket location on the remote server::
+
+    remote$> gpgconf --list-dir agent-socket
+    /run/user/1000/gnupg/S.gpg-agent
+
+
+Show the GnuPG-Agent *extra* socket location on the local client::
+    
+    local$> gpgconf --list-dir agent-extra-socket
+    /run/user/1000/gnupg/S.gpg-agent.extra
+
+
+No add these both to the SSH client configuration :file:`~/.ssh/config` in the
+appropriate server section as **RemoteForward** :file:`RemoteSocket`
+:file:`LocalExtraSocket`
+
+**RemoteForward** specifies that a socket from the *remote machine* be forwarded
+over the secure channel to a *local* socket
+
+::
+
+    Host remote.example.net
+        RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
+
+
+Also add the following line to your remote :doc:`SSH Server
+</server/ssh-server>` file :file:`/etc/ssh/sshd_config`::
+
+    # Specifies whether to remove an existing Unix-domain socket file for local
+    # or remote port forwarding before creating a new one. If the socket file
+    # already exists and StreamLocalBindUnlink is not enabled, sshd will be un-
+    # able to forward the port to the Unix-domain socket file. This option is
+    # only used for port forwarding to a Unix-domain socket file. The argument
+    # must be yes or no. The default is no.
+    StreamLocalBindUnlink yes
+
+
+Then restart the remote SSH server for the configuration change to be applied::
+
+    remote$> sudo systemctl restart ssh.service
+    remote$> logout
+    Connection to remote.example.net closed.
+
+After re-connecting your local keyring should be available on the remote system,
+but not yet usable without their corresponding public keys and trust settings.
+
+This is how we transfer your public key and trust settings from the local to the
+remote system::
+
+    local$> gpg --export-options export-local-sigs --export $GPGKEY | \
+                ssh remote.example.net gpg --import
+    local$> gpg --export-ownertrust | \
+                ssh remote.example.net gpg --import-ownertrust
+
+
+You also might want to assimilate the GnuPG configuration::
+
+    local$> cd ~/.gnupg/
+    local$> scp gpg.conf dirmngr.conf gpg-agent.conf \
+                remote.example.net:/home/user/.gnupg/
+
+
+Publishing Keys
+---------------
+
+As can be seen with the :file:`--auto-key-locate` configuration parameter of
+there are various ways to find and import a key.
+
+
+Keyservers
+^^^^^^^^^^
+
+Public Keyservers are still the mostly widely used way to find OpenPGP keys, but
+other methods come with significant benefits over the old keyserver.
+
+
+LDAP
+^^^^
+
+
+DNS CERT
+^^^^^^^^
+
+Publishing keys using DNS CERT, as specified in RFC-4398.
+
+
+PKA
+^^^
+
+
+DANE
+^^^^
+
+
+Web Key Directory
 ^^^^^^^^^^^^^^^^^
 
-Over time the keyring will grow, especially if used with the ``auto-key-
-retrieve`` option we have set earlier. A large keyring my slow down operations
-and lead to sluggish response of other applications like Thunderbird with
-Enigmail.
-
-How many keys are there? To find out::
-
-    $ gpg --list-keys | grep 'pub ' | wc -l
+TBD.
 
 
-`gpgkeymgr <https://nudin.github.io/GnuPGP-Tools/>`_ can help doing a spring
-cleaning.
+Keybase.io
+^^^^^^^^^^
 
-Download and install::
-
-    $ cd ~/Downloads
-    $ wget https://nudin.github.io/GnuPGP-Tools/gpgkeymgr/gpgkeymgr-0.4.tar.gz
-    $ tar -xzf gpgkeymgr-0.4.tar.gz
-    $ cd gpgkeymgr-0.4
-    $ sudo apt-get install libgpgme11-dev
-    $ sudo make install
-
-Usage manual::
-
-    $ man gpgkeymgr
+TBD.
 
 
 Backup Your Keys!
 -----------------
 
-Backup is very important. If you lose your private key or the passhprase for
+Backup is very important. If you lose your private key or the passphrase for
 it, everything encrypted will not be recoverable.
 
 Backups of your private keys and key-rings should be stored on a encrypted USB
@@ -320,8 +334,11 @@ References
  * `Ubuntu GNU Privacy Guard How To
    <https://help.ubuntu.com/community/GnuPrivacyGuardHowto>`_
 
- * `Gnu Privacy Guard 2.0.x manpage
-   <http://manpages.ubuntu.com/manpages/trusty/man1/gpg2.1.html>`_
+ * `Gnu Privacy Guard 2.2.4 manpage
+   <https://manpages.ubuntu.com/manpages/bionic/en/man1/gpg.1.html>`_
 
  * `GnuPG Agent manpage
-   <http://manpages.ubuntu.com/manpages/trusty/man1/gpg-agent.1.html>`_
+   <http://manpages.ubuntu.com/manpages/bionic/man1/gpg-agent.1.html>`_
+
+ * `How to use local secrets on a remote machine 
+   <https://wiki.gnupg.org/AgentForwarding>`_
