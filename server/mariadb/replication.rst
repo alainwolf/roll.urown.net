@@ -87,7 +87,7 @@ Create random passwords for the slave users::
 
 
 Create the user profile for the slave on the master for incoming IPv4 and
-IPv6 :doc:`/server/VPN` connections, using the generated password above::
+IPv6 :doc:`/server/wireguard` connections, using the generated password above::
 
     $ mysql -u root -p
 

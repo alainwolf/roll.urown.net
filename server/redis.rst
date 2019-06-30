@@ -8,7 +8,7 @@ Redis
 `Redis <https://redis.io/>`_ is a fast and persistent key-value database with
 a network interface.
 
-As a key-value database it is similar to :doc:`server/memcache` but the
+As a key-value database it is similar to :term:`memcache` but the
 dataset is not only stored entirely in memory but periodically flushed to
 disk. This way the dataset remains persistent across restarts and is no longer
 only volatile.

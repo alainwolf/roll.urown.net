@@ -222,7 +222,7 @@ Don't use:
     * umac-64-etm@openssh.com
 
 
-.. literalinclude:: config-files//etc/ssh/sshd_config
+.. literalinclude:: config-files/etc/ssh/sshd_config
     :language: ini
     :start-after: PrintMotd
     :end-before: # Allow client to pass locale environment variables
@@ -235,7 +235,7 @@ Other Settings
     :language: ini
     :start-after: MACs hmac-sha2-512-etm@openssh.com
 
-
+   
 Restart SSH Server
 ^^^^^^^^^^^^^^^^^^
 

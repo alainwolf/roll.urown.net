@@ -1,9 +1,12 @@
-.. image:: Mozilla-Firefox-Logo.*
-    :alt: Mozilla Firefox Logo
-    :align: right
-
 Web Browser
 ===========
+
+.. image:: firefox-logo.*
+    :alt: Mozilla Firefox Logo
+    :align: right
+    :height: 200px
+    :width: 200px
+
 
 `Mozilla Firefox <https://www.mozilla.org/en-US/firefox/desktop/>`_ is default
 web browser in Ubuntu and therefore already installed.
@@ -35,8 +38,12 @@ Untick "Prompt integration options for any website" below "Desktop Integration":
     :scale: 75%
 
 
-Privacy
-^^^^^^^
+Home & Search
+^^^^^^^^^^^^^
+
+
+Privacy & Security
+^^^^^^^^^^^^^^^^^^
 
 Select the "Privacy" tab in the Preferences dialog.
 

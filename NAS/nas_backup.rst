@@ -208,40 +208,43 @@ only accessible with Synology software.
 Why not use Synology Hyper-Backup in "single-version"?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-While "legacy-mode" or "single-version" backed up files are just stored in its
-native form in folders and remain accessible without Synology software,
- * deletions are not propagated to the backup folders. It will add files but never
-   delete any;
- * Backups are push only. A remote system can not pull the backup data.
+ #. While "legacy-mode" or "single-version" backed up files are just stored in its
+    native form in folders and remain accessible without Synology software;
+
+ #. Deletions are not propagated to the backup folders, it will add files but 
+    never delete any;
+
+ #. Backups are push only. A remote system can not pull the backup data;
 
 
 Why not use Synology Backup Vault on the remote NAS?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
- * Only works with backup-data created by Hyper-Backup in its proprietary format;
- * Backups are push only. The remote NAS is not can not pull the backup data
-   from the local one by itself.
+ #. Only works with backup-data created by Hyper-Backup in its proprietary format;
+
+ #. Backups are push only. The remote NAS is not can not pull the backup data
+    from the local one by itself.
 
 
 Why not use Synology Shared-Folder-Sync?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
- * Again this is a one-way push only solution which must be initiated by the
-   local NAS.
+ #. Again this is a one-way push only solution which must be initiated by the
+    local NAS.
 
 
 Why not use Synology Cloud Station ShareSync?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
- * Has a more overhead as it does a lot we don't need, i.e. file versioning.
-   The backup solutions on the clients already take care of that.
+ #. Has a more overhead as it does a lot we don't need, i.e. file versioning.
+    The backup solutions on the clients already take care of that.
 
 
 Why not use Synology Cloud Station Backup?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
- * Cloud Station Backup is a solution geared towards desktop systems.
-   We are mostly talking about backing up servers and routers.
+ #. Cloud Station Backup is a solution geared towards desktop systems.
+    We are mostly talking about backing up servers and routers.
 
- * Ubuntu Desktop has a well integrated backup solution (DejaDup) which
-   transfers its backup data via SFTP.
+ #. Ubuntu Desktop has a well integrated backup solution (DejaDup) which
+    transfers its backup data via SFTP.

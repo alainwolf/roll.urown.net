@@ -99,14 +99,14 @@ Glossary
 
         See also :term:`WMM`.
 
-        `IEEE 802.11e-2005 <https://en.wikipedia.org/wiki/IEEE_802.11e-2005>`_  or
-        802.11e is an approved amendment to the :term:`IEEE 802.11` standard that
-        defines a set of :term:`quality of service` (QoS) enhancements for  wireless
-        LAN applications through modifications to the :term:`Media Access  Control`
-        (MAC) layer. The standard is considered of critical importance  for delay-
-        sensitive applications, such as :term:`Voice over Wireless LAN` and streaming
-        multimedia. The amendment has been incorporated into the  published IEEE
-        802.11-2007 standard.
+        `IEEE 802.11e-2005 <https://en.wikipedia.org/wiki/IEEE_802.11e-2005>`_  
+        or 802.11e is an approved amendment to the :term:`IEEE 802.11` standard
+        that defines a set of :term:`quality of service` (QoS) enhancements for 
+        wireless LAN applications through modifications to the :term:`Media
+        Access  Control` (MAC) layer. The standard is considered of critical
+        importance  for delay- sensitive applications, such as :term:`Voice over
+        Wireless LAN` and streaming multimedia. The amendment has been
+        incorporated into the  published IEEE 802.11-2007 standard.
 
 
     802.11g
@@ -179,6 +179,37 @@ Glossary
         (AES) is used by an application.
 
 
+    Authenticated Received Chain
+    ARC
+
+        `Authenticated Received Chain <https://en.wikipedia.org/wiki/Authenticated_Received_Chain>`_ 
+
+        (ARC) is an email authentication system designed to allow an 
+        intermediate mail server like a mailing list or forwarding service to
+        sign an email's original authentication results. This allows a receiving
+        service to validate an email when the email's :term:`SPF` and
+        :term:`DKIM` records are rendered invalid by an intermediate server's
+        processing.
+
+        ARC is currently an Internet Draft with the IETF.
+
+        :term:`DMARC` allows a sender's domain to indicate that their emails are
+        protected by SPF and/or DKIM, and tells a receiving service what to do
+        if neither of those authentication methods passes - such as to reject
+        the message. However, a strict DMARC policy may block legitimate emails
+        sent through a mailing list or forwarder, as the SPF check will fail due
+        to the unapproved sender, and the DKIM signature will be invalidated if
+        the message is modified, such as by adding a subject tag or footer.
+
+        ARC helps solve this problem by giving intermediate servers a way to
+        sign the original message's validation results. Even if the SPF and DKIM
+        validation fail, the receiving service can choose to validate the ARC.
+        If the ARC indicates that the original message passed the SPF and DKIM
+        checks, and the only modifications were made by intermediaries trusted
+        by the receiving service, the receiving service may choose to accept the
+        email.
+
+
     AXFR
     DNS zone transfer
 
@@ -205,6 +236,21 @@ Glossary
         classification.
 
 
+    Beacon Broadcast interval
+    Beacon Interval
+        Beacon Broadcast interval is the time lag between each of the beacons
+        sent by your router or access points. By definition, the lower the
+        value, the smaller the time lag which means that the beacon is sent more
+        frequently. The higher the value, the bigger the time lag which means
+        that the beacon is sent broadcasted less frequently.
+
+        The beacon is needed for your devices or clients to receive information
+        about the particular router. In this case the beacon includes some main
+        information such as SSID, Timestamp, and various parameters.
+
+        See `Beacon Interval Best Optimal Setting <https://routerguide.net/beacon-interval-best-optimal-setting-improve-wireless-speed/>`_
+
+
     Blowfish
         `Blowfish <https://en.wikipedia.org/wiki/Blowfish_(cipher)>`_ is a
         symmetric-key block cipher, designed in 1993 by Bruce Schneier and
@@ -215,10 +261,43 @@ Glossary
         users are encouraged by Bruce Schneier, Blowfish's creator, to use the
         more modern and computationally efficient alternative :term:`Twofish`.
 
+    
+    BSSID
+    Basic Service Set Identifier
+        An infrastructure mode wireless network consists of one ore more
+        redistribution points — typically access points — together with one or
+        more "client" stations that are associated with (i.e. connected to) that
+        redistribution point.
+
+        Each access point has its own unique identifier, a BSSID, which is a
+        unique 48-bit identifier that follows :term:`MAC address` conventions
+        and is usually non-configurable.
+
 
     CA
     Certificate Authority
         TBD
+
+
+    CCM mode Protocol
+    CCMP
+    Counter Mode CBC-MAC Protocol
+    Counter Mode Cipher Block Chaining Message Authentication Code Protocol
+        `CCMP <https://en.wikipedia.org/wiki/CCMP_(cryptography)>`_ is an
+        encryption protocol designed for Wireless LAN products that implements
+        the standards of the :term:`IEEE 802.11i` amendment to the original
+        :term:`IEEE 802.11` standard. CCMP is an enhanced data cryptographic
+        encapsulation mechanism designed for data confidentiality and based upon
+        the Counter Mode with CBC-MAC (CCM mode) of the :term:`Advanced
+        Encryption Standard` (AES) standard. It was created to address the
+        vulnerabilities presented by :term:`Wired Equivalent Privacy` (WEP), a
+        dated, insecure protocol.
+
+        CCMP is the standard encryption protocol for use with the :term:`Wi-Fi
+        Protected Access II` (WPA2) standard and is much more secure than the
+        Wired Equivalent Privacy (WEP) protocol and :term:`Temporal Key
+        Integrity Protocol` (TKIP) of :term:`Wi-Fi Protected Access` (WPA).
+
 
     Chip card
     ICC
@@ -249,17 +328,17 @@ Glossary
 
     Cryptographic Hash Function
 
-        A `cryptographic hash function
-        <https://en.wikipedia.org/wiki/Cryptographic_hash_function>`_ is a hash
-        function which is considered practically impossible to invert, that is, to
-        recreate the input data from its hash value alone. They are used for digital
-        signatures, message authentication codes (:term:`MAC`), and other forms of
-        authentication. It can also be used as ordinary :term:`hash function`, to
-        index data in hash tables, for fingerprinting, to detect duplicate data or
-        uniquely identify files, and as checksums to detect accidental data
-        corruption. Cryptographic hash values are sometimes called (digital)
-        fingerprints, checksums, or just hash values. Some widely used ones are:
-        :term:`MD5`, :term:`SHA-1`, :term:`SHA-256`
+        A `cryptographic hash function <https://en.wikipedia.org/wiki/Cryptographic_hash_function>`_ 
+        is a :term:`hash function` which is considered practically impossible to
+        invert, that is, to recreate the input data from its hash value alone.
+        They are used for digital signatures, message authentication codes
+        (:term:`MAC`), and other forms of authentication. It can also be used as
+        ordinary :term:`hash function`, to index data in hash tables, for
+        fingerprinting, to detect duplicate data or uniquely identify files, and
+        as checksums to detect accidental data corruption. Cryptographic hash
+        values are sometimes called (digital) fingerprints, checksums, or just
+        hash values. Some widely used ones are: :term:`MD5`, :term:`SHA-1`,
+        :term:`SHA-256`
 
 
     Curve25519
@@ -332,9 +411,87 @@ Glossary
         session keys during initial handshake and periodic renevals, without any
         noticeable delay.
 
+    Diceware
+        `Diceware <https://en.wikipedia.org/wiki/Diceware>`_ is a method for
+        creating passphrases, passwords, and other cryptographic variables using
+        ordinary dice as a hardware random number generator. For each word in
+        the passphrase, five rolls of the dice are required. The numbers from 1
+        to 6 that come up in the rolls are assembled as a five-digit number,
+        e.g. 43146. That number is then used to look up a word in a word list.
+        In the English list 43146 corresponds to munch. By generating several
+        words in sequence, a lengthy passphrase can be constructed.
+
+        A Diceware word list is any list of 6^5 = 7,776 unique words, preferably
+        ones the user will find easy to spell and to remember. The contents of
+        the word list do not have to be protected or concealed in any way, as
+        the security of a Diceware passphrase is in the number of words
+        selected, and the number of words each selected word could be taken
+        from. Lists have been compiled for several languages.
+
+        See also the original 
+        `Diceware Passphrase Home Page <http://world.std.com/~reinhold/diceware.html>`_
+        or the `urown.net Diceware <https://diceware.urown.net/#eff>`_ 
+        installation.
+
 
     Digital Fingerprint
         See :term:`Cryptographic Hash Function`.
+
+    Distance Optimization
+        A configuration option in wireless networks. The distance between the
+        wireless access point and the furthest wireless client in meters.
+
+
+    DKIM
+    DomainKeys Identified Mail
+
+        `DomainKeys Identified Mail <https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail>`_ 
+        (DKIM) is an email authentication method designed to detect forged sender
+        addresses in emails (email spoofing), a technique often used in phishing
+        and email spam.
+
+        DKIM allows the receiver to check that an email claimed to have come
+        from a specific domain was indeed authorized by the owner of that
+        domain. It achieves this by affixing a digital signature, linked to a
+        domain name, to each outgoing email message. The recipient system can
+        verify this by looking up the sender's public key published in the DNS.
+        A valid signature also guarantees that some parts of the email (possibly
+        including attachments) have not been modified since the signature was
+        affixed. Usually, DKIM signatures are not visible to end-users, and are
+        affixed or verified by the infrastructure rather than the message's
+        authors and recipients.
+
+        DKIM is now an "Internet standard". It is defined in :rfc:`6376`, dated
+        September 2011; with updates in :rfc:`8301` and :rfc:`8463`.
+
+
+    DMARC
+    Domain-based Message Authentication, Reporting and Conformance
+
+        `DMARC <https://en.wikipedia.org/wiki/DMARC>`_ (Domain-based Message
+        Authentication, Reporting and Conformance) is an email authentication
+        protocol. It is designed to give email domain owners the ability to
+        protect their domain from unauthorized use, commonly known as email
+        spoofing. The purpose and primary outcome of implementing DMARC is to
+        protect a domain from being used in business email compromise attacks,
+        phishing emails, email scams and other cyber threat activities.
+
+        Once the DMARC DNS entry is published, any receiving email server can
+        authenticate the incoming email based on the instructions published by
+        the domain owner within the DNS entry. If the email passes the
+        authentication it will be delivered and can be trusted. If the email
+        fails the check, depending on the instructions held within the DMARC
+        record the email could be delivered, quarantined or rejected.
+
+        DMARC extends two existing mechanisms, :term:`Sender Policy Framework`
+        (SPF) and :term:`DomainKeys Identified Mail` (DKIM). It allows the
+        administrative owner of a domain to publish a policy in their DNS
+        records to specify which mechanism (DKIM, SPF or both) is employed when
+        sending email from that domain; how to check the From: field presented
+        to end users; how the receiver should deal with failures - and a
+        reporting mechanism for actions performed under those policies.
+
+        DMARC is defined in :rfc:`7489`, dated March 2015, as "Informational".
 
 
     DNS
@@ -369,6 +526,33 @@ Glossary
         employee. The patent was given to the United States, and NIST has made
         it available worldwide royalty-free. DSA is a variant of the ElGamal
         signature scheme.
+
+    DSM
+    DiskStation Manager
+        Synology’s primary product is the Synology DiskStation Manager (DSM), a
+        Linux based software package that is the operating system for the
+        DiskStation and RackStation products.
+
+
+    DTIM Interval
+    Delivery traffic indication map
+    Delivery traffic indication message
+        DTIM stands for Delivery traffic indication map or message. It is
+        basically an additional message added after the normal beacon broadcast
+        by your router or access point. See :term:`Beacon Interval`.
+
+        Depending on the timing set for your router, the router “buffers”
+        broadcast and multicast data and let your mobile devices or clients know
+        when to “wake up” to receive those data.
+
+        The more often that DTIM is transmitted, the more often that your mobile
+        devices wake up, and the more battery that it uses (due to the lack of
+        “sleep”). By setting a low value of DTIM and beacon interval, you can
+        effectively keep your devices awake indefinitely so they never go into
+        sleep mode when idling. In some cases the “no sleep” setup can use up to
+        10~20% additional power consumption.
+
+        See `DTIM Interval Best Setting <https://routerguide.net/dtim-interval-period-best-setting/>`_
 
 
     Dual EC DRBG
@@ -430,9 +614,35 @@ Glossary
         and Bo-Yin Yang. The reference implementation is public domain software.
 
     
+    EEPROM
+    Electrically Erasable Programmable Read-Only Memory
+        `EEPROM <https://en.wikipedia.org/wiki/EEPROM>`_ (also E2PROM) stands
+        for electrically erasable programmable read-only memory and is a type of
+        non-volatile memory used in computers, integrated in microcontrollers
+        for smart cards and remote keyless systems, and other electronic devices
+        to store relatively small amounts of data but allowing individual bytes
+        to be erased and reprogrammed. 
+
     EFF
     Electronic Frontier Foundation
         TBD
+
+    EPROM
+    Erasable Programmable Read-only Memory
+        An `EPROM <https://en.wikipedia.org/wiki/EPROM>`_ (rarely EROM), or
+        erasable programmable read-only memory, is a type of programmable
+        :term:`read-only memory` (PROM) chip that retains its data when its
+        power supply is switched off. Computer memory that can retrieve stored
+        data after a power supply has been turned off and back on is called
+        non-volatile. It is an array of floating-gate transistors individually
+        programmed by an electronic device that supplies higher voltages than
+        those normally used in digital circuits. Once programmed, an EPROM can
+        be erased by exposing it to strong ultraviolet light source (such as
+        from a mercury-vapor lamp). EPROMs are easily recognizable by the
+        transparent fused quartz window in the top of the package, through which
+        the silicon chip is visible, and which permits exposure to ultraviolet
+        light during erasing.
+
 
     ESMTP
 
@@ -500,17 +710,61 @@ Glossary
         Diffie–Hellman` are used to create and exchange session keys.
 
 
+    Fragmentation Threshold
+        In wireless networks this value is used to set the maximum size of
+        packet a client can send. Smaller packets improve reliability, but they
+        will decrease performance. Unless you’re facing problems with an
+        unreliable network, reducing the fragmentation threshold is not
+        recommended. Make sure it is set to the default settings (usually 2346).
+
+
     FTP
     File Transfer Protocol
         TBD
 
 
+    Hash
     Hash Function
-        TBD
+    Hash Functions
+        A `hash function <https://en.wikipedia.org/wiki/Hash_function>`_ is any
+        function that can be used to map data of arbitrary size onto data of a
+        fixed size. The values returned by a hash function are called hash
+        values, hash codes, digests, or simply hashes. Hash functions are often
+        used in combination with a hash table, a common data structure used in
+        computer software for rapid data lookup. Hash functions accelerate table
+        or database lookup by detecting duplicated records in a large file. One
+        such application is finding similar stretches in DNA sequences. They are
+        also useful in cryptography. A :term:`cryptographic hash function`
+        allows one to easily verify whether some input data map onto a given
+        hash value, but if the input data is unknown it is deliberately
+        difficult to reconstruct it (or any equivalent alternatives) by knowing
+        the stored hash value. This is used for assuring integrity of
+        transmitted data, and is the building block for :term:`HMAC`'s, which
+        provide message authentication.
+
+        Hash functions are related to (and often confused with) checksums, check
+        digits, fingerprints, lossy compression, randomization functions,
+        error-correcting codes, and ciphers. Although the concepts overlap to some
+        extent, each one has its own uses and requirements and is designed and
+        optimized differently. 
 
 
     HMAC
-        TBD
+
+        In cryptography, an `HMAC <https://en.wikipedia.org/wiki/HMAC>`_
+        (sometimes expanded as either keyed-hash message authentication code or
+        hash-based message authentication code) is a specific type of
+        :term:`message authentication code` (:term:`MAC`) involving a
+        :term:`cryptographic hash function` and a secret cryptographic key. It
+        may be used to simultaneously verify both the data integrity and the
+        authentication of a message, as with any MAC. Any cryptographic hash
+        function, such as :term:`SHA-256` or :term:`SHA-3`, may be used in the
+        calculation of an HMAC; the resulting MAC algorithm is termed HMAC-X,
+        where X is the hash function used (e.g. HMAC-SHA256 or HMAC-SHA3). The
+        cryptographic strength of the HMAC depends upon the cryptographic
+        strength of the underlying hash function, the size of its hash output,
+        and the size and quality of the key.
+
 
     HTTP
     Hyper Text Transfer Protocol
@@ -664,10 +918,53 @@ Glossary
     
         LRU means "Least Recently Used"
 
+    LUA
 
-    MAC
+        `Lua <https://en.wikipedia.org/wiki/Lua_(programming_language)>`_ (from
+        Portuguese meaning "moon") is a lightweight, multi-paradigm programming
+        language designed primarily for embedded use in applications. Lua is
+        cross-platform, since the interpreter of compiled bytecode is written in
+        ANSI C, and Lua has a relatively simple C API to embed it into
+        applications.
+
+        Lua was originally designed in 1993 as a language for extending software
+        applications to meet the increasing demand for customization at the
+        time. It provided the basic facilities of most procedural programming
+        languages, but more complicated or domain-specific features were not
+        included; rather, it included mechanisms for extending the language,
+        allowing programmers to implement such features. As Lua was intended to
+        be a general embeddable extension language, the designers of Lua focused
+        on improving its speed, portability, extensibility, and ease-of-use in
+        development.
+
+
+
+    MAC Address
     Media Access Control
-        TBD
+    Media Access Control Address
+        A `media access control address <https://en.wikipedia.org/wiki/MAC_address>`_ 
+        (MAC address) of a device is a unique identifier assigned to a network
+        interface controller (NIC). For communications within a network segment,
+        it is used as a network address for most IEEE 802 network technologies,
+        including Ethernet, Wi-Fi, and Bluetooth. Within the Open Systems
+        Interconnection (OSI) model, MAC addresses are used in the medium access
+        control protocol sublayer of the data link layer. As typically
+        represented, MAC addresses are recognizable as six groups of two
+        hexadecimal digits, separated by hyphens, colons, or no separator (see
+        Notational conventions below). 
+
+        A MAC address may be referred to as the burned-in address, and is also
+        known as an **Ethernet hardware address**, **hardware address**, and
+        **physical address**.
+
+        A network node with multiple NICs must have a unique MAC address for
+        each. Sophisticated network equipment such as a multilayer switch or
+        router may require one or more permanently assigned MAC addresses.
+
+        MAC addresses are most often assigned by the manufacturer of network
+        interface cards. Each is stored in hardware, such as the card's
+        read-only memory or by a firmware mechanism. A MAC address typically
+        includes the manufacturer's organizationally unique identifier (OUI).
 
 
     MAC
@@ -686,6 +983,35 @@ Glossary
     MDA
     Mail Delivery Agent
         Another name for :term:`LDA` or :term:`Local Delivery Agent`.
+
+    
+    Memcached
+    Memcache
+
+        `Memcached <https://en.wikipedia.org/wiki/Memcached>`_ is a
+        general-purpose distributed memory caching system. It is often used to
+        speed up dynamic database-driven websites by caching data and objects in
+        RAM to reduce the number of times an external data source (such as a
+        database or API) must be read. Memcached is free and open-source
+        software, licensed under the Revised BSD license. Memcached runs on
+        Unix-like operating systems and on Microsoft Windows.
+
+        Memcached's APIs provide a very large hash table distributed across
+        multiple machines. When the table is full, subsequent inserts cause
+        older data to be purged in least recently used (LRU) order. Applications
+        using Memcached typically layer requests and additions into RAM before
+        falling back on a slower backing store, such as a database.
+
+
+    Milter
+
+        `Milter <https://en.wikipedia.org/wiki/Milter>`_ (portmanteau for mail
+        filter) is an extension to the widely used open source mail transfer
+        agents (:term:`MTA`) Sendmail and Postfix. It allows administrators to
+        add mail filters for filtering spam or viruses in the mail-processing
+        chain. In the language of the art, "milter" refers to the protocol and
+        API implementing the service, while "a milter" has come to refer to a
+        filter application that uses milter to provide service.
 
 
     MIMO
@@ -801,6 +1127,15 @@ Glossary
         of partners, combining Internet Archive, O'Reilly Media, Feedbooks, OLPC,
         and others.
 
+    PDU
+    Power Distribution Unit
+        A `power distribution unit <https://en.wikipedia.org/wiki/Power_distribution_unit>`_ 
+        (PDU) or mains distribution unit (MDU) is a device fitted with multiple
+        (outputs designed to distribute electric power, especially to racks of
+        (computers and networking equipment located within a data center. Data
+        (centers face challenges in power protection and management solutions.
+        (This is why many data centers rely on PDU monitoring to improve
+        (efficiency, uptime, and growth.
 
     PEM
         
@@ -850,6 +1185,15 @@ Glossary
         capability to break RC4 even when used in the TLS protocol.
         **RC4 should disabled and avoided wherever possible!**
 
+    Regular Expression
+    regex
+    regexp
+        A `regular expression <https://en.wikipedia.org/wiki/Regular_expression>`_, 
+        regex or regexp is a sequence of characters that define a search
+        pattern. Usually such patterns are used by string searching algorithms
+        for "find" or "find and replace" operations on strings, or for input
+        validation. It is a technique developed in theoretical computer science
+        and formal language theory. 
 
     RFC
 
@@ -879,6 +1223,21 @@ Glossary
         <https://www.youtube.com/watch?v=wXB-V_Keiu8>`_ that explains it in 16
         minutes.
 
+    
+    RTS/CTS Threshold
+        RTS (Request to send) and CTS (Clear to Send) is the optional mechanism
+        used by the :term:`802.11` wireless networking protocol to reduce frame
+        collisions introduced by the "hidden node problem". Originally the
+        protocol fixed the "exposed node problem" as well, but modern RTS/CTS
+        includes ACKs and does not solve the exposed node problem. 
+
+        RTS (Request to send) is send by the client to the access point – it
+        essentially asks for permission to send the next data packet. The lower
+        the threshold, the more stable your Wi-Fi network, since it essentially
+        asks more often when sending packages. However, if you don’t have
+        problems with your Wi-Fi you should make sure that the RTS Threshold is
+        set to the maximum allowed.
+
 
     Salt
         In cryptography, a `salt
@@ -897,9 +1256,26 @@ Glossary
         from Unix system credentials to Internet security.
 
 
+    Short Preamble
+    Long Preamble
+        Preamble Type is an easy router option that can boost the performance of
+        your wireless wifi network slightly. Most of the routers or firmware has
+        the default setting for the Preamble Type as long. 
+
+        Preamble Type setting means that it adds some additional data header
+        strings to help check the wifi data transmission errors. Short Preamble
+        Type uses shorter data strings that adds less data to transmit the error
+        redundancy check which means that it is much faster. Long Preamble Type
+        uses longer data strings which allow for better error checking
+        capability.
+
+        See `Preamble Type Short or Long <https://routerguide.net/preamble-type-short-or-long/>`_
+
+
     SHA
     SHA1
     SHA-1
+
         `SHA-1 <https://en.wikipedia.org/wiki/SHA1>`_ is a :term:`cryptographic
         hash function` designed by the NSA and is a U.S. Governement Standard
         published by the United States NIST in 1995. SHA stands for "secure hash
@@ -922,10 +1298,40 @@ Glossary
     SHA-512/256
 
         `SHA-2 <https://en.wikipedia.org/wiki/SHA2>`_ is :term:`cryptographic
-        hash function`, published in 2001 by the US governement (NSA & NIST), is
+        hash function`, published in 2001 by the US government (NSA & NIST), is
         significantly different from :term:`SHA-1`. SHA-2 currently consists of
-        a set of six hash functions with digests that are 224, 256, 384 or 512
-        bits.
+        a set of six :term:`hash functions` with digests that are 224, 256, 384
+        or 512 bits.
+
+    SHA-3
+    Keccak
+
+        SHA-3 (Secure Hash Algorithm 3) is the latest member of the Secure Hash
+        Algorithm family of standards, released by NIST on August 5, 2015.
+        Although part of the same series of standards, SHA-3 is internally
+        different from the MD5-like structure of :term:`SHA-1` and
+        :term:`SHA-2`.
+
+        SHA-3 is a subset of the broader cryptographic primitive family Keccak
+        designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van
+        Assche, building upon RadioGatún. Keccak's authors have proposed
+        additional uses for the function, not (yet) standardized by NIST,
+        including a stream cipher, an authenticated encryption system, a "tree"
+        hashing scheme for faster hashing on certain architectures, and AEAD
+        ciphers Keyak and Ketje.
+
+        Keccak is based on a novel approach called sponge construction. Sponge
+        construction is based on a wide random function or random permutation,
+        and allows inputting ("absorbing" in sponge terminology) any amount of
+        data, and outputting ("squeezing") any amount of data, while acting as a
+        pseudorandom function with regard to all previous inputs. This leads to
+        great flexibility.
+
+        NIST does not currently plan to withdraw SHA-2 or remove it from the
+        revised Secure Hash Standard. The purpose of SHA-3 is that it can be
+        directly substituted for SHA-2 in current applications if necessary, and
+        to significantly improve the robustness of NIST's overall hash algorithm
+        toolkit.
 
 
     Sieve
@@ -954,8 +1360,49 @@ Glossary
         providers still provide this service on port 465 today.
 
 
+    SPF
+    Sender Policy Framework
+
+        `Sender Policy Framework <https://en.wikipedia.org/wiki/Sender_Policy_Framework>`_ 
+        (SPF) is an email authentication method designed to detect forging sender
+        addresses during the delivery of the email. SPF alone though is limited
+        only to detect a forged sender claimed in the envelope of the mail which
+        is used when the mail gets bounced. Only in combination with
+        :term:`DMARC` it can be used to detect forging of the visible sender in
+        emails (email spoofing), a technique often used in phishing and email
+        spam.
+
+        SPF allows the receiving mail server to check during mail delivery that
+        a mail claiming to come from a specific domain is submitted by an IP
+        address authorized by that domain's administrators. The list of
+        authorized sending hosts and IP addresses for a domain is published in
+        the DNS records for that domain.
+
+        Sender Policy Framework is defined in :rfc:`7208` dated April 2014 as a
+        "proposed standard".
+
+
     SSH
         TBD.
+
+    SSID
+    Service Set Identifier
+        In :term:`IEEE 802.11` wireless local area networking standards
+        (including Wi-Fi), a 
+        `service set <https://en.wikipedia.org/wiki/Service_set_(802.11_network)>`_ 
+        is a group of wireless network devices
+        that are operating with the same networking parameters. 
+
+        The SSID or "Service Set Identifier" is a unique ID of up to 32
+        characters that is used for naming wireless networks. When
+        multiple wireless networks overlap in a certain location, SSIDs make
+        sure that data gets sent to the correct destination.
+
+        Each packet sent over a wireless network includes the SSID, which
+        ensures that the data being sent over the air arrives at the correct
+        location.
+
+        See also :term:`BSSID`.
 
 
     SSL
@@ -997,6 +1444,20 @@ Glossary
         mail for further delivery on the internet. It is essentially
         :term:`SMTP`, but with mandatory :term:`TLS`-encrpytion and user
         authentication added and running on TCP port 587.
+
+
+    TKIP
+    Temporal Key Integrity Protocol
+        `Temporal Key Integrity Protocol
+        <https://en.wikipedia.org/wiki/Temporal_Key_Integrity_Protocol>` is a
+        security protocol used in the :term:`IEEE 802.11` wireless networking
+        standard. TKIP was designed by the :term:`IEEE 802.11i` task group and
+        the Wi-Fi Alliance as an interim solution to replace :term:`WEP` without
+        requiring the replacement of legacy hardware. This was necessary because
+        the breaking of WEP had left Wi-Fi networks without viable link-layer
+        security, and a solution was required for already deployed hardware.
+        However, TKIP itself is no longer considered secure, and was deprecated
+        in the 2012 revision of the 802.11 standard.
 
 
     TLDR
@@ -1071,6 +1532,30 @@ Glossary
     VoWLAN
         TBD
 
+    WEP
+    Wired Equivalent Privacy
+
+        `Wired Equivalent Privacy <https://en.wikipedia.org/wiki/Wired_Equivalent_Privacy>`_
+        (WEP) is a security algorithm for :term:`IEEE 802.11` wireless networks.
+        Introduced as part of the original 802.11 standard ratified in 1997, its
+        intention was to provide data confidentiality comparable to that of a
+        traditional wired network.
+
+        WEP, recognizable by its key of 10 or 26 hexadecimal digits (40 or 104
+        bits), was at one time widely in use and was often the first security
+        choice presented to users by router configuration tools.
+
+        In 2003 the Wi-Fi Alliance announced that WEP had been superseded by
+        :term:`Wi-Fi Protected Access` (WPA). In 2004, with the ratification of
+        the full 802.11i standard (i.e. :term:`WPA2`), the :term:`IEEE` declared
+        that both WEP-40 and WEP-104 have been deprecated.
+
+        WEP was the only encryption protocol available to :term:`802.11a` and
+        :term:`802.11b` devices built before the WPA standard, which was
+        available for :term:`802.11g` devices. However, some 802.11b devices
+        were later provided with firmware or software updates to enable WPA, and
+        newer devices had it built in.
+
 
     Wi-Fi
         TBD
@@ -1079,7 +1564,6 @@ Glossary
     Wireless Multimedia Extensions
     WME
     WMM
-
         `Wireless Multimedia Extensions <https://en.wikipedia.org/wiki/Wireless_Multimedia_Extensions>`_
         (WME), also known as Wi-Fi Multimedia (WMM), is a Wi-Fi Alliance 
         interoperability certification, based on the :term:`IEEE 802.11e` standard. It 
@@ -1115,6 +1599,53 @@ Glossary
         A `List of WLAN Channels <https://en.wikipedia.org/wiki/List_of_WLAN_channels>`_ 
         is available at Wikipedia.
 
+    WPA
+    Wi-Fi Protected Access
+    IEEE 802.11i
+        `Wi-Fi Protected Access <https://en.wikipedia.org/wiki/Wi-Fi_Protected_Access>`_
+        is a security certification programs developed by the Wi-Fi Alliance to
+        secure wireless computer networks. The Alliance defined these in
+        response to serious weaknesses researchers had found in the previous
+        system, Wired Equivalent Privacy (:term:`WEP`).
+
+        WPA (sometimes referred to as the draft IEEE 802.11i standard) became
+        available in 2003. The Wi-Fi Alliance intended it as an intermediate
+        measure in anticipation of the availability of the more secure and
+        complex :term:`WPA2`, which became available in 2004 and is a common
+        shorthand for the full IEEE 802.11i (or :term:`IEEE 802.11i-2004`)
+        standard.
+
+        In January 2018, Wi-Fi Alliance announced the release of :term:`WPA3`
+        with several security improvements over WPA2.
+
+
+    WPA2
+    Wi-Fi Protected Access II
+    IEEE 802.11i-2004
+        `IEEE 802.11i-2004 <https://en.wikipedia.org/wiki/IEEE_802.11i-2004>`_, 
+        or 802.11i for short, is an amendment to the original IEEE 802.11,
+        implemented as Wi-Fi Protected Access II (WPA2). The draft standard was
+        ratified on 24 June 2004. This standard specifies security mechanisms
+        for wireless networks, replacing the short Authentication and privacy
+        clause of the original standard with a detailed Security clause. In the
+        process, the amendment deprecated broken Wired Equivalent Privacy (WEP),
+        while it was later incorporated into the published IEEE 802.11-2007
+        standard. 
+
+    WPA2-PSK
+        A :term:`WPA2` wireless connection using the a pre-shared key (aka a
+        password) to carry out the initial authentication process.
+
+    WPA3
+        In January 2018, the Wi-Fi Alliance announced WPA3 as a replacement to
+        :term:`WPA2`. The new standard uses 128-bit encryption in WPA3-Personal
+        mode (192-bit in WPA3-Enterprise) and :term:`forward secrecy`. The WPA3
+        standard also replaces the Pre-Shared Key exchange with Simultaneous
+        Authentication of Equals as defined in IEEE 802.11-2016 resulting in a
+        more secure initial key exchange in personal mode. The Wi-Fi Alliance
+        also claims that WPA3 will mitigate security issues posed by weak
+        passwords and simplify the process of setting up devices with no display
+        interface.
 
     WPS
     Wi-Fi Protected Setup

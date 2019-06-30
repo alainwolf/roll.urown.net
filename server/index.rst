@@ -42,7 +42,7 @@ Contents:
    tor/index
    bitcoin/index
    pgp-keyserver
-   fail2ban
+   pgp-wks
 
 
 Recommended reading:

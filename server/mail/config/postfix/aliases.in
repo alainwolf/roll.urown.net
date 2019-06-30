@@ -4,3 +4,8 @@ root:       hostmaster@example.net
 postmaster: postmaster@example.net
 webmaster:  webmaster@example.net
 www-data:   webmaster@example.net
+
+# OpenPGP Web Key Service
+key-submission@example.net: webkey
+key-submission@example.org: webkey
+key-submission@example.com: webkey

@@ -124,6 +124,7 @@ html_theme = "sphinx_rtd_theme"
 # and /usr/local/lib/python2.7/dist-packages/sphinx_rtd_theme/theme.conf
 html_theme_options = {
   'canonical_url': 'https://roll.urown.net/',
+  'prev_next_buttons_location' : 'both',
   'style_external_links': True,
 }
 

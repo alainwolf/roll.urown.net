@@ -36,10 +36,15 @@ Shared Folder > Edit > Permissions).
 
 Advanced share permissions are applied when a user accesses a shared folder via
 the following file services:
+
  * Windows File Sharing,
+
  * Apple File Sharing,
+
  * File Station,
+
  * FTP (incl. SFTP?),
+
  * WebDAV.
 
 If necessary, you can place further restrictions on users when they access a
@@ -207,16 +212,24 @@ SFTP.
 To create a root directory change rule:
 
  * In Advanced Settings, check Select User.
+
  * Click Add.
+
  * In User or group, select whom this rule will be applied to.
+
  * Select which root directory will be available when the user logs in.
+
    Choose from:
+
     * User home: Users arrive at their home directory after logging in.
+
     * Other directory: Choose a shared folder as the root directory and click
       Select. Please note that the folder permissions for the user or group
       should be checked first. A user or group with insufficient folder
       permissions will be unable to log in.
+
  * Click OK.
+
  * After all rules are added, click Apply to save the rules.
 
 .. Note::

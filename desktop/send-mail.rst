@@ -1,5 +1,5 @@
-Mail for Personal Computers
-===========================
+Personal Mail Server
+====================
 
 Usually personal computers are not set up to send mail out on their own.
 

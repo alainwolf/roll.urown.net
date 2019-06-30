@@ -531,14 +531,14 @@ our selected :ref:`cipher-suite`:
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
     :language: lua
     :start-after: Include "/usr/local/lib/prosody/xmpp-onion-map/onions-map.lua"
-    :end-before: -- TLS Client Encryption
+    :end-before: c2s_require_encryption = true
 
 
 Force clients to use TLS encrypted connections:
 
 .. literalinclude:: config-files/etc/prosody/prosody.cfg.lua
     :language: lua
-    :start-after: -- TLS Client Encryption
+    :start-after:     certificate = "/etc/ssl/certs/example.net.cert.pem";
     :end-before: -- Force certificate authentication for server-to-server
 
 

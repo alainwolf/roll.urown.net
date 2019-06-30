@@ -42,11 +42,11 @@ Advanced Settings:
 ================================== ====================
 Country Code:                      **CH - Switzerland**
 Allow legacy :term:`802.11b` rates **No**
-:term:`Distance Optimization <>`   **15 meters**
-Fragmentation Threshold
-RTS/CTS Threshold
+:term:`Distance Optimization`      **15 meters**
+:term:`Fragmentation Threshold`
+:term:`RTS/CTS Threshold`
 Force 40MHz mode
-Beacon Interval
+:term:`Beacon Interval`
 ================================== ====================
 
 
@@ -70,11 +70,11 @@ Advanced Settings:
 ================================== ====================
 Country Code                       **CH - Switzerland**
 Allow legacy :term:`802.11b` rates **No**
-:term:`Distance Optimization <>`   **10 meters**
-Fragmentation Threshold
-RTS/CTS Threshold
+:term:`Distance Optimization`      **10 meters**
+:term:`Fragmentation Threshold`
+:term:`RTS/CTS Threshold`
 Force 40MHz mode
-Beacon Interval
+:term:`Beacon Interval`
 ================================== ====================
 
 
@@ -84,8 +84,9 @@ WiFi Interface Configuration
 Per network settings like encryption and mode of operation are grouped in the
 Interface Configuration. 
 
-Wireless Security
-^^^^^^^^^^^^^^^^^
+
+Wireless Security Recommendations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To get highest possible wireless network security, as
 of August 2018 the following is recommended:
@@ -153,9 +154,9 @@ Advanced Settings:
 =================================== ===========
 Isolate Clients                     **No**
 Interface Name 
-Short Preamble                      **Yes**
-DTIM Interval
-Disassociate On Low Acknowledgement **Yes**
+:term:`Short Preamble`              **Yes**
+:term:`DTIM Interval`
+Disassociate On Low Acknowledgment  **Yes**
 =================================== ===========
 
 
