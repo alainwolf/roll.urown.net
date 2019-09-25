@@ -16,10 +16,10 @@ Contents:
    secrets/index
    gpg
    yubikey/index
+   network
    send-mail
    anacron
    borg-backup
-   monkeysphere
    firefox
    thunderbird
    tails
@@ -39,7 +39,10 @@ Contents:
    signal-desktop
    gajim
    electrum
+   dyndns
 
+.. Removed ...
+   monkeysphere
 
 Recommended reading:
 `Ubuntu Desktop Guide <https://help.ubuntu.com/18.04/ubuntu-help/index.html>`_

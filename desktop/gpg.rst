@@ -256,6 +256,12 @@ You also might want to assimilate the GnuPG configuration::
                 remote.example.net:/home/user/.gnupg/
 
 
+Signed GIT Commits
+------------------
+
+
+
+
 Publishing Keys
 ---------------
 

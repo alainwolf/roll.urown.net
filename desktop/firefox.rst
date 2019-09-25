@@ -122,19 +122,6 @@ is an efficient ad blocker: easy on memory and CPU footprint, and yet can load
 and enforce thousands more filters than other popular blockers out there.
 
 
-DNSSEC TLSA Validator
-^^^^^^^^^^^^^^^^^^^^^
-
-`DNSSEC TLSA Validator <https://addons.mozilla.org/en-US/firefox/addon/dnssec-validator/>`_
-allows you to check the existence and validity of :term:`DNSSEC` and :term:`TLSA`
-records related to the domain of the website you visit.
-
-Colored icons in the browser address bar, indicate if a websites can be trusted,
-by relying on digitally signed information provided by the owner of the websites
-domain, without involvment of third-parties, like certificate authorities,
-browser vendors et al.
-
-
 Privacy Badger
 ^^^^^^^^^^^^^^
 
@@ -158,32 +145,6 @@ HTTPS-Everywhere is published by the `Electronic Frontier Foundation
 <https://www.eff.org/>`_ which maintains `a list
 <https://www.eff.org/https-everywhere/atlas/>`_ of major websites supporting
 HTTPS.
-
-
-Perspectives
-^^^^^^^^^^^^
-`Perspectives <https://addons.mozilla.org/en-US/firefox/addon/perspectives/>`_
-can ..
-
- * Provide a second-layer of security to detect attacks due to a compromised or
-   malicious certificate authority.
-
- * Securely determine the validity of “self-signed” certificates that have not
-   been signed by a certificate authority, avoiding the “scary” Firefox security
-   error when it is safe to do so.
-
-This plugin uses an existing set of Network Notary servers run by the
-`Perspectives Project <http://www.perspectives-project.org>`_.
-
-Perspectives is a new approach to helping computers communicate securely on the
-Internet, based on a research project of the Computer Science Department at
-Carnegie Mellon University. With Perspectives, public “network notary” servers
-regularly monitor the TLS certificates used by 100,000s+ websites to help your
-browser detect “man-in-the-middle” attacks without relying on certificate
-authorities.
-
-Visit the `Perspectives Project <http://www.perspectives-project.org>`_ for more
-information how this works.
 
 
 Decentraleyes
@@ -224,6 +185,8 @@ Bundles ressources:
     * Underscore.js
     * Web Font Loader
 
+
+CookiErazor
 
 Self-Destructing Cookies
 ^^^^^^^^^^^^^^^^^^^^^^^^

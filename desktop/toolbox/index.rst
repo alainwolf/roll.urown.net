@@ -16,10 +16,20 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
+   sublime-text
+   guake
    sphinx-doc
+   nut
+   gnome-tweaks
+   gnome-shell-extensions
+   pomodoro
+
+
 
 .. TBD
+
    git
    shellcheck
    python
-   sublime-text
+   zenmap
+
