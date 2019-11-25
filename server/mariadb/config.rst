@@ -112,13 +112,11 @@ Character Sets
 
 Use *UTF-8* instead of *Latin1* as default for the server and clients.
 
-Open :file:`/etc/mysql/conf.d/mariadb.cnf` and uncomment the three UTF-8 lines.
+Open :file:`/etc/mysql/my.cnf` and uncomment the three UTF-8 lines.
 
-.. literalinclude:: /server/config-files/etc/mysql//my.cnf
+.. literalinclude:: /server/config-files/etc/mysql/my.cnf
     :language: ini
     :lines: 10-15,22,43-48
-
-
 
 
 When done with the configuration changes, restart the MariaDB server::

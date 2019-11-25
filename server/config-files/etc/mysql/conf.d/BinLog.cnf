@@ -11,7 +11,7 @@
 # is derived from the rules specified in log_bin system variable.
 # Default: as set by "log_bin"
 #log_bin_basename = /var/log/mysql/mariadb-bin
-#log_bin_basename = Lapidus
+log_bin_basename = Aiken
 
 # Whether binary logging is enabled or not. If the --log-bin option is used,
 # log_bin will be set to ON, otherwise it will be OFF. If no name option is
@@ -22,11 +22,11 @@
 # optionally include an absolute path. If no path is specified, the log will be
 # written to the data directory.
 # Default: OFF
-log_bin	= /var/lib/mysql/Example-bin
+log_bin	= /var/lib/mysql/Aiken-bin
 
 # File that holds the names for last binlog files.
 # Default: Same name as the binary log files, with the extension .index
-#log_bin_index = /var/log/mysql/Lapidus-bin.index
+#log_bin_index = /var/log/mysql/Aiken-bin.index
 
 # If the binary log exceeds this size after a write, the server rotates it by
 # closing it and opening a new binary log. Single transactions will always be
