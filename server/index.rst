@@ -19,6 +19,7 @@ Contents:
    tools
    network_systemd
    firewall
+   serial-console
    server-ups
    wireguard
    server-backup
