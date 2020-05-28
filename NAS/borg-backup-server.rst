@@ -11,7 +11,7 @@ since only changes are stored. The authenticated encryption technique makes it
 suitable for backups to not fully trusted targets.
 
 This is how to setup a Borg Backup **Server** on a Synology DiskStation, so it
-can be used by :doc:`Borg Backup clients</desktop/borg-backup>` as backup
+can be used by :doc:`Borg Backup clients</desktop/backup/index>` as backup
 storage location.
 
 

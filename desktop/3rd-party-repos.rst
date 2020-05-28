@@ -17,6 +17,8 @@ Day of Ubuntu Walllpaper
 
 A classic.
 
+`Direct Package download <https://launchpadlibrarian.net/34625118/day-of-ubuntu-wallpaper_1_all.deb>`_.
+
 ::
 
 	$ sudo apt-key adv --keyserver keys.gnupg.net --recv-keys 0x7A5579BA519AE6BB
@@ -30,36 +32,10 @@ A classic.
 
 
 
-Ubuntu Multimedia for Trusty 
-----------------------------
-
-Upgraded, advanced or not normally available multimedia packages for Trusty.
-
-Website: https://launchpad.net/~mc3man/+archive/ubuntu/trusty-media
-
-::
-
-	sudo add-apt-repository ppa:mc3man/trusty-media
-
-
-Java Ayatana 
-------------
-
-Permite integrar aplicaciones Java al escritorio de Ubuntu, permitiendo a las
-aplicaciones Java Swing integrar el menu global.
-
-Website: https://launchpad.net/~danjaredg/+archive/ubuntu/jayatana
-
-::
-
-	sudo add-apt-repository ppa:danjaredg/jayatana
-
-
-
 Devolo Powerline
 ----------------
 
-Power line home network products.
+Powerline home network products.
 
 Website: https://www.devolo.com/en/Downloads
 
@@ -79,41 +55,6 @@ Website: https://www.devolo.com/en/Downloads
 	# See /etc/cron.daily/devolo-updates for more details.
 	deb http://update.devolo.com/linux/apt/ stable main
 
-
-Google Chrome Browser
----------------------
-
-The Google Chrome web-browser.
-
-Website: http://www.google.com/chrome
-
-::
-
-	$ sudo apt-key adv --keyserver keys.gnupg.net --recv-keys 0xA040830F7FAC5991
-	$ sudo nano /etc/apt/sources.list.d/google-chrome.list
-
-
-.. code-block:: text
-
-	### THIS FILE IS AUTOMATICALLY CONFIGURED ###
-	# You may comment out this entry, but any other modifications may be lost.
-	deb http://dl.google.com/linux/chrome/deb/ stable main
-
-
-GTK EveMon
-----------
-
-Official GtkEveMon PPA
-
-Websites: 
-
- * https://launchpad.net/~gtkevemon-admins/+archive/ubuntu/ppa
- * https://github.com/gtkevemon/gtkevemon
-
-
-::
-
-	$ sudo add-apt-repository ppa:gtkevemon-admins/ppa
 
 
 Guardian Project KeySync
@@ -170,10 +111,10 @@ Websites:
 	$ sudo add-apt-repository ppa:micahflee/ppa
 
 
-OwnCloud Client
----------------
+Nextcloud Client
+----------------
 
-SUSE hosted official OwnCloud packages for Ubuntu.
+Official Nextcloud packages for Ubuntu.
 
 Websites:
  * http://download.opensuse.org/repositories/isv:/ownCloud:/desktop/xUbuntu_14.04/

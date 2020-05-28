@@ -246,7 +246,7 @@ DuckDuckGo
 ^^^^^^^^^^
 
 `DuckDuckGo <https://duckduckgo.com/>`_ is an Internet search engine that
-emphasizes protecting searchers privacy and avoiding the :term:`filter bubble`
+emphasizes protecting searchers privacy and avoiding the :term:`Filter Bubble`
 of personalized search results. DuckDuckGo gets its results from over one
 hundred `different sources <https://duck.co/help/results/sources>`_.
 

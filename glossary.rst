@@ -23,7 +23,7 @@ Glossary
     IEEE 802.11
 
         `IEEE 802.11 <https://en.wikipedia.org/wiki/IEEE_802.11>`_ is a set of
-        :term:`media access control` (MAC) and physical layer (PHY) specifications for
+        :term:`Media Access Control` (MAC) and physical layer (PHY) specifications for
         implementing wireless local area network (WLAN) computer communication in the
         900 MHz and 2.4, 3.6, 5, and 60 GHz frequency bands. They are the world's most
         widely used wireless computer networking standards, used in most home and
@@ -101,10 +101,10 @@ Glossary
 
         `IEEE 802.11e-2005 <https://en.wikipedia.org/wiki/IEEE_802.11e-2005>`_  
         or 802.11e is an approved amendment to the :term:`IEEE 802.11` standard
-        that defines a set of :term:`quality of service` (QoS) enhancements for 
+        that defines a set of :term:`Quality of Service` (QoS) enhancements for 
         wireless LAN applications through modifications to the :term:`Media
         Access  Control` (MAC) layer. The standard is considered of critical
-        importance  for delay- sensitive applications, such as :term:`Voice over
+        importance  for delay-sensitive applications, such as :term:`Voice over
         Wireless LAN` and streaming multimedia. The amendment has been
         incorporated into the  published IEEE 802.11-2007 standard.
 
@@ -177,6 +177,28 @@ Glossary
         the x86 CPU architecture from Intel and AMD. It accelarates data
         encryption and decryption if the :term:`Advanced Encryption Standard`
         (AES) is used by an application.
+
+
+    AMD Platform Security Processor
+    AMD PSP
+    AMD Secure Technology
+    PSP
+
+        The `AMD Platform Security Processor <https://en.wikipedia.org/wiki/AMD_Platform_Security_Processor>`_ 
+        (PSP), officially known as AMD Secure Technology, is a trusted 
+        execution environment subsystem incorporated **since about 2013** into 
+        all AMD microprocessors. According to an AMD developer's guide, the 
+        subsystem is "responsible for creating, monitoring and maintaining the 
+        security environment" and "its functions include managing the boot 
+        process, initializing various security related mechanisms, and 
+        monitoring the system for any suspicious activity or events and 
+        implementing an appropriate response." Critics worry it can be used as 
+        a backdoor and is a security concern. 
+
+        AMD has denied requests to open source the code that runs on the PSP.
+
+        The PSP is similar to the :term:`Intel Management Engine` for Intel 
+        processors.
 
 
     Authenticated Received Chain
@@ -270,7 +292,7 @@ Glossary
         redistribution point.
 
         Each access point has its own unique identifier, a BSSID, which is a
-        unique 48-bit identifier that follows :term:`MAC address` conventions
+        unique 48-bit identifier that follows :term:`MAC Address` conventions
         and is usually non-configurable.
 
 
@@ -329,11 +351,11 @@ Glossary
     Cryptographic Hash Function
 
         A `cryptographic hash function <https://en.wikipedia.org/wiki/Cryptographic_hash_function>`_ 
-        is a :term:`hash function` which is considered practically impossible to
+        is a :term:`Hash Function` which is considered practically impossible to
         invert, that is, to recreate the input data from its hash value alone.
-        They are used for digital signatures, message authentication codes
+        They are used for digital signatures, Message Authentication Codes
         (:term:`MAC`), and other forms of authentication. It can also be used as
-        ordinary :term:`hash function`, to index data in hash tables, for
+        ordinary hash function, to index data in hash tables, for
         fingerprinting, to detect duplicate data or uniquely identify files, and
         as checksums to detect accidental data corruption. Cryptographic hash
         values are sometimes called (digital) fingerprints, checksums, or just
@@ -345,7 +367,7 @@ Glossary
 
         In cryptography, `Curve25519 <https://en.wikipedia.org/wiki/Curve25519>`_ is
         an elliptic curve offering 128 bits of security and designed for use with the
-        :term:`elliptic curve Diffie–Hellman` (:term:`ECDH`) key agreement scheme. It
+        :term:`Elliptic Curve Diffie–Hellman` (:term:`ECDH`) key agreement scheme. It
         is one of the fastest :term:`ECC` curves and is not covered by any known
         patents. Curve25519 was first released by Daniel J. Bernstein in 2005, but
         interest increased considerably after 2013 when it was discovered that the NSA
@@ -371,7 +393,7 @@ Glossary
         :term:`Transport Layer Security` (:term:`TLS`), to be bound to :term:`DNS`
         names using :term:`Domain Name System Security Extensions` (:term:`DNSSEC`).
         It is proposed in :RFC:`6698` as a way to authenticate TLS client and server
-        entities without a :term:`certificate authority` (CA).
+        entities without a :term:`Certificate Authority` (CA).
 
 
     Delegation-Signing
@@ -560,8 +582,8 @@ Glossary
 
         Dual EC DRBG (Dual Elliptic Curve Deterministic Random Bit Generator) is
         an algorithm that was presented as a cryptographically secure
-        pseudorandom number generator (CSPRNG) using methods in :term:`elliptic
-        curve cryptography`. Despite wide public criticism, including a
+        pseudorandom number generator (CSPRNG) using methods in :term:`Elliptic
+        Curve Cryptography`. Despite wide public criticism, including a
         potential backdoor, for seven years it was one of the four (now three)
         CSPRNGs standardized in NIST SP 800-90A as originally published circa
         June 2006, until *withdrawn in 2014*.
@@ -582,15 +604,15 @@ Glossary
     ECDH
     Elliptic curve Diffie–Hellman
 
-        `Elliptic curve Diffie–Hellman (ECDH)
+        `Elliptic Curve Diffie–Hellman (ECDH)
         <https://en.wikipedia.org/wiki/Elliptic_curve_Diffie-Hellman>`_ is an
         anonymous key agreement protocol that allows two parties, each having an
-        elliptic curve public–private key pair, to establish a shared secret
+        Elliptic Curve public–private key pair, to establish a shared secret
         over an insecure channel. This shared secret may be directly  used as a
         key, or better yet, to derive another key which can then be used to
         encrypt subsequent communications using a symmetric key cipher. It is a
-        variant of the :term:`Diffie-Hellman key exchange` using :term:`elliptic
-        curve cryptography`.
+        variant of the :term:`Diffie-Hellman key exchange` using :term:`Elliptic
+        Curve Cryptography`.
 
 
     ECDSA
@@ -630,7 +652,7 @@ Glossary
     EPROM
     Erasable Programmable Read-only Memory
         An `EPROM <https://en.wikipedia.org/wiki/EPROM>`_ (rarely EROM), or
-        erasable programmable read-only memory, is a type of programmable
+        erasable programmable Read-Only Memory, is a type of programmable
         :term:`read-only memory` (PROM) chip that retains its data when its
         power supply is switched off. Computer memory that can retrieve stored
         data after a power supply has been turned off and back on is called
@@ -734,7 +756,7 @@ Glossary
         computer software for rapid data lookup. Hash functions accelerate table
         or database lookup by detecting duplicated records in a large file. One
         such application is finding similar stretches in DNA sequences. They are
-        also useful in cryptography. A :term:`cryptographic hash function`
+        also useful in cryptography. A :term:`Cryptographic Hash Function`
         allows one to easily verify whether some input data map onto a given
         hash value, but if the input data is unknown it is deliberately
         difficult to reconstruct it (or any equivalent alternatives) by knowing
@@ -754,8 +776,8 @@ Glossary
         In cryptography, an `HMAC <https://en.wikipedia.org/wiki/HMAC>`_
         (sometimes expanded as either keyed-hash message authentication code or
         hash-based message authentication code) is a specific type of
-        :term:`message authentication code` (:term:`MAC`) involving a
-        :term:`cryptographic hash function` and a secret cryptographic key. It
+        :term:`Message Authentication Code` (:term:`MAC`) involving a
+        :term:`Cryptographic Hash Function` and a secret cryptographic key. It
         may be used to simultaneously verify both the data integrity and the
         authentication of a message, as with any MAC. Any cryptographic hash
         function, such as :term:`SHA-256` or :term:`SHA-3`, may be used in the
@@ -859,6 +881,54 @@ Glossary
         organization.
 
 
+    Intel Active Management Technology
+    AMT
+
+        `Intel Active Management Technology <https://en.wikipedia.org/wiki/Intel_Active_Management_Technology>`_ 
+        (AMT) is hardware and firmware backdoor for remote out-of-band
+        management of personal computers, running on the :term:`Intel 
+        Management Engine`, a separate microprocessor not exposed to the user, 
+        in order to monitor, maintain, update, upgrade, and repair them.
+
+        Features include remote power up/down, boot from remote storage
+        devices, console redirection, remote KVM access and other remote
+        management and security features.
+
+        Intel AMT is available on processors advertised under the umbrella
+        marketing term **Intel vPro** technology tipically targeted at
+        corporate customers since about 2007.
+
+        Unlike the Intel Management Engine, AMT usually can be switched off by
+        the computers BIOS options.
+
+
+    Intel Management Engine
+    ME
+    Manageability Engine
+
+        The `Intel Management Engine <https://en.wikipedia.org/wiki/Intel_Management_Engine>`_ 
+        (ME), also known as the Manageability Engine, is an autonomous 
+        subsystem that has been incorporated in virtually all of Intel's 
+        processor chipsets **since 2008**. It is located in the Platform 
+        Controller Hub of modern Intel motherboards. It is a part of 
+        :term:`Intel Active Management Technology`, which allows system 
+        administrators to perform tasks on the machine remotely. System 
+        administrators can use it to turn the computer on and off, and they can
+        login remotely into the computer regardless of whether or not an 
+        operating system is installed.
+
+        The Intel Management Engine always runs as long as the motherboard is
+        receiving power, even when the computer is turned off.
+
+        The ME is an attractive target for hackers, since it has top level
+        access to all devices and completely bypasses the operating system.
+        Intel has not released much information on the Intel Management
+        Engine, prompting speculation that it may include a backdoor. The
+        :term:`Electronic Frontier Foundation` has voiced concern about IME.
+
+        AMD processors have a similar feature, called :term:`AMD Secure Technology`.
+
+
     IMAP
         `Internet Message Access Protocol (IMAP)
         <https://en.wikipedia.org/wiki/Imap>`_ is a protocol for email
@@ -884,8 +954,8 @@ Glossary
     DNSKEY
 
         Key-signing-key (KSK) is the cryptographic key-pair used in :term:`DNSSEC` to
-        sign :term:`zone-signing-keys` (ZSK). The KSK public key is signed by the
-        parent and published as :term:`delegation-signing` (DS) record in the the
+        sign :term:`Zone-Signing-Keys` (ZSK). The KSK public key is signed by the
+        parent and published as :term:`Delegation-Signing` (DS) record in the the
         parent zone. The child zone publishes the public part of the KSK as DNSKEY
         record in its own Zone.
 
@@ -1022,7 +1092,7 @@ Glossary
     Message Submission Agent
         The software program in charge of receiving mail messages from the
         :term:`MUA` using the :term:`Submission` protocol. The MSA runs as a
-        :term:`daemon`.
+        :term:`Daemon`.
 
 
     MTA
@@ -1085,7 +1155,7 @@ Glossary
         secure and run just as fast
 
         In 2014 `Daniel J. Bernstein and Tanja Lange claimed <https://safecurves.cr.yp.to/>`_
-        that that most real-world implementations of :term:`elliptic-curve cryptography`
+        that that most real-world implementations of :term:`Elliptic-Curve Cryptography`
         are not to be considered safe. Amongst many others they also criticize
         the NIST curves. **Use if no better alternatives available** like
         :term:`Curve25519`.
@@ -1112,6 +1182,19 @@ Glossary
         within tens of milliseconds over the public Internet, and can achieve better
         than one millisecond accuracy in local area networks under ideal conditions.
         Asymmetric routes and network congestion can cause errors of 100 ms or more.
+
+
+    Null Modem
+
+        `Null modem <https://en.wikipedia.org/wiki/Null_modem>`_ is a
+        communication method to directly connect two DTEs (computer, terminal,
+        printer, etc.) using an :term:`RS-232` serial cable. The name stems
+        from the historical use of RS-232 cables to connect two teleprinter
+        devices or two modems in order to communicate with one another; null
+        modem communication refers to using a crossed-over RS-232 cable to
+        connect the teleprinters directly to one another without the modems.
+        It is also used to serially connect a computer to a printer, since
+        both are DTE, and is known as a Printer Cable. 
 
 
     OFDMA
@@ -1210,7 +1293,7 @@ Glossary
         Read-only memory (ROM) is a class of storage medium used in computers
         and other electronic devices. Data stored in ROM can only be modified
         slowly, with difficulty, or not at all, so it is mainly used to
-        distribute :term:`firmware`.
+        distribute :term:`Firmware`.
 
 
     RSA
@@ -1238,6 +1321,19 @@ Glossary
         problems with your Wi-Fi you should make sure that the RTS Threshold is
         set to the maximum allowed.
 
+    RS-232
+
+        In telecommunications, `RS-232
+        <https://en.wikipedia.org/wiki/RS-232>`_, Recommended Standard 232
+        refers to a standard originally introduced in 1960 for serial
+        communication transmission of data. It formally defines signals
+        connecting between a DTE (data terminal equipment) such as a computer
+        terminal, and a DCE (data circuit-terminating equipment or data
+        communication equipment), such as a modem. The standard defines the
+        electrical characteristics and timing of signals, the meaning of
+        signals, and the physical size and pinout of connectors.
+
+        See also :term:`Serial Port`.
 
     Salt
         In cryptography, a `salt
@@ -1256,6 +1352,36 @@ Glossary
         from Unix system credentials to Internet security.
 
 
+    Serial Port
+    COM Port
+
+        In computing, a serial port is a serial communication interface
+        through which information transfers in or out one bit at a time (in
+        contrast to a parallel port).Throughout most of the history of
+        personal computers, data was transferred through serial ports to
+        devices such as modems, terminals, and various peripherals. 
+
+        While such interfaces as Ethernet, FireWire, and USB all send data as
+        a serial stream, the term serial port usually identifies hardware
+        compliant to the :term:`RS-232` standard or similar and intended to
+        interface with a modem or with a similar communication device. 
+
+        Modern computers without serial ports may require USB-to-serial
+        converters to allow compatibility with RS-232 serial devices. Serial
+        ports are still used in applications such as industrial automation
+        systems, scientific instruments, point of sale systems and some
+        industrial and consumer products. Server computers may use a serial
+        port as a control console for diagnostics. Network equipment (such as
+        routers and switches) often use serial console for configuration.
+        Serial ports are still used in these areas as they are simple, cheap
+        and their console functions are highly standardized and widespread. A
+        serial port requires very little supporting software from the host
+        system. 
+
+        On personal computers they are called **COM** ports and numerated like
+        COM1, COM2 etc.
+
+ 
     Short Preamble
     Long Preamble
         Preamble Type is an easy router option that can boost the performance of
@@ -1528,7 +1654,7 @@ Glossary
         TBD
 
 
-    Voice Over Wireless LAN
+    Voice over Wireless LAN
     VoWLAN
         TBD
 
@@ -1693,4 +1819,15 @@ Glossary
     Zone-Signing-Keys
     ZSK
         TBD
+
+
+    OMEMO
+        TBD
+
+    OpenPGP
+        TBD
+
+    WebRTC
+        TBD
+
 

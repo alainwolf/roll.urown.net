@@ -37,6 +37,7 @@ Contents:
    owncloud-server
    ebooks
    prosody
+   videocon/index
    voip/index
    transmission
    media

@@ -142,7 +142,7 @@ remote mail-servers. To yourself, the owner or the person responsible for this
 computer.
 
 To re-route all mails to one single address, we can use a 
-:term:`regular expression`. Regular expression need to be defined in a map file, 
+:term:`Regular Expression`. Regular expression need to be defined in a map file, 
 for Postfix to interpret it.
 
 So instead of the usual :file:`/etc/aliases` file, we create a virtual alias 

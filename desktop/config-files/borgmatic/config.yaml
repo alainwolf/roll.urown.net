@@ -1,0 +1,152 @@
+# Where to look for files to backup, and where to store those backups. See
+# https://borgbackup.readthedocs.io/en/stable/quickstart.html and
+# https://borgbackup.readthedocs.io/en/stable/usage.html#borg-create for details.
+location:
+    # List of source directories to backup (required). Globs and tildes are expanded.
+    source_directories:
+        - ~/
+
+    # Paths to local or remote repositories (required). Tildes are expanded. Multiple
+    # repositories are backed up to in sequence. See ssh_command for SSH options like
+    # identity file or port.
+    repositories:
+        - ssh://borg-backup@nas.example.net/volume1/BorgBackup/{user}-{hostname}
+
+    # Any paths matching these patterns are excluded from backups. Globs and tildes
+    # are expanded. See the output of "borg help patterns" for more details.
+    exclude_patterns:
+        - '**/.cache'
+        - '**/cache'        
+        - '**/.beagle'
+        - ~/.eve/ResFiles
+        - ~/.local/share/keybase/fs
+        - ~/.local/share/keybase/kbfs_block_cache
+        - ~/.local/share/keybase/kbfs_sync_cache
+        - ~/.local/share/keybase/keybase.leveldb
+        - ~/.local/share/Trash
+        - ~/.thumbnails
+        - ~/.Trash
+        - ~/Downloads
+        - ~/Music
+        - ~/Videos
+
+    # Exclude directories that contain a CACHEDIR.TAG file. See
+    # http://www.brynosaurus.com/cachedir/spec.html for details. Defaults to false.
+    exclude_caches: true
+
+    # Exclude directories that contain a file with the given filenames. Defaults to not
+    # set.
+    exclude_if_present:
+        - .nobackup
+
+# Repository storage options. See
+# https://borgbackup.readthedocs.io/en/stable/usage.html#borg-create and
+# https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables for
+# details.
+storage:
+    # Passphrase to unlock the encryption key with. Only use on repositories that were
+    # initialized with passphrase/repokey encryption. Quote the value if it contains
+    # punctuation, so it parses correctly. And backslash any quote or backslash
+    # literals as well. Defaults to not set.
+    encryption_passphrase: "********"
+
+    # Command to use instead of "ssh". This can be used to specify ssh options.
+    # Defaults to not set.
+    ssh_command: ssh -i ~/.config/borg/ssh/id_ed25519 -o BatchMode=yes -o VerifyHostKeyDNS=yes
+                 
+    # Name of the archive. Borg placeholders can be used. See the output of
+    # "borg help placeholders" for details. Defaults to
+    # "{hostname}-{now:%Y-%m-%dT%H:%M:%S.%f}". If you specify this option, you must
+    # also specify a prefix in the retention section to avoid accidental pruning of
+    # archives with a different archive name format. And you should also specify a
+    # prefix in the consistency section as well.
+    archive_name_format: '{user}-{hostname}-{now}'
+
+# Retention policy for how many backups to keep in each category. See
+# https://borgbackup.readthedocs.org/en/stable/usage.html#borg-prune for details.
+# At least one of the "keep" options is required for pruning to work. See
+# https://torsion.org/borgmatic/docs/how-to/deal-with-very-large-backups/
+# if you'd like to skip pruning entirely.
+retention:
+    # Keep all archives within this time interval.
+    keep_within: 6H
+
+    # Number of hourly archives to keep.
+    keep_hourly: 8
+
+    # Number of daily archives to keep.
+    keep_daily: 7
+
+    # Number of weekly archives to keep.
+    keep_weekly: 4
+
+    # Number of monthly archives to keep.
+    keep_monthly: 6
+
+    # Number of yearly archives to keep.
+    keep_yearly: 1
+
+    # When pruning, only consider archive names starting with this prefix.
+    # Borg placeholders can be used. See the output of "borg help placeholders" for
+    # details. Defaults to "{hostname}-". Use an empty value to disable the default.
+    prefix: '{user}-{hostname}-'
+
+# Consistency checks to run after backups. See
+# https://borgbackup.readthedocs.org/en/stable/usage.html#borg-check and
+# https://borgbackup.readthedocs.org/en/stable/usage.html#borg-extract for details.
+consistency:
+    # List of one or more consistency checks to run: "repository", "archives", "data",
+    # and/or "extract". Defaults to "repository" and "archives". Set to "disabled" to
+    # disable all consistency checks. "repository" checks the consistency of the
+    # repository, "archives" checks all of the archives, "data" verifies the integrity
+    # of the data within the archives, and "extract" does an extraction dry-run of the
+    # most recent archive. Note that "data" implies "archives".
+    # checks:
+        # - repository
+        # - archives
+
+    # Paths to a subset of the repositories in the location section on which to run
+    # consistency checks. Handy in case some of your repositories are very large, and
+    # so running consistency checks on them would take too long. Defaults to running
+    # consistency checks on all repositories configured in the location section.
+    # check_repositories:
+        # - user@backupserver:sourcehostname.borg
+
+    # Restrict the number of checked archives to the last n. Applies only to the "archives" check. Defaults to checking all archives.
+    # check_last: 3
+
+    # When performing the "archives" check, only consider archive names starting with
+    # this prefix. Borg placeholders can be used. See the output of
+    # "borg help placeholders" for details. Defaults to "{hostname}-". Use an empty
+    # value to disable the default.
+    prefix: '{user}-{hostname}-'
+
+# Shell commands, scripts, or integrations to execute at various points during a borgmatic
+# run. IMPORTANT: All provided commands and scripts are executed with user permissions of
+# borgmatic. Do not forget to set secure permissions on this configuration file (chmod
+# 0600) as well as on any script called from a hook (chmod 0700) to prevent potential
+# shell injection or privilege escalation.
+hooks:
+
+    # List of one or more shell commands or scripts to execute when an exception
+    # occurs during a "prune", "create", or "check" action or an associated
+    # before/after hook.
+    # Supported variables:
+    #   configuration_filename
+    #   repository
+    #   error
+    #   output
+    on_error:
+       - ~/.config/borgmatic/notify.sh "{configuration_filename}" "{repository}" "{error}" "{output}"
+
+    # List of one or more shell commands or scripts to execute before running all
+    # actions (if one of them is "create"). These are collected from all configuration
+    # files and then run once before all of them (prior to all actions).
+    # before_everything:
+        # - echo "Starting actions."
+
+    # List of one or more shell commands or scripts to execute after running all
+    # actions (if one of them is "create"). These are collected from all configuration
+    # files and then run once before all of them (prior to all actions).
+    # after_everything:
+        # - echo "Completed actions."

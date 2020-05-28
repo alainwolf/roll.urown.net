@@ -86,31 +86,18 @@ TLS Policies Map
 Domain                  Provider        Policy
 ======================= =============== ===============
 _default                _               dane
-alainwolf.ch            Hostpoint.ch    verify
-alainwolf.net           urown.net       dane-only
-audioasyl.net           Nocloud         encrypt
 digitalocean.com        Google          verify
-eat.ch                  P               encrypt
-epost.ch                Post CH AG      verify
-fuerdich.ch             Cyon.net        encrypt
 gmail.com               Google          verify
 gmx.at                  1&1             dane-only
 gmx.ch                  1&1             dane-only
 gmx.de                  1&1             dane-only
 hotmail.ch              Microsoft       encrypt
 hotmail.com             Microsoft       encrypt
-init7.net               Init7           none
-koch18.org              Hostpoint       verify
 lede-project.org        lede-project    verify
 lists.torproject.org    torproject.org  dane-only
-morganschmid.ch         Hostpoint       verify
 nongnu.org              Gnu             verify
-notime.ch               Google          verify
-notime.eu               Google          verify
 nzz.ch                  Microsoft       verify
-restkultur.ch           Blankton        encrypt
 torproject.org          torproject.org  dane-only
-veloplus.ch             Google          verify
 web.de                  1&1             dane-only
 ======================= =============== ===============
 

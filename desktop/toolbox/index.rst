@@ -23,6 +23,7 @@ Contents:
    gnome-tweaks
    gnome-shell-extensions
    pomodoro
+   networking-toolbox
 
 
 

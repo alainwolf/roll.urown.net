@@ -1,0 +1,148 @@
+# Where to look for files to backup, and where to store those backups. See
+# https://borgbackup.readthedocs.io/en/stable/quickstart.html and
+# https://borgbackup.readthedocs.io/en/stable/usage.html#borg-create for details.
+location:
+    # List of source directories to backup (required). Globs and tildes are expanded.
+    source_directories:
+        - /boot
+        - /etc
+        - /opt
+        - /root
+        - /usr/local
+        - /var
+
+    # Paths to local or remote repositories (required). Tildes are expanded. Multiple
+    # repositories are backed up to in sequence. See ssh_command for SSH options like
+    # identity file or port.
+    repositories:
+        - ssh://borg-backup@nas.example.net/volume1/BorgBackup/{hostname}
+
+    # Any paths matching these patterns are excluded from backups. Globs and tildes
+    # are expanded. See the output of "borg help patterns" for more details.
+    # Any paths matching these patterns are excluded from backups. Globs and tildes
+    # are expanded. See the output of "borg help patterns" for more details.
+    exclude_patterns:
+        - '**/.cache'
+        - '**/cache'
+        - /dev
+        - /lost+found
+        - /mnt
+        - /proc
+        - /run
+        - /snap
+        - /sys
+        - /var/lib/container
+        - /var/lib/lxcfs
+        - /var/lib/ooni
+        - /var/run
+        - /var/tmp/*
+
+    # Exclude directories that contain a CACHEDIR.TAG file. See
+    # http://www.brynosaurus.com/cachedir/spec.html for details. Defaults to false.
+    exclude_caches: true
+
+    # Exclude directories that contain a file with the given filenames. Defaults to not
+    # set.
+    exclude_if_present:
+        - .nobackup
+
+    # Path for additional source files used for temporary internal state like
+    # borgmatic database dumps. Note that changing this path prevents "borgmatic
+    # restore" from finding any database dumps created before the change. Defaults
+    # to ~/.borgmatic
+    borgmatic_source_directory: /tmp/borgmatic
+
+# Repository storage options. See
+# https://borgbackup.readthedocs.io/en/stable/usage.html#borg-create and
+# https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables for
+# details.
+storage:
+    # Passphrase to unlock the encryption key with. Only use on repositories that were
+    # initialized with passphrase/repokey encryption. Quote the value if it contains
+    # punctuation, so it parses correctly. And backslash any quote or backslash
+    # literals as well. Defaults to not set.
+    encryption_passphrase: "********"
+
+    # Command to use instead of "ssh". This can be used to specify ssh options.
+    # Defaults to not set.
+    ssh_command: ssh -i /etc/borg/ssh/id_ed25519 -o BatchMode=yes -o VerifyHostKeyDNS=yes
+
+    # Base path used for various Borg directories. Defaults to $HOME, ~$USER, or ~.
+    # See https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables for details.
+    borg_base_directory: /var/lib//borg
+
+    # Path for Borg configuration files. Defaults to $borg_base_directory/.config/borg
+    borg_config_directory: /etc/borg
+
+    # Path for Borg cache files. Defaults to $borg_base_directory/.cache/borg
+    borg_cache_directory: /var/lib/borg/cache
+
+    # Path for Borg encryption key files. Defaults to $borg_base_directory/.config/borg/keys
+    borg_keys_directory: /etc/borg/keys
+
+    # Name of the archive. Borg placeholders can be used. See the output of
+    # "borg help placeholders" for details. Defaults to
+    # "{hostname}-{now:%Y-%m-%dT%H:%M:%S.%f}". If you specify this option, you must
+    # also specify a prefix in the retention section to avoid accidental pruning of
+    # archives with a different archive name format. And you should also specify a
+    # prefix in the consistency section as well.
+    archive_name_format: '{hostname}-{now}'
+
+# Retention policy for how many backups to keep in each category. See
+# https://borgbackup.readthedocs.org/en/stable/usage.html#borg-prune for details.
+# At least one of the "keep" options is required for pruning to work. See
+# https://torsion.org/borgmatic/docs/how-to/deal-with-very-large-backups/
+# if you'd like to skip pruning entirely.
+retention:
+    # Keep all archives within this time interval.
+    keep_within: 6H
+
+    # Number of hourly archives to keep.
+    keep_hourly: 8
+
+    # Number of daily archives to keep.
+    keep_daily: 7
+
+    # Number of weekly archives to keep.
+    keep_weekly: 4
+
+    # Number of monthly archives to keep.
+    keep_monthly: 6
+
+    # Number of yearly archives to keep.
+    keep_yearly: 1
+
+    # When pruning, only consider archive names starting with this prefix.
+    # Borg placeholders can be used. See the output of "borg help placeholders" for
+    # details. Defaults to "{hostname}-". Use an empty value to disable the default.
+    prefix: '{hostname}-'
+
+# Shell commands, scripts, or integrations to execute at various points during a borgmatic
+# run. IMPORTANT: All provided commands and scripts are executed with user permissions of
+# borgmatic. Do not forget to set secure permissions on this configuration file (chmod
+# 0600) as well as on any script called from a hook (chmod 0700) to prevent potential
+# shell injection or privilege escalation.
+hooks:
+
+    # List of one or more shell commands or scripts to execute when an exception
+    # occurs during a "prune", "create", or "check" action or an associated
+    # before/after hook.
+    # Supported variables:
+    #   configuration_filename
+    #   repository
+    #   error
+    #   output
+    on_error:
+       - /etc/borgmatic/notify.sh "{configuration_filename}" "{repository}" "{error}" "{output}"
+
+    # List of one or more shell commands or scripts to execute before running all
+    # actions (if one of them is "create"). These are collected from all configuration
+    # files and then run once before all of them (prior to all actions).
+    # before_everything:
+        # - echo "Starting actions."
+
+    # List of one or more shell commands or scripts to execute after running all
+    # actions (if one of them is "create"). These are collected from all configuration
+    # files and then run once before all of them (prior to all actions).
+    # after_everything:
+        # - echo "Completed actions."

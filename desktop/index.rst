@@ -16,10 +16,11 @@ Contents:
    secrets/index
    gpg
    yubikey/index
+   ssh
    network
    send-mail
    anacron
-   borg-backup
+   backup/index
    firefox
    thunderbird
    tails
@@ -31,6 +32,7 @@ Contents:
    calibre
    acrobat
    media
+   wireguard-client
    3rd-party-repos
    toolbox/index
 
