@@ -9,7 +9,7 @@ OnCalendar=daily
 RandomizedDelaySec=6h
 
 # Only wake up the system for this service after 8 hours or more.
-AccuracySec=8h
+#AccuracySec=8h
 
 # Catch up on missed runs of the service when the system was powered down.
 Persistent=true
