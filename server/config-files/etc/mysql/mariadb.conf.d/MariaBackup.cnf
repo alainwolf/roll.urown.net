@@ -1,0 +1,4 @@
+[mariabackup]
+user=mariabackup
+password=**** **** **** **** **** ****
+target-dir=/var/backups/mariadb/
