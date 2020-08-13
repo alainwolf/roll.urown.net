@@ -40,20 +40,20 @@ awk '/^Package:/{PKG= $2} /^Status: .*user installed/{print PKG}' /usr/lib/opkg/
 
 # Backup and compress
 /bin/tar --create --exclude-backups --auto-compress \
-    --file ${LOCAL_DIR}/${BACKUP_FILE}.tar.gz \
-    ${BACKUP_LIST}
+    --file "${LOCAL_DIR}/${BACKUP_FILE}.tar.gz" \
+    "${BACKUP_LIST}"
 
 # Encrypt
-/usr/bin/gpg --batch --no-default-recipient --recipient ${PGP_ID} \
-    --encrypt ${LOCAL_DIR}/${BACKUP_FILE}.tar.gz
+/usr/bin/gpg --batch --no-default-recipient --recipient "${PGP_ID}" \
+    --encrypt "${LOCAL_DIR}/${BACKUP_FILE}.tar.gz"
 
 # Transfer
 /usr/bin/rsync --archive --delete --rsh "${RSYNC_RSH}" \
-            --log-file ${LOGFILE} \
+            --log-file "${LOGFILE}" \
             --human-readable --stats --verbose \
             "${source}" "${target}"
 
 #/usr/bin/scp -i ${SSH_ID} -p 6883 ${source} ${target}
 
 # Remove the temporary directory
-rm -rf $LOCAL_DIR
+rm -rf "$LOCAL_DIR"
