@@ -25,20 +25,68 @@ Client Configuration File
 -------------------------
 
 The system-wide default client settings are stored in
-:file:`/etc/ssh/ssh_config`. Change according to the example below:
+:file:`/etc/ssh/ssh_config`. 
+
+Change according to the example below:
 
 .. code-block:: sh
 
-    # Github sometimes needs diffie-hellman-group-exchange-sha1
+    #
+    # Our own servers
+    #
+    Host server1.example.net
+        Port 63508
+
+    Host server2.example.net
+        Port 49208
+        User admin
+
+    Host *.example.net
+        ForwardAgent Yes
+        StrictHostKeyChecking Yes
+        RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
+
     Host github.com
-        KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+        User git
 
+    #
+    # Global options
+    #
     Host *
-        HostKeyAlgorithms ssh-ed25519-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ssh-ed25519,ssh-rsa
-        KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
-        Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
-        MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+        HashKnownHosts No
+        VerifyHostKeyDNS Yes
+        StrictHostKeyChecking Ask
 
 
 
+Environment
+-----------
 
+Unless :file:`/etc/resolv.conf` contains **edns0** and **trust-ad** in options,
+glibc using applications (like OpenSSH) aren't going to see that :term:`DNSSEC`
+validation is successful. 
+
+This affects our **VerifyHostKeyDNS** configuration option.
+
+Since nowadys :file:`/etc/resolv.conf` is often managed automatically, one can
+set these options as spacce separated list in the RES_OPTIONS environment
+variable instead, as described in the manpage for :manpage:`resolv.conf`:
+
+Add this to your :file:`~/.profile` file:
+
+.. code-block:: sh
+
+    # Let OpenSSH trust DNSSEC-signed SSHFP records found in DNS. Workaround for
+    # https://github.com/NLnetLabs/dnssec-trigger/issues/5 
+    export RES_OPTIONS="edns0 trust-ad"
+
+
+See also
+--------
+
+You may also look at these related pages:
+
+ * :doc:`yubikey/yubikey_ssh`
+ * :doc:`gpg`
+ * :doc:`secrets/keys`
+ * :doc:`/server/ssh-server`
