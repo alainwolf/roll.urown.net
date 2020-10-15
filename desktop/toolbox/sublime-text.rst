@@ -158,6 +158,13 @@ To install Node::
     $> sudo apt install nodejs
 
 
+Using Sublime Text with git
+---------------------------
+
+Setup :doc:`git <git>` to use Sublime Text as default editor::
+
+    $> git config --global core.editor "subl --new-window --wait"
+
 
 
 References
