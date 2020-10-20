@@ -1,32 +1,30 @@
 #!/bin/ash
-# Download list of Internet root servers from ICANN
 #
-# Author: Alain Wolf <admin@urown.net>
-# Date: Oct. 12, 2020
-
+# Refresh list of Internet root servers from Internic
+# See https://www.iana.org/domains/root/files
+#
 # Allow echo with -n parameter: 
 # shellcheck disable=SC2039
 # shellcheck shell=dash
 
 # Vars
 REMOTE_URL='https://www.internic.net/domain/named.cache'
-LOCAL_FILE='/etc/unbound/ICANN.cache'
-RUNTIME_FILE='/var/lib/unbound/ICANN.cache'
+LOCAL_FILE='/etc/unbound/root-hints.cache'
 FILE_USER=unbound
-FILE_GROUP=root
+FILE_GROUP=unbound
 
-# Make a temporary file to download the hints to
-TEMP_FILE=$(mktemp /tmp/ICANN.cache.XXXXXX)
+# Make a temporary file to download the blocklist to
+TEMP_FILE=$(mktemp /tmp/$(basename ${LOCAL_FILE}).XXXXXX)
 
 # Download the file, if its newer then what we already have installed
-echo -n "Checking ICANN for root servers updates since $( date -r ${LOCAL_FILE} ) ... "
-
+echo -n "Checking Internic for root zone server updates since "
+echo -n "$( date -r ${LOCAL_FILE} ) ... "
 if curl --fail --silent --show-error --location --remote-time \
     --time-cond ${LOCAL_FILE} \
     --output "${TEMP_FILE}" \
     ${REMOTE_URL}
 then
-    echo "Done"
+    echo "Done."
 else
     echo Download failed!
     exit
@@ -35,32 +33,27 @@ fi
 # Do we have a download (file exists and is greater then zero)?
 if [ -s "${TEMP_FILE}" ]; then
 
-    echo "Downloaded fresh root servers from $( date -r "${TEMP_FILE}" )."
-    echo -n 'Installing new root servers ... '
+    echo "Downloaded fresh root-hints from $( date -r "${TEMP_FILE}" )."
+    echo -n 'Installing new root-hints ... '
 
     # Install the file
-    cp -p -f -u "${TEMP_FILE}" "${RUNTIME_FILE}" 
-    touch -r "${TEMP_FILE}" "${RUNTIME_FILE}" 
-    chown ${FILE_USER}:${FILE_GROUP} "${RUNTIME_FILE}"
-    chmod 644 "${RUNTIME_FILE}"
-
     cp -p -f -u "${TEMP_FILE}" "${LOCAL_FILE}" 
     touch -r "${TEMP_FILE}" "${LOCAL_FILE}" 
     chown ${FILE_USER}:${FILE_GROUP} "${LOCAL_FILE}"
     chmod 644 "${LOCAL_FILE}"
-
     echo 'Done.'
 
     # Check configuration
+    cd /etc/unbound || exit
     echo -n 'Checking configuration ... '
-    if unbound-checkconf > /dev/null
+    if unbound-checkconf /etc/unbound/unbound.conf > /dev/null
     then
 
         echo Ok
 
         # Reload configuration
-        echo -n 'Reloading local server ... '
-        unbound-control -q reload && echo Done
+        echo -n 'Restart the local server ... '
+        /etc/init.d/unbound restart && echo Done
         echo -n 'Checking local server status ... '
         sleep 10 && unbound-control status -q && echo Ok
 
@@ -71,5 +64,8 @@ if [ -s "${TEMP_FILE}" ]; then
 else
     echo 'No new updates.'
 fi
+
+# Clean-up
+rm "${TEMP_FILE}"
 
 # -*- mode: sh; tab-width: 4; indent-tabs-mode: nil -*-
