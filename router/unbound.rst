@@ -1,6 +1,30 @@
-Domain Name Resolving
-=====================
+.. image:: unbound-logo.*
+    :alt: unbound Logo
+    :align: right
 
+DNS Resolver
+============
+
+.. contents::
+
+
+`Unbound <https://unbound.net/>`_ is a validating, recursive, and caching DNS
+server software product from NLnet Labs, VeriSign Inc., Nominet, and Kirei. It
+is distributed free of charge in open source form under the BSD license.
+
+Unbound is designed as a set of modular components that incorporate modern
+features, such as enhanced security (DNSSEC) validation, Internet Protocol
+Version 6 (IPv6), and a client resolver application programming interface
+library as an integral part of the architecture. Originally written for POSIX-
+compatible Unix-like operating system, it runs on FreeBSD, OpenBSD, NetBSD, OS
+X, and Linux, as well as Microsoft Windows.
+
+OpenWrt uses `dnsmasq <http://www.thekelleys.org.uk/dnsmasq/doc.html>`_ as 
+default pre-installed software as DHCP server and DNS resolver.
+
+Since we already run Unbound as our DNS resolver of choice on other
+:doc:`servers </server/dns/unbound>` and synchronize its configuration, we want
+to use Unbound instead of dnsmasq on our OpenWrt router too.
 
 
 Installation
@@ -9,99 +33,162 @@ Installation
 ::
     
     $ opkg update
-    $ opkg install unbound
+    $ opkg install unbound-daemon-heavy unbound-anchor unbound-control
 
 
 Configuration
 -------------
 
-::
-    
-    $ cd /etc/unbund
-    $ wget -O ICANN.cache ftp://FTP.INTERNIC.NET/domain/named.cache
-    $ wget -O ORSN.cache http://www.orsn.org/roothint/root-hint.txt
-    $ wget http://ftp.isc.org/www/dlv/dlv.isc.org.key
+Disable dnsmasq Resolver
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Disable the default dnsmasq resolver, by settting the TCP listening port to 0.
+This way only the DNS server is disabled, while it still might be used as DCHP
+and TFTP services:
+
+In :file:`/etc/config/dhcp`::
+
+    config dnsmasq
+        option port '0'
 
 
-Edit :file:`/etc/unbound/unbound.conf`:
+OpenWrt Integration
+^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: ini
+OpenWrt's unified configuration interface (UCI) does a lot of things with
+Unbound. See :file:`/etc/init.d/unbound`. One reason is, the preservation of CPU
+resources, memory and file-space on smaller devices, another is the conservation
+of the flash memory, by limiting write operations, and finally it intergrates
+the unbound services with OpenWrt's own upstream IPS DNS resolvers, leased out
+DCHP server addresses and other things.
 
-    ...
+In our case, we don't need any of this. We therefore run unbound in "unmanaged"
+mode.
 
-        # file to read root hints from.
-        # get one from ftp://FTP.INTERNIC.NET/domain/named.cache
-        # root-hints: ""
-        #root-hints: "/etc/unbound/named.cache"
-        root-hints: "/etc/unbound/ORSN.cache"
+In :file:`/etc/config/unbound`::
 
-    ...
+    config unbound
+        option manual_conf '1'
+        option root_age '9'
+        option unbound_control '1'
 
-        # Allow the domain (and its subdomains) to contain private addresses.
-        # local-data statements are allowed to contain private addresses too.
-        # private-domain: "example.net"
-        private-domain: "lan"
 
-    ...
+In this manual mode, our unbound configuration in :file:`/etc/unbound/` is, for
+the most part, left untouched.
 
-        # if yes, the above default do-not-query-address entries are present.
-        # if no, localhost can be queried (for testing and debugging).
-        # do-not-query-localhost: yes
-        do-not-query-localhost: no
 
-    ...
+Root Server Updates
+^^^^^^^^^^^^^^^^^^^
 
-        # File with DLV trusted keys. Same format as trust-anchor-file.
-        # There can be only one DLV configured, it is trusted from root down.
-        # Download http://ftp.isc.org/www/dlv/dlv.isc.org.key
-        dlv-anchor-file: "dlv.isc.org.key"
+The “root hints file” contains the names and IP addresses of the root servers,
+so that a resolver can bootstrap the DNS resolution process. The list is
+built-in most DNS server software, but changes from time to time.
 
-    ...
+The following script
+:download:`/root/root-servers-update <files/root/root-servers-update>` checks
+for newer versions online, downloads and installs if necessary.
 
-        # Ignore chain of trust. Domain is treated as insecure.
-        # domain-insecure: "example.net"
-        domain-insecure: "lan."
-        domain-insecure: "168.192.in-addr.arpa."    
-    ...
+.. literalinclude:: files/root/root-servers-update
+   :linenos:
 
-        # a number of locally served zones can be configured.
-        #   local-zone: <zone> <type>
-        #   local-data: "<resource record string>"
-        # o deny serves local data (if any), else, drops queries. 
-        # o refuse serves local data (if any), else, replies with error.
-        # o static serves local data, else, nxdomain or nodata answer.
-        # o transparent gives local data, but resolves normally for other names
-        # o redirect serves the zone data for any subdomain in the zone.
-        # o nodefault can be used to normally resolve AS112 zones.
-        # o typetransparent resolves normally for other types and other names
-        #
-        # defaults are localhost address, reverse for 127.0.0.1 and ::1
-        # and nxdomain for AS112 zones. If you configure one of these zones
-        # the default content is omitted, or you can omit it with 'nodefault'.
-        # 
-        # If you configure local-data without specifying local-zone, by
-        # default a transparent local-zone is created for the data.
-        #
-        # You can add locally served data with
-        # local-zone: "local." static
-        # local-data: "mycomputer.local. IN A 192.0.2.51"
-        # local-data: 'mytext.local TXT "content of text record"'
-        #
-        # You can override certain queries with
-        # local-data: "adserver.example.net A 127.0.0.1"
-        #
-        # You can redirect a domain to a fixed address with
-        # (this makes example.net, www.example.net, etc, all go to 192.0.2.3)
-        # local-zone: "example.net" redirect
-        # local-data: "example.net A 192.0.2.3"
-        local-zone: "168.192.in-addr.arpa" nodefault
 
-    ...
+Configuration Files
+-------------------
 
-    forward-zone:
-            name: "lan."
-            forward-addr: 127.0.0.1@5553
-        
-    forward-zone:
-            name: "20.172.in-addr.arpa."
-            forward-addr: 127.0.0.1@5553
+However, the init-script will still insist to copy our configuration files from
+:file:`/etc/unbound/*` to :file:`/var/lib/unbound/` before the service starts.
+
+This is to minimise strain on the flash memory chips, because unbound rewrites
+part of its configuration files, like encryption keys, periodically.
+
+The unbound binaries provided by OpenWrt with opkg, all have hard-coded
+:file:`/var/lib/unbound/` as the default configuration directory to use.
+
+The init-script will however not copy any subdirectories from
+:file:`/etc/unbound/*` to :file:`/var/lib/unbound/`. So be avare, to reference
+included configuration files with their full path to the :file:`/etc/unbound/`
+directory.
+
+Example::
+
+    # File to read root hints.
+    root-hints: "ICANN.cache" # <-- this will be read from /var/lib/unbound
+
+    # Upstream DNS reslovers
+    include: "myisp-resolver.conf" # <-- this will be read from /var/lib/unbound
+
+    # Local Zones Settings
+    include: "/etc/unbound/local-zones.d/*.conf" # <-- fully qualifed path specified.
+
+
+Remote Control Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:download:`/etc/unbound/unbound.conf.d/remote-control.conf <files/etc/unbound/unbound.conf.d/remote-control.conf>`
+
+.. literalinclude:: files/etc/unbound/unbound.conf.d/remote-control.conf
+   :language: ini
+   :linenos:
+
+
+Main Configuration File
+^^^^^^^^^^^^^^^^^^^^^^^
+
+:download:`/etc/unbound/unbound.conf <files/etc/unbound/unbound.conf>`
+
+.. literalinclude:: files/etc/unbound/unbound.conf
+   :language: ini
+   :linenos:
+
+
+Access Control Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:download:`/etc/unbound/unbound.conf.d/access-control.conf <files/etc/unbound/unbound.conf.d/access-control.conf>`
+
+.. literalinclude:: files/etc/unbound/unbound.conf.d/access-control.conf
+   :language: ini
+   :linenos:
+
+
+Security and Privacy Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:download:`/etc/unbound/unbound.conf.d/security.conf <files/etc/unbound/unbound.conf.d/security.conf>`
+
+.. literalinclude:: files/etc/unbound/unbound.conf.d/security.conf
+   :language: ini
+   :linenos:
+
+
+Unbound DNSSEC Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:download:`/etc/unbound/unbound.conf.d/dnssec.conf <files/etc/unbound/unbound.conf.d/dnssec.conf>`
+
+.. literalinclude:: files/etc/unbound/unbound.conf.d/dnssec.conf
+   :language: ini
+   :linenos:
+
+
+Upstream Resolvers
+^^^^^^^^^^^^^^^^^^
+
+:download:`/etc/unbound/unbound.conf.d/upstream-resolvers.conf <files/etc/unbound/unbound.conf.d/upstream-resolvers.conf>`
+
+.. literalinclude:: files/etc/unbound/unbound.conf.d/upstream-resolvers.conf
+   :language: ini
+   :linenos:
+
+
+Downstream DNS-over-TLS (DoT)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:download:`/etc/unbound/unbound.conf.d/dns-over-tls.conf <files/etc/unbound/unbound.conf.d/dns-over-tls.conf>`
+
+.. literalinclude:: files/etc/unbound/unbound.conf.d/dns-over-tls.conf
+   :language: ini
+   :linenos:
+
+
+.. -*- mode: rst; tab-width: 4; indent-tabs-mode: nil -*-

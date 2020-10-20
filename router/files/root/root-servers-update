@@ -1,0 +1,75 @@
+#!/bin/ash
+# Download list of Internet root servers from ICANN
+#
+# Author: Alain Wolf <admin@urown.net>
+# Date: Oct. 12, 2020
+
+# Allow echo with -n parameter: 
+# shellcheck disable=SC2039
+# shellcheck shell=dash
+
+# Vars
+REMOTE_URL='https://www.internic.net/domain/named.cache'
+LOCAL_FILE='/etc/unbound/ICANN.cache'
+RUNTIME_FILE='/var/lib/unbound/ICANN.cache'
+FILE_USER=unbound
+FILE_GROUP=root
+
+# Make a temporary file to download the hints to
+TEMP_FILE=$(mktemp /tmp/ICANN.cache.XXXXXX)
+
+# Download the file, if its newer then what we already have installed
+echo -n "Checking ICANN for root servers updates since $( date -r ${LOCAL_FILE} ) ... "
+
+if curl --fail --silent --show-error --location --remote-time \
+    --time-cond ${LOCAL_FILE} \
+    --output "${TEMP_FILE}" \
+    ${REMOTE_URL}
+then
+    echo "Done"
+else
+    echo Download failed!
+    exit
+fi
+
+# Do we have a download (file exists and is greater then zero)?
+if [ -s "${TEMP_FILE}" ]; then
+
+    echo "Downloaded fresh root servers from $( date -r "${TEMP_FILE}" )."
+    echo -n 'Installing new root servers ... '
+
+    # Install the file
+    cp -p -f -u "${TEMP_FILE}" "${RUNTIME_FILE}" 
+    touch -r "${TEMP_FILE}" "${RUNTIME_FILE}" 
+    chown ${FILE_USER}:${FILE_GROUP} "${RUNTIME_FILE}"
+    chmod 644 "${RUNTIME_FILE}"
+
+    cp -p -f -u "${TEMP_FILE}" "${LOCAL_FILE}" 
+    touch -r "${TEMP_FILE}" "${LOCAL_FILE}" 
+    chown ${FILE_USER}:${FILE_GROUP} "${LOCAL_FILE}"
+    chmod 644 "${LOCAL_FILE}"
+
+    echo 'Done.'
+
+    # Check configuration
+    echo -n 'Checking configuration ... '
+    if unbound-checkconf > /dev/null
+    then
+
+        echo Ok
+
+        # Reload configuration
+        echo -n 'Reloading local server ... '
+        unbound-control -q reload && echo Done
+        echo -n 'Checking local server status ... '
+        sleep 10 && unbound-control status -q && echo Ok
+
+    else
+        echo 'unbound server configuration has errors!'
+        exit 1
+    fi
+else
+    echo 'No new updates.'
+fi
+
+# -*- mode: sh; tab-width: 4; indent-tabs-mode: nil -*-
