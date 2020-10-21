@@ -20,19 +20,13 @@ X, and Linux, as well as Microsoft Windows.
 Software Installation
 ---------------------
 
-::
+The unbound server is available from the Ubuntu software repository::
 
-    $ sudo apt-get install unbound
-    $ sudo service unbound stop
+    $ sudo apt install unbound
 
-Configuration
+
+Prerequisites
 -------------
-
-The installed configuration file is very minimal.
-
-A more extensive example configuration file is found at 
-`/usr/doc/share/unbound/examples/unbound.conf`.
-
 
 Server IP Address
 ^^^^^^^^^^^^^^^^^
@@ -47,7 +41,7 @@ Make them persistent across reboots by adding them to the
 
     ...
 
-    # dns2.lan
+    # ns1.home.example.net
     iface eth0 inet6 static
         address 2001:db8::43/64
     iface eth0 inet static
@@ -62,6 +56,140 @@ following lines to :file:`/etc/unbound/unbound.conf`:
 
         interface: 192.0.2.43
         interface: 2001:db8::43
+
+
+Disable Default Resolvers
+-------------------------
+
+There might be a local resolver running already. 
+
+If there is already a local or remote resolving name server in active use, its
+address is found in the file :file:`/etc/resolv.conf` or by issuing the
+following command::
+
+    $ nslookup example.com | grep Server
+
+Ubuntu Server 18.04
+^^^^^^^^^^^^^^^^^^^
+
+In Ubunutu Bionic **systemd-resolved** is installed and active by default. To
+deactivate it::
+
+    $ sudo systemctl stop systemd-resolved 
+    $ sudo systemctl disable systemd-resolved 
+
+You can also tell **systemd-networkd** your nameserver preferencs. Edit the file
+:file:`/etc/systemd/network/bond0.network`:
+
+.. code-block:: ini
+    :linenos:
+    :emphasize-lines: 4,11
+
+    # home.example.net IPv4 Network
+    Address=192.0.2.10/24
+    Gateway=192.0.2.1
+    DNS=192.0.2.43
+    NTP=192.0.2.1
+
+    # home.example.net IPv6 Network
+    Address=2001:db8::10/64
+    IPv6PrivacyExtensions=true
+    IPv6AcceptRouterAdvertisements=true
+    DNS=2001:db8::43
+    NTP=2001:db8::1
+
+    # ns1.home.example.net
+    Address=192.0.2.43/24
+    Address=2001:db8::43/64
+
+
+
+Ubuntu Server 16.04
+^^^^^^^^^^^^^^^^^^^
+
+In Ubuntu Xenial :file:`/etc/resolv.conf` is controlled by **resolvconf** an can
+not be edited manually. You can de-install **resolvconf** and remove any
+remaining symbolic link as follows::
+
+    $ sudo apt remove resolvconf
+    $ sudo rm /etc/resolv.conf
+
+
+After re-create it as follows after that::
+
+    $ echo "nameserver 2001:db8::43" | sudo tee -a /etc/resolv.conf
+    $ echo "nameserver 192.0.2.43" | sudo tee -a /etc/resolv.conf
+    $ echo "options edns0 trust-ad" | sudo tee -a /etc/resolv.conf
+
+
+To let the system manage it for you, you can add the following lines to the file
+:file:`/etc/network/interfaces`:
+
+.. code-block:: ini
+    :linenos:
+    :emphasize-lines: 6,10
+
+    auto bond0
+
+    iface bond0 inet static
+        address 192.0.2.10/24
+        gateway 192.0.2.1
+        dns-nameserver 192.0.2.43
+
+    iface bond0 inet6 static
+        address 2001:db8::10/64
+        dns-nameserver 2001:db8::43
+
+    iface bond0 inet static
+        address 192.0.2.43/24
+
+    iface bond0 inet static
+        address 2001:db8::43/64
+
+
+Time Servers
+------------
+
+Sometimes a chicken and egg problem occurs with DNSSEC. Cryptographic operations
+need accurate time. But most systems have default time servers set something
+like "pool.ntp.org" or "ntp.ubuntu.com". Thus the clock needs first to be set
+before DNSSEC works, but for the clock to be set, a time server address needs to
+be resolved ...
+
+To be on the safe side, set numerical IPs as timeservers. In the file
+:file:`/etc/systemd/network/bond0.network`:
+
+.. code-block:: ini
+    :linenos:
+    :emphasize-lines: 5,12
+
+    # home.example.net IPv4 Network
+    Address=192.0.2.10/24
+    Gateway=192.0.2.1
+    DNS=192.0.2.43
+    NTP=192.0.2.1
+
+    # home.example.net IPv6 Network
+    Address=2001:db8::10/64
+    IPv6PrivacyExtensions=true
+    IPv6AcceptRouterAdvertisements=true
+    DNS=2001:db8::43
+    NTP=2001:db8::1
+
+    # ns1.home.example.net
+    Address=192.0.2.43/24
+    Address=2001:db8::43/64
+
+
+Configuration
+-------------
+
+The installed configuration file is very minimal.
+
+A more extensive example configuration file is found at 
+`/usr/doc/share/unbound/examples/unbound.conf`.
+
+
 
 
 Internet Root DNS severs
