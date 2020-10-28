@@ -10,8 +10,7 @@ Prerequisites
 -------------
 
  * Yubico installed and setup as described in :doc:`index`.
- * Disabled the GPG-Agent of Gnome Keyring Daemon.
- * GnuPG installed and configured as in :doc:`../gpg` (including GPG Agent).
+ * GnuPG installed and configured as in :doc:`../gpg`.
 
 
 Additional Software
@@ -22,7 +21,7 @@ Additional Software
 
 Install these as follows::
 
-	> sudo apt install pcscd scdaemon
+	$ sudo apt install pcscd scdaemon
 
 
 GnuPG should now be able to access the Yubikey Neo as a smart card::
@@ -54,7 +53,7 @@ Setup the Yubikey NEO
 
 Use GnuPG's `card-edit` command to configure the card::
 
-	> gpg card-edit
+	$ gpg card-edit
 
 
 Setting PIN codes
@@ -70,6 +69,7 @@ The Smartcard has two PIN codes:
 
 
 .. warning::
+
 	Entering a wrong Administration PIN three times in a row **destroys the
 	card!** There is no way to unblock the card when a wrong Administration PIN
 	has been entered three times.
@@ -182,27 +182,26 @@ On other Systems
 ----------------
 
 Thanks to the Yubikey, our private keys are no longer stored on and tied to a
-personal computer. The Yubikey can be plugged in at any computer system and our
-private keys are ready for use ... Right?
+particular computer. The Yubikey can be plugged in at any computer system and
+our private keys are ready for use ... Right?
 
-Unfortunately thats not the case. For the following reasons:
+Unfortunately thats not the case. For the following two reasons:
 
 #. As shown on the beginning of this guide, additional software, usually not 
    pre-installed, is used to access the Yubikey or GnuPG Smartcard.
 
-#. Second, the local GnuPG key-rings don't have any knowledge of the public and
-   private keys. The private keys are stored on the Yubikey only and the public
-   keys are nowhere at all.
+#. Second, the local GnuPG keyring doesn't know anything about the private key
+   on the Yubikey and does not know anything of its corresponding public key.
 
 So to use your PGP keys stored on a Yubikey or GnuPG Smartcard the following
 steps need to be taken:
 
-#. Install required software::
+#. Install required software to enable GnuPG to access the Yubikey::
 
 	> sudo apt install pcscd scdaemon
 
-#. Download the corresponding public keys of your private keys and add them to 
-   your local keyring::
+#. Download the corresponding public keys of your private keys and add them to
+   the local keyring::
 
  	> gpg --card-edit
  	gpg/card> fetch
