@@ -121,12 +121,43 @@ Save and close the file, then update the initial RAM disk::
     $  sudo update-initramfs -u
 
 
-Enable at Suspend/Resume
-^^^^^^^^^^^^^^^^^^^^^^^^
+Yubikey LUKS Suspend
+^^^^^^^^^^^^^^^^^^^^
+
+There is also a *YubiKey/Luks Suspend/Resume* service installed with this
+software package. 
+
+It takes care of closing your encrpyted volume and discards all key material
+from memory, before the system goes to sleep.
+
+When the system wakes up again, and the Yubikey is not present, nobody will
+have access.
+
+Unfortunately this particular feature `doesn't work anymore
+<https://github.com/cornelinux/yubikey-luks/issues/45>`_ since Unbuntu 18.04.
+On suspend the system gets stuck on a black text screen saying::
+
+    gzip: stdin: not in gzip format
+    cpio: premature end of archive
+    Press ENTER to continue.
+
+
+When you press enter the system will lock your session, but doesn't go to sleep.
+
+You can still use suspend/resume , just disable the
+:file:`yubikey-luks-suspend.service` service:
+
+.. warning::
+
+    Be aware, that the encrypted volume **will remain unencrypted** during
+    suspend and will be readable without the need of the Yubikey and password
+    on resume.
+
+    Only a complete shutdown and **power off**, will lock your encrpyted volume.
 
 ::
 
-    $ systemctl enable yubikey-luks-suspend.service
+    $ systemctl disable yubikey-luks-suspend.service
 
 
 References
