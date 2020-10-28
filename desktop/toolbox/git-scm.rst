@@ -10,10 +10,10 @@ Version Control
     :alt: Git Logo
     :align: right
 
-Git
----
+Git Source Code Management
+--------------------------
 
-`Git <https://git-scm.com/>`_ is a free and open source distributed version
+`Git SCM <https://git-scm.com/>`_ is a free and open source distributed version
 control system designed to handle everything from small to very large projects
 with speed and efficiency.
 
@@ -69,10 +69,10 @@ hour::
     :align: right
 
 
-GitHub
-------
+GitHub Website
+--------------
 
-`GitHub <https://github.com/>`_ provides hosting for software development and
+`GitHub Site <https://github.com/>`_ provides hosting for software development and
 version control using Git. Since 2018 it's owned by Microsoft.
 
 Basic services are free of charge. More advanced professional and enterprise
@@ -173,16 +173,18 @@ you won't have to type it in every time::
     :alt: Git Logo
     :align: right
 
-Meld
-====
+
+Meld Visual Diff Tool
+=====================
 
 `Meld <https://meldmerge.org/>`_ is a visual diff and merge tool targeted at
 developers. Meld helps you compare files, directories, and version controlled
 projects. It provides two- and three-way comparison of both files and
 directories, and has support for many popular version control systems.
 
-Installation
-------------
+
+Meld Installation
+-----------------
 
 Meld is in the Ubuntu software repository::
 

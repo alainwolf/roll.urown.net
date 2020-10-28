@@ -16,7 +16,7 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
-   git
+   git-scm
    sublime-text
    guake
    sphinx-doc
