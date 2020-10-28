@@ -118,7 +118,7 @@ SSH Public Key
 
 Typically git uses SSH to clone, push and pull code between repositories on
 different systems. With GitHub SSH connections are always made with the user
-:file:`git` to the host :file:`ssh.github.com` on either the standard TCP port
+:file:`git` to the host :file:`github.com` on either the standard TCP port
 22 or port 443 (to bypass restricitve firewalls). For identification and
 authorization GitHub uses your SSH key. Therefore your SSH key needs to be tied
 to our GitHub account as well.
@@ -137,8 +137,6 @@ You may add the following lines to your SSH configuration file
 .. code-block:: ini
 
     Host github.com
-      Hostname ssh.github.com
-      Port 443
       User git
 
 More on 
@@ -224,3 +222,4 @@ References
 
  * `Git Documentation <https://git-scm.com/doc>`_
  * `Getting started with Git and GitHub <https://docs.github.com/en/free-pro-team@latest/github/using-git/getting-started-with-git-and-github>`_
+
