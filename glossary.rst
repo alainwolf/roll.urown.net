@@ -521,6 +521,59 @@ Glossary
         TBD
 
 
+    DNS Resolver
+
+        The client side of the DNS is called a DNS resolver. A resolver is
+        responsible for initiating and sequencing the queries that ultimately
+        lead to a full resolution (translation) of the resource sought, e.g.,
+        translation of a domain name into an IP address. DNS resolvers are
+        classified by a variety of query methods, such as recursive,
+        non-recursive, and iterative. A resolution process may use a combination
+        of these methods.
+
+
+    DNS-over-HTTPS
+    DoH
+
+        `DNS over HTTPS <https://en.wikipedia.org/wiki/DNS_over_HTTPS>`_ (DoH)
+        is a protocol for performing remote Domain Name System (:term:`DNS`)
+        resolution via the :term:`HTTPS` protocol. A goal of the method is to
+        increase user privacy and security by preventing eavesdropping and
+        manipulation of DNS data by man-in-the-middle attacks[1] by using the
+        HTTPS protocol to encrypt the data between the DoH client and the
+        DoH-based DNS resolver. By March of 2018, Google and the Mozilla
+        Foundation had started testing versions of DNS over HTTPS. In February
+        2020, Firefox switched to DNS over HTTPS by default for users in the
+        United States.
+
+    DNS-over-TLS
+    DoT
+
+        `DNS over TLS <https://en.wikipedia.org/wiki/DNS_over_TLS>`_ (DoT) is a
+        security protocol for encrypting and wrapping Domain Name System
+        (:term:`DNS`) queries and answers via the
+        :term:`Transport Layer Security` (:term:`TLS`) protocol. The goal of the
+        method is to increase user privacy and security by preventing
+        eavesdropping and manipulation of DNS data via man-in-the-middle
+        attacks.
+
+    DNSCrypt
+
+        `DNSCrypt <https://en.wikipedia.org/wiki/DNSCrypt>`_ is a network
+        protocol that authenticates and encrypts :term:`Domain Name
+        System` (term:`DNS`) traffic between the user's computer and recursive
+        name servers. It was originally designed by Frank Denis and Yecheng Fu.
+        Although multiple client and server implementations exist, the protocol
+        was never proposed to the :term:`Internet Engineering Task Force`
+        (:term:`IETF`) by the way of a :term:`Request for Comments`
+        (:term:`RFC`). DNSCrypt wraps unmodified DNS traffic between a client
+        and a DNS resolver in a cryptographic construction in order to detect
+        forgery. Though it doesn't provide end-to-end security, it protects the
+        local network against man-in-the-middle attacks. It also mitigates
+        UDP-based amplification attacks by requiring a question to be at least
+        as large as the corresponding response. Thus, DNSCrypt helps to prevent
+        DNS amplification attacks.
+
     DNSSEC
     Domain Name System Security Extensions
 
@@ -790,8 +843,30 @@ Glossary
 
     HTTP
     Hyper Text Transfer Protocol
-        TBD
 
+        `The Hypertext Transfer Protocol <https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol>`_
+        (HTTP) is an application layer protocol for distributed, collaborative,
+        hypermedia information systems. HTTP is the foundation of data
+        communication for the World Wide Web, where hypertext documents include
+        hyperlinks to other resources that the user can easily access, for
+        example by a mouse click or by tapping the screen in a web browser.
+        
+        Development of HTTP was initiated by Tim Berners-Lee at CERN in 1989.
+        Development of early HTTP Requests for Comments (RFCs) was a coordinated
+        effort by the Internet Engineering Task Force (IETF) and the World Wide
+        Web Consortium (W3C), with work later moving to the IETF.
+
+    HTTPS
+    Hypertext Transfer Protocol Secure
+        
+        `Hypertext Transfer Protocol Secure <https://en.wikipedia.org/wiki/HTTPS>`_
+        (HTTPS) is an extension of the :term:`Hypertext Transfer Protocol`
+        (:term:`HTTP`). It is used for secure communication over a computer
+        network, and is widely used on the Internet. In HTTPS, the communication
+        protocol is encrypted using :term:`Transport Layer Security`
+        (:term:`TLS`) or, formerly, :term:`Secure Sockets Layer` (:term:`SSL`).
+        The protocol is therefore also referred to as HTTP over TLS, or HTTP
+        over SSL.
 
     HPKP
     HTTP Public Key Pinning

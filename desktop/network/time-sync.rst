@@ -53,6 +53,23 @@ compiled-in options are shown:
 So I assume that *ntp.ubuntu.com* is used as time-server because the list
 remains empty, even if our DHCP sever is sending out NTP server addesses to use.
 
+Let's change that first, so it will no longer phone home by editing
+:file:`/etc/systemd/timesyncd.conf`:
+
+.. code-block:: ini
+
+    #  This file is part of systemd.
+    #
+    # See timesyncd.conf(5) for details.
+
+    [Time]
+    FallbackNTP=ch.pool.ntp.org
+
+
+Restart the service afterwards::
+
+    $ sudo systemctl restart systemd-timesyncd.service 
+
 
 systemd-networkd
 ----------------
@@ -60,28 +77,7 @@ systemd-networkd
 In systemd-networkd is configured via :file:`/etc/systemd/networkd.conf` and
 various configuration file in the directory :file:`/etc/systemd/network/`.
 
-Also in this file, nothing is set, but the defaults are shown as commented-out
-lines.
-
-.. code-block:: ini
-
-    #  This file is part of systemd.
-    #
-    # Entries in this file show the compile time defaults.
-    # You can change settings by editing this file.
-    # Defaults can be restored by simply deleting this file.
-    #
-    # See networkd.conf(5) for details
-
-    [Network]
-    #SpeedMeter=no
-    #SpeedMeterIntervalSec=10sec
-
-    [DHCP]
-    #DUIDType=vendor
-    #DUIDRawData=
-
-There is not even a setting for NTP in that file. But the manpage for the
+But the manpage for the
 `systemd network-configuration <https://manpages.ubuntu.com/manpages/focal/en/man5/systemd.network.5.html>`_,
 states that you can either set an NTP server address yourself with the
 **"NTP="** setting in the **"[Network]"** section, or you can set the option
@@ -93,23 +89,23 @@ why isn't that actually happening?
 
 As it turns out, Ubuntu Desktop doesn't actually use
 **systemd-networkd.service**. Its disabled in favor of the
-**Gnome NetworkManager**.
+**NetworkManager**.
 
 
-Gnome NetworkManager
---------------------
+NetworkManager
+--------------
 
 Contrary to **systemd-networkd**, **NetworkManager** is not capable to
 communicate with systemd-timesyncd to set the NTP server addesses automatically.
 
-But with *NetworkManager*, scripts can be placed in specific subdirectories of
-the :file:`/etc/NetworkManager/dispatcher.d/` directory to be triggered by the
-*NetworkManager-dispatcher.service* on related network events.
+But with **NetworkManager**, scripts can be placed in specific subdirectories
+of the :file:`/etc/NetworkManager/dispatcher.d/` directory to be triggered by
+the *NetworkManager-dispatcher.service* on related network events.
 
-I found the following script in the ArchLinux wiki, to be placed in
-:download:`/etc/NetworkManager/dispatcher.d/10-update-timesyncd <config-files/etc/NetworkManager/dispatcher.d/10-update-timesyncd>`:
+The following script is inspired by the ArchLinux wiki, to be placed in
+:download:`/etc/NetworkManager/dispatcher.d/10-update-timesyncd <../config-files/etc/NetworkManager/dispatcher.d/10-update-timesyncd>`:
 
-.. literalinclude:: config-files/etc/NetworkManager/dispatcher.d/10-update-timesyncd
+.. literalinclude:: ../config-files/etc/NetworkManager/dispatcher.d/10-update-timesyncd
 
 
 Make it executable by the **root** user only::
