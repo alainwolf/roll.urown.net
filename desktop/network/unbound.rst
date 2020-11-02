@@ -1,6 +1,6 @@
 
-Domain Name System
-==================
+Domain Name Resolver
+====================
 
 Here is how we handle Domain Name resolving on the desktop.
 
@@ -182,13 +182,18 @@ The DNSSEC-Trigger is in the Ubuntu software repository::
 DNSSEC-Trigger Configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-DNSSEC-Trigger uses two configuration file in the :file:`/etc/dnssec-trigger/`
+DNSSEC-Trigger uses two configuration files in the :file:`/etc/dnssec-trigger/`
 directory.
 
-The file :file:`dnssec-trigger.conf` controls how DNSSEC-Trigger is working.
+The file :file:`dnssec-trigger.conf` controls how **dnssec-trigger** dameon is
+working. Documentation is found on the
+`dnssec-trigger.conf(8) <https://manpages.ubuntu.com/manpages/focal/en/man8/dnssec-trigger.conf.8.html>`_
+man page and in the comments inside the configuration file.
 
-The file :file:`dnssec.conf` controls how unbound will handle certain networks.
-Some of these have security implications and are described in detail.
+The file :file:`dnssec.conf` controls the **dnssec-trigger-script**. The script
+is called when after changes of network connectoins have been detected and
+re-configures your unbound DNS resolver. There is no man page for this
+configuration file, but the comments inside it file describe all the options.
 
 
 Intitial Setup
@@ -200,60 +205,6 @@ service after that::
 
     $ sudo dnssec-trigger-control-setup
     $ sudo systemctl restart dnssec-triggerd.service
-
-
-If dnssec-trigger Keeps Crashing
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. warning::
-
-    At the time of this writing there is a 
-    `bug (#4218) <https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=4218>`_ 
-    in the current dnssec-triggerd daemon version 0.17.
-
-    dnssec-triggerd might crash soon after startup, leaving you without DNS
-    resolution.
-
-
-Here is a partial and temporary workaraound:
-
- #. Copy the file :file:`/lib/systemd/system/dnssec-triggerd.service` to :file:`/etc/systemd/system/`::
-
-     $ sudo cp /lib/systemd/system/dnssec-triggerd.service /etc/systemd/system/
-
-
- #. Open the file :file:`/etc/systemd/system/dnssec-triggerd.service` and comment out line 13 "ExecStartPost=-/usr/lib/dnssec-trigger/dnssec-trigger-script --update_all":
- 
- ::
-
-    [Unit]
-    Description=Reconfigure local DNSSEC resolver on connectivity changes
-    After=NetworkManager.service unbound.service dnssec-triggerd-keygen.service
-    Requires=unbound.service
-    Wants=dnssec-triggerd-keygen.service
-
-    [Service]
-    PIDFile=/run/dnssec-triggerd.pid
-    Type=simple
-    Restart=always
-    ExecStart=/usr/sbin/dnssec-triggerd -d
-    ExecStartPre=-/usr/lib/dnssec-trigger/dnssec-trigger-script --prepare
-    #ExecStartPost=-/usr/lib/dnssec-trigger/dnssec-trigger-script --update_all
-    ExecStopPost=-/usr/lib/dnssec-trigger/dnssec-trigger-script --cleanup
-
-    [Install]
-    WantedBy=multi-user.target
-
- 
- #. Save and close the file, then reload your services to activate the changes you just made::
-
-     $ sudo systemctl daemon-reload
-
-
- #. Restart the dnssec-triggerd daemon::
-
-     $ sudo systemctl restart dnssec-triggerd.service
-
 
 
 Network Manager Configuration
@@ -268,23 +219,26 @@ file :file:`/etc/NetworkManager/conf.d/no-systemd-resolved.conf`::
     [main]
     systemd-resolved=false
 
-Tell network manager that **unbound** and **dnssec-trigger** will be taking care of things. by creating the
-file :file:`/etc/NetworkManager/conf.d/unbound-dns.conf`::
+
+By creating the file :file:`/etc/NetworkManager/conf.d/unbound-dns.conf` we tell
+network manager that **unbound** and **dnssec-trigger** will be taking care of
+things and not to interfere::
 
     # Configuration file for NetworkManager.
     # See "man 5 NetworkManager.conf" for details.
     [main]
 
     # NetworkManager will talk to unbound and dnssec-triggerd, using "Conditional
-    # Forwarding" with DNSSEC support. /etc/resolv.conf will be managed by
-    # dnssec-trigger daemon.
+    # Forwarding" with DNSSEC support. 
     dns=unbound
 
-    # Don't touch /etc/resolv.conf
+    # NetworkManager should not touch /etc/resolv.conf, as it will be managed by
+    # the dnssec-trigger daemon.
     rc-manager=unmanaged
 
 
-Restart the Network Manager service, after saving and closing the configuration file::
+Restart the Network Manager service, after saving and closing the configuration
+file::
 
     $ sudo systemctl restart NetworkManager.service
 
@@ -292,4 +246,4 @@ Restart the Network Manager service, after saving and closing the configuration 
 References
 ----------
 
-* `DNS Privacy Project <https://dnsprivacy.org/wiki/>`_
+* `The DNS Privacy Project <https://dnsprivacy.org/wiki/>`_
