@@ -414,7 +414,7 @@ Glossary
 
 
     DH
-    Diffie-Hellman key exchange
+    Diffie-Hellman Key Exchange
 
         `Diffie–Hellman key exchange (DH) <https://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange>`_ 
         is a specific method of exchanging cryptographic keys.
@@ -427,8 +427,8 @@ Glossary
 
     DH Parameters
         DH parameters are pre-generated large prime-numbers, which accelerates
-        the  generatation of session keys while using :term:`Diffie-Hellman key
-        exchange`. To find and evaluate such prime numbers takes a long time
+        the  generatation of session keys while using :term:`Diffie-Hellman Key
+        Exchange`. To find and evaluate such prime numbers takes a long time
         (up to several minutes). Using pre-generated values allows to establish
         session keys during initial handshake and periodic renevals, without any
         noticeable delay.
@@ -451,10 +451,9 @@ Glossary
         from. Lists have been compiled for several languages.
 
         See also the original 
-        `Diceware Passphrase Home Page <http://world.std.com/~reinhold/diceware.html>`_
+        `Diceware Passphrase Home Page <https://theworld.com/~reinhold/diceware.html>`_
         or the `urown.net Diceware <https://diceware.urown.net/#eff>`_ 
         installation.
-
 
     Digital Fingerprint
         See :term:`Cryptographic Hash Function`.
@@ -646,7 +645,7 @@ Glossary
     Elliptic Curve Cryptography
     Elliptic-Curve Cryptography
 
-        `Elliptic-curve cryptography (ECC)
+        `Elliptic Curve Cryptography (ECC)
         <https://en.wikipedia.org/wiki/Elliptic-curve_cryptography>`_ is an
         approach to public-key cryptography based on the algebraic structure of
         elliptic curves over finite fields. ECC requires smaller keys compared
@@ -655,7 +654,8 @@ Glossary
 
 
     ECDH
-    Elliptic curve Diffie–Hellman
+    Elliptic Curve Diffie–Hellman
+    Elliptic-Curve Diffie–Hellman
 
         `Elliptic Curve Diffie–Hellman (ECDH)
         <https://en.wikipedia.org/wiki/Elliptic_curve_Diffie-Hellman>`_ is an
@@ -664,7 +664,7 @@ Glossary
         over an insecure channel. This shared secret may be directly  used as a
         key, or better yet, to derive another key which can then be used to
         encrypt subsequent communications using a symmetric key cipher. It is a
-        variant of the :term:`Diffie-Hellman key exchange` using :term:`Elliptic
+        variant of the :term:`Diffie-Hellman Key Exchange` using :term:`Elliptic
         Curve Cryptography`.
 
 
@@ -674,7 +674,7 @@ Glossary
         In cryptography, the 
         `Elliptic Curve Digital Signature Algorithm (ECDSA) <https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm>`_
         offers a variant of the Digital Signature Algorithm (:term:`DSA`)
-        which uses elliptic curve cryptography.
+        which uses :term:`Elliptic Curve Cryptography`.
 
 
     Ed25519
@@ -706,7 +706,7 @@ Glossary
     Erasable Programmable Read-only Memory
         An `EPROM <https://en.wikipedia.org/wiki/EPROM>`_ (rarely EROM), or
         erasable programmable Read-Only Memory, is a type of programmable
-        :term:`read-only memory` (PROM) chip that retains its data when its
+        :term:`Read-Only Memory` (PROM) chip that retains its data when its
         power supply is switched off. Computer memory that can retrieve stored
         data after a power supply has been turned off and back on is called
         non-volatile. It is an array of floating-gate transistors individually
@@ -781,7 +781,7 @@ Glossary
         protocols ensuring that a session key derived from a set of long-term
         keys cannot be compromised if one of the long-term keys (like the
         servers private key) is compromised in the future. Usually either
-        :term:`Diffie-Hellman key exchange` or :term:`Elliptic curve
+        :term:`Diffie-Hellman Key Exchange` or :term:`Elliptic Curve
         Diffie–Hellman` are used to create and exchange session keys.
 
 
@@ -886,7 +886,7 @@ Glossary
 
 
     HSTS
-    Http Strict Transport Security
+    HTTP Strict Transport Security
         TBD.
 
 
@@ -1413,13 +1413,13 @@ Glossary
     Salt
         In cryptography, a `salt
         <https://en.wikipedia.org/wiki/Salt_%28cryptography%29>`_ is random data
-        that is used as an additional input to a :term:`cryptographic hash
-        function` on a password or passphrase. The primary function of salts is
+        that is used as an additional input to a :term:`Cryptographic Hash
+        Function` on a password or passphrase. The primary function of salts is
         to defend against dictionary attacks versus a list of password hashes
-        and against pre- computed :term:`rainbow table` attacks. A new salt is
+        and against pre- computed :term:`Rainbow Table` attacks. A new salt is
         randomly generated for each password. In a typical setting, the salt and
-        the password are concatenated and processed with a :term:`cryptographic
-        hash function`, and the resulting output (but not the original password)
+        the password are concatenated and processed with a :term:`Cryptographic
+        Hash Function`, and the resulting output (but not the original password)
         is stored with the salt in a database. Hashing allows for later
         authentication while defending against compromise of the plaintext
         password in the event that the database is somehow compromised.
@@ -1477,8 +1477,8 @@ Glossary
     SHA1
     SHA-1
 
-        `SHA-1 <https://en.wikipedia.org/wiki/SHA1>`_ is a :term:`cryptographic
-        hash function` designed by the NSA and is a U.S. Governement Standard
+        `SHA-1 <https://en.wikipedia.org/wiki/SHA1>`_ is a :term:`Cryptographic
+        Hash Function` designed by the NSA and is a U.S. Governement Standard
         published by the United States NIST in 1995. SHA stands for "secure hash
         algorithm". In 2005, analysts found attacks on SHA-1 suggesting
         that the algorithm might not be secure enough for ongoing use. The U.S,
@@ -1498,10 +1498,10 @@ Glossary
     SHA-512/224
     SHA-512/256
 
-        `SHA-2 <https://en.wikipedia.org/wiki/SHA2>`_ is :term:`cryptographic
-        hash function`, published in 2001 by the US government (NSA & NIST), is
+        `SHA-2 <https://en.wikipedia.org/wiki/SHA2>`_ is :term:`Cryptographic
+        Hash Function`, published in 2001 by the US government (NSA & NIST), is
         significantly different from :term:`SHA-1`. SHA-2 currently consists of
-        a set of six :term:`hash functions` with digests that are 224, 256, 384
+        a set of six :term:`Hash Functions` with digests that are 224, 256, 384
         or 512 bits.
 
     SHA-3
@@ -1632,9 +1632,9 @@ Glossary
 
 
     Stock ROM
-        Original :term:`firmware` of a device as supplied by the manufacturer on
+        Original :term:`Firmware` of a device as supplied by the manufacturer on
         a programmable :term:`ROM`. The term is mostly used in the context where
-        a third party provides alternative :term:`firmware` which may enhance or
+        a third party provides alternative :term:`Firmware` which may enhance or
         otherwise change the functionality of a device, beyond the intentions of
         its original manufacturer.
 
@@ -1768,7 +1768,7 @@ Glossary
         `Wireless Multimedia Extensions <https://en.wikipedia.org/wiki/Wireless_Multimedia_Extensions>`_
         (WME), also known as Wi-Fi Multimedia (WMM), is a Wi-Fi Alliance 
         interoperability certification, based on the :term:`IEEE 802.11e` standard. It 
-        provides basic :term:`Quality of service` (QoS) features to :term:`IEEE 802.11` 
+        provides basic :term:`Quality of Service` (QoS) features to :term:`IEEE 802.11` 
         networks. WMM prioritizes traffic according to four Access Categories 
         (AC): voice (AC_VO), video (AC_VI), best effort (AC_BE), and background 
         (AC_BK). However, it does not provide guaranteed throughput. It is 
@@ -1840,7 +1840,7 @@ Glossary
     WPA3
         In January 2018, the Wi-Fi Alliance announced WPA3 as a replacement to
         :term:`WPA2`. The new standard uses 128-bit encryption in WPA3-Personal
-        mode (192-bit in WPA3-Enterprise) and :term:`forward secrecy`. The WPA3
+        mode (192-bit in WPA3-Enterprise) and :term:`Forward Secrecy`. The WPA3
         standard also replaces the Pre-Shared Key exchange with Simultaneous
         Authentication of Equals as defined in IEEE 802.11-2016 resulting in a
         more secure initial key exchange in personal mode. The Wi-Fi Alliance
