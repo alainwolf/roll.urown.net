@@ -11,8 +11,8 @@ communication, features a versatile key management system as well as access
 modules for all kinds of public key directories.
 
 GnuPG is a complete and free implementation of the OpenPGP standard as defined
-by :RFC:`4880` (also known as
-`PGP or Pretty Good Privacy <https://en.wikipedia.org/wiki/Pretty_Good_Privacy>`_).
+by :RFC:`4880` (also known as `PGP or Pretty Good Privacy
+<https://en.wikipedia.org/wiki/Pretty_Good_Privacy>`_).
 
 
 .. contents::
@@ -21,42 +21,74 @@ by :RFC:`4880` (also known as
     :backlinks: top
 
 
-Software Installation
----------------------
+.. note::
 
-Current Ubuntu versions install `GnuPG <https://gnupg.org/>`_ version 2.x,
-while versions before Ubuntu 18.04 LTS (bionic) had version 1.4.x pre-installed, 
-but allowed to install newer version 2.x.
-
-.. warning::
-
-    Throughout this documentation we assume GnuPG version 2.4 or newer is
-    installed.
+    Throughout this documentation we assume GnuPG version 2.2.x as
+    pre-installed in Ubuntu 20.04.
 
 
-On Ubuntu 18.04 LTS (bionic) and newer
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Prerequisites
+-------------
+
+Disable the Gnome SSH Agent
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Disable autostart of the Gnome SSH agent::
+
+    $ mkdir -p ~/.config/autostart
+    $ cp /etc/xdg/autostart/gnome-keyring-ssh.desktop ~/.config/autostart/
+    $ echo 'X-GNOME-Autostart-enabled=false' \
+        >> ~/.config/autostart/gnome-keyring-ssh.desktop
+    $ echo 'Hidden=true' \
+        >> ~/.config/autostart/gnome-keyring-ssh.desktop
+
+
+Restart any Gnome keyring daemon which might already be running::
+
+    $ /usr/bin/gnome-keyring-daemon --replace --components keyring,pkcs11
+
+
+Systemd User Environment
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+In Ubuntu 20.04.1 there is a script which tells SystemD services, how to 
+communicate with the GnuPG SSH Agent. But it somehow lacks the execution bit. 
+This 
+`might be a bug <https://bugs.launchpad.net/ubuntu/+source/gnupg2/+bug/1901724>`_, 
+but for the time beeing ...
 
 ::
 
-    $> sudo apt install xloadimage
+    $ sudo chmod +x /lib/systemd/user-environment-generators/90gpg-agent
 
 
-On Ubuntu 16.04 LTS (bionic) and older
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Bash User Environment
+^^^^^^^^^^^^^^^^^^^^^
 
-On older Ubunutu versions before 18.04 LTS (bionic) "GNU Privacy Guard Version
-2.x", "GnuPG Agent" and "PIN Entry" needs to be installed manually::
+The following lines should be added to your local profile settings file 
+:file:`~/.profile`::
 
-    $> sudo apt install gnupg2 gnupg-agent pinentry-gtk2 pinentry-curses xloadimage
+    # Let GnuPG know which key you normally use
+    export GPGKEY=0x0123456789ABCDEF
+
+    # Let the SSH Agent know how to communicate with GPG Agent.
+    unset SSH_AGENT_PID
+    if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+        SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+        export SSH_AUTH_SOCK
+    fi
 
 
-Both versions are now available as :file:`/usr/bin/gpg` and :file:`/usr/bin/gpg2`.
-To use version 2.x by default, define a command alias::
+Terminal Sessions Environment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    $> echo "alias gpg='/usr/bin/gpg2'" >> ~/.bash_aliases
-    $> source ~/.bash_aliases
+GnuPG and the GnuPG Agent need the following lines added to your shell
+configuration file :file:`~/.bashrc`::
 
+    #
+    # GnuPG Agent
+    GPG_TTY=$(tty)
+    export GPG_TTY
 
 
 Configuration
@@ -69,8 +101,8 @@ GnuPG
 The available configuration options can be found on the `gpg man page
 <https://manpages.ubuntu.com/manpages/bionic/man1/gpg.1.html#options>`_.
 
-Open the file  :download:`.gnupg/gpg.conf <config-files/gnupg/gpg.conf>` in you home
-directory and change, add or uncomment as follows:
+Open the file :download:`.gnupg/gpg.conf <config-files/gnupg/gpg.conf>` in you
+home directory and change, add or uncomment as follows:
 
 .. literalinclude:: config-files/gnupg/gpg.conf
 
@@ -78,11 +110,11 @@ directory and change, add or uncomment as follows:
 GnuPG Agent
 ^^^^^^^^^^^
 
-The "Gnu Privacy Guard Agent" is a service which safely manages your private-keys
-in the background. Any application (e.g. the mail-client singning a message with
-your key) don't need direct access to your keyfile or your passphrase. Instead
-they go trough the agent, which eventually will ask the user for the key
-passphrase in a protected environment.
+The "Gnu Privacy Guard Agent" is a service which safely manages your
+private-keys in the background. Any application (e.g. the mail-client singning
+a message with your key) don't need direct access to your keyfile or your
+passphrase. Instead they go trough the agent, which eventually will ask the
+user for the key passphrase in a protected environment.
 
 Additionally GnuPG-Agent also will manage your SSH keys, thus replacing the SSH-
 Agent.
@@ -99,11 +131,11 @@ and change, add or uncomment as follows:
 Directory Manager
 ^^^^^^^^^^^^^^^^^
 
-Since version 2.1 of GnuPG, dirmngr takes care of accessing the OpenPGP
-keyservers. As with previous versions it is also used as a server for managing
-and downloading certificate revocation lists (CRLs) for X.509 certificates,
-downloading X.509 certificates, and providing access to OCSP providers. Dirmngr
-is invoked internally by gpg, gpgsm, or via the gpg-connect-agent tool.
+dirmngr takes care of accessing the OpenPGP keyservers. It is also used as a
+server for managing and downloading certificate revocation lists (CRLs) for
+X.509 certificates, downloading X.509 certificates, and providing access to
+OCSP providers. Dirmngr is invoked internally by gpg, gpgsm, or via the
+gpg-connect-agent tool.
 
 The available configuration options can be found on the `dirmngr man page
 <https://manpages.ubuntu.com/manpages/bionic/en/man8/dirmngr.8.html#options>`_.
@@ -127,42 +159,14 @@ stay unlocked so you are not required to enter your passphrase again every time
 they key is needed.
 
 
-Login Shell Options
-^^^^^^^^^^^^^^^^^^^
-
-GnuPG and the GnuPG Agent need the following lines added to your shell
-configuration file :file:`~/.bashrc`::
-
-    # Let GnuPG know which key you normally use
-    export GPGKEY=0x0123456789ABCDEF
-
-    #
-    # GnuPG Agent
-    GPG_TTY=$(tty)
-    export GPG_TTY
-
-
 Related Tools and Options
 -------------------------
 
 
-Disable Seahorse GnuPG-agent
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use a Password-Safe
+^^^^^^^^^^^^^^^^^^^
 
-Seahorse is a GNOME application for managing encryption keys and passwords in
-the GNOME Keyring. 
-
-By default your GnuPG keys are managed by Seahorse. This can result in problems
-when using GnuPG 2.0 or newer versions.
-
-See the section `Disabling the Seahorse GnuPG-Agent
-</desktop/secrets.html#disabling-the-seahorse-gnupg-agent>`_ on how to do this.
-
-
-Use KeePassXC
-^^^^^^^^^^^^^
-
-Store your GnuPG passphrases in KeePassXC.
+Store your GnuPG passphrases in a password-safe, like KeePassXC.
 
 See the section `KeePassXC </desktop/secrets.html#keepassxc>`_ on how to set it
 up.
@@ -171,56 +175,49 @@ up.
 Yubikey Neo
 ^^^^^^^^^^^
 
+Store your private keys on a secure hardware device, and use it everywhere, 
+instead of storing the as files on disks.
+
 See :doc:`yubikey/yubikey_gpg`.
 
 
 Enigmail
 ^^^^^^^^
 
+Encrypt, decrypt, digitally sign and verifify your mail communications.
+
 See :doc:`thunderbird`.
 
 
-Use local keys on remote systems over SSH
------------------------------------------
+Using PGP keys on remote Machines
+---------------------------------
 
-GnuPG enables you to forward the GnuPG-Agent to a remote system. That means that
-you can keep your secret keys on a local machine (or even a hardware token like
-a :doc:`YubiKey <yubikey/index>` or smartcard), but use them for signing or
-decryption on a remote machine.
+If you frequently you work on remote systems, you can use GnuPG on these
+systems, without the need to transfer and install any private keys there.
 
-This is done by forwarding a special gpg-agent socket to the remote system by
-the local SSH client.
+You can use GnuPG as in the same way as on your local machine, while signing or
+decrypting, files and mails, perform signed git operations, signing software
+packages or use the GnuPG ssh-agent while opening remote sessions to further
+systems or transferring files. All the while your private keys never leave your
+local machine.
 
-Set up the forwards in the *local* SSH-client configuration. We also need
-to know the location of the socket on the remote system to connect to.
+This is even more usefull if you keep your private keys ona a hardware token
+(like a :doc:`YubiKey <yubikey/index>` or a smartcard), since you can't plug-in
+your hardware key in the remote system.
 
-Show the GnuPG-Agent socket location on the remote server::
-
-    remote$> gpgconf --list-dir agent-socket
-    /run/user/1000/gnupg/S.gpg-agent
-
-
-Show the GnuPG-Agent *extra* socket location on the local client::
-    
-    local$> gpgconf --list-dir agent-extra-socket
-    /run/user/1000/gnupg/S.gpg-agent.extra
+The GnuGP agent can be told to use an additional socket on the local system and
+forward it to the remote system trough the secure SSH connection. On the remore
+system that socket is then connected to the gpg-agent socket and used by gpg,
+as if it where a locally running gpg-agent.
 
 
-No add these both to the SSH client configuration :file:`~/.ssh/config` in the
-appropriate server section as **RemoteForward** :file:`RemoteSocket`
-:file:`LocalExtraSocket`
+Remote System Setup
+^^^^^^^^^^^^^^^^^^^
 
-**RemoteForward** specifies that a socket from the *remote machine* be forwarded
-over the secure channel to a *local* socket
+The **remote SSH server** needs to be told how to manage these remote sockets.
 
-::
-
-    Host remote.example.net
-        RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
-
-
-Also add the following line to your remote :doc:`SSH Server
-</server/ssh-server>` file :file:`/etc/ssh/sshd_config`::
+Add the following line to your remote 
+:doc:`SSH Server</server/ssh-server>` file :file:`/etc/ssh/sshd_config`::
 
     # Specifies whether to remove an existing Unix-domain socket file for local
     # or remote port forwarding before creating a new one. If the socket file
@@ -231,16 +228,55 @@ Also add the following line to your remote :doc:`SSH Server
     StreamLocalBindUnlink yes
 
 
-Then restart the remote SSH server for the configuration change to be applied::
+To activate this change, the remote SSH server needs a restart::
 
     remote$> sudo systemctl restart ssh.service
     remote$> logout
     Connection to remote.example.net closed.
 
-After re-connecting your local keyring should be available on the remote system,
-but not yet usable without their corresponding public keys and trust settings.
 
-This is how we transfer your public key and trust settings from the local to the
+Also on the **remote** system, we need to know, where the gpg-agent socket is 
+found::
+
+    remote$> gpgconf --list-dir agent-socket
+    /run/user/1000/gnupg/S.gpg-agent
+
+
+Local System Setup
+^^^^^^^^^^^^^^^^^^
+
+On the **local system** we need to know the location of the gpg-agent **extra
+socket**::
+
+    local$> gpgconf --list-dir agent-extra-socket
+    /run/user/1000/gnupg/S.gpg-agent.extra
+
+An additional **exta socket** is needed on the **local system**, so we can
+still also use our local gpg-agent as usual.
+
+Since we now know the locations of both the **local extra socket** and the
+**remote socket**, we can set up the forward in the **local SSH client**
+configuration::
+
+    Host remote.example.net
+        RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
+
+
+Personally I use a slightly different configuration, as I connect to multiple 
+systems with different user-ids, but have this setup onlny on a subset of them::
+
+    # We have GPGP Agent sockets setup on some hosts.
+    Match Host dolores.*,maeve.*,bernard.*,arnold.* User john
+        RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
+
+
+Remote GnuPG Setup
+^^^^^^^^^^^^^^^^^^
+
+While you now have your private keys available on the remote system, GnuPG is
+not yet fully usable remotely without the public keyrings.
+
+This is how we transfer the public keys and trust settings from the local to the
 remote system::
 
     local$> gpg --export-options export-local-sigs --export $GPGKEY | \
@@ -248,18 +284,16 @@ remote system::
     local$> gpg --export-ownertrust | \
                 ssh remote.example.net gpg --import-ownertrust
 
-
 You also might want to assimilate the GnuPG configuration::
 
-    local$> cd ~/.gnupg/
-    local$> scp gpg.conf dirmngr.conf gpg-agent.conf \
-                remote.example.net:/home/user/.gnupg/
+    local$> scp ~/.gnupg/*.conf remote.example.net:/home/user/.gnupg/
 
 
-Signed GIT Commits
-------------------
+Signing GIT Operations
+----------------------
 
-
+In :doc:/toolbox/git.html#configuration you find a description to set up git 
+for siging and verifying various operations.
 
 
 Publishing Keys
@@ -276,10 +310,6 @@ Public Keyservers are still the mostly widely used way to find OpenPGP keys, but
 other methods come with significant benefits over the old keyserver.
 
 
-LDAP
-^^^^
-
-
 DNS CERT
 ^^^^^^^^
 
@@ -288,6 +318,12 @@ Publishing keys using DNS CERT, as specified in RFC-4398.
 
 PKA
 ^^^
+
+PKA (public key association) puts a pointer where to obtain a key into a DNS TXT 
+record. At the same time that can be used to verify that a key belongs to a mail 
+address. The documentation is at the g10code website (only in German so far). 
+
+I put the following into the df7cb.de zone:
 
 
 DANE

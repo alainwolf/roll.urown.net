@@ -16,8 +16,7 @@ Contents:
    secrets/index
    gpg
    yubikey/index
-   ssh
-   network
+   network/index
    send-mail
    anacron
    backup/index
@@ -43,8 +42,6 @@ Contents:
    electrum
    dyndns
 
-.. Removed ...
-   monkeysphere
 
 Recommended reading:
 `Ubuntu Desktop Guide <https://help.ubuntu.com/18.04/ubuntu-help/index.html>`_

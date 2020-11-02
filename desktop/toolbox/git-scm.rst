@@ -10,10 +10,10 @@ Version Control
     :alt: Git Logo
     :align: right
 
-Git
----
+Git Source Code Management
+--------------------------
 
-`Git <https://git-scm.com/>`_ is a free and open source distributed version
+`Git SCM <https://git-scm.com/>`_ is a free and open source distributed version
 control system designed to handle everything from small to very large projects
 with speed and efficiency.
 
@@ -69,10 +69,10 @@ hour::
     :align: right
 
 
-GitHub
-------
+GitHub Website
+--------------
 
-`GitHub <https://github.com/>`_ provides hosting for software development and
+`GitHub Site <https://github.com/>`_ provides hosting for software development and
 version control using Git. Since 2018 it's owned by Microsoft.
 
 Basic services are free of charge. More advanced professional and enterprise
@@ -118,7 +118,7 @@ SSH Public Key
 
 Typically git uses SSH to clone, push and pull code between repositories on
 different systems. With GitHub SSH connections are always made with the user
-:file:`git` to the host :file:`ssh.github.com` on either the standard TCP port
+:file:`git` to the host :file:`github.com` on either the standard TCP port
 22 or port 443 (to bypass restricitve firewalls). For identification and
 authorization GitHub uses your SSH key. Therefore your SSH key needs to be tied
 to our GitHub account as well.
@@ -137,8 +137,6 @@ You may add the following lines to your SSH configuration file
 .. code-block:: ini
 
     Host github.com
-      Hostname ssh.github.com
-      Port 443
       User git
 
 More on 
@@ -175,16 +173,18 @@ you won't have to type it in every time::
     :alt: Git Logo
     :align: right
 
-Meld
-====
+
+Meld Visual Diff Tool
+=====================
 
 `Meld <https://meldmerge.org/>`_ is a visual diff and merge tool targeted at
 developers. Meld helps you compare files, directories, and version controlled
 projects. It provides two- and three-way comparison of both files and
 directories, and has support for many popular version control systems.
 
-Installation
-------------
+
+Meld Installation
+-----------------
 
 Meld is in the Ubuntu software repository::
 
@@ -224,3 +224,4 @@ References
 
  * `Git Documentation <https://git-scm.com/doc>`_
  * `Getting started with Git and GitHub <https://docs.github.com/en/free-pro-team@latest/github/using-git/getting-started-with-git-and-github>`_
+

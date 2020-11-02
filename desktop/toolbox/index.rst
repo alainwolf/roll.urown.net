@@ -16,6 +16,7 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
+   git-scm
    sublime-text
    guake
    sphinx-doc
@@ -24,6 +25,7 @@ Contents:
    gnome-shell-extensions
    pomodoro
    networking-toolbox
+   winbox
 
 
 

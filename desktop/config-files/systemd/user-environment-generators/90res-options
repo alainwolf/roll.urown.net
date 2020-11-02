@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Systemd user environment generator
+# 
+# Let Gnu C libary programs see if DNS answers are authenticated by DNSSEC.
+# Required for OpenSSH (and subsequently gvfs-daemon and Nautilus) to trust in
+# DNSSEC-signed SSHFP records.
+#
+
+# Set the value, preserve existing if already set.
+RES_OPTIONS="$RES_OPTIONS edns0 trust-ad"
+
+# Write out to the sytemd user environment
+echo RES_OPTIONS="${RES_OPTIONS}"
