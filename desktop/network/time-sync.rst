@@ -63,7 +63,12 @@ Let's change that first, so it will no longer phone home by editing
     # See timesyncd.conf(5) for details.
 
     [Time]
-    FallbackNTP=ch.pool.ntp.org
+    # Set at least one numerical IP address as fallback 
+    # to avoid DNSSEC chicken-and-egg problems.
+    #   Init7 NTP servers:
+    #       aquila.init7.net    - 82.197.164.46
+    #       eudyptula.init7.net - 82.197.188.130
+    FallbackNTP=ch.pool.ntp.org 82.197.188.130 82.197.164.46
 
 
 Restart the service afterwards::
