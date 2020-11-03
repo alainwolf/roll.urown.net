@@ -1,5 +1,5 @@
-SSH User Authentication with Yubikey NEO
-========================================
+SSH User Authentication with Yubikey
+====================================
 
 .. image:: yubikey_neo.*
     :alt: YubiKey NEO

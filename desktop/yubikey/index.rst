@@ -1,19 +1,9 @@
-Yubikey NEO
-===========
+Yubikey
+=======
 
 .. image:: yubikey_neo.*
     :alt: YubiKey NEO
     :align: right
-
-.. toctree::
-   :maxdepth: 2
-
-   yubikey_luks
-   yubikey_pam
-   yubikey_gpg
-   yubikey_ssh
-   yubikey_piv
-
 
 YubiKey is an authentication device capable of generating One Time Passwords
 (OTPs). The YubiKey connects to a USB port and identifies itself as a standard
@@ -23,95 +13,56 @@ the system’s native drivers.
 Its available for around € 45.00 from
 `Yubico's website <https://www.yubico.com/store/>`_
 
-We will use the device with the following services:
 
- * :doc:`yubikey_luks`
- * :doc:`yubikey_pam`
- * :doc:`yubikey_gpg`
- * :doc:`yubikey_ssh`
-
-Other possible uses:
-
- * Password Management (KeePassX using static password)
- * S/Mime mail signing and encryption (as SmartCard)
- * SSL/TLS browser client login on web servers (as SmartCard)
- * SSL/TLS Certificate Management (as SmartCard with XCA, OpenSSL)
- * ownCloud user login (TOTP TwoFactor App for OwnCloud 9.1)
- * WordPress user login (with U2F)
- * Prosody XMPP server login (via PAM Challenge-Response)
- * Bitcoin Wallet (?)
- * Various WebServices (TOTP with Yubico Authenticator or U2F)
-
-     * Google Services
-     * Cloud Servers (Digital Ocean, AmazonWS)
-     * CDN (Cloudflare)
-     * Code Repository (GitHub)
-     * NAS Devices (Synology DiskStation)
-     * Domain Registration (GandiNet)
-     * Mail Providers (mailbox.org)
-
-
-Prerequisites
--------------
-
- * Havegd
- * Gnupg 2.0 or later
-
-
-Installation
-------------
+Software Packages
+-----------------
 
 Yubico provides a software package repository on Launchpad::
 
     $ sudo add-apt-repository ppa:yubico/stable
-    $ sudo apt-get update
+    $ sudo apt update
 
 
-The following Linux Software packages are provided:
+Yubico Authenticator
+^^^^^^^^^^^^^^^^^^^^
 
- * YubiKey NEO Manager (to set which operation-modes are active on connection);
- * YubiKey Personalization Tool (used to program the two configuration slots in your YubiKey);
- * YubiKey PIV Manager (to configure private keys and certificates on the PIV smart-card in your YubiKey)
- * Yubico Authenticator for Linux (manages your TOTP and HOTP one time passwords);
- * Yubico PAM module (to use your Yubikey for Login on your Linux Desktop or Server)
+A graphical desktop tool for generating Open
+AuTHentication (OATH) event-based HOTP and time-based TOTP one-time password
+codes, that are often used as a 2nd-factor for two-factor authentication::
 
-
-USB Device Rules
-^^^^^^^^^^^^^^^^
-
-**udev** rules control how Linux handles certain devices. i.e. when they are 
-plugged in or out, programs to start or access restrictions to be set.
-
-Yubico provides a set of such rules, not only for its own Yubikeys, but also a
-range of other USB security devices from various vendors.
-
-To install these device rules on your system::
-
-    $ sudo wget -O /etc/udev/rules.d/70-u2f.rules \
-        https://raw.githubusercontent.com/Yubico/libu2f-host/master/70-u2f.rules
+    $ sudo apt install yubioath-desktop
 
 
-YubiKey Software
-^^^^^^^^^^^^^^^^
+Yubikey personalization Tool
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We don't need YubiKey NEO Manager, since November 2015 YubiKeys are shipped with
-all modes of operations already already enabled by default.
+This is a graphical tool to customize the token with your own cryptographic key
+and options::
 
-::
-
-    $ sudo apt-get install yubikey-personalization-gui
-    $ sudo apt install yubikey-manager-qt
+    $ sudo apt install yubikey-personalization-gui
 
 
-YubiKey Applications
---------------------
+Yubikey Manager
+^^^^^^^^^^^^^^^
 
- * :doc:`yubikey_pam`
- * :doc:`yubikey_gpg`
+Python library and command line tool for configuring a YubiKey YubiKey Manager
+(:file:`ykman`) is a command line tool for configuring a YubiKey over all
+transports. It is capable of reading out device information as well as
+configuring several aspects of a YubiKey, including enabling or disabling
+connection transports an programming various types of credentials::
+    
+    $ sudo apt install yubikey-manager
 
 
-References
-----------
+Where YubiKeys can Help
+-----------------------
 
- * `NEO-Manager QuickStart Guide <https://www.yubico.com/wp-content/uploads/2014/11/NEO-Manager-Quick-Start-Guide.pdf>`_
- * `Yubico Support: Using Your U2F YubiKey with Linux <https://support.yubico.com/support/solutions/articles/15000006449-using-your-u2f-yubikey-with-linux>`_
+.. toctree::
+   :maxdepth: 1
+
+   yubikey_luks
+   yubikey_pam
+   yubikey_gpg
+   yubikey_ssh
+   yubikey_piv
+

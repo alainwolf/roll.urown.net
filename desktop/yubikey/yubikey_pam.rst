@@ -1,5 +1,5 @@
-Linux Login with Yubikey NEO
-============================
+Linux Login with Yubikey
+========================
 
 .. image:: yubikey_neo.*
     :alt: YubiKey NEO
@@ -83,6 +83,50 @@ Open the PAM service file :file:`/etc/pam.d/gdm-password` and the following line
 
 	@include u2f
 	@include common-auth
+
+
+Lock the Desktop with Yubikey
+-----------------------------
+
+This is how we setup our desktop to immediately lock Gnome shell desktop
+sessions, when the Yubikey is removed.
+
+In Linux most hardware devices are managed by the **udev** service. Using
+**udev-rules** actions can be triggered when certain hardware events (device is
+added or removed) occur. Each USB device has a Vendor ID and a Product ID that
+can be used to identify the device. For all YubiKeys, Yubico’s USB vendor ID
+(VID) is **0x1050**. Yubico publishes a list of
+`YubiKey USB ID Values <https://support.yubico.com/hc/en-us/articles/360016614920-YubiKey-USB-ID-Values>`_
+where you can see all the Product IDs.
+
+To get a list of all currently attached USB devices on your system::
+
+    $ lsusb
+
+To show only USB devices manufactured by Yubico::
+
+    $ lsusb -d 1050:
+
+In this example **0116** is the product ID for a Yubike NEO. You might have a
+different product ID.
+
+.. note::
+
+    Note that The USB product ID will change depending on which of the 
+    features on your Yubikey have been enabled with **Yubikey Manager**.
+
+Let's create an udev rule for this specific device with the file
+:file:`/etc/udev/rules.d/85-yubikey-screen-lock.rules`::
+
+    #
+    # udev rules file for Yubikey NEO USB devices
+    #
+    # See https://support.yubico.com/hc/en-us/articles/360016614920-YubiKey-USB-ID-Values
+    #
+
+    # Lock all (gnome-)sessions when Yubikey NEO is unplugged
+    SUBSYSTEM=="usb", ACTION=="remove", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0110|0111|0112|0113|0114|0115|0116", RUN+="/usr/bin/loginctl lock-sessions"
+
 
 
 References

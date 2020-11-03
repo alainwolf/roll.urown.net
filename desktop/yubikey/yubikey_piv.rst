@@ -1,5 +1,5 @@
 YubiKey SmartCard
-=================
+==================
 
 .. image:: yubikey_neo.*
     :alt: YubiKey NEO
@@ -20,17 +20,17 @@ Prerequisites
 Additional Software
 -------------------
 
- * YubiKey PIV Manager (with graphic interface)
- * YubiKey PIV Tool (command line)
- * OpenSC - Smart card utilities with support for PKCS#15 compatible cards
+* YubiKey PIV Manager (with graphic interface)
+* YubiKey PIV Tool (command line)
+* OpenSC - Smart card utilities with support for PKCS#15 compatible cards
 
 ::
 
-    $> sudo apt install yubikey-piv-manager opensc
+    $ sudo apt install yubikey-piv-manager opensc
 
 
-Setup the Yubikey NEO
----------------------
+Setup the Yubikey
+-----------------
 
 If you have a YubiKey that was not previously set up with YubiKey PIV Manager, a
 PIN has to be set the first time YubiKey PIV Manager is accessing the YubiKey.
@@ -39,20 +39,17 @@ PIN has to be set the first time YubiKey PIV Manager is accessing the YubiKey.
 The PIN
 ^^^^^^^
 
- * The PIN is a password that you type when you are using your YubiKey to ...
-
-   * request new certificates
-   * log into websites using a certificate stored on your YubiKey
-   * sign or decrypt mails using a certificate stored on your YubiKey
-
- * The PIN must be 4 to 8 characters in length.
- * The PIN can contain lower- and uppercase English characters and numbers.
- * Use of nonalphanumeric characters in the PIN are possible but not recommended.
- * Entering an incorrect PIN three times consecutively will cause the PIN to
-   become blocked, rendering the SmartCard features of your YubiKey unusable.
+* The PIN is a password that you type when you are using your YubiKey to ...
+    * request new certificates
+    * log into websites using a certificate stored on your YubiKey
+    * sign or decrypt mails using a certificate stored on your YubiKey
+* The PIN must be 4 to 8 characters in length.
+* The PIN can contain lower- and uppercase English characters and numbers.
+* Use of nonalphanumeric characters in the PIN are possible but not recommended.
+* Entering an incorrect PIN three times consecutively will cause the PIN to
+  become blocked, rendering the SmartCard features of your YubiKey unusable.
 
 Let KeepassX generate a random PIN.
-
 
 The PUK
 ^^^^^^^
@@ -65,9 +62,9 @@ reasons.
 
 The requirements and restrictions of the PUK are the same as for the PIN:
 
- * The PUK must be 4 to 8 characters in length.
- * The PUK may contain lower- and uppercase English characters and numbers.
- * Use of nonalphanumeric characters in the PUK are possible but not recommended.
+* The PUK must be 4 to 8 characters in length.
+* The PUK may contain lower- and uppercase English characters and numbers.
+* Use of nonalphanumeric characters in the PUK are possible but not recommended.
 
 If PIN complexity is enforced, the same rules are applied to the PUK.
 
@@ -84,7 +81,7 @@ Management Key
 By default the YubiKey PIV Manager lets you use the PIN as Management Key too.
 **This is not recommended for security and compatibility reasons**.
 
- * The Management Key must be a 24 byte long 3DES key (24-byte random hex string).
+* The Management Key must be a 24 byte long 3DES key (24-byte random hex string).
 
 
 .. image:: KeePassX_YubiKey_NEO_Smart_Card.*
@@ -108,12 +105,14 @@ therefore ask for a new PIN.
 .. image:: yubikey_piv_init.*
     :alt: YubiKey PIV Initialization
 
+
 3. Select "Use a separate key" under "Management Key".
 
 A random 24 byte 3DES Key is automatically created to be used as management key.
 
 .. image:: yubikey_piv_seperate_management_key.*
     :alt: YubiKey PIV Initialization - Using a separate Management Key
+
 
 4. Deactivate "Generate a certificate for authentication" under "Authentication
 certificate".
@@ -143,19 +142,19 @@ The second one usually is just a link to the first one.
 
 In your Mozilla Application ...
 
- #. Open "Settings"
- #. Select "Advanced"
- #. Select "Certificates"
- #. Click the "Cryptographic Modules" button
- #. Click the "Load" button
- #. Change the module name to "OpenSC PKCS#11 Module"
- #. Enter the path of the library as found before (:file:`/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so`)
- #. Click the "Ok" button
+#. Open "Settings"
+#. Select "Advanced"
+#. Select "Certificates"
+#. Click the "Cryptographic Modules" button
+#. Click the "Load" button
+#. Change the module name to "OpenSC PKCS#11 Module"
+#. Enter the path of the library as found before (:file:`/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so`)
+#. Click the "Ok" button
 
 
 References
 ----------
 
- * `yubico.com: YubiKey PIV for Smart Card <https://www.yubico.com/support/knowledge-base/categories/yubikey-piv/>`_
- * `dev.yubico: PIN and Management Key <https://developers.yubico.com/yubikey-piv-manager/PIN_and_Management_Key.html>`_
- * `OpenSC Wiki <https://github.com/OpenSC/OpenSC/wiki/>`_
+* `yubico.com: YubiKey PIV for Smart Card <https://www.yubico.com/support/knowledge-base/categories/yubikey-piv/>`_
+* `dev.yubico: PIN and Management Key <https://developers.yubico.com/yubikey-piv-manager/PIN_and_Management_Key.html>`_
+* `OpenSC Wiki <https://github.com/OpenSC/OpenSC/wiki/>`_

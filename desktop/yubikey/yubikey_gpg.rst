@@ -1,5 +1,5 @@
-GnuPG with Yubikey NEO
-======================
+GnuPG with Yubikey
+==================
 
 .. image:: yubikey_neo.*
     :alt: YubiKey NEO

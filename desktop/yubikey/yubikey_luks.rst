@@ -1,5 +1,5 @@
-Yubikey and Full Disk Encryption
-================================
+Disk Encryption with Yubikey
+============================
 
 .. image:: yubikey_neo.*
     :alt: YubiKey NEO
