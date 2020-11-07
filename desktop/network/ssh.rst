@@ -1,12 +1,37 @@
 Secure-Shell
 ============
 
+.. image:: openssh-logo.*
+    :alt: OpenSSH Logo
+    :align: right
+    :width: 300px
+
+`OpenSSH <https://www.openssh.com/>`_ is the premier connectivity tool for
+remote login with the :term:`SSH` protocol. It encrypts all traffic to eliminate
+eavesdropping, connection hijacking, and other attacks. In addition, OpenSSH
+provides a large suite of secure tunneling capabilities, several authentication
+methods, and sophisticated configuration options.
+
+The OpenSSH suite consists of the following tools:
+
+* Remote operations are done using ssh, scp, and sftp.
+* Key management with ssh-add, ssh-keysign, ssh-keyscan, and ssh-keygen.
+* The service side consists of sshd, sftp-server, and ssh-agent.
+
+OpenSSH is developed by a few developers of the OpenBSD Project and made
+available under a BSD-style license.
+
 .. note::
 
     The following is valid for *OpenSSH_8.2p1 Ubuntu-4, OpenSSL 1.1.1f  31 March 2020*
     as shipped with *Ubuntu 20.04 LTS "Focal Fossa"*.
     See the `OpenSSH release notes <https://www.openssh.com/releasenotes.html>`_
     for changes since the 7.6 release that came with Ubuntu 18.04.
+
+.. contents::
+    :depth: 1
+    :local:
+    :backlinks: top
 
 
 SSH Server
@@ -24,39 +49,118 @@ SSH Client
 Client Configuration File
 -------------------------
 
+System Configuration
+^^^^^^^^^^^^^^^^^^^^
+
 The system-wide default client settings are stored in
-:file:`/etc/ssh/ssh_config`.
+:file:`/etc/ssh/ssh_config`. The options are described in the
+`ssh_config(5) <https://manpages.ubuntu.com/manpages/focal/en/man5/ssh_config.5.html>`_
+man page.
 
-Change according to the example below:
+Its easier to maintain and distribute, if you use your own include-file in the
+:file:`/etc/ssh/ssh_config.d/` directory.
 
-.. code-block:: sh
+Create a file like :file:`/etc/ssh/ssh_config.d/example.net.conf` and make
+changes according your needs:
+
+.. code-block:: ini
 
     #
-    # Our own servers
+    # ssh client system-wide configuration file for example.net.
+    #
+
+    # Verify the remote key using DNS and SSHFP resource records
+    # Note: This implies that we can always trust our DNS resolver and providers,
+    # wherever we are connecting from!
+    VerifyHostKeyDNS Yes
+
+    #
+    # How we connect to our own servers
+    #
+    Host *.example.net
+
+        # We don't use keyboard-interactive authentication
+        KbdInteractiveAuthentication No
+
+        # We never use password authentication
+        PasswordAuthentication No
+
+        # We currently don't use GSSAPI authentication
+        GSSAPIAuthentication No
+
+        # Order in which we try authentication methods
+        PreferredAuthentications PublicKey
+
+        # Since we rely on SSHFP, we don't need to maintain knoww_hosts files.
+        StrictHostKeyChecking Yes
+        UpdateHostKeys No
+
+    #
+    # Our servers custom SSH ports
     #
     Host dolores.example.net
         Port 63508
 
     Host maeve.example.net
         Port 49208
-        User admin
 
-    Host *.example.net
-        ForwardAgent Yes
-        StrictHostKeyChecking Yes
+    # Synology NAS servers allow only admin and root users to the SSH
+    # terminal service. All other users are restricted to SFTP.
+    # The SSH terminal service and the SFTP-server might listen to different TCP
+    # ports.
+
+    # SSH terminal service (root and admin connect here):
+    Match Host teddy.home.example.net User admin,root
+        Port 58849
+
+    # SFTP service (all others connect here):
+    Match Host teddy.home.example.net User *
+        Port 50990
+
+
+
+User Configuration
+^^^^^^^^^^^^^^^^^^
+
+The client settings for users are stored in
+:file:`/etc/ssh/ssh_config`. The options are the same as described in the
+`ssh_config(5) man page <https://manpages.ubuntu.com/manpages/focal/en/man5/ssh_config.5.html>`_
+
+In the file :file:`~/.ssh/config` you can customize your client (like specific
+user names) or add 3rd-party systems which are not covered by system-wide
+settings:
+
+.. code-block:: ini
+
+    # Keep hostnames readable in my known_hosts file.
+    HashKnownHosts No
+
+    # The OpenWrt router in my home LAN
+    Host arnold.home.example.net
+        User root
+
+    # The open source media center (Kodi) on my RaspberryPi
+    Host charlotte.home.example.net
+        User osmc
+
+    # Some hosts have GPGP Agent sockets setup for some users
+    Match Host dolores.example.net,maeve.example.net User john
         RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
+
+
+    # 3rd-party systems
+    Host kissy.example.org
+        Port 54393
+        User johnd
+
+    Host holden.example.org
+        Port 51193
 
     Host github.com
         User git
 
-    #
-    # Global options
-    #
-    Host *
-        HashKnownHosts No
-        VerifyHostKeyDNS Yes
-        StrictHostKeyChecking Ask
-
+    Host *.synology.me
+        VerifyHostKeyDNS No
 
 
 OpenSSH's Trust in DNSSEC
