@@ -3,8 +3,8 @@ Secure-Shell
 
 .. note::
 
-    The following is valid for *OpenSSH_8.2p1 Ubuntu-4, OpenSSL 1.1.1f  31 March 2020* 
-    as shipped with *Ubuntu 20.04 LTS "Focal Fossa"*. 
+    The following is valid for *OpenSSH_8.2p1 Ubuntu-4, OpenSSL 1.1.1f  31 March 2020*
+    as shipped with *Ubuntu 20.04 LTS "Focal Fossa"*.
     See the `OpenSSH release notes <https://www.openssh.com/releasenotes.html>`_
     for changes since the 7.6 release that came with Ubuntu 18.04.
 
@@ -25,7 +25,7 @@ Client Configuration File
 -------------------------
 
 The system-wide default client settings are stored in
-:file:`/etc/ssh/ssh_config`. 
+:file:`/etc/ssh/ssh_config`.
 
 Change according to the example below:
 
@@ -62,26 +62,27 @@ Change according to the example below:
 OpenSSH's Trust in DNSSEC
 -------------------------
 
-.. warning::
+In the previous section, we have set our SSH client to verify the servers SSH
+public key with the fingeprints published in DNS trough the **VerifyHostKeyDNS**
+configuration option. Unfortunately this wont work out of the box, as the
+following tests will show:
 
-    The following steps imply that you fully trust your DNS resolvers and
-    providers.
+Set this to your own servers hostname for the following checks to work::
 
+    $ export TEST_HOST=dolores.example.net
 
-This affects our **VerifyHostKeyDNS** configuration option.
+Lets check if the fingerprints of our server are present in DNS and that these
+DNS records are secured by DNSSEC::
 
-::
-
-    $ dig dolores.example.net SSHFP | egrep --color "ad|$"
+    $ dig $TEST_HOST SSHFP | egrep "ad|$"
     flags: qr rd ra ad
 
-While the **ad** flag in the DNS answer confirms that the data has been
-successfully verified by DNNSEC, the OpenSSH client keeps insisting, they are
-not to be trusted.
+The **ad** flag in the DNS answer stands for "**a**\ uthenticated **d**\ ata" and
+confirms that the DNS records requested have been successfully verified by
+DNNSEC. But the OpenSSH client will still insist, that the fingerprints, while
+visible, are not to be trusted::
 
-::
-
-    $ ssh -v dolores.example.net logout 2>&1 | egrep --color "found .* in DNS|$"
+    $ ssh -v $TEST_HOST logout 2>&1 | egrep "found .* in DNS|$"
     debug1: found 2 insecure fingerprints in DNS
 
 This is caused by the GNU C library and its not just a simple bug, but a rather
@@ -94,48 +95,71 @@ and many others, aren't able to see that the :term:`DNSSEC` validation was
 successful.
 
 Nowadys the :file:`/etc/resolv.conf` file is managed by systemd, NetworkManager,
-or whatever software you use as your
-:doc:`local DNS resolver <unbound>`. 
+the resolvconf service or whatever you use as your
+:doc:`local DNS resolver <unbound>`. Its therefore no longer possible and not
+recomended to change anything in this file manually.
 
-As an alternative, the options can be set as space separated list in the
-**RES_OPTIONS** environment variable, as described in the manpage for
-:manpage:`resolv.conf`:
+As as described in the
+`manpage for resolv.conf(5) <https://manpages.ubuntu.com/manpages/focal/en/man5/resolv.conf.5.html>`_
+as sn alternative, the options can also be set as space separated list in the
+**RES_OPTIONS** environment variable, :
 
-Let's try it out::
+Let's try this out::
 
-    $ RES_OPTIONS="edns0 trust-ad" 
-    $ ssh -v dolores.example.net logout 2>&1 | egrep --color "found .* in DNS|$"
+    $ RES_OPTIONS="edns0 trust-ad"
+    $ ssh -v $TEST_HOST logout 2>&1 | egrep "found .* in DNS|$"
     debug1: found 2 secure fingerprints in DNS
 
 
-Bash User Environment
-^^^^^^^^^^^^^^^^^^^^^
+.. warning::
 
-To set this as default for your terminal sessions, add the following lines your
-:file:`~/.profile` file:
+    The following system-wide configuration settings should only be made, if
+    trust your DNS resolvers and providers.
+    `dnssec-trigger <unbound.html#unbound-and-dnssec-trigger>`_ can help to
+    establish this trust.
+
+
+Bash Environment
+^^^^^^^^^^^^^^^^
+
+To set this as a system-wide default for terminal sessions and shell scripts,
+add the following file to :file:`/etc/profile.d` directory:
 
 .. code-block:: sh
 
-    # Let Gnu C libary programs see if DNS answers are authenticated by DNSSEC.
-    # Required for OpenSSH to trust in DNSSEC-signed SSHFP records.
+    #!/usr/bin/env bash
+    #
+    # Let programs who use the GNU C libary (glibc) see if DNS answers are
+    # authenticated by DNSSEC. Required for OpenSSH to trust in DNSSEC-signed
+    # SSHFP records.
+    # See man resolv.conf(5)
+
+    # Set the value, preserve existing if already set.
     export RES_OPTIONS="$RES_OPTIONS edns0 trust-ad"
 
 
 Systemd Environment
 ^^^^^^^^^^^^^^^^^^^
 
-You might need this for your own Systemd user services too, so its set also
-in your Gnome graphical desktop environnment. This way SSHFP fingerprinte will 
-also be verified, while accessing remote filesystems with SFTP in Nautilus.
+Gnome desktop applications, like remote SFTP folders in Nautilus, may not read
+your bash environment, as they are not running in your terminal session. Since
+these are managed by Systemd, we set these trough a `systemd environment file
+generator
+<https://manpages.ubuntu.com/manpages/focal/en/man7/systemd.environment-generator.7.html>`_.
 
-Create a systemd-environment directory::
+Create the systemd user environment directory::
 
-    $ mkdir -p ~/.config/systemd/user-environment-generators/
+    $ sudo mkdir -p /etc/systemd/user-evironment-generators
 
-Create a file :download:`~/.config/systemd/user-environment-generators/90res-options <../config-files/systemd/user-environment-generators/90res-options>`
-    
-.. literalinclude:: ../config-files/systemd/user-environment-generators/90res-options
+Create the file
+:file:`/etc/systemd/user-environment-generators/90res-options` or
+:download:`download it <../config-files/etc/systemd/user-environment-generators/90res-options>`
 
+.. literalinclude:: ../config-files/etc/systemd/user-environment-generators/90res-options
+
+It needs to be executable::
+
+    $ sudo chmod +x /etc/systemd/user-evironment-generators/90res-options
 
 
 See also
