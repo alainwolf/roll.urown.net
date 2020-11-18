@@ -37,10 +37,11 @@ available under a BSD-style license.
 SSH Server
 ----------
 
-::
+On Ubuntu Desktop the SSH server is not there pre-installed::
 
-    sudo apt install ssh molly-guard
+    $ sudo apt install ssh molly-guard
 
+For configuration, see our :doc:`SSH server configuration </server/ssh>`.
 
 
 SSH Client
@@ -51,6 +52,14 @@ Client Configuration File
 
 System Configuration
 ^^^^^^^^^^^^^^^^^^^^
+
+.. note::
+
+    The following configuration options can also be just kept in your personal
+    user settings in the :file:`~/.ssh/config` file. But if you services or
+    scripts running under other users or if this system is used by multiple user
+    profiles, it might be easier to maintain a system-wide configuration.
+
 
 The system-wide default client settings are stored in
 :file:`/etc/ssh/ssh_config`. The options are described in the
@@ -73,27 +82,6 @@ changes according your needs:
     # Note: This implies that we can always trust our DNS resolver and providers,
     # wherever we are connecting from!
     VerifyHostKeyDNS Yes
-
-    #
-    # How we connect to our own servers
-    #
-    Host *.example.net
-
-        # We don't use keyboard-interactive authentication
-        KbdInteractiveAuthentication No
-
-        # We never use password authentication
-        PasswordAuthentication No
-
-        # We currently don't use GSSAPI authentication
-        GSSAPIAuthentication No
-
-        # Order in which we try authentication methods
-        PreferredAuthentications PublicKey
-
-        # Since we rely on SSHFP, we don't need to maintain knoww_hosts files.
-        StrictHostKeyChecking Yes
-        UpdateHostKeys No
 
     #
     # Our servers custom SSH ports
@@ -132,23 +120,25 @@ settings:
 
 .. code-block:: ini
 
-    # Keep hostnames readable in my known_hosts file.
+    # Keep host names readable in my known_hosts file.
     HashKnownHosts No
 
     # The OpenWrt router in my home LAN
     Host arnold.home.example.net
         User root
 
-    # The open source media center (Kodi) on my RaspberryPi
+    # The open source media center (OSMC/Kodi) on my RaspberryPi
     Host charlotte.home.example.net
         User osmc
 
-    # Some hosts have GPGP Agent sockets setup for some users
+    # Some hosts have GPG Agent sockets setup for some users
     Match Host dolores.example.net,maeve.example.net User john
         RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
 
 
+    #
     # 3rd-party systems
+    #
     Host kissy.example.org
         Port 54393
         User johnd
@@ -163,11 +153,15 @@ settings:
         VerifyHostKeyDNS No
 
 
-OpenSSH's Trust in DNSSEC
+In case you where wondering about the `HashKnownHosts` options, I suggest
+reading `Joey’s Blog about this <https://blog.joeyhewitt.com/2013/12/openssh-hashknownhosts-a-bad-idea/>`_
+
+
+OpenSSH Trust in DNSSEC
 -------------------------
 
 In the previous section, we have set our SSH client to verify the servers SSH
-public key with the fingeprints published in DNS trough the **VerifyHostKeyDNS**
+public key with the fingerprints published in DNS trough the **VerifyHostKeyDNS**
 configuration option. Unfortunately this wont work out of the box, as the
 following tests will show:
 
@@ -175,16 +169,16 @@ Set this to your own servers hostname for the following checks to work::
 
     $ export TEST_HOST=dolores.example.net
 
-Lets check if the fingerprints of our server are present in DNS and that these
+Let's check if the fingerprints of our server are present in DNS and that these
 DNS records are secured by DNSSEC::
 
     $ dig $TEST_HOST SSHFP | egrep "ad|$"
     flags: qr rd ra ad
 
-The **ad** flag in the DNS answer stands for "**a**\ uthenticated **d**\ ata" and
-confirms that the DNS records requested have been successfully verified by
-DNNSEC. But the OpenSSH client will still insist, that the fingerprints, while
-visible, are not to be trusted::
+The **ad** flag in the DNS answer stands for "**a**\ uthenticated **d**\ ata"
+and confirms that the DNS records requested have been successfully verified with
+valid DNSSEC signatures. But the OpenSSH client will still insist, that the
+fingerprints, while visible, are not to be trusted::
 
     $ ssh -v $TEST_HOST logout 2>&1 | egrep "found .* in DNS|$"
     debug1: found 2 insecure fingerprints in DNS
@@ -194,14 +188,14 @@ complex trust issue described in
 `Glibc support encryption by modifying the DNS <http://www.newfreesoft.com/programming/glibc_support_encryption_by_modifying_the_dns_5365/>`_.
 
 Unless :file:`/etc/resolv.conf` contains **edns0** and **trust-ad** as
-configuration options, programs who use the GNU C libary (glibc) like OpenSSH
+configuration options, programs who use the GNU C library (glibc) like OpenSSH
 and many others, aren't able to see that the :term:`DNSSEC` validation was
 successful.
 
-Nowadys the :file:`/etc/resolv.conf` file is managed by systemd, NetworkManager,
+Nowadays the :file:`/etc/resolv.conf` file is managed by systemd, NetworkManager,
 the resolvconf service or whatever you use as your
 :doc:`local DNS resolver <unbound>`. Its therefore no longer possible and not
-recomended to change anything in this file manually.
+recommended to change anything in this file manually.
 
 As as described in the
 `manpage for resolv.conf(5) <https://manpages.ubuntu.com/manpages/focal/en/man5/resolv.conf.5.html>`_
@@ -233,7 +227,7 @@ add the following file to :file:`/etc/profile.d` directory:
 
     #!/usr/bin/env bash
     #
-    # Let programs who use the GNU C libary (glibc) see if DNS answers are
+    # Let programs who use the GNU C library (glibc) see if DNS answers are
     # authenticated by DNSSEC. Required for OpenSSH to trust in DNSSEC-signed
     # SSHFP records.
     # See man resolv.conf(5)
@@ -253,7 +247,7 @@ generator
 
 Create the systemd user environment directory::
 
-    $ sudo mkdir -p /etc/systemd/user-evironment-generators
+    $ sudo mkdir -p /etc/systemd/user-environment-generators
 
 Create the file
 :file:`/etc/systemd/user-environment-generators/90res-options` or
@@ -263,7 +257,7 @@ Create the file
 
 It needs to be executable::
 
-    $ sudo chmod +x /etc/systemd/user-evironment-generators/90res-options
+    $ sudo chmod +x /etc/systemd/user-environment-generators/90res-options
 
 
 See also
