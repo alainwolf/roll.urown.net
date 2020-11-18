@@ -14,8 +14,6 @@ Contents:
    :maxdepth: 1
 
    secrets/index
-   gpg
-   yubikey/index
    network/index
    send-mail
    anacron
@@ -34,9 +32,9 @@ Contents:
    wireguard-client
    3rd-party-repos
    toolbox/index
+   nextcloud-client
 
 .. TBD ..
-   nextcloud-client
    signal-desktop
    gajim
    electrum

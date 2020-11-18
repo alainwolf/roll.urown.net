@@ -41,7 +41,7 @@ On Ubuntu Desktop the SSH server is not there pre-installed::
 
     $ sudo apt install ssh molly-guard
 
-For configuration, see our :doc:`SSH server configuration </server/ssh>`.
+For configuration, see our :doc:`SSH server configuration </server/ssh-server>`.
 
 
 SSH Client
@@ -265,7 +265,7 @@ See also
 
 You may also look at these related pages:
 
- * :doc:`../yubikey/yubikey_ssh`
- * :doc:`../gpg`
- * :doc:`../secrets/keys`
+ * :doc:`/desktop/secrets/yubikey/yubikey_ssh`
+ * :doc:`/desktop/secrets/gpg`
+ * :doc:`/desktop/secrets/keys`
  * :doc:`/server/ssh-server`

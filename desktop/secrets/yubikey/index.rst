@@ -6,12 +6,12 @@ Yubikey
     :align: right
 
 YubiKey is an authentication device capable of generating One Time Passwords
-(OTPs). The YubiKey connects to a USB port and identifies itself as a standard
+(OTP). The YubiKey connects to a USB port and identifies itself as a standard
 USB HID keyboard, which allows it to be used in most computer environments using
 the system’s native drivers.
 
-Its available for around € 45.00 from
-`Yubico's website <https://www.yubico.com/store/>`_
+Its available for around € 45.00 from the
+`Yubico online store <https://www.yubico.com/store/>`_
 
 
 Software Packages
@@ -50,12 +50,11 @@ Python library and command line tool for configuring a YubiKey YubiKey Manager
 transports. It is capable of reading out device information as well as
 configuring several aspects of a YubiKey, including enabling or disabling
 connection transports an programming various types of credentials::
-    
+
     $ sudo apt install yubikey-manager
 
 
-Where YubiKeys can Help
------------------------
+Where to go from here ...
 
 .. toctree::
    :maxdepth: 1

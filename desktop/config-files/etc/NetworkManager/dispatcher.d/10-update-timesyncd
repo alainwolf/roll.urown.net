@@ -1,9 +1,8 @@
-#!/usr/bin/env dash 
+#!/usr/bin/env dash
 #
 # Setup timesyncd to use NTP servers received by DHCP.
+# Time server addresses are added or removed for each connection.
 #
-# Time server addresses are added or removed by connection.
-# 
 set -e
 
 INTERFACE=$1
@@ -18,7 +17,7 @@ fi
 # Is the timesyncd service currently active?
 _timesyncd_state="$( systemctl show --property "ActiveState" systemd-timesyncd.service )"
 
-# Do we have the overlay configuration directory for timesyncd 
+# Do we have the overlay configuration directory for timesyncd
 if [ ! -d "$_CONF_DIR" ]; then
 
     # Create it
@@ -33,7 +32,7 @@ case $ACTION in
         # Did we receive any NTP server addresses by DHCP?
         if [ -z "$DHCP4_NTP_SERVERS" ] && [ -z "$DHCP6_NTP_SERVERS" ]; then
 
-            # Neither IPv6 nor IPv4 NTP server address received. 
+            # Neither IPv6 nor IPv4 NTP server address received.
             exit 0
         fi
 
@@ -51,20 +50,20 @@ case $ACTION in
             echo "NTP=${_ntp_servers}"
 
         if [ "$_timesyncd_state" = "ActiveState=active" ]; then
-    
+
             # Restart the timesyncd service
             systemctl restart systemd-timesyncd
         fi
         ;;
-    
+
     # Connection went down
     down | vpn-down)
 
-        # Remov the timesyncd configuration for this connection
+        # Remove the timesyncd configuration for this connection
         rm -f "${_CONF_DIR}/${CONNECTION_UUID}.conf"
 
         if [ "$_timesyncd_state" = "ActiveState=active" ]; then
-    
+
             # Restart the timesyncd service
             systemctl restart systemd-timesyncd
         fi

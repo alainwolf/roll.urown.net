@@ -3,8 +3,8 @@
     :align: right
 
 
-GNU Privacy Guard
-=================
+OpenPGP
+=======
 
 `GnuPG <https://gnupg.org/>`_ allows to encrypt and sign your data and
 communication, features a versatile key management system as well as access
@@ -51,11 +51,11 @@ Restart any Gnome keyring daemon which might already be running::
 Systemd User Environment
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-In Ubuntu 20.04.1 there is a script which tells SystemD services, how to 
-communicate with the GnuPG SSH Agent. But it somehow lacks the execution bit. 
-This 
-`might be a bug <https://bugs.launchpad.net/ubuntu/+source/gnupg2/+bug/1901724>`_, 
-but for the time beeing ...
+In Ubuntu 20.04.1 there is a script which tells SystemD services, how to
+communicate with the GnuPG SSH Agent. But it somehow lacks the execution bit.
+This
+`might be a bug <https://bugs.launchpad.net/ubuntu/+source/gnupg2/+bug/1901724>`_,
+but for the time being ...
 
 ::
 
@@ -65,7 +65,7 @@ but for the time beeing ...
 Bash User Environment
 ^^^^^^^^^^^^^^^^^^^^^
 
-The following lines should be added to your local profile settings file 
+The following lines should be added to your local profile settings file
 :file:`~/.profile`::
 
     # Let GnuPG know which key you normally use
@@ -101,20 +101,20 @@ GnuPG
 The available configuration options can be found on the `gpg man page
 <https://manpages.ubuntu.com/manpages/bionic/man1/gpg.1.html#options>`_.
 
-Open the file :download:`.gnupg/gpg.conf <config-files/gnupg/gpg.conf>` in you
+Open the file :download:`.gnupg/gpg.conf </desktop/config-files/gnupg/gpg.conf>` in you
 home directory and change, add or uncomment as follows:
 
-.. literalinclude:: config-files/gnupg/gpg.conf
+.. literalinclude:: /desktop/config-files/gnupg/gpg.conf
 
 
 GnuPG Agent
 ^^^^^^^^^^^
 
 The "Gnu Privacy Guard Agent" is a service which safely manages your
-private-keys in the background. Any application (e.g. the mail-client singning
-a message with your key) don't need direct access to your keyfile or your
-passphrase. Instead they go trough the agent, which eventually will ask the
-user for the key passphrase in a protected environment.
+private-keys in the background. Any application (e.g. the mail-client signing a
+message with your key) don't need direct access to your key or your passphrase.
+Instead they go trough the agent, which eventually will ask the user for the key
+passphrase in a protected environment.
 
 Additionally GnuPG-Agent also will manage your SSH keys, thus replacing the SSH-
 Agent.
@@ -122,28 +122,29 @@ Agent.
 The available configuration options can be found on the `gpg-agent man page
 <https://manpages.ubuntu.com/manpages/bionic/man1/gpg-agent.1.html#options>`_.
 
-Open the file  :download:`.gnupg/gpg-agent.conf <config-files/gnupg/gpg-agent.conf>`
+Open the file  :download:`.gnupg/gpg-agent.conf </desktop/config-files/gnupg/gpg-agent.conf>`
 and change, add or uncomment as follows:
 
-.. literalinclude:: config-files/gnupg/gpg-agent.conf
+.. literalinclude:: /desktop/config-files/gnupg/gpg-agent.conf
 
 
 Directory Manager
 ^^^^^^^^^^^^^^^^^
 
-dirmngr takes care of accessing the OpenPGP keyservers. It is also used as a
-server for managing and downloading certificate revocation lists (CRLs) for
-X.509 certificates, downloading X.509 certificates, and providing access to
-OCSP providers. Dirmngr is invoked internally by gpg, gpgsm, or via the
-gpg-connect-agent tool.
+**dirmngr** takes care of retrieving PGP public keys of from various sources
+(i.e. key-servers). It is also used as a server for managing and downloading
+certificate revocation lists (CRL) for X.509 certificates, downloading X.509
+certificates, and providing access to OCSP providers. :file:`dirmngr` is invoked
+internally by :file:`gpg`, :file:`gpgsm`, or via the :file:`gpg-connect-agent`
+tool.
 
 The available configuration options can be found on the `dirmngr man page
 <https://manpages.ubuntu.com/manpages/bionic/en/man8/dirmngr.8.html#options>`_.
 
-Open the file  :download:`.gnupg/dirmngr.conf <config-files/gnupg/dirmngr.conf>`
+Open the file  :download:`.gnupg/dirmngr.conf </desktop/config-files/gnupg/dirmngr.conf>`
 and change, add or uncomment as follows:
 
-.. literalinclude:: config-files/gnupg/dirmngr.conf
+.. literalinclude:: /desktop/config-files/gnupg/dirmngr.conf
 
 
 PIN Entry
@@ -163,6 +164,32 @@ Related Tools and Options
 -------------------------
 
 
+Seahorse Nautilus Extension
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Seahorse**, sometimes also called "Secretes and Keys" is the name of the Gnome
+Desktop application that provides a graphical user interface for the user to
+manage his secrets inside the Gnome-Keyring.
+
+The "Nautilus extension for Seahorse integration" allows encryption
+and decryption of OpenPGP files using GnuPG.
+
+.. image:: seahorse-nautilus.*
+    :alt: The Seahorse Nautilus extensions in action.
+
+
+.. image:: /scbutton-free-200px.*
+    :alt: Install seahorse-nautilus
+    :target: apt:seahorse-nautilus
+    :align: left
+
+Install **seahorse-nautilus** from the Ubuntu Software Center
+
+or with the command-line::
+
+    $ sudo apt install seahorse-nautilus
+
+
 Use a Password-Safe
 ^^^^^^^^^^^^^^^^^^^
 
@@ -175,7 +202,7 @@ up.
 Yubikey Neo
 ^^^^^^^^^^^
 
-Store your private keys on a secure hardware device, and use it everywhere, 
+Store your private keys on a secure hardware device, and use it everywhere,
 instead of storing the as files on disks.
 
 See :doc:`yubikey/yubikey_gpg`.
@@ -184,9 +211,9 @@ See :doc:`yubikey/yubikey_gpg`.
 Enigmail
 ^^^^^^^^
 
-Encrypt, decrypt, digitally sign and verifify your mail communications.
+Encrypt, decrypt, digitally sign and verify your mail communications.
 
-See :doc:`thunderbird`.
+See :doc:`/desktop/thunderbird`.
 
 
 Using PGP keys on remote Machines
@@ -201,12 +228,12 @@ packages or use the GnuPG ssh-agent while opening remote sessions to further
 systems or transferring files. All the while your private keys never leave your
 local machine.
 
-This is even more usefull if you keep your private keys ona a hardware token
+This is even more useful if you keep your private keys ona a hardware token
 (like a :doc:`YubiKey <yubikey/index>` or a smartcard), since you can't plug-in
 your hardware key in the remote system.
 
 The GnuGP agent can be told to use an additional socket on the local system and
-forward it to the remote system trough the secure SSH connection. On the remore
+forward it to the remote system trough the secure SSH connection. On the remote
 system that socket is then connected to the gpg-agent socket and used by gpg,
 as if it where a locally running gpg-agent.
 
@@ -216,7 +243,7 @@ Remote System Setup
 
 The **remote SSH server** needs to be told how to manage these remote sockets.
 
-Add the following line to your remote 
+Add the following line to your remote
 :doc:`SSH Server</server/ssh-server>` file :file:`/etc/ssh/sshd_config`::
 
     # Specifies whether to remove an existing Unix-domain socket file for local
@@ -235,7 +262,7 @@ To activate this change, the remote SSH server needs a restart::
     Connection to remote.example.net closed.
 
 
-Also on the **remote** system, we need to know, where the gpg-agent socket is 
+Also on the **remote** system, we need to know, where the gpg-agent socket is
 found::
 
     remote$> gpgconf --list-dir agent-socket
@@ -251,7 +278,7 @@ socket**::
     local$> gpgconf --list-dir agent-extra-socket
     /run/user/1000/gnupg/S.gpg-agent.extra
 
-An additional **exta socket** is needed on the **local system**, so we can
+An additional **extra socket** is needed on the **local system**, so we can
 still also use our local gpg-agent as usual.
 
 Since we now know the locations of both the **local extra socket** and the
@@ -262,10 +289,10 @@ configuration::
         RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
 
 
-Personally I use a slightly different configuration, as I connect to multiple 
-systems with different user-ids, but have this setup onlny on a subset of them::
+Personally I use a slightly different configuration, as I connect to multiple
+systems with different user-ids, but have this setup only on a subset of them::
 
-    # We have GPGP Agent sockets setup on some hosts.
+    # We have GPG agent sockets setup on some hosts.
     Match Host dolores.*,maeve.*,bernard.*,arnold.* User john
         RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
 
@@ -292,8 +319,8 @@ You also might want to assimilate the GnuPG configuration::
 Signing GIT Operations
 ----------------------
 
-In :doc:/toolbox/git.html#configuration you find a description to set up git 
-for siging and verifying various operations.
+In :doc:/toolbox/git.html#configuration you find a description to set up git
+for signing and verifying various operations.
 
 
 Publishing Keys
@@ -303,11 +330,11 @@ As can be seen with the :file:`--auto-key-locate` configuration parameter of
 there are various ways to find and import a key.
 
 
-Keyservers
-^^^^^^^^^^
+Key-Servers
+^^^^^^^^^^^
 
-Public Keyservers are still the mostly widely used way to find OpenPGP keys, but
-other methods come with significant benefits over the old keyserver.
+Public key servers are still the mostly widely used way to find OpenPGP keys,
+but other methods come with significant benefits over the old key servers.
 
 
 DNS CERT
@@ -319,9 +346,9 @@ Publishing keys using DNS CERT, as specified in RFC-4398.
 PKA
 ^^^
 
-PKA (public key association) puts a pointer where to obtain a key into a DNS TXT 
-record. At the same time that can be used to verify that a key belongs to a mail 
-address. The documentation is at the g10code website (only in German so far). 
+PKA (public key association) puts a pointer where to obtain a key into a DNS TXT
+record. At the same time that can be used to verify that a key belongs to a mail
+address. The documentation is at the g10code website (only in German so far).
 
 I put the following into the df7cb.de zone:
 
@@ -349,7 +376,7 @@ Backup is very important. If you lose your private key or the passphrase for
 it, everything encrypted will not be recoverable.
 
 Backups of your private keys and key-rings should be stored on a encrypted USB
-drive along with other important and protected files, like your KeepassX
+drive along with other important and protected files, like your KeepassXC
 password database, your personal TLS certificates and private keys and the ones
 of your servers.
 
@@ -382,5 +409,5 @@ References
  * `GnuPG Agent manpage
    <http://manpages.ubuntu.com/manpages/bionic/man1/gpg-agent.1.html>`_
 
- * `How to use local secrets on a remote machine 
+ * `How to use local secrets on a remote machine
    <https://wiki.gnupg.org/AgentForwarding>`_

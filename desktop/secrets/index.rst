@@ -5,11 +5,12 @@ Passphrases, Keys and Certificates
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    passphrases
-   seahorse
-   keepassxc
    keys
    certificates
-
+   gnome-keyring
+   keepassxc
+   gpg
+   yubikey/index

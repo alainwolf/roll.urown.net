@@ -1,5 +1,8 @@
 .. image:: keepassxc-logo.*
     :alt: KeepassXC Logo
+    :align: right
+    :width: 120px
+    :target: https://keepassxc.org/
 
 KeePassXC
 =========
@@ -18,10 +21,10 @@ personal database.
 It is essentially designed as a safe password storage, but can be used for any
 piece of information which needs to be kept private. Like ...
 
- * bank account numbers,
- * credit-card information,
- * PIN codes of your various devices and ATM cards,
- * etc.
+* bank account numbers,
+* credit-card information,
+* PIN codes of your various devices and ATM cards,
+* etc.
 
 Every piece of information that needs to stay private should be kept in the
 KeePass database.
@@ -31,20 +34,20 @@ KeePass database.
     If you use KeePassXC for your secrets ...
 
         * You will never have to remember a password again apart from your KeePass
-          database password;
+            database password;
 
         * Never have to use the same password twice or more for different accounts,
-          websites etc. since you don't need to remember them anymore;
+            websites etc. since you don't need to remember them anymore;
 
         * Automatically create and use very strong passwords which are impossible to
-          guess and are very hard to break, even for government agencies;
+            guess and are very hard to break, even for government agencies;
 
         * As single encrypted file the database can be stored and synced
-          across all your devices and stored on unencrypted drives or third-party
-          cloud storage.
+            across all your devices and stored on unencrypted drives or third-party
+            cloud storage.
 
         * You might also give a copy to a friend or family member for safekeeping,
-          as they can't access it without the pass-phrase.
+            as they can't access it without the pass-phrase.
 
 Besides running on our Ubuntu Desktop, the KeePass database format can be read
 by applications running on the following platforms:
@@ -65,9 +68,8 @@ by applications running on the following platforms:
 Installation
 ------------
 
-As of November 2017 KeePassXC was not available in the Ubuntu Software Package
-repositories. Therefore the following PPA (Personal Package Archive) needs to be
-added first::
+To get the latest available version the following PPA (Personal Package Archive)
+can to be added first::
 
     sudo add-apt-repository ppa:phoerious/keepassxc
     sudo apt update
@@ -85,3 +87,9 @@ Install **keepassxc** from the Ubuntu Software Center
 or with the command-line::
 
     $ sudo apt install keepassxc
+
+
+References
+----------
+
+* `KeePassXC USer Guide <https://keepassxc.org/docs/KeePassXC_UserGuide.html>`_

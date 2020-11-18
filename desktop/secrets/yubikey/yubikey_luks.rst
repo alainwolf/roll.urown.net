@@ -46,7 +46,7 @@ Display the already used slots in the LUKS header information::
 
 
 If you only used one password to decrypt your disk, it is usually stored in slot
-0 and slot 1 to 7 are still unused. 
+0 and slot 1 to 7 are still unused.
 
 .. warning::
 
@@ -63,8 +63,8 @@ Backup your LUKS header in any case before modifying it::
     $ sudo cryptsetup luksHeaderBackup /dev/nvme0n1p3 \
         --header-backup-file /media/user/safe-storage/${HOSTNAME}-LUKS-header.backup-$(date -u +%Y-%m-%d_%H-%M-%S)
 
-The backup is stored on :file:`/media/user/safe-storage/` a 
-:doc:`../luks`.
+The backup is stored on :file:`/media/user/safe-storage/` a
+:doc:`/desktop/luks`.
 
 
 Initialize your Yubikey
@@ -84,17 +84,17 @@ Enroll your Yubikey to a LUKS slot
     $ sudo yubikey-luks-enroll -d /dev/nvme0n1p3
     setting disk to /dev/nvme0n1p3.
     setting slot to 7.
-    This script will utilize slot 7 on drive /dev/nvme0n1p3.  If this is not 
+    This script will utilize slot 7 on drive /dev/nvme0n1p3.  If this is not
     what you intended, exit now!
     Adding yubikey to initrd
-    Please enter the yubikey challenge password. This is the password that will 
-    only work while your yubikey is installed in your computer: 
+    Please enter the yubikey challenge password. This is the password that will
+    only work while your yubikey is installed in your computer:
     ********
-    Please enter the yubikey challenge password again: 
+    Please enter the yubikey challenge password again:
     ********
-    Please provide an existing passphrase. This is NOT the passphrase you just 
-    entered, this is the passphrase that you currently use to unlock your LUKS 
-    encrypted drive: 
+    Please provide an existing passphrase. This is NOT the passphrase you just
+    entered, this is the passphrase that you currently use to unlock your LUKS
+    encrypted drive:
     ********
 
 
@@ -111,9 +111,9 @@ as follows::
     nvme0n1p3_crypt UUID=baa9d1c2-3b57-440a-9148-52570dba9814 none luks,keyscript=/usr/share/yubikey-luks/ykluks-keyscript,discard
 
 
-This will tell the boot process, that the script 
-:file:`/usr/share/yubikey-luks/ykluks-keyscript` needs to be called, which in 
-turn will send the password typed by the user as challenge to the Yubikey and 
+This will tell the boot process, that the script
+:file:`/usr/share/yubikey-luks/ykluks-keyscript` needs to be called, which in
+turn will send the password typed by the user as challenge to the Yubikey and
 send the response from the Yubikey to LUKS to decrypt the disk.
 
 Save and close the file, then update the initial RAM disk::
@@ -125,7 +125,7 @@ Yubikey LUKS Suspend
 ^^^^^^^^^^^^^^^^^^^^
 
 There is also a *YubiKey/Luks Suspend/Resume* service installed with this
-software package. 
+software package.
 
 It takes care of closing your encrpyted volume and discards all key material
 from memory, before the system goes to sleep.
