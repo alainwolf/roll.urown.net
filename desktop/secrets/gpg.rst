@@ -319,8 +319,8 @@ You also might want to assimilate the GnuPG configuration::
 Signing GIT Operations
 ----------------------
 
-In :doc:/toolbox/git.html#configuration you find a description to set up git
-for signing and verifying various operations.
+In :doc:`/desktop/toolbox/git-scm` you find a description to set up git for
+signing and verifying various operations.
 
 
 Publishing Keys
@@ -336,6 +336,13 @@ Key-Servers
 Public key servers are still the mostly widely used way to find OpenPGP keys,
 but other methods come with significant benefits over the old key servers.
 
+In recent years, various problems with with the key-servers and their federation
+model have been discovered. In terms of reliability, abuse-resistance, privacy,
+and usability, the use of key servers can no longer be recommended.
+
+Notable keys servers include:
+
+ * keys.openpgp.org <https://keys.openpgp.org>
 
 DNS CERT
 ^^^^^^^^
@@ -350,11 +357,55 @@ PKA (public key association) puts a pointer where to obtain a key into a DNS TXT
 record. At the same time that can be used to verify that a key belongs to a mail
 address. The documentation is at the g10code website (only in German so far).
 
-I put the following into the df7cb.de zone:
+TBD
+
+::
+
+        $ gpg --export-options export-minimal,export-pka \
+        --export-filter keep-uid="uid=~@example.net" \
+        --export $GPGKEY
 
 
 DANE
 ^^^^
+
+The :RFC:`7929` titled "DNS-Based Authentication of Named Entities (DANE)
+Bindings for OpenPGP"  describes a mechanism to associate a user's OpenPGP
+public key with their email address, using the OPENPGPKEY DNS RRtype.
+These records are published in the DNS zone of the user's email
+address.  If the user loses their private key, the OPENPGPKEY DNS
+record can simply be updated or removed from the zone.
+
+As with other DANE records like TLSA, the OPENPGPKEY data is supposed to be
+secured by DNSSEC.
+
+The :file:`gpg` provides a way to output the required DNS records for a key with
+the **export-dane** export option.
+
+Since this will be published as DNS record, we want to export the smallest
+possible key. We therefore also add the **export-minimal** export-option.
+
+Additionally, most users have multiple user-ids (email addresses) in their key.
+Probably not all of those domains provide write-access to their DNS records
+(i.e. gmail.com). With the **keep-uid** export-filter, only the records for the
+domain we actually are allowed to publish will be shown::
+
+    $ gpg --export-options \
+                export-minimal,export-dane \
+        --export-filter keep-uid="uid=~@example.net" \
+        --export $GPGKEY
+
+This outputs records in generic format as TYPE61.
+
+If you want standard OPENPGPKEY format records::
+
+    $ export MY_USER=john MY_DOMAIN=example.net
+    $ echo -e "$( echo -n "$MY_USER" | sha256sum | head --bytes=56 )._openpgpkey.${MY_DOMAIN}. IN OPENPGPKEY (\n $( gpg --export-options export-minimal --export-filter keep-uid="uid=~@${MAIL_DOMAIN}" --export $GPGKEY | hexdump -e '"\t" /1 "%.2x"' -e '/32 "\n"' )\n )"
+
+
+There is also the online
+`DNS OPENPGPKEY Record Generator <https://www.huque.com/bin/openpgpkey>`_ who
+generates standard OPENPGPKEY records.
 
 
 Web Key Directory
