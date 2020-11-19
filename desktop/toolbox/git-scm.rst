@@ -20,7 +20,7 @@ with speed and efficiency.
 Git is easy to learn and has a tiny footprint with lightning fast performance.
 It outclasses SCM tools like Subversion, CVS, Perforce, and ClearCase with
 features like cheap local branching, convenient staging areas, and multiple
-workflows. 
+workflows.
 
 Installation
 ^^^^^^^^^^^^
@@ -77,7 +77,7 @@ version control using Git. Since 2018 it's owned by Microsoft.
 
 Basic services are free of charge. More advanced professional and enterprise
 services are commercial. Free GitHub accounts are commonly used to host
-open-source projects. 
+open-source projects.
 
 As of January 2020, GitHub reports having over 40 million users and more than
 190 million repositories (including at least 28 million public repositories),
@@ -91,7 +91,7 @@ GitHub uses your *commit email address* to associate commits with your GitHub
 account. Make sure the mail address you set in :file:`git config` above also
 exists in your GitHub account settings at https://github.com/settings/emails.
 
-for more details, especially on how to preserve your email address privacy, see 
+for more details, especially on how to preserve your email address privacy, see
 `setting your commit email address in GitHub <https://docs.github.com/en/free-pro-team@latest/github/setting-up-and-managing-your-github-user-account/setting-your-commit-email-address>`_.
 
 
@@ -105,11 +105,10 @@ to your GitHub account.
 
 Export your PGP key to add it to your GitHub account::
 
-    $>  gpg --export-options export-minimal,export-clean,no-export-attributes \
-            --armor --export $GPGKEY 
+    $>  gpg --export-options export-minimal --armor --export $GPGKEY
 
 The above command exports your public key in the smallest possible way, which
-makes it easier to copy and paste it to your GitHub account at 
+makes it easier to copy and paste it to your GitHub account at
 https://github.com/settings/keys.
 
 
@@ -119,7 +118,7 @@ SSH Public Key
 Typically git uses SSH to clone, push and pull code between repositories on
 different systems. With GitHub SSH connections are always made with the user
 :file:`git` to the host :file:`github.com` on either the standard TCP port
-22 or port 443 (to bypass restricitve firewalls). For identification and
+22 or port 443 (to bypass restrictive firewalls). For identification and
 authorization GitHub uses your SSH key. Therefore your SSH key needs to be tied
 to our GitHub account as well.
 
@@ -128,10 +127,10 @@ for SSH::
 
     $> gpg --export-ssh-key $GPGKEY
 
-Copy and paste the displayed key into your GitHub profile at 
+Copy and paste the displayed key into your GitHub profile at
 https://github.com/settings/keys.
 
-You may add the following lines to your SSH configuration file 
+You may add the following lines to your SSH configuration file
 :file:`~/.ssh/config`:
 
 .. code-block:: ini
@@ -139,19 +138,19 @@ You may add the following lines to your SSH configuration file
     Host github.com
       User git
 
-More on 
+More on
 `Connecting to GitHub with SSH <https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/connecting-to-github-with-ssh>`_.
 
 
 Personal Access Tokens
 ^^^^^^^^^^^^^^^^^^^^^^
 
-If you are 
-`using HTTPS <https://docs.github.com/en/free-pro-team@latest/github/using-git/which-remote-url-should-i-use>`_ 
-on GitHub, instead of SSH, you need to create a  **personal access token**  on 
+If you are
+`using HTTPS <https://docs.github.com/en/free-pro-team@latest/github/using-git/which-remote-url-should-i-use>`_
+on GitHub, instead of SSH, you need to create a  **personal access token**  on
 GitHub to identify yourself on HTTPS connections:
 
-Goto https://github.com/settings/tokens 
+Goto https://github.com/settings/tokens
 
 When using git on the Linux command-line with GitHub's HTTPS URLs you will be
 asked for a user name and password every time a connection to the remote
@@ -195,7 +194,7 @@ Using meld with git
 -------------------
 
 An `extensive description <https://stackoverflow.com/questions/34119866/>`_  on
-how to integrate meld with git is found on 
+how to integrate meld with git is found on
 `stackoverflow <https://stackoverflow.com/>`_.
 
 Meld as `git difftool <https://git-scm.com/docs/git-difftool>`_
