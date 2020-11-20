@@ -333,44 +333,49 @@ there are various ways to find and import a key.
 Key-Servers
 ^^^^^^^^^^^
 
-Public key servers are still the mostly widely used way to find OpenPGP keys,
-but other methods come with significant benefits over the old key servers.
+.. note::
 
-In recent years, various problems with with the key-servers and their federation
-model have been discovered. In terms of reliability, abuse-resistance, privacy,
-and usability, the use of key servers can no longer be recommended.
+    In recent years, various problems with with key-servers and their
+    federation model have been discovered. In terms of reliability,
+    abuse-resistance, privacy, and usability, the use of key servers can no
+    longer be recommended.
 
 Notable keys servers include:
 
  * keys.openpgp.org <https://keys.openpgp.org>
 
+While public key servers are still the mostly widely used way to find OpenPGP
+keys, but other methods come with significant benefits over the old key servers.
+
+
 DNS CERT
 ^^^^^^^^
 
-Publishing keys using DNS CERT, as specified in RFC-4398.
+Publishing a key as OpenPGP packet using DNS CERT type 3 (PGP), as specified in
+:RFC:`4398`.
 
 
 PKA
 ^^^
 
-PKA (public key association) puts a pointer where to obtain a key into a DNS TXT
-record. At the same time that can be used to verify that a key belongs to a mail
-address. The documentation is at the g10code website (only in German so far).
+Publishing a key as DNS CERT record type 6 (IPGP), as specified in :RFC:`4398`.
+The record contains the fingerprint and/or the URL of an OpenPGP packet.
 
-TBD
+The :cmd:`gpg` command provides a way to output the required DNS records for a
+key with the **export-pka** export option::
 
-::
+        $ gpg --export-options export-pka \
+            --export-filter keep-uid="uid=~@example.net" \
+            --export $GPGKEY
 
-        $ gpg --export-options export-minimal,export-pka \
-        --export-filter keep-uid="uid=~@example.net" \
-        --export $GPGKEY
+This outputs records in generic format as TYPE37.
 
 
 DANE
 ^^^^
 
 The :RFC:`7929` titled "DNS-Based Authentication of Named Entities (DANE)
-Bindings for OpenPGP"  describes a mechanism to associate a user's OpenPGP
+Bindings for OpenPGP" describes a mechanism to associate a user's OpenPGP
 public key with their email address, using the OPENPGPKEY DNS RRtype.
 These records are published in the DNS zone of the user's email
 address.  If the user loses their private key, the OPENPGPKEY DNS
@@ -416,6 +421,12 @@ TBD.
 
 Keybase.io
 ^^^^^^^^^^
+
+TBD.
+
+
+QR-Code
+^^^^^^^
 
 TBD.
 
