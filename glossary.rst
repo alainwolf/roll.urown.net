@@ -99,9 +99,9 @@ Glossary
 
         See also :term:`WMM`.
 
-        `IEEE 802.11e-2005 <https://en.wikipedia.org/wiki/IEEE_802.11e-2005>`_  
+        `IEEE 802.11e-2005 <https://en.wikipedia.org/wiki/IEEE_802.11e-2005>`_
         or 802.11e is an approved amendment to the :term:`IEEE 802.11` standard
-        that defines a set of :term:`Quality of Service` (QoS) enhancements for 
+        that defines a set of :term:`Quality of Service` (QoS) enhancements for
         wireless LAN applications through modifications to the :term:`Media
         Access  Control` (MAC) layer. The standard is considered of critical
         importance  for delay-sensitive applications, such as :term:`Voice over
@@ -124,7 +124,7 @@ Glossary
     802.11n
     IEEE 802.11n
 
-        `IEEE 802.11n-2009 <https://en.wikipedia.org/wiki/IEEE_802.11n-2009>`_, 
+        `IEEE 802.11n-2009 <https://en.wikipedia.org/wiki/IEEE_802.11n-2009>`_,
         commonly shortened to 802.11n, is a wireless-networking standard that
         uses multiple antennas to increase data rates. Sometimes referred to
         as MIMO, which stands for "multiple input and multiple output", it is
@@ -144,7 +144,7 @@ Glossary
         :term:`802.11`-2012 standard.
 
 
-    802.11w 
+    802.11w
     Management Frame Protection
     MFP
 
@@ -157,7 +157,7 @@ Glossary
 
         See :term:`LACP`;
 
-    
+
     AES
     Advanced Encryption Standard
 
@@ -184,29 +184,29 @@ Glossary
     AMD Secure Technology
     PSP
 
-        The `AMD Platform Security Processor <https://en.wikipedia.org/wiki/AMD_Platform_Security_Processor>`_ 
-        (PSP), officially known as AMD Secure Technology, is a trusted 
-        execution environment subsystem incorporated **since about 2013** into 
-        all AMD microprocessors. According to an AMD developer's guide, the 
-        subsystem is "responsible for creating, monitoring and maintaining the 
-        security environment" and "its functions include managing the boot 
-        process, initializing various security related mechanisms, and 
-        monitoring the system for any suspicious activity or events and 
-        implementing an appropriate response." Critics worry it can be used as 
-        a backdoor and is a security concern. 
+        The `AMD Platform Security Processor <https://en.wikipedia.org/wiki/AMD_Platform_Security_Processor>`_
+        (PSP), officially known as AMD Secure Technology, is a trusted
+        execution environment subsystem incorporated **since about 2013** into
+        all AMD microprocessors. According to an AMD developer's guide, the
+        subsystem is "responsible for creating, monitoring and maintaining the
+        security environment" and "its functions include managing the boot
+        process, initializing various security related mechanisms, and
+        monitoring the system for any suspicious activity or events and
+        implementing an appropriate response." Critics worry it can be used as
+        a backdoor and is a security concern.
 
         AMD has denied requests to open source the code that runs on the PSP.
 
-        The PSP is similar to the :term:`Intel Management Engine` for Intel 
+        The PSP is similar to the :term:`Intel Management Engine` for Intel
         processors.
 
 
     Authenticated Received Chain
     ARC
 
-        `Authenticated Received Chain <https://en.wikipedia.org/wiki/Authenticated_Received_Chain>`_ 
+        `Authenticated Received Chain <https://en.wikipedia.org/wiki/Authenticated_Received_Chain>`_
 
-        (ARC) is an email authentication system designed to allow an 
+        (ARC) is an email authentication system designed to allow an
         intermediate mail server like a mailing list or forwarding service to
         sign an email's original authentication results. This allows a receiving
         service to validate an email when the email's :term:`SPF` and
@@ -283,7 +283,7 @@ Glossary
         users are encouraged by Bruce Schneier, Blowfish's creator, to use the
         more modern and computationally efficient alternative :term:`Twofish`.
 
-    
+
     BSSID
     Basic Service Set Identifier
         An infrastructure mode wireless network consists of one ore more
@@ -326,7 +326,7 @@ Glossary
     Integrated Circuit Card
     Smart card
     Smartcard
- 
+
         A pocket-sized plastic card with embedded integrated circuits. Smart
         cards can provide identification, authentication, data storage and
         application processing. See the `Wikipedia article
@@ -350,7 +350,7 @@ Glossary
 
     Cryptographic Hash Function
 
-        A `cryptographic hash function <https://en.wikipedia.org/wiki/Cryptographic_hash_function>`_ 
+        A `cryptographic hash function <https://en.wikipedia.org/wiki/Cryptographic_hash_function>`_
         is a :term:`Hash Function` which is considered practically impossible to
         invert, that is, to recreate the input data from its hash value alone.
         They are used for digital signatures, Message Authentication Codes
@@ -416,7 +416,7 @@ Glossary
     DH
     Diffie-Hellman Key Exchange
 
-        `Diffie–Hellman key exchange (DH) <https://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange>`_ 
+        `Diffie–Hellman key exchange (DH) <https://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange>`_
         is a specific method of exchanging cryptographic keys.
         The method allows two parties that have no prior knowledge of each other to
         jointly establish a shared secret key over an insecure communications channel.
@@ -450,9 +450,9 @@ Glossary
         selected, and the number of words each selected word could be taken
         from. Lists have been compiled for several languages.
 
-        See also the original 
+        See also the original
         `Diceware Passphrase Home Page <https://theworld.com/~reinhold/diceware.html>`_
-        or the `urown.net Diceware <https://diceware.urown.net/#eff>`_ 
+        or the `urown.net Diceware <https://diceware.urown.net/#eff>`_
         installation.
 
     Digital Fingerprint
@@ -466,7 +466,7 @@ Glossary
     DKIM
     DomainKeys Identified Mail
 
-        `DomainKeys Identified Mail <https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail>`_ 
+        `DomainKeys Identified Mail <https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail>`_
         (DKIM) is an email authentication method designed to detect forged sender
         addresses in emails (email spoofing), a technique often used in phishing
         and email spam.
@@ -671,7 +671,7 @@ Glossary
     ECDSA
     Elliptic Curve Digital Signature Algorithm
 
-        In cryptography, the 
+        In cryptography, the
         `Elliptic Curve Digital Signature Algorithm (ECDSA) <https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm>`_
         offers a variant of the Digital Signature Algorithm (:term:`DSA`)
         which uses :term:`Elliptic Curve Cryptography`.
@@ -688,7 +688,7 @@ Glossary
         including Daniel J. Bernstein, Niels Duif, Tanja Lange, Peter Schwabe,
         and Bo-Yin Yang. The reference implementation is public domain software.
 
-    
+
     EEPROM
     Electrically Erasable Programmable Read-Only Memory
         `EEPROM <https://en.wikipedia.org/wiki/EEPROM>`_ (also E2PROM) stands
@@ -696,7 +696,7 @@ Glossary
         non-volatile memory used in computers, integrated in microcontrollers
         for smart cards and remote keyless systems, and other electronic devices
         to store relatively small amounts of data but allowing individual bytes
-        to be erased and reprogrammed. 
+        to be erased and reprogrammed.
 
     EFF
     Electronic Frontier Foundation
@@ -821,7 +821,7 @@ Glossary
         digits, fingerprints, lossy compression, randomization functions,
         error-correcting codes, and ciphers. Although the concepts overlap to some
         extent, each one has its own uses and requirements and is designed and
-        optimized differently. 
+        optimized differently.
 
 
     HMAC
@@ -850,7 +850,7 @@ Glossary
         communication for the World Wide Web, where hypertext documents include
         hyperlinks to other resources that the user can easily access, for
         example by a mouse click or by tapping the screen in a web browser.
-        
+
         Development of HTTP was initiated by Tim Berners-Lee at CERN in 1989.
         Development of early HTTP Requests for Comments (RFCs) was a coordinated
         effort by the Internet Engineering Task Force (IETF) and the World Wide
@@ -858,7 +858,7 @@ Glossary
 
     HTTPS
     Hypertext Transfer Protocol Secure
-        
+
         `Hypertext Transfer Protocol Secure <https://en.wikipedia.org/wiki/HTTPS>`_
         (HTTPS) is an extension of the :term:`Hypertext Transfer Protocol`
         (:term:`HTTP`). It is used for secure communication over a computer
@@ -893,19 +893,19 @@ Glossary
     IANA
     Internet Assigned Numbers Authority
 
-        The `Internet Assigned Numbers Authority <https://en.wikipedia.org/wiki/Internet_Assigned_Numbers_Authority>`_ 
+        The `Internet Assigned Numbers Authority <https://en.wikipedia.org/wiki/Internet_Assigned_Numbers_Authority>`_
         (IANA) is a function of :term:`ICANN`, a nonprofit private American
         corporation that oversees global IP address allocation, autonomous system
         number allocation, root zone management in the Domain Name System
         (:term:`DNS`), media types, and other Internet Protocol-related symbols
-        and Internet numbers. 
+        and Internet numbers.
         Its website is `www.iana.org <https://www.iana.org/>`_.
 
-    
+
     ICANN
     Internet Corporation for Assigned Names and Numbers
 
-        The `Internet Corporation for Assigned Names and Numbers <https://en.wikipedia.org/wiki/ICANN>`_ 
+        The `Internet Corporation for Assigned Names and Numbers <https://en.wikipedia.org/wiki/ICANN>`_
         (ICANN) is a nonprofit organization responsible for coordinating the
         maintenance and procedures of several databases related to the namespaces
         and numerical spaces of the Internet, ensuring the network's stable and
@@ -914,23 +914,23 @@ Glossary
         Much of its work has concerned the Internet's global Domain Name System
         (:term:`DNS`), including policy development for internationalization of
         the DNS system, introduction of new generic top-level domains (TLDs), and
-        the operation of root name servers. 
+        the operation of root name servers.
         Its website is `www.icann.org <https://www.icann.org/>`_.
 
 
     IEEE
     Institute of Electrical and Electronics Engineers
 
-        The 
-        `Institute of Electrical and Electronics Engineers <https://en.wikipedia.org/wiki/Institute_of_Electrical_and_Electronics_Engineers>`_ 
-        (IEEE) is a professional association with its corporate office in New 
-        York City and its operations center in Piscataway, New Jersey. It was 
-        formed in 1963 from the amalgamation of the American Institute of 
-        Electrical Engineers and the Institute of Radio Engineers. As of 2018, 
-        it is the world's largest association of technical professionals with 
-        more than 423,000 members in over 160 countries around the world. Its 
-        objectives are the educational and technical advancement of electrical 
-        and electronic engineering, telecommunications, computer engineering 
+        The
+        `Institute of Electrical and Electronics Engineers <https://en.wikipedia.org/wiki/Institute_of_Electrical_and_Electronics_Engineers>`_
+        (IEEE) is a professional association with its corporate office in New
+        York City and its operations center in Piscataway, New Jersey. It was
+        formed in 1963 from the amalgamation of the American Institute of
+        Electrical Engineers and the Institute of Radio Engineers. As of 2018,
+        it is the world's largest association of technical professionals with
+        more than 423,000 members in over 160 countries around the world. Its
+        objectives are the educational and technical advancement of electrical
+        and electronic engineering, telecommunications, computer engineering
         and allied disciplines.
 
 
@@ -959,10 +959,10 @@ Glossary
     Intel Active Management Technology
     AMT
 
-        `Intel Active Management Technology <https://en.wikipedia.org/wiki/Intel_Active_Management_Technology>`_ 
+        `Intel Active Management Technology <https://en.wikipedia.org/wiki/Intel_Active_Management_Technology>`_
         (AMT) is hardware and firmware backdoor for remote out-of-band
-        management of personal computers, running on the :term:`Intel 
-        Management Engine`, a separate microprocessor not exposed to the user, 
+        management of personal computers, running on the :term:`Intel
+        Management Engine`, a separate microprocessor not exposed to the user,
         in order to monitor, maintain, update, upgrade, and repair them.
 
         Features include remote power up/down, boot from remote storage
@@ -981,15 +981,15 @@ Glossary
     ME
     Manageability Engine
 
-        The `Intel Management Engine <https://en.wikipedia.org/wiki/Intel_Management_Engine>`_ 
-        (ME), also known as the Manageability Engine, is an autonomous 
-        subsystem that has been incorporated in virtually all of Intel's 
-        processor chipsets **since 2008**. It is located in the Platform 
-        Controller Hub of modern Intel motherboards. It is a part of 
-        :term:`Intel Active Management Technology`, which allows system 
-        administrators to perform tasks on the machine remotely. System 
+        The `Intel Management Engine <https://en.wikipedia.org/wiki/Intel_Management_Engine>`_
+        (ME), also known as the Manageability Engine, is an autonomous
+        subsystem that has been incorporated in virtually all of Intel's
+        processor chipsets **since 2008**. It is located in the Platform
+        Controller Hub of modern Intel motherboards. It is a part of
+        :term:`Intel Active Management Technology`, which allows system
+        administrators to perform tasks on the machine remotely. System
         administrators can use it to turn the computer on and off, and they can
-        login remotely into the computer regardless of whether or not an 
+        login remotely into the computer regardless of whether or not an
         operating system is installed.
 
         The Intel Management Engine always runs as long as the motherboard is
@@ -1055,12 +1055,12 @@ Glossary
         Protocol. It is defined in :RFC:`2033`.
 
 
-    LFU 
+    LFU
         LFU means "Least Frequently Used"
 
 
-    LRU 
-    
+    LRU
+
         LRU means "Least Recently Used"
 
     LUA
@@ -1087,7 +1087,7 @@ Glossary
     MAC Address
     Media Access Control
     Media Access Control Address
-        A `media access control address <https://en.wikipedia.org/wiki/MAC_address>`_ 
+        A `media access control address <https://en.wikipedia.org/wiki/MAC_address>`_
         (MAC address) of a device is a unique identifier assigned to a network
         interface controller (NIC). For communications within a network segment,
         it is used as a network address for most IEEE 802 network technologies,
@@ -1096,7 +1096,7 @@ Glossary
         control protocol sublayer of the data link layer. As typically
         represented, MAC addresses are recognizable as six groups of two
         hexadecimal digits, separated by hyphens, colons, or no separator (see
-        Notational conventions below). 
+        Notational conventions below).
 
         A MAC address may be referred to as the burned-in address, and is also
         known as an **Ethernet hardware address**, **hardware address**, and
@@ -1129,7 +1129,7 @@ Glossary
     Mail Delivery Agent
         Another name for :term:`LDA` or :term:`Local Delivery Agent`.
 
-    
+
     Memcached
     Memcache
 
@@ -1269,7 +1269,7 @@ Glossary
         modem communication refers to using a crossed-over RS-232 cable to
         connect the teleprinters directly to one another without the modems.
         It is also used to serially connect a computer to a printer, since
-        both are DTE, and is known as a Printer Cable. 
+        both are DTE, and is known as a Printer Cable.
 
 
     OFDMA
@@ -1287,7 +1287,7 @@ Glossary
 
     PDU
     Power Distribution Unit
-        A `power distribution unit <https://en.wikipedia.org/wiki/Power_distribution_unit>`_ 
+        A `power distribution unit <https://en.wikipedia.org/wiki/Power_distribution_unit>`_
         (PDU) or mains distribution unit (MDU) is a device fitted with multiple
         (outputs designed to distribute electric power, especially to racks of
         (computers and networking equipment located within a data center. Data
@@ -1296,7 +1296,7 @@ Glossary
         (efficiency, uptime, and growth.
 
     PEM
-        
+
         `Privacy Enhanced Mail (PEM)
         <https://en.wikipedia.org/wiki/Privacy_Enhanced_Mail>`_ is a 1993
         :term:`IETF` proposal for securing email using public-key
@@ -1346,12 +1346,12 @@ Glossary
     Regular Expression
     regex
     regexp
-        A `regular expression <https://en.wikipedia.org/wiki/Regular_expression>`_, 
+        A `regular expression <https://en.wikipedia.org/wiki/Regular_expression>`_,
         regex or regexp is a sequence of characters that define a search
         pattern. Usually such patterns are used by string searching algorithms
         for "find" or "find and replace" operations on strings, or for input
         validation. It is a technique developed in theoretical computer science
-        and formal language theory. 
+        and formal language theory.
 
     RFC
 
@@ -1381,13 +1381,13 @@ Glossary
         <https://www.youtube.com/watch?v=wXB-V_Keiu8>`_ that explains it in 16
         minutes.
 
-    
+
     RTS/CTS Threshold
         RTS (Request to send) and CTS (Clear to Send) is the optional mechanism
         used by the :term:`802.11` wireless networking protocol to reduce frame
         collisions introduced by the "hidden node problem". Originally the
         protocol fixed the "exposed node problem" as well, but modern RTS/CTS
-        includes ACKs and does not solve the exposed node problem. 
+        includes ACKs and does not solve the exposed node problem.
 
         RTS (Request to send) is send by the client to the access point – it
         essentially asks for permission to send the next data packet. The lower
@@ -1434,12 +1434,12 @@ Glossary
         through which information transfers in or out one bit at a time (in
         contrast to a parallel port).Throughout most of the history of
         personal computers, data was transferred through serial ports to
-        devices such as modems, terminals, and various peripherals. 
+        devices such as modems, terminals, and various peripherals.
 
         While such interfaces as Ethernet, FireWire, and USB all send data as
         a serial stream, the term serial port usually identifies hardware
         compliant to the :term:`RS-232` standard or similar and intended to
-        interface with a modem or with a similar communication device. 
+        interface with a modem or with a similar communication device.
 
         Modern computers without serial ports may require USB-to-serial
         converters to allow compatibility with RS-232 serial devices. Serial
@@ -1451,17 +1451,17 @@ Glossary
         Serial ports are still used in these areas as they are simple, cheap
         and their console functions are highly standardized and widespread. A
         serial port requires very little supporting software from the host
-        system. 
+        system.
 
         On personal computers they are called **COM** ports and numerated like
         COM1, COM2 etc.
 
- 
+
     Short Preamble
     Long Preamble
         Preamble Type is an easy router option that can boost the performance of
         your wireless wifi network slightly. Most of the routers or firmware has
-        the default setting for the Preamble Type as long. 
+        the default setting for the Preamble Type as long.
 
         Preamble Type setting means that it adds some additional data header
         strings to help check the wifi data transmission errors. Short Preamble
@@ -1564,7 +1564,7 @@ Glossary
     SPF
     Sender Policy Framework
 
-        `Sender Policy Framework <https://en.wikipedia.org/wiki/Sender_Policy_Framework>`_ 
+        `Sender Policy Framework <https://en.wikipedia.org/wiki/Sender_Policy_Framework>`_
         (SPF) is an email authentication method designed to detect forging sender
         addresses during the delivery of the email. SPF alone though is limited
         only to detect a forged sender claimed in the envelope of the mail which
@@ -1589,10 +1589,10 @@ Glossary
     SSID
     Service Set Identifier
         In :term:`IEEE 802.11` wireless local area networking standards
-        (including Wi-Fi), a 
-        `service set <https://en.wikipedia.org/wiki/Service_set_(802.11_network)>`_ 
+        (including Wi-Fi), a
+        `service set <https://en.wikipedia.org/wiki/Service_set_(802.11_network)>`_
         is a group of wireless network devices
-        that are operating with the same networking parameters. 
+        that are operating with the same networking parameters.
 
         The SSID or "Service Set Identifier" is a unique ID of up to 32
         characters that is used for naming wireless networks. When
@@ -1766,13 +1766,13 @@ Glossary
     WME
     WMM
         `Wireless Multimedia Extensions <https://en.wikipedia.org/wiki/Wireless_Multimedia_Extensions>`_
-        (WME), also known as Wi-Fi Multimedia (WMM), is a Wi-Fi Alliance 
-        interoperability certification, based on the :term:`IEEE 802.11e` standard. It 
-        provides basic :term:`Quality of Service` (QoS) features to :term:`IEEE 802.11` 
-        networks. WMM prioritizes traffic according to four Access Categories 
-        (AC): voice (AC_VO), video (AC_VI), best effort (AC_BE), and background 
-        (AC_BK). However, it does not provide guaranteed throughput. It is 
-        suitable for well-defined applications that require QoS, such as :term:`Voice 
+        (WME), also known as Wi-Fi Multimedia (WMM), is a Wi-Fi Alliance
+        interoperability certification, based on the :term:`IEEE 802.11e` standard. It
+        provides basic :term:`Quality of Service` (QoS) features to :term:`IEEE 802.11`
+        networks. WMM prioritizes traffic according to four Access Categories
+        (AC): voice (AC_VO), video (AC_VI), best effort (AC_BE), and background
+        (AC_BK). However, it does not provide guaranteed throughput. It is
+        suitable for well-defined applications that require QoS, such as :term:`Voice
         over IP` (VoIP) on Wi-Fi phones (:term:`VoWLAN`).
 
         WMM is mandatory for :term:`802.11n`. If you disable WMM you also
@@ -1797,7 +1797,7 @@ Glossary
         own regulations to the allowable channels, allowed users and maximum
         power levels within these frequency ranges.
 
-        A `List of WLAN Channels <https://en.wikipedia.org/wiki/List_of_WLAN_channels>`_ 
+        A `List of WLAN Channels <https://en.wikipedia.org/wiki/List_of_WLAN_channels>`_
         is available at Wikipedia.
 
     WPA
@@ -1823,7 +1823,7 @@ Glossary
     WPA2
     Wi-Fi Protected Access II
     IEEE 802.11i-2004
-        `IEEE 802.11i-2004 <https://en.wikipedia.org/wiki/IEEE_802.11i-2004>`_, 
+        `IEEE 802.11i-2004 <https://en.wikipedia.org/wiki/IEEE_802.11i-2004>`_,
         or 802.11i for short, is an amendment to the original IEEE 802.11,
         implemented as Wi-Fi Protected Access II (WPA2). The draft standard was
         ratified on 24 June 2004. This standard specifies security mechanisms
@@ -1831,7 +1831,7 @@ Glossary
         clause of the original standard with a detailed Security clause. In the
         process, the amendment deprecated broken Wired Equivalent Privacy (WEP),
         while it was later incorporated into the published IEEE 802.11-2007
-        standard. 
+        standard.
 
     WPA2-PSK
         A :term:`WPA2` wireless connection using the a pre-shared key (aka a
@@ -1851,7 +1851,7 @@ Glossary
     WPS
     Wi-Fi Protected Setup
 
-        Originally called, Wi-Fi Simple Config, 
+        Originally called, Wi-Fi Simple Config,
         `WiFi Protected Setup <https://en.wikipedia.org/wiki/Wi-Fi_Protected_Setup>`_
         is a network security standard to create a secure wireless home network.
 

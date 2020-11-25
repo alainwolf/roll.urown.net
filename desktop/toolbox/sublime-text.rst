@@ -5,14 +5,14 @@
     :align: right
 
 
-Sublime Text 
+Sublime Text
 ============
 
 `Sublime Text <https://www.sublimetext.com/>`_ is a proprietary cross-platform
 source code editor with a Python application programming interface (API). It
 natively supports many programming languages and markup languages, and
 functions can be added by users with plugins, typically community-built and
-maintained under free-software licenses. 
+maintained under free-software licenses.
 
 
 Software Installation
@@ -51,7 +51,7 @@ syntax highlighting definitions, menus, snippets and more.
 Regular users rarely need to know how to install packages by hand, as
 automatic package managers are available.
 
-The de facto package manager for Sublime Text is 
+The de facto package manager for Sublime Text is
 `Package Control <https://packagecontrol.io/>`_.
 
 
@@ -82,7 +82,7 @@ Recommended Packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sublime Text plugin for `EditorConfig <https://editorconfig.org/>`_. Helps
-developers maintain consistent coding styles between different editors 
+developers maintain consistent coding styles between different editors
 
 
 `Emacs-like Modelines <https://packagecontrol.io/packages/Emacs-like%20Modelines>`_
@@ -95,7 +95,7 @@ Emacs-like Modelines for Sublime Text 2 (and 3).
 `Sublime Linter <https://packagecontrol.io/packages/SublimeLinter>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The code linting framework for Sublime Text 3. 
+The code linting framework for Sublime Text 3.
 
 *lint*, or a *linter*, is a static code analysis tool used highlight programming
 errors, bugs, stylistic errors, and suspicious constructs. The term originates
@@ -107,8 +107,8 @@ You then install plug-ins for any script and programming languages you need.
 `Sublime​Linter-shellcheck <https://packagecontrol.io/packages/SublimeLinter-shellcheck>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This linter plugin for SublimeLinter provides an interface to 
-`shellcheck <https://www.shellcheck.net/>`_, to find bugs in shell-scripts. 
+This linter plugin for SublimeLinter provides an interface to
+`shellcheck <https://www.shellcheck.net/>`_, to find bugs in shell-scripts.
 
 
 Before using this plug-in, ensure that shellcheck is installed on your system::
@@ -120,7 +120,7 @@ Before using this plug-in, ensure that shellcheck is installed on your system::
 `Sublime​Linter-php <https://packagecontrol.io/packages/SublimeLinter-php>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-SublimeLinter 3 plugin for PHP, using :file:`php -l`. 
+SublimeLinter 3 plugin for PHP, using :file:`php -l`.
 
 This requires that a `php <https://www.php.net/>`_ command-line interpreter is
 installed as well::
@@ -161,7 +161,7 @@ To install Node::
 Using Sublime Text with git
 ---------------------------
 
-Setup :doc:`git <git>` to use Sublime Text as default editor::
+Setup :doc:`git <git-scm>` to use Sublime Text as default editor::
 
     $> git config --global core.editor "subl --new-window --wait"
 

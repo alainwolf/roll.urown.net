@@ -12,5 +12,5 @@ Contents:
    certificates
    gnome-keyring
    keepassxc
-   gpg
+   gpg/index
    yubikey/index

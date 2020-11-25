@@ -266,6 +266,6 @@ See also
 You may also look at these related pages:
 
  * :doc:`/desktop/secrets/yubikey/yubikey_ssh`
- * :doc:`/desktop/secrets/gpg`
+ * :doc:`/desktop/secrets/gpg/index`
  * :doc:`/desktop/secrets/keys`
  * :doc:`/server/ssh-server`

@@ -10,7 +10,7 @@ Prerequisites
 -------------
 
  * Yubico installed and setup as described in :doc:`index`.
- * GnuPG installed and configured as in :doc:`../gpg`.
+ * GnuPG installed and configured as in :doc:`/desktop/secretes/gpg/index`.
 
 
 Additional Software
@@ -187,7 +187,7 @@ our private keys are ready for use ... Right?
 
 Unfortunately thats not the case. For the following two reasons:
 
-#. As shown on the beginning of this guide, additional software, usually not 
+#. As shown on the beginning of this guide, additional software, usually not
    pre-installed, is used to access the Yubikey or GnuPG Smartcard.
 
 #. Second, the local GnuPG keyring doesn't know anything about the private key
@@ -217,8 +217,8 @@ steps need to be taken:
 
 	gpg> trust
 
-	Please decide how far you trust this user to correctly verify other users 
-	keys (by looking at passports, checking fingerprints from different sources, 
+	Please decide how far you trust this user to correctly verify other users
+	keys (by looking at passports, checking fingerprints from different sources,
 	etc.)
 
 	  1 = I don't know or won't say
@@ -239,5 +239,5 @@ References
 ----------
 
  * `GnuPG Howto's: The GnuPG Smartcard How-To <https://gnupg.org/howtos/card-howto/en/smartcard-howto.html>`_
- 
+
  * `Yubico Support: Using Your YubiKey with OpenPGP <https://support.yubico.com/support/solutions/articles/15000006420-using-your-yubikey-with-openpgp>`_
