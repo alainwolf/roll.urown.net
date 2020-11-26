@@ -45,8 +45,9 @@ connection during a desktop session is managed and remembered in the keyring.
 To use the current native versions of the agent for OpenSSH we need to to
 disable the Gnome Keyring agent.
 
+.. _disable ssh agent:
 
-Disabling the Gnome Keyring SSH Agent
+Disabling the Gnome-Keyring SSH Agent
 -------------------------------------
 
  * It doesn't handle newer SSH key formats (ed22519, etc);
@@ -69,15 +70,9 @@ Copy the desktop file::
     $ cp /etc/xdg/autostart/gnome-keyring-ssh.desktop ~/.config/autostart/
 
 
-Add the lines to disable autostart::
+Add a line to disable autostart::
 
     $ echo 'X-GNOME-Autostart-enabled=false' \
-        >> ~/.config/autostart/gnome-keyring-ssh.desktop
-
-    $ echo 'Hidden=true' \
-        >> ~/.config/autostart/gnome-keyring-ssh.desktop
-
-    $ echo 'NoDisplay=false' \
         >> ~/.config/autostart/gnome-keyring-ssh.desktop
 
 
@@ -85,14 +80,4 @@ This will be active on your next login. For your current session, restart (aka
 "replace") the already running Gnome Keyring Daemon, without the agent part::
 
     $ /usr/bin/gnome-keyring-daemon --replace --components keyring,pkcs11
-
-
-Another way might be available, depending on your Ubuntu Desktop version:
-
- 1. Open the Startup Applications manager, by pressing :kbd:`Super` and typing
-    ``session``.
-
- 2. Uncheck the "SSH Agent" entry.
-
- 3. Restart your session by logging out and logging in again.
 
