@@ -187,7 +187,7 @@ Configuration
 -------------
 
 The following settings need to be changed in
-:download:`/etc/powerdns/pdns.conf <config/pdns.conf>`:
+:download:`/etc/powerdns/pdns.conf <config/pdns-master.conf>`:
 
 REST API
 ^^^^^^^^
@@ -198,46 +198,54 @@ other apps::
     $ pwgen -cns 64 1
 
 
-.. literalinclude:: config/pdns.conf
+.. literalinclude:: config/pdns-master.conf
     :language: ini
-    :lines: 50-68
+    :lines: 42-52
+
+.. literalinclude:: config/pdns-master.conf
+    :language: ini
+    :lines: 629-664
+
+Don't forget: if you want to use the API from any other host then localhost, add / change `webserver-address` and `webserver-allow-from`
 
 
 Allowed Zone Transfers
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/pdns.conf
+.. literalinclude:: config/pdns-master.conf
     :language: ini
-    :start-after: #only-notify=
-    :end-before: # allow-recursion
+    :start-after: # 8bit-dns=no
+    :end-before: # allow-dnsupdate-from
 
 
 
 Enable Zone Transfers
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/pdns.conf
+.. literalinclude:: config/pdns-master.conf
     :language: ini
-    :start-after: # default-soa-name=
-    :end-before: # disable-tcp
+    :start-after: # direct-dnskey=no
+    :end-before: # disable-axfr-rectify
 
 
-Server IP Address
-^^^^^^^^^^^^^^^^^
+Server IP Address (Optional)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/pdns.conf
+Replace this with your IPv4, and (optional) IPv6 address. Sperated by ","
+
+.. literalinclude:: config/pdns-master.conf
     :language: ini
     :start-after: # load-modules=
-    :end-before: # local-port
+    :end-before: # local-address-nonexist-fail
 
 
 Act as Master Server
 ^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/pdns.conf
+.. literalinclude:: config/pdns-master.conf
     :language: ini
-    :start-after: loglevel=
-    :end-before: # max-queue-length
+    :start-after: # lua-records-exec-limit=
+    :end-before: # max-cache-entries
 
 
 Source Address
@@ -250,10 +258,10 @@ The slave servers, will not accept any NOTIFY messages, if they are not coming
 from the defined master server of a domain. Here is how we tell PowerDNS to use
 its dedicated IPv4 and IPv6 addresses for outgoing connections:
 
-.. literalinclude:: config/pdns.conf
+.. literalinclude:: config/pdns-master.conf
     :language: ini
-    :start-after: # queue-limit=
-    :end-before: # receiver-threads
+    :start-after: # query-cache-ttl=20
+    :end-before: # query-logging Hint backends that queries should be logged
 
 
 Server Restart
@@ -261,11 +269,11 @@ Server Restart
 
 ::
 
-    $ sudo service pdns restart
+    $ sudo systemctl restart pdns.service
 
 
 
-Import Zone-Files
+Import existing Zone-Files
 ^^^^^^^^^^^^^^^^^
 
 If you already have zone files, from previous DNS servers or 3rd-party
@@ -297,47 +305,48 @@ Install MariaDB and PowerDNS
 
 See above. Also add the MySQL tables as above.
 
-Copy the  configuration file from the master and change following things:
-
+Copy the configuration file from the master and change following things,
+or download it for the slave :download:`/etc/powerdns/pdns.conf <config/pdns-slave.conf>`:
 
 Slave Server IP Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: ini
-
-    #################################
-    # local-address Local IP address to which we bind
-    #
-    local-address=192.0.2.42
-
-    #################################
-    # local-ipv6    Local IP address to which we bind
-    #
-    local-ipv6=2001:db8::42
+.. literalinclude:: config/pdns-slave.conf
+    :language: ini
+    :start-after: # load-modules=
+    :end-before: # local-address-nonexist-fail
 
 
 Setup PowerDNS as a Slave
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: ini
-
-    #################################
-    # master    Act as a master
-    #
-    master=no
+.. literalinclude:: config/pdns-slave.conf
+    :language: ini
+    :start-after: # lua-records-exec-limit=1000
+    :end-before: # max-cache-entries
 
 
-.. code-block:: ini
+.. literalinclude:: config/pdns-slave.conf
+    :language: ini
+    :start-after: # signing-threads=3
+    :end-before: # slave-cycle-interval
 
-    #################################
-    # slave Act as a slave
-    #
-    slave=yes
+
+.. literalinclude:: config/pdns-slave.conf
+    :language: ini
+    :start-after: # socket-dir=
+    :end-before: # tcp-control-address
+
+
+.. literalinclude:: config/pdns-slave.conf
+    :language: ini
+    :start-after: # allow-dnsupdate-from=
+    :end-before: # allow-unsigned-notify
 
 
 Restart the slave server::
 
-    $ sudo service pdns restart
+    $ sudo systemctl restart pdns.service
 
 
 Add Domain Record on Slave Server
