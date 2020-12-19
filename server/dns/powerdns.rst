@@ -23,8 +23,21 @@ IP Addresses
 The server will need a dedicated private IPv4 address and global IPv6 address.
 See :doc:`/server/network`.
 
-Troughout this document we will use **192.0.2.41** as IPv4 address and
-**2001:db8::41** as IPv6 address.
+Troughout this document we will use following IP Addresses for demonstration.
+
+.. list-table:: IP Addresses
+   :header-rows: 1
+
+   * - Host
+     - IPv4
+     - IPv6
+   * - Master
+     - 192.0.2.41
+     - 2001:db8::41
+   * - Slave
+     - 192.0.2.42
+     - 2001:db8::42
+
 
 Also you need to know your public IPv4 address on your gateway. In this document
 we will use **198.51.100.240** as an example address.
