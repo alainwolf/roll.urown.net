@@ -183,7 +183,7 @@ To create this table structures in our new PowerDNS database::
     $ mysql -u root -p pdns < powerdns.sql
 
 
-Configuration
+Master Server
 -------------
 
 The following settings need to be changed in
@@ -192,11 +192,12 @@ The following settings need to be changed in
 REST API
 ^^^^^^^^
 
+This is only requiered, if you want to make changes through the API, or use PowerDNS-Admin.
+
 Create a random string to be used as API key to access the server by
 other apps::
 
     $ pwgen -cns 64 1
-
 
 .. literalinclude:: config/pdns-master.conf
     :language: ini
@@ -206,17 +207,18 @@ other apps::
     :language: ini
     :lines: 629-664
 
-Don't forget: if you want to use the API from any other host then localhost, add / change `webserver-address` and `webserver-allow-from`
+Don't forget: if you want to use the API from any other host then localhost, add / change `webserver-address` and `webserver-allow-from`.
 
 
 Allowed Zone Transfers
 ^^^^^^^^^^^^^^^^^^^^^^
 
+Add here all your slave servers IP.
+
 .. literalinclude:: config/pdns-master.conf
     :language: ini
     :start-after: # 8bit-dns=no
     :end-before: # allow-dnsupdate-from
-
 
 
 Enable Zone Transfers
@@ -231,13 +233,14 @@ Enable Zone Transfers
 Server IP Address (Optional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Replace this with your IPv4, and (optional) IPv6 address. Sperated by ","
+Replace this with your IPv4, and (optional) IPv6 address.
 
 .. literalinclude:: config/pdns-master.conf
     :language: ini
     :start-after: # load-modules=
     :end-before: # local-address-nonexist-fail
 
+Don't use `local-ipv6`, it's deprecated!
 
 Act as Master Server
 ^^^^^^^^^^^^^^^^^^^^
