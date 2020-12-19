@@ -28,20 +28,20 @@ Troughout this document we will use following IP Addresses for demonstration.
 .. list-table:: IP Addresses
    :header-rows: 1
 
-   * - Host
+   * - Type
+     - Host
      - IPv4
      - IPv6
    * - Master
+     - dns01
      - 192.0.2.41
      - 2001:db8::41
    * - Slave
+     - dns02
      - 192.0.2.42
      - 2001:db8::42
 
-
-Also you need to know your public IPv4 address on your gateway. In this document
-we will use **198.51.100.240** as an example address.
-
+In the real world a DNS slave would be on entirely another subnet.
 
 Firewall-Gateway
 ^^^^^^^^^^^^^^^^
