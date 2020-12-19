@@ -334,20 +334,71 @@ Restart the slave server::
     $ sudo systemctl restart pdns.service
 
 
+Add a Domain and Recrods
+------------------------
+
+You need to do that only on the Master Server.
+
+Import existing Zone-Files
+^^^^^^^^^^^^^^^^^
+
+If you already have zone files, from previous DNS servers or 3rd-party
+providers, you can import them as follows::
+
+    $ zone2sql --zone=example.de.zone \
+               --zone-name=example.de \
+               --gmysql --transactions --verbose \
+               > example.de.zone.sql
+    1 domains were fully parsed, containing 49 records
+    $ mysql -u root -p pdns < example.de.zone.sql
+    Enter password:
+
+or
+
+Create a sample Zones
+^^^^^^^^^^^^^^^^^^^^^
+
+Make sure, this is the first domain you add, else you need to change the `domain_id` in `INSERT INTO records` statements.
+
+.. code-block:: mysql
+
+    USE pdns;
+
+    INSERT INTO domains (name, type, account) values ('example.de', 'MASTER', 'example');
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','localhost admin.example.de 1 10380 3600 604800 3600','SOA', 86400, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','dns01','NS',86400, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','dns02','NS',86400, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','192.0.1.10','A',120, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'mail.example.de','192.0.1.12','A',120, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','mail.example.de','MX',120,25);
+
+
+And done. Very easy.
+
+
 Add Domain Record on Slave Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Open a MySQL database server sesssion::
+This happens automatic, because we use superslave :-)
 
-    slave$ mysql -u root -p pdns
+Notifications are sent default every 60 seconds. You can chagne this in :file:`/etc/powerdns/pdns.conf`
 
-
-Add the the domain along with the IP address of the master server as follows:
-
- .. code-block:: mysql
-
-    INSERT INTO `domains` (`name`, `master`, `type`)
-        VALUES('example.net', '2001:db8::41', 'SLAVE');
+.. literalinclude:: config/pdns-master.conf
+    :language: ini
+    :start-after: # slave=no
+    :end-before: # slave-renotify
 
 
 Add Slave Record on Master Server
@@ -362,24 +413,26 @@ Add a NS record and IP addresses of the new slave to the domain:
 
  .. code-block:: mysql
 
+    USE pdns;
+
     INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
         VALUES(
-            (SELECT `id` FROM `domains` WHERE `name` = 'example.net'),
-            'example.net',
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.de'),
+            'example.de',
             'NS',
-            'ns2.example.net'
+            'ns2.example.de'
     );
     INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
         VALUES(
-            (SELECT `id` FROM `domains` WHERE `name` = 'example.net'),
-            'ns2.example.net',
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.de'),
+            'ns2.example.de',
             'A',
             '192.0.2.42'
     );
     INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
         VALUES(
-            (SELECT `id` FROM `domains` WHERE `name` = 'example.net'),
-            'ns2.example.net',
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.de'),
+            'ns2.example.de',
             'AAAA',
             '2001:db8::42'
     );
@@ -388,22 +441,25 @@ Add a NS record and IP addresses of the new slave to the domain:
 Delete a Domain
 ---------------
 
-Let say you want to remove the domain **example.org** completely.
+Let's say you want to remove the domain **example.de** completely.
 
  .. code-block:: mysql
 
+    USE pdns;
+
     DELETE FROM `domainmetadata` WHERE `domain_id` = (
-        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+        SELECT `id` FROM `domains` WHERE `name` = "example.de"
     );
     DELETE FROM `records` WHERE `domain_id` = (
-        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+        SELECT `id` FROM `domains` WHERE `name` = "example.de"
     );
     DELETE FROM `comments` WHERE `domain_id` = (
-        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+        SELECT `id` FROM `domains` WHERE `name` = "example.de"
     );
     DELETE FROM `cryptokeys` WHERE `domain_id` = (
-        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+        SELECT `id` FROM `domains` WHERE `name` = "example.de"
     );
-    DELETE FROM `domains` WHERE `name` = "example.org";
+    DELETE FROM `domains` WHERE `name` = "example.de";
 
 This same procedure needs to be done on every master or slave sever.
+This happens **not** automatically with supermaster, you really need to do that on every master / slave server.
