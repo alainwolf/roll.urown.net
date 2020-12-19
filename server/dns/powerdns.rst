@@ -65,25 +65,46 @@ messages and transfer zones from the master over IPv6.
 Software Installation
 ---------------------
 
-The PowerDNS server software is in the Ubuntu software package repository. We
-install the server and the MySQL database backend.
+The PowerDNS server software is in the Ubuntu software package repository. But there is not always the latest version available.
+If this is the case, you can use the PowerDNS repository, to get the latest version.
+
+We install the authoritative server. (you need sudo/root permissions for these tasks)
+
+Create the file :file:`/etc/apt/sources.list.d/pdns.list` with this content:
+
+ATTENTION: Please visit: https://repo.powerdns.com/ and replace **ubuntu**, **focal** and **-auth-44** to fit your distribution.
 
 ::
 
-    $ sudo apt-get install pdns-server pdns-backend-mysql
+    deb [arch=amd64] http://repo.powerdns.com/ubuntu focal-auth-44 main
 
-You will be asked for the password of the MySQL root user, so the database can
-be created.
+And this to  :file:`/etc/apt/preferences.d/pdns`: Now you use the packages from the powerdns repository.
+
+.. code-block:: shell
+
+    Package: pdns-*
+    Pin: origin repo.powerdns.com
+    Pin-Priority: 600
+
+
+and execute the following commands, to install the powerdns-server:
+
+.. code-block:: shell
+
+    curl https://repo.powerdns.com/FD380FBB-pub.asc | sudo apt-key add -
+    sudo apt-get update
+    sudo apt-get install pdns-server pdns-backend-mysql
+
+for further information see: https://repo.powerdns.com/.
 
 The following happens during installation:
 
     * The following configuration file are created:
 
         * :file:`/etc/powerdns/pdns.conf`.
+        * :file:`/etc/powerdns/named.conf`.
+        * :file:`/etc/powerdns/pdns.d/bind.conf`
         * :file:`/etc/default/pdns`.
-        * :file:`/etc/powerdns/pdns.d/pdns.local.conf`
-        * :file:`/etc/powerdns/pdns.d/pdns.simplebind.conf`
-        * :file:`/etc/powerdns/pdns.d/pdns.local.gmysql.conf`
 
     * A user and group *pdns* is created.
     * A system service :file:`/etc/init.d/pdns` is created and started.
