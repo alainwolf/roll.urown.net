@@ -268,48 +268,27 @@ its dedicated IPv4 and IPv6 addresses for outgoing connections:
 
 
 Server Restart
---------------
+^^^^^^^^^^^^^^^^^
 
 ::
 
     $ sudo systemctl restart pdns.service
 
 
-
-Import existing Zone-Files
-^^^^^^^^^^^^^^^^^
-
-If you already have zone files, from previous DNS servers or 3rd-party
-providers, you can import them as follows::
-
-    $ zone2sql --zone=example.net.zone \
-               --zone-name=example.net \
-               --gmysql --transactions --verbose \
-               > example.net.zone.sql
-    1 domains were fully parsed, containing 49 records
-    $ mysql -u root -p pdns < example.net.zone.sql
-    Enter password:
-
-And done. Very easy.
-
-
-Secondary Server
+Secondary Server(s)
 ----------------
 
-Let's assume our master server has the IP address **2001:db8::41** and the new
-slave will have the IP address **2001:db8::42**.
-
-In the real world a DNS slave would be on entirely another subnet.
-
 To set up a PowerDNS as secondary slave DNS server.
+
+In this guide we use PowerDNS `Supermaster <https://doc.powerdns.com/authoritative/modes-of-operation.html#supermaster-automatic-provisioning-of-slaves>`__ functionality.
+
 
 Install MariaDB and PowerDNS
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-See above. Also add the MySQL tables as above.
+See above, run everything in the `DNS Server Database`_ section
 
-Copy the configuration file from the master and change following things,
-or download it for the slave :download:`/etc/powerdns/pdns.conf <config/pdns-slave.conf>`:
+Download the config for the slave :download:`/etc/powerdns/pdns.conf <config/pdns-slave.conf>`, or make the following changes to the default config:
 
 Slave Server IP Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -323,28 +302,31 @@ Slave Server IP Addresses
 Setup PowerDNS as a Slave
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/pdns-slave.conf
-    :language: ini
-    :start-after: # lua-records-exec-limit=1000
-    :end-before: # max-cache-entries
-
+Enable slave functionality:
 
 .. literalinclude:: config/pdns-slave.conf
     :language: ini
     :start-after: # signing-threads=3
     :end-before: # slave-cycle-interval
 
-
 .. literalinclude:: config/pdns-slave.conf
     :language: ini
     :start-after: # socket-dir=
     :end-before: # tcp-control-address
 
+Allow notify from master server.
 
 .. literalinclude:: config/pdns-slave.conf
     :language: ini
     :start-after: # allow-dnsupdate-from=
     :end-before: # allow-unsigned-notify
+
+Configure supermaster on slave server (in mysql).
+
+.. code-block:: mysql
+
+    USE pdns;
+    INSERT INTO supermasters (ip, nameserver, account) VALUES ("192.0.2.41", "ns01", "");
 
 
 Restart the slave server::
