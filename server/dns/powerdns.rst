@@ -113,7 +113,7 @@ The following happens during installation:
 DNS Server Database
 -------------------
 
-All our DNS data will stored in a MySQL database.
+All our DNS data will stored in a MariaDB database.
 
 
 Remove BIND Backend
@@ -121,42 +121,38 @@ Remove BIND Backend
 
 By default PowerDNS uses BIND style zone-files to store DNS data.
 
-As only one backend can be active at any time and we installed the MySQL backend,
-we need to remove the default "simple BIND backend". This is done simply by
+We need to remove the default "BIND backend". This is done simply by
 deleting its configuration file.
 
 ::
 
-    $ sudo rm /etc/powerdns/pdns.d/pdns.simplebind.conf
+    $ sudo rm /etc/powerdns/pdns.d/bind.conf
 
 
 Database Server
 ^^^^^^^^^^^^^^^
 
 The following setting needs to changed in
-:download:`/etc/powerdns/pdns.d/pdns.local.gmysql.conf <config/pdns.local.gmysql.conf>`:
+:download:`/etc/powerdns/pdns.d/mariadb.conf <config/mariadb.conf>`:
 
-.. literalinclude:: config/pdns.local.gmysql.conf
+.. literalinclude:: config/mariadb.conf
     :language: ini
 
 
 Preparing the database
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Create a new emtpy database called **pdns** on the MySQL server::
+Create a new emtpy database called **pdns** on the MySQL server
+::
 
-    $ mysqladmin -u root -p create pdns
+    $ mysql -u root -p 
+    CREATE DATABASE pdns;
 
-
-Create a database user for PowerDNS-server to access the database::
-
-    $ mysql -u root -p
-
+Create a database user for PowerDNS-server to access the database:
 
 .. code-block:: mysql
 
-    GRANT SELECT ON pdns.* TO 'pdns'@'127.0.0.1'
-        IDENTIFIED BY '********';
+    GRANT ALL ON pdns.* TO 'pdns'@'localhost' IDENTIFIED BY '********';
     FLUSH PRIVILEGES;
     EXIT;
 
