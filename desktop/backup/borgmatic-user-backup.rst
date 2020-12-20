@@ -57,7 +57,7 @@ Generate a new borgmatic configuration file::
 
     $ generate-borgmatic-config -d ~/.config/borgmatic/config.yaml
 
-This generates a sample configuration file 
+This generates a sample configuration file
 :file:`/home/user/.config/borgmatic/config.yaml`.
 
 
@@ -115,7 +115,7 @@ set secure permissions on borgmatic configuration files (chmod 0600) and scripts
 
     $ chmod 0600 ~/.config/borgmatic/config.yml
     $ chmod 0700 ~/.config/borgmatic/notify.sh
-    $ validate-borgmatic-config 
+    $ validate-borgmatic-config
 
 
 Initialize Repository
@@ -129,7 +129,7 @@ Initialize Repository
 Key Files and Passwords
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-After the initialization a key file is found at 
+After the initialization a key file is found at
 :file:`~/.config/borg/keys/${USER}.key`.
 
 .. warning::
@@ -168,7 +168,7 @@ Systemd service file: :file:`~/.config/systemd/user/borgmatic.service`:
 Schedule
 ^^^^^^^^
 
-Schedule the system backups once every day at a random time between midnight 
+Schedule the system backups once every day at a random time between midnight
 and 6 AM. or if a scheduled backup time was missed, due to the system powered
 off or asleep. Don't wake up the system just for doing a backup.
 
@@ -184,4 +184,67 @@ Activate
 ::
 
     $ systemctl --user enable --now borgmatic.timer
+
+
+Checking Backups
+----------------
+
+Checking Logs
+^^^^^^^^^^^^^
+
+Borgmatic logs to systemd journal::
+
+    $ journalctrl --user -t borgmatic
+
+
+Listing Archives
+^^^^^^^^^^^^^^^^
+
+::
+
+    $ borgmatic list
+
+
+Archive Information
+^^^^^^^^^^^^^^^^^^^
+
+::
+
+    $ borgmatic info --archive latest
+
+
+Testing
+^^^^^^^
+
+TBD.
+
+
+Restoring Files
+---------------
+
+
+Mounting Backup Archives
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+The easiest way to access the backed-up files in the archive, is by mounting it
+as a file-system::
+
+    $ sudo mkdir -p /media/${USER}/Borg-Backup
+    $ sudo chown ${USER} /media/${USER}/Borg-Backup
+    $ borgmatic mount --mount-point /media/${USER}/Borg-Backup
+
+
+The files in the backup archives should now be accessible in the Nautilus file
+manager, as "Borg-Backup" like an external drive.
+
+To mount a specific archive::
+
+    $ borgmatic mount --archive ${USER}-${HOSTNAME}-2020-12-07T08:06:20 \
+        --mount-point /media/${USER}/Borg-Backup
+
+
+After your are done inspecting or restoring::
+
+    $ borgmatic umount --mount-point /media/${USER}/Borg-Backup
+    $ rmdir /media/${USER}/Borg-Backup
 

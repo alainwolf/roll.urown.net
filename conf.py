@@ -119,8 +119,8 @@ html_theme = "sphinx_rtd_theme"
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-# For the Spinx RTD theme see 
-# https://sphinx-rtd-theme.readthedocs.io/en/latest/configuring.html_theme 
+# For the Spinx RTD theme see
+# https://sphinx-rtd-theme.readthedocs.io/en/latest/configuring.html_theme
 # and /usr/local/lib/python2.7/dist-packages/sphinx_rtd_theme/theme.conf
 html_theme_options = {
   'canonical_url': 'https://roll.urown.net/',
@@ -378,7 +378,7 @@ epub_exclude_files = ['search.html']
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {'https://docs.python.org/': None}
 
 # A string of reStructuredText that will be included at the end of every source
 # file that is read.
