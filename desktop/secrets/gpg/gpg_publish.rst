@@ -1,6 +1,11 @@
 Distributing OpenPGP Keys
 =========================
 
+.. contents::
+    :depth: 1
+    :local:
+    :backlinks: top
+
 As can be seen with the :file:`--auto-key-locate` configuration parameter of
 there are various ways to find and import a key.
 
@@ -48,7 +53,9 @@ without any URL.
 
 Testing::
 
-    $ env GNUPGHOME=$(mktemp -d) gpg --verbose --auto-key-locate clear,pka --locate-keys john.doe@example.net
+    $ env GNUPGHOME=$( mktemp --tmpdir --directory ) \
+        gpg --verbose --auto-key-locate clear,pka \
+            --locate-keys john.doe@example.net
 
 
 DANE
@@ -94,7 +101,9 @@ generates standard OPENPGPKEY records.
 
 Testing::
 
-    $ env GNUPGHOME=$(mktemp -d) gpg --verbose --auto-key-locate clear,dane --locate-keys john.doe@example.net
+    $ env GNUPGHOME=$( mktemp --tmpdir --directory ) \
+        gpg --verbose --auto-key-locate clear,dane \
+            --locate-keys john.doe@example.net
 
 
 Web Key Directory (WKD)
@@ -135,9 +144,10 @@ website::
         | /usr/lib/gnupg/gpg-wks-client -C "/tmp/openpgpkey" --install-key
 
 The :file:`/tmp/openpgpkey` directory now contains a subdirectory named
-:file:`example.net`. Inside it you find a :file:`policy` file and the :file:`hu`
-subdirectory. The :file:`hu` directory contains your OpenPGP public key in a
-file named after the hash of your mail-address::
+:file:`example.net`. Inside it you find a :file:`policy` file and the
+:file:`hu` subdirectory. The :file:`hu` directory (for "**h**\ ashed **u**\
+ser-id") contains your OpenPGP public key in a file named after the hash of
+your mail-address::
 
     /tmp/openpgpkey/
     └── example.net
@@ -165,11 +175,14 @@ For example::
         /var/www/${MY_DOMAIN}/public_html/.well-known
 
 
-The exact commands and locations need to be adapted to your web-hosting environment.
+The exact commands and locations need to be adapted to your web-hosting
+environment.
 
 Testing::
 
-    $ env GNUPGHOME=$(mktemp -d) gpg --verbose --auto-key-locate clear,wkd --locate-keys john.doe@example.net
+    $ env GNUPGHOME=$( mktemp --tmpdir --directory ) \
+        gpg --verbose --auto-key-locate clear,wkd \
+            --locate-keys john.doe@example.net
 
 
 There is also an online test page:
@@ -303,4 +316,5 @@ Testing
 
 ::
 
-    $ env GNUPGHOME=$(mktemp -d) gpg --verbose --fetch-key https://example.net/0x0123456789ABCDEF.bexpk
+    $ env GNUPGHOME=$( mktemp --tmpdir --directory ) \
+        gpg --verbose --fetch-key https://example.net/0x0123456789ABCDEF.bexpk
