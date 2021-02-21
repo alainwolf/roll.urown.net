@@ -1,3 +1,5 @@
+:orphan:
+
 DomainKeys Identified Mail (DKIM)
 =================================
 
@@ -27,20 +29,20 @@ OpenDKIM is in the Ubuntu software package repository::
 The package installs ...
 
  * The system user and group **opendkim**
- * The configuration files :file:`/etc/opendkim.conf` and 
+ * The configuration files :file:`/etc/opendkim.conf` and
    :file:`/etc/default/opendkim`
  * The system service :file:`opendkim` in the :file:`/etc/init.d` directory
- * A runtime directory :file:`/var/run/opendkim/` for the PID file and UNIX 
+ * A runtime directory :file:`/var/run/opendkim/` for the PID file and UNIX
    socket.
  * Various binaries and tools in :file:`/usr/bin`:
        * opendkim
-       * opendkim-atpszone 
+       * opendkim-atpszone
        * opendkim-genkey
-       * opendkim-genzone 
-       * opendkim-spam 
+       * opendkim-genzone
+       * opendkim-spam
        * opendkim-stats
-       * opendkim-testadsp 
-       * opendkim-testkey   
+       * opendkim-testadsp
+       * opendkim-testkey
        * opendkim-testmsg
 
 
@@ -65,8 +67,8 @@ Mails sent out trough our mail-server will be signed using 1024bit RSA keys. So
 receiving mail-servers can verify that they have been sent by us and nobody has
 tampered with them along the way.
 
-To create those RSA keys the `opendkim-genkey 
-<http://manpages.ubuntu.com/manpages/trusty/en/man8/opendkim-genkey.8.html>`_ 
+To create those RSA keys the `opendkim-genkey
+<http://manpages.ubuntu.com/manpages/trusty/en/man8/opendkim-genkey.8.html>`_
 tool can be used::
 
     $ opendkim-genkey --directory=/etc/mail --selector=${HOSTNAME} --testmode
@@ -87,6 +89,6 @@ Configuration is in the file :download:`/etc/opendkim.conf
 References
 ----------
  * `OpenDKIM README file <http://www.opendkim.org/opendkim-README>`_
- * `Ubuntu Community Help Wiki - Postfix DKIM 
+ * `Ubuntu Community Help Wiki - Postfix DKIM
    <https://help.ubuntu.com/community/Postfix/DKIM>`_
  * `Wikipedia on DKIM <http://en.wikipedia.org/wiki/DKIM>`_

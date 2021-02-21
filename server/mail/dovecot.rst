@@ -4,20 +4,20 @@
     single: Internet Protocols; LMTP
 
 
-Mail Access Server
-==================
+MAS - Mail Access Server
+========================
 
 .. image:: Dovecot-logo.*
     :alt: Dovecot Logo
     :align: right
 
-`Dovecot <http://www.dovecot.org/>`_ is an open source :abbr:`IMAP (Internet 
-Message Access Protocol)` and :abbr:`POP3 (Post Office Protocol)` server for 
+`Dovecot <http://www.dovecot.org/>`_ is an open source :abbr:`IMAP (Internet
+Message Access Protocol)` and :abbr:`POP3 (Post Office Protocol)` server for
 Linux/UNIX-like systems, written primarily with security in mind. Dovecot is an
 excellent choice for both small and large installations. It's fast, simple to
 set up, requires no special administration and it uses very little memory.
 
-.. contents:: \ 
+.. contents:: \
 
 
 Install Software
@@ -35,9 +35,9 @@ created :doc:`../server-tls`.
 The installation creates the following items:
 
  * The user and group **dovecot** for the mail server.
- * The user and group **dovenull** to process mail server logins. 
+ * The user and group **dovenull** to process mail server logins.
  * The directory :file:`/etc/dovecot`
- * The main configuration file :file:`/etc/dovecot/dovecot.conf` 
+ * The main configuration file :file:`/etc/dovecot/dovecot.conf`
  * Various other configuration files in the directory :file:`/etc/dovecot/conf.d`
  * The Ubuntu Upstart service configuration :file:`/etc/init/dovecot.conf`
 
@@ -49,9 +49,9 @@ Main Configuration
 ------------------
 
 The main configuration file
-:download:`/etc/dovecot/dovecot.conf 
-</server/config-files/etc/dovecot/dovecot.conf>` has a limited amount of 
-settings, as most things are included from individual files in the 
+:download:`/etc/dovecot/dovecot.conf
+</server/config-files/etc/dovecot/dovecot.conf>` has a limited amount of
+settings, as most things are included from individual files in the
 :file:`/etc/dovecot/conf.d` directory.
 
 
@@ -88,7 +88,7 @@ Database Connection
 -------------------
 
 Dovecot can use our mailserver database to validate domains, mailboxes and
-authenticate users. The configuration is set in the file 
+authenticate users. The configuration is set in the file
 :download:`/etc/dovecot/dovecot-sql.conf.ext
 </server/config-files/etc/dovecot/dovecot-sql.conf.ext>`.
 
@@ -112,7 +112,7 @@ How to connect to the database server and what username and password to use:
     :language: ini
     :lines: 34,70
 
-The database-name, user and password are identical to what you have set in 
+The database-name, user and password are identical to what you have set in
 :file:`/etc/postfix/mysql-virtual-mailbox-maps.cf` for :doc:`postfix`.
 
 
@@ -125,7 +125,7 @@ How are passwords stored (hashed) in the password database:
     :language: ini
     :lines: 72,78
 
-The Dovecot Wiki describes the available `password schemes 
+The Dovecot Wiki describes the available `password schemes
 <See http://wiki2.dovecot.org/Authentication/PasswordSchemes>`_.
 
 
@@ -138,7 +138,7 @@ The MySQL query to retrieve username and (hashed) password for a mail-address.
     :language: ini
     :lines: 80-84, 110
 
-    
+
 .. index::
     single: IMAP
     single: LMTP
@@ -149,14 +149,14 @@ Services
 --------
 
 The file :download:`/etc/dovecot/conf.d/10-master.conf
-</server/config-files/etc/dovecot/conf.d/10-master.conf>` defines the properties of the services Dovecot
-provides to other hosts.
+</server/config-files/etc/dovecot/conf.d/10-master.conf>` defines the properties
+of the services Dovecot provides to other hosts.
 
 We use Dovecot to provide the following services:
 
     * |IMAP| - for MUA to access their mailbox
     * |LMTP| & |LDA| - Delivery of mail to local mailboxes
-    * AUTH - let other services (i.e. |MSA| or |XMPP|) authenticate users by 
+    * AUTH - let other services (i.e. |MSA| or |XMPP|) authenticate users by
       Dovecot.
 
 
@@ -165,6 +165,14 @@ IMAP Settings
 
 The |IMAP| service configuration can be left at its defaults.
 
+In the file :download:`/etc/dovecot/conf.d/20-imap.conf
+</server/config-files/etc/dovecot/conf.d/20-imap.conf>` we add
+the :command:`imap_sieve` pluing as loaded (more on sieve later).
+
+It also advisable to increase the number of IMAP connections per user from the
+default 10, considering multiple devices (PC, Laptop, Notebook, Tablet,
+Smartphone) and probably most of it trough NAT.
+
 
 LMTP - Local Mail Transport
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -172,8 +180,8 @@ LMTP - Local Mail Transport
 *   When the |MTA| server has accepted a message from the Internet he uses an
     |LDA| to send it to the server who holds the recipients mailbox.
 
-*   When the |MSA| server has accepted a message from an |MUA| he then sends it 
-    by |LMTP| to the |MTA| who takes care of the transer to other  Internet 
+*   When the |MSA| server has accepted a message from an |MUA| he then sends it
+    by |LMTP| to the |MTA| who takes care of the transer to other  Internet
     domains.
 
 *   A script running on a web-server creates a mail to a user, as part of some
@@ -187,7 +195,7 @@ To allow our |MTA| Postfix to deliver mails to mailboxes trough the Dovecot
     :language: ini
     :lines: 48-53
 
-The configuration file 
+The configuration file
 :download:`/etc/dovecot/conf.d/20-lmtp.conf </server/config-files/etc/dovecot/conf.d/20-lmtp.conf>` holds settings specific to the |LMTP| service.
 
 We load the Dovecot :term:`Sieve` plugin.
@@ -200,11 +208,11 @@ We load the Dovecot :term:`Sieve` plugin.
 LDA - Local Delivery Agent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Local delivery happens when mails are to be delivered to a mailbox of the local 
+Local delivery happens when mails are to be delivered to a mailbox of the local
 system. Here are some uses-cases:
 
-The file :download:`/etc/dovecot/conf.d/15-lda.conf 
-</server/config-files/etc/dovecot/conf.d/15-lda.conf>` is used to set-up local 
+The file :download:`/etc/dovecot/conf.d/15-lda.conf
+</server/config-files/etc/dovecot/conf.d/15-lda.conf>` is used to set-up local
 delivery.
 
 The name and domain of our server is only availabel in our local LAN and not
@@ -245,7 +253,7 @@ See also the `Dovecot SSL configuration
 <http://wiki2.dovecot.org/SSL/DovecotConfiguration>`_ in the Dovecot wiki.
 
 The file :download:`/etc/dovecot/conf.d/10-ssl.conf
-</server/config-files/etc/dovecot/conf.d/10-ssl.conf>` contains settings 
+</server/config-files/etc/dovecot/conf.d/10-ssl.conf>` contains settings
 for TLS protocol settings, certificates and keys.
 
 We enforce encryption and server authentication on all connections:
@@ -268,7 +276,7 @@ Where the servers certificate and private key are stored:
 Diffie-Hellmann Parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Encryption strenght of session keys negotiated by :term:`Diffie-Hellman key 
+Encryption strenght of session keys negotiated by :term:`Diffie-Hellman key
 exchange`.
 
 Dovecot creates its own :term:`DH parameters` and also refesehes them
@@ -309,13 +317,13 @@ Authentication
 --------------
 
 The file :download:`/etc/dovecot/conf.d/10-auth.conf
-</server/config-files/etc/dovecot/conf.d/10-auth.conf>` defines how users logins 
+</server/config-files/etc/dovecot/conf.d/10-auth.conf>` defines how users logins
 are processed.
 
 .. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-auth.conf
     :language: ini
     :start-after: #auth_ssl_username_from_cert = no
-    :end-before: ## 
+    :end-before: ##
 
 Disable login for system users and enable the MySQL user database, by commenting
 out the first line with a hashtag and activating the *auth- sql.conf.ext* line
@@ -325,9 +333,9 @@ with a exclamation mark:
     :language: bash
     :start-after: # <doc/wiki/UserDatabase.txt>
 
-The now included file 
-:download:`/etc/dovecot/conf.d/auth-sql.conf.ext 
-</server/config-files/etc/dovecot/auth-sql.conf.ext>` contains references to the 
+The now included file
+:download:`/etc/dovecot/conf.d/auth-sql.conf.ext
+</server/config-files/etc/dovecot/auth-sql.conf.ext>` contains references to the
 database configuration file.
 
 First where (hashed) paswords are retrieved for authenticating users:
@@ -335,7 +343,7 @@ First where (hashed) paswords are retrieved for authenticating users:
 .. literalinclude:: /server/config-files/etc/dovecot/auth-sql.conf.ext
     :language: bash
     :start-after: # <doc/wiki/AuthDatabase.SQL.txt>
-    :end-before: # "prefetch" user database 
+    :end-before: # "prefetch" user database
 
 And how other used properties, like mailbox directory, are retrieved:
 
@@ -365,9 +373,9 @@ This basically means, that mails for **user@example.net** will be stored in the
 Mailbox Locations
 -----------------
 
-In the file 
-:download:`/etc/dovecot/conf.d/10-mail.conf 
-</server/config-files/etc/dovecot/conf.d/10-mail.conf>` we set up parameters for 
+In the file
+:download:`/etc/dovecot/conf.d/10-mail.conf
+</server/config-files/etc/dovecot/conf.d/10-mail.conf>` we set up parameters for
 our virtual mailboxes.
 
 .. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-mail.conf
@@ -380,17 +388,186 @@ our virtual mailboxes.
     :lines: 103-108
 
 
+IMAP Folder Creation
+--------------------
+
+Most mail clients use a common set of IMAP folders, besides the "Inbox" for
+storing various types of mails:
+
+    * Drafts
+    * Sent
+    * Archives
+    * Junk
+    * Trash
+
+We can tell Dovecot to create these folders automatically, if they don't already
+exists, on users login. The user will also be subcribed to them, depending on
+settings. If a user accidentely deletes one of these folders, they will be
+re-created automatically on the next login.
+
+:download:`/etc/dovecot/conf.d/15-mailboxes.conf
+</server/config-files/etc/dovecot/conf.d/15-mailboxes.conf>`.
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/15-mailboxes.conf
+    :language: bash
+
+
+
 Sieve Filter Management Server
 ------------------------------
 
-The ManageSieve server allows users to manage their own mail filters directly
-on the server.
+Todays users access their mail from multiple devices and locations. Desktop
+computers at the office and at home, laptops, notebooks, tablets, smartphones,
+while commuting or from coffee-shops, hotel-rooms etc. They use dedicated mail
+clients like Thunderbird or Outlook, but also with their browser on webmail
+clients.
 
-The ManageSieve server is configured in the file 
-:download:`/etc/dovecot/conf.d/20-managesieve.conf 
+Classic client-side mail filter-rules don't cut it anymore. Mail has to be
+categorized and filtered on the server on delivery, to provide a consistent view
+accross all clients.
+
+:term:`Sieve` is a basic script language to manage mail on the server, by
+triggering simple actions (move to folder, delete, mark as read, etc.), based on
+message attributes like sender or recipient, spam-flags, mailing-listss,
+headers, etc. The famous "Out-of Office" or "Vacation" auto-answer is a typical
+use case.
+
+The ManageSieve server allows administrators to define a set of sieve-scripts
+for all accounts on the server, but also lets users to manage their own mail
+filters.
+
+User can manage their own filter-scripts with a sieve client. Either integrated
+in their mail-client, on their webmail-page or with standalone software which
+then connects to the ManageSieve server provided by dovecot.
+
+The ManageSieve server is configured in the file
+:download:`/etc/dovecot/conf.d/20-managesieve.conf
 </server/config-files/etc/dovecot/conf.d/20-managesieve.conf>`.
 
 .. literalinclude:: /server/config-files/etc/dovecot/conf.d/20-managesieve.conf
     :language: bash
 
 
+Pigeonhole Sieve interpreter
+----------------------------
+
+Sieve plugin itself is configured in the file
+:download:`/etc/dovecot/conf.d/90-sieve.conf
+</server/config-files/etc/dovecot/conf.d/90-sieve.conf>`.
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/90-sieve.conf
+    :language: bash
+
+
+Dovecot Sieve & RSPAMD
+----------------------
+
+Sieve is also used to intergrate Dovecot nicely with the RSPAMD Spamfilter:
+
+    * Mail marked as Spam by RSPAMD is moved to the Junk folder, instead of the
+      Inbox.
+    * When a user moves a message from any folder to the Junk folder, that
+      message is passed on to RSPAMD as training data to improve its reliablitly
+      in detecting spam.
+    * When a user is movin a message out of the Junk folder, its also passed on
+      to RSPAMD for training to reduce false postives.
+
+`darix on GitHub <https://github.com/darix/dovecot-sieve-antispam-rspamd>`_ has
+prepared a set of scripts and configurations for doing all that.
+
+
+Installation
+^^^^^^^^^^^^
+
+Clone and install darix's repository::
+
+    $ cd /usr/local/src/
+    $ git clone git@github.com:darix/dovecot-sieve-antispam-rspamd.git
+    $ cd dovecot-sieve-antispam-rspamd
+    $ make install
+
+
+Configuration
+^^^^^^^^^^^^^
+
+The dovecot sieve scripts need access to the RPSPAMD controller socket.
+Write your RPSPAMD controller password in to the file
+:file:`/etc/dovecot/rspamd-controller.password`.
+
+Most other settings are found in the file
+:file:`/etc/dovecot/conf.d/99-antispam_with_sieve.conf`.
+
+Change the lines containing the Spamfolder to the one we use::
+
+    ...
+    imapsieve_mailbox1_name = Junk
+    ...
+    imapsieve_mailbox2_from = Junk
+
+
+The same needs to be done in the sieve script
+:file:`/usr/lib/dovecot/sieve/global-spam.sieve`::
+
+    ...
+    fileinto :create "Junk";
+    ...
+
+
+Mailbox Quota
+-------------
+
+Quota Plugins Activation
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+In the file :file:`/etc/dovecot/conf.d/20-imap.conf`:
+
+.. code-block:: bash
+
+    # Enable quota plugin for tracking and enforcing the quota.
+    mail_plugins = $mail_plugins quota
+
+    # Enable the IMAP QUOTA extension, allowing IMAP clients to ask for the
+    # current quota usage.
+    mail_plugins = $mail_plugins imap_quota
+
+
+Qupta Plugins Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Quota plugins configurations in the file
+:download:`/etc/dovecot/conf.d/90-quota.conf
+</server/config-files/etc/dovecot/conf.d/90-quota.conf>`.
+
+.. literalinclude:: /server/config-files/etc/dovecot/conf.d/90-quota.conf
+    :language: bash
+
+
+Quota Warning Mails
+^^^^^^^^^^^^^^^^^^^
+
+Create the simple shell script :file:`/usr/local/bin/dovecot-quota-warning`::
+
+    #!/bin/sh
+
+    PERCENT=$1
+    USER=$2
+
+    cat << EOF | /usr/lib/dovecot/dovecot-lda -d "$USER" \
+        -o "plugin/quota=maildir:User quota:noenforcing"
+    From: postmaster@urown.net
+    Subject: Mail service quota warning
+
+    Your mailbox $USER is now $PERCENT% full.
+
+    You should delete some messages from the server.
+
+
+    WARNING: Do not ignore this message as if your mailbox
+    reaches 100% of quota, new mail will be rejected.
+
+    EOF
+
+
+Make it executable::
+
+    $ chmod +x /usr/local/bin/dovecot-quota-warning

@@ -9,31 +9,27 @@
 # service type  private unpriv  chroot  wakeup  maxproc command + args
 #               (yes)   (yes)   (yes)   (never) (100)
 # ==========================================================================
-#smtp      inet  n       -       -       -       -       smtpd
-smtp       inet  n       -       n       -       1       postscreen
-dnsblog    unix  -       -       n       -       0       dnsblog
-tlsproxy   unix  -       -       n       -       0       tlsproxy
-smtpd      pass  -       -       n       -       -       smtpd
-  -o smtpd_proxy_filter=127.0.0.1:10024
-127.0.0.1:10025 inet n   -       -       -       -       smtpd
-  -o content_filter=
-  -o smtpd_proxy_filter=
-  -o local_recipient_maps=
-  -o smtpd_authorized_xforward_hosts=127.0.0.0/8
-  -o relay_recipient_maps=
-  -o smtpd_restriction_classes=
-  -o smtpd_client_restrictions=
-  -o smtpd_helo_restrictions=
-  -o smtpd_sender_restrictions=
-  -o smtpd_data_restrictions=
-  -o smtpd_recipient_restrictions=permit_mynetworks,reject
-  -o mynetworks=127.0.0.0/8
-  -o strict_rfc821_envelopes=yes
-  -o receive_override_options=no_unknown_recipient_checks,no_header_body_checks
-  -o inet_interfaces=127.0.0.1
-submission inet  n       -       n       -       -       smtpd
+smtp      inet  n       -       y       -       -       smtpd
+#smtp     inet  n       -       y       -       1       postscreen
+#  -o smtpd_sasl_auth_enable=no
+#smtpd    pass  -       -       y       -       -       smtpd
+#dnsblog  unix  -       -       y       -       0       dnsblog
+tlsproxy   unix  -      -       y       -       0       tlsproxy
+submission inet  n       -       y       -       -      smtpd
   -o syslog_name=postfix/submission
   -o smtpd_tls_security_level=encrypt
+  -o smtpd_sasl_auth_enable=yes
+  -o smtpd_tls_auth_only=yes
+  -o smtpd_reject_unlisted_recipient=no
+  -o smtpd_client_restrictions=$mua_client_restrictions
+  -o smtpd_helo_restrictions=$mua_helo_restrictions
+  -o smtpd_sender_restrictions=$mua_sender_restrictions
+  -o smtpd_recipient_restrictions=
+  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
+  -o milter_macro_daemon_name=ORIGINATING
+smtps      inet  n       -       y       -       -      smtpd
+  -o syslog_name=postfix/smtps
+  -o smtpd_tls_wrappermode=yes
   -o smtpd_sasl_auth_enable=yes
   -o smtpd_reject_unlisted_recipient=no
   -o smtpd_client_restrictions=$mua_client_restrictions
@@ -42,17 +38,6 @@ submission inet  n       -       n       -       -       smtpd
   -o smtpd_recipient_restrictions=
   -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
   -o milter_macro_daemon_name=ORIGINATING
-#smtps     inet  n       -       -       -       -       smtpd
-#  -o syslog_name=postfix/smtps
-#  -o smtpd_tls_wrappermode=yes
-#  -o smtpd_sasl_auth_enable=yes
-#  -o smtpd_reject_unlisted_recipient=no
-#  -o smtpd_client_restrictions=$mua_client_restrictions
-#  -o smtpd_helo_restrictions=$mua_helo_restrictions
-#  -o smtpd_sender_restrictions=$mua_sender_restrictions
-#  -o smtpd_recipient_restrictions=
-#  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
-#  -o milter_macro_daemon_name=ORIGINATING
 #628      inet  n       -       -       -       -       qmqpd
 pickup    unix  n       -       -       60      1       pickup
 cleanup   unix  n       -       -       -       0       cleanup

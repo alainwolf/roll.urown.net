@@ -1,5 +1,0 @@
-# Don't do this when you handle lots of email.
-aol.com     reject_unverified_sender
-hotmail.com reject_unverified_sender
-bigfoot.com reject_unverified_sender
-#yahoo.com   reject_unverified_sender

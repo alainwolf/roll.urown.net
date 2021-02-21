@@ -1,8 +1,9 @@
 #
 # Postfix hashed maps maintenance
 #
-MAPS = aliases.db canonical.db generic.db relay_password.db \
-		sender_access.db sender_canonical.db 
+MAPS = aliases.db \
+		sender_canonical.db recipient_canonical.db canonical.db \
+		generic.db transport.db
 
 all: $(MAPS)
 
@@ -13,7 +14,7 @@ aliases.db: aliases.in
 		@mv $<.db $@
 
 # All others
-%.db: %.in
+%.db: %.map
 		@echo Rebuilding hashed DB for $@
 		@postmap hash:$<
 		@mv $<.db $@

@@ -45,7 +45,7 @@ do it for “example.net”, "example.org" and "example.com"::
 	$ mkdir -p /var/lib/gnupg/wks/{example.net example.org example.com}
 
 
-.. note::	
+.. note::
 
 	Apparently the location of the service working directory is hard-coded and
 	can't be changed.
@@ -79,13 +79,13 @@ The mail server need to forward all incoming mails on these addresses, to the
 
 This is done in the :doc:`mail/postfix` configuration trough alias addresses.
 
-.. literalinclude:: mail/config/postfix/aliases.in
+.. literalinclude:: /server/config-files/etc/postfix/aliases.map
     :language: bash
 
 
 The contents of the file are cached in the database
 :file:`/etc/postfix/aliases.db`. Because of that the database must be refreshed
-after each and every change made in :file:`/etc/postfix/aliases.in`::
+after each and every change made in :file:`/etc/postfix/aliases.map`::
 
     $ cd /etc/postfix
     $ sudo make

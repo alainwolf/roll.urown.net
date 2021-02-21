@@ -1,15 +1,20 @@
+
 .. image:: letsencrypt-logo.*
     :alt: Let's Encrypt Logo
     :align: right
 
-Lets Encrypt
-============
+Dehydrated ACME Client
+======================
 
-`Dehydrated <https://dehydrated.de>`_ is a Letsencrypt/ACME client implemented
-as a shell-script.
+`Dehydrated <https://dehydrated.io/>`_ is a client for signing certificates with
+an :term:`ACME` server (as provided by
+`Let’s Encrypt <https://letsencrypt.org/>`_ and
+`others <https://docs.https.dev/list-of-acme-servers>`_) implemented as a
+relatively simple bash-script.
 
-`pdns_api.sh <https://github.com/silkeh/pdns_api.sh>`_, a simple DNS hook for
-letting Dehydrated talk to the PowerDNS API.
+`pdns_api.sh <https://github.com/silkeh/pdns_api.sh>`_, is a simple DNS hook for
+Dehydrated, which uses the HTTP API of a PowerDNS server to answer the
+challenge requests of the ACME server.
 
 .. contents::
   :local:
@@ -18,8 +23,8 @@ letting Dehydrated talk to the PowerDNS API.
 Installation
 ------------
 
-Dehydrated
-^^^^^^^^^^
+Dehydrated Shell Script
+^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
@@ -51,8 +56,8 @@ PowerDNS API Hook Script
 Configuration
 -------------
 
-Dehydrated
-^^^^^^^^^^
+Dehydrated Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 :file:`/etc/dehydrated/config`
 

@@ -1,3 +1,5 @@
+:orphan:
+
 .. image:: monkeysphere-logo.*
     :alt: Monkeysphere Logo
     :align: right

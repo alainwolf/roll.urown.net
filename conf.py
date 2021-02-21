@@ -313,7 +313,7 @@ texinfo_documents = [
 epub_title = 'roll.urown.net'
 epub_author = 'roll.urown.net'
 epub_publisher = 'roll.urown.net'
-epub_copyright = '2014, 2020, roll.urown.net'
+epub_copyright = '2014, 2021, roll.urown.net'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = 'roll.urown.net'

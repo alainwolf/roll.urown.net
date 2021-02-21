@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<clientConfig version="1.1">
+
+    <!-- Outgoing Server -->
+    <emailProvider id="example.net">
+
+        <!-- Hosted Domains -->
+        <domain>example.net</domain>
+        <domain>example.org</domain>
+        <domain>example.com</domain>
+
+        <displayName>Your Own Mail Provider</displayName>
+        <displayShortName>example.net</displayShortName>
+
+
+        <!-- Incoming Mail Servers -->
+        <incomingServer type="imap">
+            <hostname>mail.example.net</hostname>
+            <port>993</port>
+            <socketType>SSL</socketType>
+            <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
+        </incomingServer>
+
+        <incomingServer type="imap">
+            <hostname>mail.example.net</hostname>
+            <port>143</port>
+            <socketType>STARTTLS</socketType>
+            <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
+        </incomingServer>
+
+        <incomingServer type="pop3">
+            <hostname>mail.example.net</hostname>
+            <port>995</port>
+            <socketType>SSL</socketType>
+            <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
+            <pop3>
+                <leaveMessagesOnServer>true</leaveMessagesOnServer>
+            </pop3>
+        </incomingServer>
+
+        <incomingServer type="pop3">
+            <hostname>mail.example.net</hostname>
+            <port>110</port>
+            <socketType>STARTTLS</socketType>
+            <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
+            <pop3>
+                <leaveMessagesOnServer>true</leaveMessagesOnServer>
+            </pop3>
+        </incomingServer>
+
+
+        <!-- Outgoing Mail Servers -->
+        <outgoingServer type="smtp">
+            <hostname>mail.example.net</hostname>
+            <port>465</port>
+            <socketType>SSL</socketType>
+            <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
+        </outgoingServer>
+
+        <outgoingServer type="smtp">
+            <hostname>mail.example.net</hostname>
+            <port>587</port>
+            <socketType>STARTTLS</socketType>
+            <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
+        </outgoingServer>
+
+
+        <documentation url="http://www.example.com/help/mail/thunderbird">
+            <descr lang="en">Configure Thunderbird 2.0 for IMAP</descr>
+            <descr lang="de">Thunderbird 2.0 mit IMAP konfigurieren</descr>
+        </documentation>
+
+    </emailProvider>
+
+    <clientConfigUpdate url="https://autoconfig.example.net/autoconfig/mail/config-v1.1.xml" />
+
+</clientConfig>

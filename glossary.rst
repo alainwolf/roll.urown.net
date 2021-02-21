@@ -157,6 +157,20 @@ Glossary
 
         See :term:`LACP`;
 
+    ACME
+    Automated Certificate Management Environment
+        The
+        `Automatic Certificate Management Environment <https://en.wikipedia.org/wiki/Automated_Certificate_Management_Environment#API_version_2>`_
+        (ACME) protocol is a communications protocol for automating interactions
+        between certificate authorities and their users' web servers, allowing
+        the automated deployment of public key infrastructure at very low
+        cost. It was designed by the Internet Security Research Group
+        (ISRG) for their Let's Encrypt service.
+
+        The protocol, based on passing JSON-formatted messages over HTTPS, has
+        been published as an Internet Standard in :rfc:`8555` by its own
+        chartered :term:`IETF` working group.
+
 
     AES
     Advanced Encryption Standard
@@ -700,7 +714,11 @@ Glossary
 
     EFF
     Electronic Frontier Foundation
-        TBD
+        `The Electronic Frontier Foundation <https://en.wikipedia.org/wiki/Electronic_Frontier_Foundation>`_
+        (EFF) is an international non-profit digital rights group based in San
+        Francisco, California. The foundation was formed in July 1990 by John
+        Gilmore, John Perry Barlow and Mitch Kapor to promote Internet civil
+        liberties.
 
     EPROM
     Erasable Programmable Read-only Memory
@@ -842,8 +860,7 @@ Glossary
 
 
     HTTP
-    Hyper Text Transfer Protocol
-
+    Hypertext Transfer Protocol
         `The Hypertext Transfer Protocol <https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol>`_
         (HTTP) is an application layer protocol for distributed, collaborative,
         hypermedia information systems. HTTP is the foundation of data
@@ -858,7 +875,6 @@ Glossary
 
     HTTPS
     Hypertext Transfer Protocol Secure
-
         `Hypertext Transfer Protocol Secure <https://en.wikipedia.org/wiki/HTTPS>`_
         (HTTPS) is an extension of the :term:`Hypertext Transfer Protocol`
         (:term:`HTTP`). It is used for secure communication over a computer
@@ -1354,7 +1370,7 @@ Glossary
         and formal language theory.
 
     RFC
-
+    Request for Comments
         A `Request for Comments (RFC)
         <https://en.wikipedia.org/wiki/Request_for_Comments>`_ is a publication of the
         :term:`Internet Engineering Task Force` (:term:`IETF`) and the Internet

@@ -2,7 +2,7 @@ Backup
 ======
 
 This is how to setup a backup **client** on a server. For a how-to to
-backup your personal desktop computer or notebook see 
+backup your personal desktop computer or notebook see
 :doc:`desktop backup </desktop/backup/index>`.
 
 .. contents::
@@ -92,14 +92,17 @@ MariaDB Database Backups
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 For database servers like MariaDB, its not possible to just copy the files out
-of the data directory of the database sever. 
+of the data directory of the database sever.
 
-MariaDB physical backups are created in the :file:`/var/backups/mariadb/` 
+MariaDB physical backups are created in the :file:`/var/backups/mariadb/`
 directory, as described in :doc:`mariadb/backup`.
 
-So here we just make sure that the :file:`/var/backups/mariadb/` directory is 
+So here we make sure that the :file:`/var/backups/mariadb/` directory is
 **included** and the :file:`/var/lib/mysql/` directory is **excluded** in our
 Borgmatic configuration.
+
+We then let :command:`borgmatic` run a :command:`mariabackup` full backup as
+pre-backup task, and let it empty the directory afterwards.
 
 
 Installed Packages
@@ -151,7 +154,7 @@ Prerequisites
 
  * Its assumed a working :doc:`/NAS/borg-backup-server` has been prepared to
    receive the backup data.
- * Your personal computer is setup to 
+ * Your personal computer is setup to
    :doc:`send out mails on its own </desktop/send-mail>`.
 
 

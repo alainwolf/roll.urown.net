@@ -1,0 +1,30 @@
+# ----------------------------------------
+# Alias Addresses Mapping
+# Postfix version 3.4.13
+# ----------------------------------------
+#
+# The aliases(5) table provides a system-wide mechanism to redirect mail for
+# local recipients. The redirections are processed by the Postfix local(8)
+# delivery agent.
+# An alias definition has the form
+#     name: value1, value2, ...
+# The name is a local address (no domain part). when an alias exists for
+# owner-name, this will override the envelope sender address, so that
+# delivery diagnostics are directed to owner-name.
+# The value contains one or more of the following:
+#     address             - Mail is forwarded to to a RFC 822 standard addres.
+#     /file/name          - Mail is appended to /file/name.
+#     |command            - Mail is piped into command.
+#     :include:/file/name - Mail is sent to destinations listed in the file.
+#
+# https://manpages.ubuntu.com/manpages/focal/en/man5/aliases.5.html
+#
+# Run the following after changing this file:
+#   $ cd /etc/postfix && sudo make"
+#
+
+root:       hostmaster@example.net
+www-data:   webmaster@example.net
+john:       john.doe@example.org
+
+# -*- mode: txt; indent-tabs-mode: nil; tab-width: 4; -*-

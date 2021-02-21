@@ -1,7 +1,9 @@
+:orphan:
+
 Postscreen Whitelist
 ====================
 
-`Postwhite <https://www.stevejenkins.com/blog/2015/11/postscreen-whitelisting-smtp-outbound-ip-addresses-large-webmail-providers/>`_ 
+`Postwhite <https://www.stevejenkins.com/blog/2015/11/postscreen-whitelisting-smtp-outbound-ip-addresses-large-webmail-providers/>`_
 is a script that generates a whitelist for Postfix's Postscreen for a mail
 sending domain by fetching the domains SPF records.
 
@@ -67,11 +69,11 @@ Postwhite Setup & Configuration
     # POSTWHITE WILL LOOK FOR THIS FILE IN /etc/postwhite.conf
 
     # FILE PATHS
-    spftoolspath=/usr/local/bin/spf-tools 
+    spftoolspath=/usr/local/bin/spf-tools
     postfixpath=/etc/postfix
     postfixbinarypath=/usr/sbin
     whitelist=postscreen_spf_whitelist.cidr
-    blacklist=postscreen_spf_blacklist.cidr 
+    blacklist=postscreen_spf_blacklist.cidr
     yahoo_static_hosts=/etc/postwhite/yahoo_static_hosts.txt
 
     # CUSTOM HOSTS
@@ -88,7 +90,7 @@ Postwhite Setup & Configuration
     # Do what to invalid IPv4 addresses and CIDRs?
     # Valid settings are 'remove' 'fix' or 'keep'
     invalid_ip4=fix
-     
+
     # Simplify (remove) IP addresses from the whitelist that are already covered by CIDRs?
     # WARNING: Enabling this option can dramatically increase the time Postwhite takes to
     # run if you have many mailers selected. Try it once, then come back and turn it off. :)
@@ -101,14 +103,14 @@ Postwhite Setup & Configuration
 Postwhite Cron-Jobs
 -------------------
 
-Daily cron job to refresh the IP address whitelist, 
+Daily cron job to refresh the IP address whitelist,
 :file:`/etc/cron.daily/postwhite`::
 
     #!/bin/sh
 
     set -e
 
-    # Update Postfix Postscreen white-list with IP addresses of mail providers 
+    # Update Postfix Postscreen white-list with IP addresses of mail providers
     /usr/local/bin/postwhite/postwhite \
         /etc/postwhite/postwhite.conf > /dev/null 2>&1
 
@@ -116,7 +118,7 @@ Daily cron job to refresh the IP address whitelist,
 Yahoo! has SPF records too, but they don't contain any IP addresses, as they
 rely on reverse-DNS entries of their **yahoo.com** domain,
 
-Weekly cron job to refresh Yahoo outbound mail server IP addresses 
+Weekly cron job to refresh Yahoo outbound mail server IP addresses
 :file:`/etc/cron.weekly/postwhite-yahoo`::
 
     #!/bin/sh
@@ -132,9 +134,9 @@ Postfix Configuration
 ---------------------
 
 Add the whitelist to the Postscreen configuration in the main Postfix configuration-file :file:`/etc/postfix/main.cf`::
-    
+
     ...
-    
+
     # Postscreen Settings
     #
 

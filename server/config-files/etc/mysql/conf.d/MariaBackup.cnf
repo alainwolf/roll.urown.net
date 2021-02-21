@@ -1,0 +1,12 @@
+# **************************************************
+# MariDB Backup 10.5.8
+# See https://mariadb.com/kb/en/mariabackup/
+# **************************************************
+
+# Despite this being a MariaDB specific configuration file, it needs to be
+# stored in /etc/mysql/conf.d/ as [mariadb] is not recognized by mariabackup,
+# the file would never be inlcuded otherwise. See MDEV-21298
+
+[mariabackup]
+user=mariabackup
+password=********

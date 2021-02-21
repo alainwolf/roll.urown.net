@@ -25,8 +25,9 @@ Contents:
    server-backup
    server-tls
    ciphers
-   letsencrypt
-   monkeysphere
+   dehydrated
+   certbot
+   clamav
    dns/index
    mariadb/index
    redis

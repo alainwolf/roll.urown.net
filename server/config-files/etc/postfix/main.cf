@@ -1,0 +1,335 @@
+# **********************************************************************
+# Mail Server Setttings for charlotte.example.net
+# Postfix version 3.4.13
+#
+# See /usr/share/postfix/main.cf.dist for a commented version
+#
+# Reload server after chnages:
+#     'sudo systemctl reload postfix.service'
+# **********************************************************************
+
+
+# ------------------------------------------------------------
+# General Mail Server Setttings
+# ------------------------------------------------------------
+
+# Disable backwards-compatibility safety net
+compatibility_level = 2
+
+# What is my domainname?
+mydomain = example.net
+
+# What is my hostname (FQDN)?
+myhostname = mail.${mydomain}
+
+# What domain name do I append to local sender addresses on outbound mail?
+myorigin = charlotte.${mydomain}
+
+# Do I have to append a dot and my domain-name (.$mydomain) to addresses?
+append_dot_mydomain = no
+
+# What characters in a recipient address separate users from extensions?
+recipient_delimiter = +-
+
+# Should I refuse mails with non-standard FROM or RCPT address formats?
+strict_rfc821_envelopes = yes
+
+# What domains do I receive mail for?
+mydestination = charlotte, localhost
+                dolores.example.net
+                maeve.example.net
+                bernard.example.net
+                charlotte.example.net
+
+# For which clients I will relay mail to other doemains?
+mynetworks_style = host
+
+# To which 3rd-party domains do I accept and forward (relay) mails?
+relay_domains =
+
+# What trouble do I need to report to a human (postmaster)?
+notify_classes = resource, software, 2bounce
+
+# After how long should I notify if mail-delivery is delayed?
+delay_warning_time = 6h
+
+# Do I need to notify local users of new mail?
+biff = no
+
+
+# ------------------------------------------------------------
+# Local Mailboxes and Aliases Maps
+# ------------------------------------------------------------
+
+# Where do I forward messages to root, postmaster or webmaster?
+alias_maps = hash:${config_directory}/aliases
+
+# Which database do I have to build, when I update alias information?
+alias_database = hash:${config_directory}/aliases
+
+# Which sender addresses I have to rewrite before sending out mail?
+sender_canonical_maps = hash:${config_directory}/sender_canonical
+
+# Which recipient addresses I have to rewrite before sending out mail?
+recipient_canonical_maps = hash:${config_directory}/recipient_canonical
+
+# Which addresses I have to rewrite before sending out mail?
+canonical_maps = hash:${config_directory}/canonical
+
+# How can I map addresses to mailboxes when delivering mail?
+smtp_generic_maps = hash:${config_directory}/generic
+
+
+# ------------------------------------------------------------
+# Virtual Domains, Mailboxes and Aliases Maps
+# ------------------------------------------------------------
+
+# How can I lookup virtual mail-domains hosted here?
+virtual_mailbox_domains = mysql:${config_directory}/sql/virtual-domains.cf
+
+# How do I lookup individual mailbox addresses of virtual mail-domains?
+virtual_mailbox_maps = mysql:${config_directory}/sql/virtual-mailboxes.cf
+
+# How do I lookup aliases of virtual domain mailbox addresses?
+virtual_alias_maps = mysql:${config_directory}/sql/virtual-aliases.cf
+
+# Deliver all local mail via LMTP to the Dovecot server
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+
+
+# ------------------------------------------------------------
+# TCP/IP Protocols Settings
+#
+# Changes made here need a full server restart:
+#     'sudo systemctl restart postfix.service'
+# ------------------------------------------------------------
+
+# Which IPv4 addres do I use for outbound connections?
+smtp_bind_address = 192.0.2.40
+
+# Which IPv6 addres do I use for outbound connections?
+smtp_bind_address6 = 2001:db8::40
+
+# On which interfaces / IP addresses do I listen for inbound connections?
+inet_interfaces = 127.0.0.1, ::1, ${smtp_bind_address}, ${smtp_bind_address6}
+
+# Which address type does the SMTP client try first?
+smtp_address_preference = ipv6
+
+# Our Firewall/Gateway is doing NAT. What is my external IPv4 address?
+proxy_interfaces = ipv4.home.example.net
+
+
+# ------------------------------------------------------------
+# General TLS Settings
+# ------------------------------------------------------------
+
+# Generated 2020-12-13, Mozilla Guideline v5.6,
+# Postfix 3.4.13, OpenSSL 1.1.1f, intermediate configuration
+# https://ssl-config.mozilla.org/
+
+# Files containing TLS private keys, certificates and issueing intermediate CA
+smtp_tls_chain_files =
+    /etc/dehydrated/certs/postfix/keycertchain.pem
+    /etc/dehydrated/certs/postfix-rsa/keycertchain.pem
+    smtpd_tls_chain_files = ${smtp_tls_chain_files}
+
+# Where do I find trusted CA certificates to verify SMTP clients or servers?
+smtp_tls_CApath = /etc/ssl/certs
+smtpd_tls_CApath = ${smtp_tls_CApath}
+
+# Which TLS protocols am I allowed to use if a security level is set to anything
+# other then 'none' or 'may'?
+smtp_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+smtpd_tls_mandatory_protocols = ${smtp_tls_mandatory_protocols}
+
+# Which set of ciphers suites should I use, if a security level is set to
+# anything other then 'none' or 'may'?
+smtp_tls_mandatory_ciphers = high
+smtpd_tls_mandatory_ciphers = ${smtp_tls_mandatory_ciphers}
+
+# What ciphers suites do I normally use?
+tls_medium_cipherlist = ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+
+# What OpenSSL options do I enable?
+tls_ssl_options = NO_COMPRESSION
+                  NO_RENEGOTIATION
+                  NO_SESSION_RESUMPTION_ON_RENEGOTIATION
+
+# Where do I get Diffie-Hellmann key-exchange (DHE) parameters from?
+smtpd_tls_dh1024_param_file = /etc/ssl/dh/dh2048.pem
+
+# Where do I cache outgoing SMTP TLS sessions?
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+# Where do I cache incoming SMTP TLS sessions?
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+
+# Should I ask connecting clients for their own certificate?
+smtpd_tls_ask_ccert = yes
+
+# Should I include protocol and cipher used in the "Received:" message headers?
+smtpd_tls_received_header = yes
+
+# How much of the incoming TLS transactions should I log?
+smtpd_tls_loglevel = 1
+
+
+# ------------------------------------------------------------
+# SMTP Client Settings
+# ------------------------------------------------------------
+
+# What do I do with outgoing mail?
+default_transport = smtp:example.net
+
+# What DNS lookup methods do I use for outgoing SMTP sessions?
+# Possible values:
+# 'disabled', 'enabled' or 'dnssec'
+smtp_dns_support_level = dnssec
+
+# Is a (verified) TLS encryption required for outgoing SMTP connections?
+# Possible values:
+# 'none', 'may', 'encrypt', 'dane', 'dane-only', 'fingerprint', 'verify' or 'secure'.
+smtp_tls_security_level = dane-only
+
+# Where do I lookup domain specific TLS policies when sending mail?
+smtp_tls_policy_maps =
+    mysql:${meta_directory}/sql/tls-policy.cf
+    socketmap:inet:127.0.0.1:8461:postfix
+
+
+# ------------------------------------------------------------
+# SMTP Server Settings
+# ------------------------------------------------------------
+
+# Is TLS encryption required for incoming connections?
+# Possible values:
+# 'none', 'may' or ''encrypt
+smtpd_tls_security_level = encrypt
+
+
+# ------------------------------------------------------------
+# SMTP Server SASL Authentication Settings
+# ------------------------------------------------------------
+
+# Which SASL implementation shoudl I use? (default: Cyrus)
+smtpd_sasl_type = dovecot
+
+# Where can I contact the Dovecot authentication server?
+smtpd_sasl_path = private/auth
+
+# Do I need to support broken clients? (Like Outlook 2003, Outlook Express 6)
+broken_sasl_auth_clients = yes
+
+# Don't let in any strangers,
+# Don't accept plaintext passowrds over unencrypted connections!
+smtpd_sasl_security_options = noanonymous, noplaintext
+
+# Don't let in any strangers
+smtpd_sasl_tls_security_options = noanonymous
+
+# Do I refuse user authentication over unencrypted connections?
+smtpd_tls_auth_only = yes
+
+# Add the sender's login name to mail message headers.
+smtpd_sasl_authenticated_header = yes
+
+
+# ------------------------------------------------------------
+# SMTP Server Restrictions
+# ------------------------------------------------------------
+
+# What is the maximum message size (in bytes)?
+# 25 Megabytes = 26,214,400 Bytes
+message_size_limit = 26214400
+
+# Whats the size limit of mailboxes (in bytes)?
+# 15 Gigabytes = 16,106,127,360 Bytes
+mailbox_size_limit = 16106127360
+
+# What restrictins apply to connecting clients?
+smtp_client_restrictions =
+    permit_mynetworks
+    permit_sasl_authenticated
+    reject_unknown_client_hostname
+
+# Are connecting clients required to greet me properly before anything else?
+smtpd_helo_required = yes
+
+# What restrictins apply to SMTP HELO greetings
+smtpd_helo_restrictions =
+    permit_mynetworks
+    reject_invalid_helo_hostname
+    reject_non_fqdn_helo_hostname
+    reject_unknown_helo_hostname
+
+# What restrictins apply to any mail sender address?
+smtp_sender_restrictions =
+    permit_mynetworks
+    reject_non_fqdn_sender
+    reject_unknown_sender_domain
+    reject_unlisted_sender
+    warn_if_reject reject_unverified_sender
+
+# What should I tell clients when their sender address verification fails?
+unverified_sender_reject_reason = Sender address verification failed
+
+# What restrictions apply to relayed mails?
+smtpd_relay_restrictions =
+    permit_mynetworks
+    permit_sasl_authenticated
+    reject_unauth_destination
+
+# What restrictins apply to any mail recipient address?
+smtpd_recipient_restrictions =
+    permit_auth_destination
+    reject_non_fqdn_recipient
+    reject_unauth_destination
+    reject_unknown_recipient_domain
+    reject_unlisted_recipient
+    reject_unverified_recipient
+
+# What restrictins apply to mail content?
+smtpd_data_restrictions = reject_unauth_pipelining
+
+
+# ------------------------------------------------------------
+# Mail User Agent (MUA) Restrictions
+# These will be applied Submission server in master.conf to override the SMTP
+# server retrictions above for authenticated submission clients only.
+# ------------------------------------------------------------
+mua_client_restrictions =
+    permit_sasl_authenticated,
+    permit
+
+mua_helo_restrictions =
+    permit
+
+mua_sender_restrictions =
+    permit
+
+
+# ------------------------------------------------------------
+# Mail Filters (Milters)
+# ------------------------------------------------------------
+
+# Milters which handle mail that arrives via smtpd(8)
+# Note: UNIX Socket files are relative to '/var/spool/postfix'
+smtpd_milters =
+    unix:/clamav/clamav-milter.ctl
+    unix:/rspamd/rspamd_proxy.sock
+
+# Milters which handle mail that arrives via sendmail(1) command-line or qmqpd(8)
+# Note: UNIX Socket files are relative to '/var/spool/postfix'
+non_smtpd_milters =
+    unix:/clamav/clamav-milter.ctl
+    unix:/rspamd/rspamd_proxy.sock
+
+milter_mail_macros =  i {mail_addr} {client_addr} {client_name} {auth_authen}
+
+# What to do in case a milter is not working as expected?
+# Possible values:
+#   'accept', 'reject', 'tempfail', or 'quarantine'.
+#milter_default_action = tempfail
+
+# -*- mode: txt; tab-width: 4; indent-tabs-mode:nil  -*-

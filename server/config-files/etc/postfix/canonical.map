@@ -1,0 +1,35 @@
+# ----------------------------------------
+# Canonical Address Mapping
+# Postfix version 3.4.13
+# ----------------------------------------
+#
+# The optional canonical(5) table specifies address mappings for local and
+# non-local addresses when mail is received. This is the opposite of the
+# generic(5) mapping, which applies when mail is delivered.
+#
+# The mapping is used by the cleanup(8) daemon, before mail
+# is stored into the queue. The address mapping is recursive.
+#
+# See https://manpages.ubuntu.com/manpages/focal/man5/canonical.5.html
+#
+# Run the following after changing this file:
+#   $ cd /etc/postfix && sudo make"
+#
+
+# Local
+root hostmaster@example.net
+postmaster postmaster@example.net
+webmaster webmaster@example.net
+www-data webmaster@example.net
+
+# Non-local
+abuse@example.net admin@example.net
+hostmaster@example.net admin@example.net
+postmaster@example.net admin@example.net
+root@example.net admin@example.net
+security@example.net admin@example.net
+support@example.net admin@example.net
+webmaster@example.net admin@example.net
+john@example.net john.doe@example.org
+
+#-*- mode: txt; tab-width: 4; indent-tabs-mode:nil  -*-

@@ -1,6 +1,3 @@
-.. warning::
-    None of this has been tested yet!
-
 MTA - Mail Transfer Server
 ==========================
 
@@ -15,6 +12,17 @@ estimated that around 26% of public mail servers on the internet run Postfix.
 .. contents:: \
 
 
+Prerequisites
+-------------
+
+    * :doc:`/server/mariadb/index`
+    * :doc:`/server/mail/dovecot`
+    * :doc:`/server/clamav`
+    * :doc:`/server/mail/rspamd`
+    * :doc:`/server/dns/unbound`
+    * :doc:`/server/letsencrypt`
+
+
 Install Software
 ----------------
 
@@ -22,7 +30,9 @@ Install Software
 
     $ sudo apt-get install postfix postfix-mysql
 
-The installed version is Postfix version 2.11, released on January 15, 2014.
+
+On Ubuntu server 20.04 (focal) the installed version is Postfix version 3.4.13,
+released on June 14, 2020.
 
 
 Main Configuration
@@ -36,37 +46,64 @@ The documentation website has `a page dedicated to main.cf
 configuration paramter.
 
 The whole file, as presented below, is also provided for download at
-:download:`config/postfix/main.cf` here.
+:download:`/server/config-files/etc/postfix/main.cf` here.
 
 
 General Settings
 ^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/postfix/main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
     :language: ini
-    :start-after: # run "sudo service postfix reload"
+    :linenos:
+    :lineno-match:
+    :start-at: # General Mail Server Setttings
+    :end-before: # Local Mailboxes and Aliases Maps
+
+
+Local Mailboxes and Aliases Maps
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
+    :language: ini
+    :linenos:
+    :lineno-match:
+    :start-at: # Local Mailboxes and Aliases Maps
+    :end-before: # Virtual Domains, Mailboxes and Aliases Maps
+
+
+Virtual Domains, Mailboxes and Aliases Maps
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
+    :language: ini
+    :linenos:
+    :lineno-match:
+    :start-at: # Virtual Domains, Mailboxes and Aliases Maps
     :end-before: # TCP/IP Protocols Settings
 
 
 TCP/IP Protocols Settings
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/postfix/main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
     :language: ini
-    :start-after: delay_warning_time
+    :linenos:
+    :lineno-match:
+    :start-at: # TCP/IP Protocols Settings
     :end-before: # General TLS Settings
 
 
 .. index:: Cipher Suite; Set in Postfix
 
+
 General TLS Settings
 ^^^^^^^^^^^^^^^^^^^^
 
-Let the server choose the preferred cipher during handshake:
-
-.. literalinclude:: config/postfix/main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
     :language: ini
-    :start-after: proxy_interfaces
+    :linenos:
+    :lineno-match:
+    :start-at: # General TLS Settings
     :end-before: # SMTP Client Settings
 
 
@@ -76,54 +113,66 @@ Let the server choose the preferred cipher during handshake:
 SMTP Client Settings
 ^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/postfix/main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
     :language: ini
-    :start-after: tls_high_cipherlist
+    :linenos:
+    :lineno-match:
+    :start-at: # SMTP Client Settings
     :end-before: # SMTP Server Settings
 
 
 SMTP Server Settings
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/postfix/main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
     :language: ini
-    :start-after: smtp_tls_session_cache_database
+    :linenos:
+    :lineno-match:
+    :start-at: # SMTP Client Settings
+    :end-before: # SMTP Server SASL Authentication Settings
+
+
+SMTP Server SASL Authentication
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
+    :language: ini
+    :linenos:
+    :lineno-match:
+    :start-at: # SMTP Server SASL Authentication Settings
     :end-before: # SMTP Server Restrictions
 
+
 SMTP Server Restrictions
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/postfix/main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
     :language: ini
-    :start-after: smtpd_tls_session_cache_database
-    :end-before: # Postscreen Settings
+    :linenos:
+    :lineno-match:
+    :start-at: # SMTP Server Restrictions
+    :end-before: # Mail User Agent (MUA) Restrictions
 
 
-Postscreen Settings
-^^^^^^^^^^^^^^^^^^^
+Mail User Agent (MUA) Restrictions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-90% of todays |SMTP| connections come from Spambots and Zombies. Postscreen is a
-sort of a |SMTP| mail server firewall. It attempts to reject as many spambots as
-possible, before they even get to our main |SMTP| server, where processing takes a
-lot more time and resources, as on the screener. If done well the main |SMTP|
-server has to process only 10% of the connections.
-
-Postscreen is described in detail in a `online readme document
-<http://www.postfix.org/POSTSCREEN_README.html>`_.
-
-.. literalinclude:: config/postfix/main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
     :language: ini
-    :start-after: smtpd_data_restrictions
-    :end-before: # Virtual Domain Settings
+    :linenos:
+    :lineno-match:
+    :start-at: # Mail User Agent (MUA) Restrictions
+    :end-before: # Mail Filters (Milters)
 
 
-Virtual Domain Settings
-^^^^^^^^^^^^^^^^^^^^^^^
+Mail Filters (Milters)
+^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/postfix/main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main.cf
     :language: ini
-    :start-after: postscreen_bare_newline_action
-    :end-before: # Unocmment to allow catch-all addresses
+    :linenos:
+    :lineno-match:
+    :start-at: # Mail Filters (Milters)
 
 
 Map Files and Databases
@@ -151,218 +200,243 @@ formats, handling and hashing.
 
 It therefore helps to create a Makefile, so refreshing anything needs just a
 single command-line. Create the :download:`/etc/postfix/Makefile
-<config/postfix/Makefile>` as follows:
+</server/config-files/etc/postfix/Makefile>` as follows:
 
-.. literalinclude:: config/postfix/Makefile
+.. literalinclude:: /server/config-files/etc/postfix/Makefile
     :language: make
+    :linenos:
+    :tab-width: 4
+
 
 After every change to any of the map files discussed below, their databases need
 to be refreshed as follows::
 
-    $ cd /etc/postfix
-    $ sudo make
+    $ cd /etc/postfix && sudo make
 
 
 Alias Map
 ^^^^^^^^^
 
-The file :download:`/etc//postfix/aliases.in <config/postfix/aliases.in>` contains
-information on where mails for certain system accounts should be delivered to.
+The file
+:download:`/etc/postfix/aliases.map </server/config-files/etc/postfix/aliases.map>`
+contains information on where mails for certain system accounts should be
+delivered to.
 
 This is needed for notification and warning mails created by system programs
 (like cronjobs) to reach human beings (like the person responsible for system
 administration).
 
-.. literalinclude:: config/postfix/aliases.in
+.. literalinclude:: /server/config-files/etc/postfix/aliases.map
     :language: bash
+    :linenos:
 
 
 The contents of the file are cached in the database
 :file:`/etc/postfix/aliases.db`. Because of that the database must be refreshed
-after each and every change made in :file:`/etc/postfix/aliases.in`::
+after each and every change made in :file:`/etc/postfix/aliases.map`::
 
-    $ cd /etc/postfix
-    $ sudo make
+    $ cd /etc/postfix && sudo make
 
 
 Canonical Sender Map
 ^^^^^^^^^^^^^^^^^^^^
 
-The file :download:`/etc//postfix/sender_canonical.in
-<config/postfix/sender_canonical.in>` contains information on which sender-
-addresses of outgoing mails need to be changed, before mail is sent out.
+The file :download:`/etc//postfix/sender_canonical.map
+</server/config-files/etc/postfix/sender_canonical.map>` contains information on
+which sender-addresses of outgoing mails need to be **rewritten**, before mail
+is sent out.
 
 This is needed mostly for system generated mails, as they contain local system
-account-names as senders, which will not be accepted as valid internet- mail
-addresses.
+account-names as senders, which will not be accepted as valid internet-mail
+addresses. However, since this is a rewrite, after the address is rewritten, you
+may not know where the message came from.
 
-.. literalinclude:: config/postfix/sender_canonical.in
+.. literalinclude:: /server/config-files/etc/postfix/sender_canonical.map
     :language: bash
+    :linenos:
+
 
 The contents of the file are cached in the database
 :file:`/etc/postfix/sender-canonical.db`. Because of that the database must be
 refreshed after each and every change made in
-:file:`/etc/postfix/sender_canonical.in`::
+:file:`/etc/postfix/sender_canonical.map`::
 
-    $ cd /etc/postfix
-    $ sudo make
+    $ cd /etc/postfix && sudo make
+
+Canonical Recipient Map
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The file :download:`/etc//postfix/recipient_canonical.map
+</server/config-files/etc/postfix/recipient_canonical.map>` contains information
+on which recipient addresses of outgoing mails need to be **rewritten**, before
+mail is sent out.
+
+This is needed mostly for system generated mails, as they contain local system
+account-names as senders, which will not be accepted as valid internet-mail
+addresses. However, since this is a rewrite, after the address is rewritten, you
+may not know where the message originally was intended to. It may be preferrable
+to use the *aliases map* decribed above, which forwards the message to a chosen
+address, leaving the original recipient headers intact.
+
+.. literalinclude:: /server/config-files/etc/postfix/recipient_canonical.map
+    :language: bash
+    :linenos:
+
+
+The contents of the file are cached in the database
+:file:`/etc/postfix/recipient-canonical.db`. Because of that the database must
+be refreshed after each and every change made in
+:file:`/etc/postfix/recipient_canonical.map`::
+
+    $ cd /etc/postfix && sudo make
 
 
 Canonical Map
 ^^^^^^^^^^^^^
 
-The file :download:`/etc//postfix/canonical.in <config/postfix/canonical.in>`
+The file
+:download:`/etc/postfix/canonical.map </server/config-files/etc/postfix/canonical.map>`
 defines a map on which addresses need always be changed for sender and recipient
 in message headers and envelopes:
 
-.. literalinclude:: config/postfix/canonical.in
+.. literalinclude:: /server/config-files/etc/postfix/canonical.map
     :language: bash
+    :linenos:
 
 The contents of the file are cached in the database
 :file:`/etc/postfix/canonical.db`.
 To update the database after changes run the following::
 
-    $ cd /etc/postfix
-    $ sudo make
+    $ cd /etc/postfix && sudo make
 
 
-SMTP Client Credentials
-^^^^^^^^^^^^^^^^^^^^^^^
+SMTP Generic Map
+^^^^^^^^^^^^^^^^
 
-The file :download:`/etc//postfix/relay_password.in
-<config/postfix/relay_password.in>` contains a lookup table with one
-username:password entry per remote hostname or domain used by the Postfix |SMTP|
-client when connecting to other |SMTP| servers when delivering mail.
+The file
+:download:`/etc/postfix/generic.map </server/config-files/etc/postfix/generic.map>`
+contains a lookup table that perform address rewriting in the Postfix |SMTP|
+client, typically to transform a locally valid address into a globally valid
+address when sending mail across the Internet:
 
-.. literalinclude:: config/postfix/relay_password.in
+.. literalinclude:: /server/config-files/etc/postfix/generic.map
     :language: bash
-
-To update the cache after any changess::
-
-    $ cd /etc/postfix
-    $ sudo make
-
-
-SMTP Generic Maps
-^^^^^^^^^^^^^^^^^
-
-The file :file:`/etc/postfix/generic` contains a lookup table that perform
-address rewriting in the Postfix |SMTP| client, typically to transform a locally
-valid address into a globally valid address when sending mail across the
-Internet::
-
-    # Lookup table for address rewriting by the Postfix SMTP client
-    # run "sudo postmap /etc/postfix/generic" after changing this file.
-    root@server user@example.net
-    user@server user@example.net
-
+    :linenos:
 
 This is needed when the local machine does not have its own Internet domain
 name, but uses something like **localdomain.local** instead.
 
+The contents of the file are cached in the database
+:file:`/etc/postfix/canonical.db`. To update the database after changes run the
+following::
 
-Sender Address Verification Map
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The file :file:`/etc/postfix/sender_access` contains domain names which often
-are used by spammers to forge sender addresses. Postfix will use this list to
-verify all sender addresses from the domains listed::
-
-    # Don't do this when you handle lots of email.
-    aol.com     reject_unverified_sender
-    hotmail.com reject_unverified_sender
-    bigfoot.com reject_unverified_sender
-    yahoo.com   reject_unverified_sender
+    $ cd /etc/postfix && sudo make
 
 
-Postscreen Access List
-^^^^^^^^^^^^^^^^^^^^^^
-
-In the file :file:`/etc/postfix/postscreen_access.cidr` we define white- and
-blacklists for IP subnets and addresses, which allow us to skip Spambot tests by
-Postscreen and allow or deny connections right away for certain hosts.
-
-Documentation is available
-`here <http://www.postfix.org/postconf.5.html#postscreen_access_list>`_.
-
-.. code-block:: bash
-
-    # Rules are evaluated in the order as specified.
-    # http://www.postfix.org/postconf.5.html#postscreen_access_list
-
-    # Private IPv4 addresses (RFC 1918)
-    10.0.0.0/8 permit
-    172.16.0.0/12 permit
-    192.168.0.0/16 permit
-
-    # Private IPv6 addresses (RFC 4193)
-    fc00::/7 permit
-
-    # Link-local IPv4 addresses (RFC 6890 and RFC 3927)
-    169.254.0.0/24 permit
-    169.254.255.0/24 permit
-    169.254.0.0/16 permit
-
-    # Link-local IPv6 addresses (RFC 4862 and RFC 4291)
-    fe80::/10 permit
-
-    # Global IPv6 subnet assigned to us (example.net)
-    2001:db8::/64 permit
-
-
-Virtual Domain Map
-^^^^^^^^^^^^^^^^^^
-
+Virtual Domains Map
+^^^^^^^^^^^^^^^^^^^
 We referenced this the file
-:file:`/etc/postfix/mysql-virtual-mailbox-domains.cf` in the main configuration
-file :file:`main.cf` above as *virtual_mailbox_domains*. It contains MySQL
-database server connection information, so Postfix can lookup the virtual
-domains hosted here:
+:file:`/etc/postfix/sql/virtual-domains.cf` in the main configuration
+file :file:`main.cf` above as *virtual_mailbox_domains*. It contains the MariaDB
+database server connection information and the SQL Query for Postfix to lookup
+the virtual domains hosted here:
 
-.. code-block:: text
+.. code-block:: ini
+    :linenos:
 
-    user = mailuser
-    password = ********
-    hosts = localhost
-    dbname = mailserver
-    query = SELECT 1 FROM virtual_domains WHERE name='%s'
+    #
+    # MySQL connection and query to lookup which mail domains are hosted here
+    #
+    # Note: Postfix can't access UNIX sockets outside of '/var/spool/postfix'
+    # so make sure to use a numerical IP addresses only for 'hosts'!
+    hosts = 127.0.0.1
+    user = postfix
+    password = ****************
+    dbname = vimbadmin
+    query = SELECT 1 FROM domain WHERE domain='%s' AND active = '1'
 
 
 Use the user, password and database defined in :doc:`virtual`.
 
 
-Virtual Mailbox Map
-^^^^^^^^^^^^^^^^^^^
+Virtual Mailboxes Map
+^^^^^^^^^^^^^^^^^^^^^
 
 Same as with the virtual domain map above, the following MySQL connection
-defined in :file:`/etc/postfix/mysql-virtual-mailbox-maps.cf` is used to lookup
+defined in :file:`/etc/postfix/sql/virtual-mailboxes.cf` is used to lookup
 which mailboxes are hosted here:
 
-.. code-block:: text
+.. code-block:: ini
+    :linenos:
 
-    user = mailuser
-    password = ********
+    #
+    # MySQL connection and query to lookup which mailboxes are hosted here
+    #
+    # Note: Postfix can't access UNIX sockets outside of '/var/spool/postfix'
+    # so make sure to use a numerical IP addresses only for 'hosts'!
     hosts = 127.0.0.1
-    dbname = mailserver
-    query = SELECT 1 FROM virtual_users WHERE email='%s'
+    user = postfix
+    password = ****************
+    dbname = vimbadmin
+    query = SELECT 1 FROM mailbox WHERE username = '%s' AND active = '1'
 
-Note that the only difference to the above one is the SQL query. looking for mailboxes
-instead of domains.
+
+Note that the only difference to the above one is the SQL query. looking for
+mailboxes instead of domains.
 
 
 Virtual Alias Map
 ^^^^^^^^^^^^^^^^^
 
-Finally we also create :file:`/etc/postfix/mysql-virtual-alias-maps.cf` to give
+Finally we also create :file:`/etc/postfix/sql/virtual-aliases.cf` to give
 Postfix a way to lookup mailbox aliases at the MySQL database server:
 
-.. code-block:: text
+.. code-block:: ini
+    :linenos:
 
-    user = mailuser
-    password = ********
+    #
+    # MySQL connection and query to lookup mail-address aliase and their mailbox
+    #
+    # Note: Postfix can't access UNIX sockets outside of '/var/spool/postfix'
+    # so make sure to use a numerical IP addresses only for 'hosts'!
     hosts = 127.0.0.1
-    dbname = mailserver
-    query = SELECT destination FROM virtual_aliases WHERE source='%s'
+    user = postfix
+    password = ****************
+    dbname = vimbadmin
+    query = SELECT goto FROM alias WHERE address = '%s' AND active = '1'
+
+
+TLS Policy Map
+^^^^^^^^^^^^^^
+
+TLS encryption is not mandatory between SMTP servers, since it based on old
+standards, which cannot be changed, without mail delivery to fail on a
+catastrphic global scale.
+
+Most SMTP servers today support TLS encryption trough the STARTTLS command which
+allows to upgrade an unencrypted connection to an encrypted one, even after the
+connection is alreeady built.
+
+But the landscape is, many servers use old outdated and weak encryption
+stadards, many use self-signed certificates. As mail sevrice provider, you have
+no choice, but to suuuport these as well, or else you and your users won't be
+able to exchange mail with any of them.
+
+A TLS policy map helps you to achieve the best possible encryption, at least
+with servers you know, while still having standards-compliant but bad encryption
+with all the other ones.
+
+The :file:`/etc/postfix/sql/tls-policy.cf` file :
+
+
+.. code-block:: ini
+    :linenos:
+
+    hosts = 127.0.0.1
+    user = postfix
+    password = ****************
+    dbname = vimbadmin
+    query = SELECT policy, params FROM tlspolicies WHERE domain = '%s'
 
 
 Master Process Configuration
@@ -381,20 +455,19 @@ The official documentation website `provides a manual page
 <http://www.postfix.org/master.5.html>`_ online.
 
 The whole file, as presented below, is also provided for download at
-:download:`config/postfix/master.cf` here.
+:download:`/server/config-files/etc/postfix/master.cf` here.
 
 .. index::
     single: Internet Protocols; SMTP
 
 
-Disable Default SMTP
+Standard SMTP Dameon
 ^^^^^^^^^^^^^^^^^^^^
 
 The first daemon specified here is the |SMTP| daemon **smtpd** which runs on the
-dedicated |SMTP| TCP port 25, it is enabled by default, but as we use postscreen
-in front of it we comment that out:
+dedicated |SMTP| TCP port 25, it is enabled by default:
 
-.. literalinclude:: config/postfix/master.cf
+.. literalinclude:: /server/config-files/etc/postfix/master.cf
     :language: bash
     :lines: 8-12
 
@@ -402,27 +475,29 @@ in front of it we comment that out:
 Postscreen SMTP Firewall
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-We enable **postscreen** on the second line instead of **smtpd** on the first
-line. This runs a mininmal |SMTP| subset to perform some compliance tests on
-incoming |SMTP| client connections. If the client passes all tests he gets
-whitelistet and the connection is passed along to the real |SMTP| server running
-behind it. That is what the second line above is for. An **smtpd** daemon that
+The **postscreen** damon on the second line is a daemon which runs a mininmal
+|SMTP| subset to perform some compliance tests on incoming |SMTP| client
+connections. If the client passes all tests he gets whitelistet and the
+connection is passed along to the real |SMTP| server running behind it.
+That is what the second line above is for. An **smtpd** daemon that
 takes over connections from **postscreen** only. The **tlsproxy** handles TLS
 encryption for postscreen and **dnsblog** does the DNS blacklist lookups.
 
-.. literalinclude:: config/postfix/master.cf
+Since we use the Rspamd milter to separate legitimate from undesired SMTP
+connections, the postscreen line can be commented out.
+
+.. literalinclude:: /server/config-files/etc/postfix/master.cf
     :language: bash
-    :lines: 8-11,13-15
+    :lines: 8-11,13-14
 
-
-Postfix SMTP Daemon
-^^^^^^^^^^^^^^^^^^^
+Internal Postfix SMTP Daemon
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If the conneting SMTP client has passed all the checks performed by
 **postscreen**, the client IP address is temporarely whitelisted.
 
 If possible the TCP connection is then handed over to the SMTPD daemon
-internally (that is what the "pass" keyword means).
+internally (that is what the "**pass**" keyword means).
 
 Sometimes this is not possible, depeneding on the checks. If the client had to
 start already some message delivery in order to complete a check, the connection
@@ -433,54 +508,180 @@ for now and try again later. If the same client connects again later, it will be
 already whitelisted and then the connection is "passed" directly to the postfix
 SMTP daemon.
 
-.. literalinclude:: config/postfix/master.cf
+Since we don't use postscreen, this daemon can be disabled by commenting out the
+line.
+
+.. literalinclude:: /server/config-files/etc/postfix/master.cf
     :language: bash
-    :lines: 8-11,16-17
-
-The SMTP daemon will use Amavis as proxy by forwarding the SMTP client
-connection to the Amavis daemon running on TCP port 10024 on localhost.
+    :lines: 8-11,15
 
 
-After-Scan SMTP Reinjection
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+DNS Blacklist & Whitelist Lookup
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When Amvis has performed all scans and checks on a mail-message, it injects the
-message back to postfix on the postfix SMTP server running at TCP port 10025 on
-localhost.
+The **dnsblog** is a helper service for the postscreen SMTP firewall to lookup,
+if connecting hosts are found in any of configured the DNS blacklists or
+whitelists.
 
-.. literalinclude:: config/postfix/master.cf
+Since we use the Rspamd milter to separate legitimate from undesired SMTP
+connections, the dnsblog line can be commented out.
+
+.. literalinclude:: /server/config-files/etc/postfix/master.cf
     :language: bash
-    :lines: 8-11,18-33
+    :lines: 8-11,16
 
 
-The Submission Daemon
-^^^^^^^^^^^^^^^^^^^^^
+TLS Proxy
+^^^^^^^^^
 
-The submission daemon runs on TCP port 587 and lets mail clients (:abbr:`MUA
-(Mail User Agent)`) to submit mails. The submission daemon accepts only
-encrypted connections, allows only authenticated and authorized users, but also
-allows mails to be relayed out on the internet, besides accepting mail to its
-own hosted domains and mailboxes.
+It is used by **postscreen** server to handle TLS connections with inbound SMTP
+client connections and by the local **smtp** client to support TLS connection
+reuse.
 
-In practice, this is another copy of the |SMTP| daemon running on TCP port 587
-instead of port 25 and some command-line options to override the default |SMTP|
-daemon settings from :file:`main.cf`.
-
-It is not enabled by default, we have to remove the comment ('#') symbol at the
-start of the line and the options in the following lines:
-
-.. literalinclude:: config/postfix/master.cf
+.. literalinclude:: /server/config-files/etc/postfix/master.cf
     :language: bash
-    :lines: 8-11,34-44
+    :lines: 8-11,17
 
 
-Amavis Daemon
-^^^^^^^^^^^^^
+Submission Daemon
+^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/postfix/master.cf
+The submission daemon is a SMTP daemon listening on TCP port 587 for mail user
+agents (MUAs aka mail clients like Thunderbird or Outlook) of authorized users
+to connecting and submit their outgoing mail.
+
+.. literalinclude:: /server/config-files/etc/postfix/master.cf
     :language: bash
-    :lines: 8-11,91-98
+    :lines: 8-11,18-29
 
+The connecting MUA is required to initialize TLS encryption of the connection
+with the STARTTLS command before anything else. This controlled by the
+"smtpd_tls_security_level=encrypt" option.
+
+The following options enable user authentication over encrypted connections and
+various settings to allow mail from authenticated and authorized users to be
+sent anywhere.
+
+The last options, marks the submitted mail messages as our own, to be handles
+accordingly by our spam filters.
+
+
+SMTPS Daemon
+^^^^^^^^^^^^
+
+The SMTPS daemon is very simliar to the submission daemon. The difference being,
+it runs on TCP port 465 and connections are already encrypted, therefore no
+STARTTLS is required.
+
+.. literalinclude:: /server/config-files/etc/postfix/master.cf
+    :language: bash
+    :lines: 8-11,30-40
+
+
+Other Postfix Daemons and Programs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/postfix/master.cf
+    :language: bash
+    :lines: 8-11,41-70
+
+**qmqpd** - QMQP (Quick Mail Queueing Protocol) daemon. A mail protocol
+orginally devloped by Daniel J. Bernstein as part of QMAIL. Disabled.
+
+**pickup** - Postfix local mail pickup. The pickup(8) daemon waits for hints that
+new mail has been dropped into the maildrop directory, and feeds it into the
+cleanup(8) daemon.
+
+**cleanup** - canonicalize and enqueue Postfix message. The cleanup(8) daemon
+processes inbound mail, inserts it into the incoming mail queue, and informs the
+queue manager of its arrival.
+
+**qmgr** - Postfix queue manager. The qmgr(8) daemon awaits the arrival of
+incoming mail and arranges for its delivery via Postfix delivery processes. The
+actual mail routing strategy is delegated to the trivial-rewrite(8) daemon.
+
+**oqmgr** - old Postfix queue manager. Disabled.
+
+**tlsmgr** - Postfix TLS session cache and PRNG manager. The tlsmgr(8) manages
+the Postfix TLS session caches. It stores and retrieves cache entries on request
+by smtpd(8) and smtp(8) processes, and periodically removes entries that have
+expired.
+
+**trivial-rewrite** - Postfix address rewriting and resolving daemon. The
+trivial-rewrite(8) daemon processes three types of client service requests:
+
+    #. **rewrite** *context address* - Rewrite an address to standard form,
+       according to the address rewriting context (local or remote).
+    #. **resolve** *sender address* - Resolve the address to a (transport,
+       nexthop, recipient, flags) quadruple.
+    #. **verify** *sender address* - Resolve the address for address
+       verification purposes.
+
+**bounce** - Postfix delivery status reports. Maintains per-message log files
+with delivery status information.
+
+**verify** - Postfix address verification server. Maintains a record of what
+recipient addresses are known to be deliverable or undeliverable.
+
+**flush** - Postfix fast flush server. Maintains a record of deferred mail by
+destination. This information is used to improve the performance of the SMTP
+ETRN request, and of its command-line equivalent, "sendmail -qR" or "postqueue
+-f".
+
+**proxymap** - Postfix lookup table proxy server. Provides read-only or
+read-write table lookup service to Postfix processes. These services are
+implemented with dis- tinct service names: proxymap and proxywrite,
+respectively. The purpose of these services is:
+
+    * Overcome chroot restrictions.
+    * Consolidate the number of open lookup tables, by open connections and
+      files.
+    * Provide write access to tables, who don't support more than one
+      simultanious write access.
+
+**showq** - list the Postfix mail queue. Reports the Postfix mail queue status.
+The output is meant to be formatted by the postqueue(1) command, as it emulates
+the Sendmail *mailq* command.
+
+**error** - Postfix error/retry mail delivery agent. Processes delivery requests
+from the queue manager. Each request specifies a queue file, a sender address,
+the reason for non-delivery (specified as the next-hop destination), and
+recipient information.
+
+**discard** - Postfix discard mail delivery agent. Processes delivery requests
+from the queue manager. Each request specifies a queue file, a sender address, a
+next-hop destination that is treated as the reason for dis- carding the mail,
+and recipient information.
+
+**local** - Postfix local mail delivery. Processes delivery requests from the
+Postfix queue manager to deliver mail to local recipients. Each delivery request
+specifies a queue file, a sender address, a domain or host to deliver to, and
+one or more recipients.
+
+**virtual** - Postfix virtual domain mail delivery agent. Designed for virtual
+mail hosting services. Originally based on the Postfix local(8) delivery agent,
+this agent looks up recipients with map lookups of their full recipient address,
+instead of using hard-coded unix password file lookups of the address local part
+only.
+
+**anvil** - Postfix session count and request rate control. Maintains statistics
+about client connection counts or client request rates.
+
+**scache** - Postfix shared connection cache server. Maintains a shared
+multi-connection cache. This information can be used by, for example, Postfix
+SMTP clients or other Postfix delivery agents.
+
+**submission-header-cleanup**
+
+**postlog** - Postfix-compatible logging utility. Implements a
+Postfix-compatible logging interface for use in, for example, shell scripts.
+
+By default, postlog(1) logs the text given on the command line as one record. If
+no text is specified on the command line, postlog(1) reads from standard input
+and logs each input line as one record.
+
+By default, logging is sent to syslogd(8) or postlogd(8); when the standard
+error stream is connected to a terminal, logging is sent there as well.
 
 
 References

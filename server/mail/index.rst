@@ -1,28 +1,25 @@
-Mail Server
-===========
+Mail Servers
+============
 
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 1
 
-   intro
-   virtual
-   mail-scanner
-   rspamd
-   dovecot
-   sieve
-   opendkim
-   postfix
-   postwhite
-   backup_mx
-   postfix_smarthost
-   mta-sts
-   starttls-everywhere
-   vimbadmin
-   rainloop
-   dns
-   backup
-   monitoring
-   testing
+    intro
+    virtual
+    rspamd
+    dovecot
+    sieve
+    postfix
+    postfix-mx
+    postfix_smarthost
+    mta-sts
+    vimbadmin
+    rainloop
+    autoconfig
+    dns
+    backup
+    monitoring
+    testing
 
 
 Prerequisites

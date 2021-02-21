@@ -1,0 +1,22 @@
+# recipient_canonical - Postfix recipient_canonical table format
+#
+# Optional address mapping lookup tables for envelope and header recipient
+# addresses. The table format and lookups are documented in canonical(5).
+#
+# Example: you want to rewrite the RECIPIENT address "user@ugly.domain" to
+# "user@pretty.domain", while still being able to send mail to the RECIPIENT
+# address "user@ugly.domain".
+#
+# Note: $recipient_canonical_maps is processed before $canonical_maps.
+#
+# Run the following after changing this file:
+#   $ cd /etc/postfix && sudo make"
+#
+
+#root                   hostmaster@urown.net
+#postmaster             postmaster@urown.net
+john                    john.doe@example.org
+@charlotte.example.net  @urown.net
+#root                   hostmaster@urown.net
+
+#-*- mode: txt; tab-width: 4; indent-tabs-mode:nil  -*-

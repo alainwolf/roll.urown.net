@@ -8,7 +8,7 @@ Redis
 `Redis <https://redis.io/>`_ is a fast and persistent key-value database with
 a network interface.
 
-As a key-value database it is similar to :term:`memcache` but the
+As a key-value database it is similar to :term:`Memcache` but the
 dataset is not only stored entirely in memory but periodically flushed to
 disk. This way the dataset remains persistent across restarts and is no longer
 only volatile.
@@ -16,7 +16,7 @@ only volatile.
 It supports many kind of data structures such as strings, hashes, lists, sets,
 sorted sets with range queries, bitmaps and more.
 
-It has built-in replication, :term:`Lua` scripting, :term:`LRU` eviction,
+It has built-in replication, :term:`LUA` scripting, :term:`LRU` eviction,
 transactions and different levels of on-disk persistence, and provides high
 availability via Redis Sentinel and automatic partitioning with Redis Cluster.
 
@@ -27,7 +27,7 @@ Topology
 The following server applications in our environment, use Redis to store and
 retrieve data fast in memory:
 
- * :doc:`mail/rspamd` for ...
+ #. :doc:`mail/rspamd` for ...
     * Ratelimit plugin uses Redis to store limits buckets;
     * Greylisting module stores data and meta hashes inside Redis;
     * DMARC module can save DMARC reports inside Redis keys;
@@ -35,9 +35,10 @@ retrieve data fast in memory:
     * IP score plugin uses Redis to store data about AS, countries and networks reputation;
     * Multimap module can use Redis as readonly database for maps;
     * MX Check module uses Redis for caching;
- * :doc:`mail/rspamd` statistics module to store Bayes tokens;
- * :doc:`mail/rspamd` storage for fuzzy hashes;
- * :doc:`nextcloud-server` for transactional file locking;
+ #. :doc:`mail/rspamd` statistics module to store Bayes tokens;
+ #. :doc:`mail/rspamd` storage for fuzzy hashes;
+ #. Postfix TLS policies of domains who publish a :doc:`/server/mail/mta-sts` policy;
+ #. :doc:`nextcloud-server` for transactional file locking;
 
 For Rspamd we set up a master/slave replication. This way all mail servers can
 share their knowledge about connecting SMTP servers and spaminess of messages.
@@ -57,7 +58,7 @@ slaves::
                   |             |
                   |             |
       +-----------------+  +-----------------+
-      |     Dolores     |  |      Maeve      |    
+      |     Dolores     |  |      Maeve      |
       |  (Redis Slave)  |  |  (Redis Slave)  |
       |     Postfix     |  |     Postfix     |
       |     Rspamd      |  |     Rspamd      |
@@ -80,9 +81,9 @@ support for multiple databases, it is also strongly recommended by its author
 not to use this feature. Instead one should run a dedicated instance of Redis
 with a single dedicated database for every application.
 
-Considering our list of applications above, we need four Redis instances, of
-which 3 are gonna to be replicated across three servers. A total of 10
-instances to setup  across all servers.
+Considering our list of applications above, we need five Redis instances, of
+which four are gonna to be replicated across three servers. A total of 13
+instances to setup across all servers.
 
 =========================== ============ ======== =================
 Application                 Instance     TCP Port Mode of Operation
@@ -91,6 +92,7 @@ Nextcloud Server            nextcloud    6380     Standalone
 Rspamd                      rspamd       6381     Master/Slave
 Rspamd Statistics Module    rspamd-bayes 6382     Master/Slave
 Rspamd Fuzzy Storage Worker rspamd-fuzzy 6383     Master/Slave
+Postfix MTA-STS TLS policy  postfix-tls  6384     Master/Slave
 =========================== ============ ======== =================
 
 
@@ -289,6 +291,47 @@ Things to do here:
     :language: bash
 
 
+Postfix MTA-STS TLS Master Instance
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Things to do here:
+
+ * Common configuration include statement;
+ * Set memory limit;
+ * Set Wireguard VPN interface address and TCP port;
+ * Set password for local clients;
+ * Set address of the master;
+ * Set password to access the master;
+
+Create a password for Postifx::
+
+    $ pwgen --secure 32 1
+    ZlsQPlZAwMRpBgzEvwH2J7jsWkcpC7Xr
+
+:download:`/etc/redis/redis-postfix-tls.conf <config-files/etc/redis/redis-postfix-tls.conf>`:
+
+.. literalinclude:: config-files/etc/redis/redis-postfix-tls.conf
+    :language: bash
+
+
+Postfix MTA-STS TLS Slave Instance
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Things to do here:
+
+ * Common configuration include statement;
+ * Set memory limit;
+ * Set Wireguard VPN interface address and TCP port;
+ * Set password for local clients;
+ * Set address of the master;
+ * Set password to access the master;
+
+:download:`/etc/redis/redis-postfix-tls.conf <config-files/etc/redis/redis-postfix-tls-slave.conf>`:
+
+.. literalinclude:: config-files/etc/redis/redis-postfix-tls-slave.conf
+    :language: bash
+
+
 Systemd Services
 ^^^^^^^^^^^^^^^^
 
@@ -302,15 +345,15 @@ Make a copy of the pre-installed service file :file:`/lib/systemd/system/redis-s
 
 .. note::
 
-    On some systems I discovered an additional service file 
-    :file:`/etc/systemd/system/redis.service`. Please remove it, if that's the case.
+    On some systems I discovered an additional service file
+    :file:`/etc/systemd/system/redis.service`. Please remove it, if that's the
+    case.
 
 
 Edit the file :file:`/etc/systemd/system/redis-server.service`, as follows:
 
 .. literalinclude:: config-files/etc/systemd/system/redis-server@.service
     :language: ini
-
 
 
 Since we don't use any clustering features of Redis, we can restrict the
@@ -339,7 +382,5 @@ References
 ----------
 
  * `Rspamd Replication in Redis <https://rspamd.com/doc/tutorials/redis_replication.html>`_
-
  * `Redis Configuration <https://redis.io/topics/config>`_
-
  * `Running Multiple Redis Instances <https://medium.com/@MauroMorales/running-multiple-redis-on-a-server-472518f3b603>`_

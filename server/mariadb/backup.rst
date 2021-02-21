@@ -30,8 +30,8 @@ such as `CREATE DATABASE`, `CREATE TABLE` and `INSERT`.
    variables or transactional logs.
 
  * The huge data exports and full table scans which are unavoidable during any
-   logical backup my put your database server under considerable stress and 
-   defeat the purpose of the servers cache and buffers, thus may result in 
+   logical backup my put your database server under considerable stress and
+   defeat the purpose of the servers cache and buffers, thus may result in
    undesirable effects on the operation and performance of your database server.
 
 
@@ -48,9 +48,9 @@ directories.
    designed for the task. Since we don't want any downtime, the latter is the
    only remaining option.
 
- * Physical backups wont work on other database server software, probably not 
+ * Physical backups wont work on other database server software, probably not
    even on other versions of the same software
- 
+
  * Physical backups just backup the whole database server, not individual
    databases or files. However, some exceptions may apply depending on the server
    software and the backup tool used.
@@ -70,13 +70,11 @@ source tool provided by MariaDB for performing **physical online backups** of
 InnoDB, Aria and MyISAM tables. For InnoDB, “hot online” backups are possible.
 
 
-
-
 Installation
 ^^^^^^^^^^^^
 
-Install from the same source and version as your MariaDB database server version::
-
+Install from the same source and version as your MariaDB database server
+version::
 
     $ sudo apt-get install mariadb-backup
 
@@ -90,36 +88,37 @@ File-System Directory
 ^^^^^^^^^^^^^^^^^^^^^
 
 In case of full backups, the file-system directory where the backup will be stored,
-needs to be empty or not existent::
+needs to be empty and owned by the user who also runs the MySQL server::
 
 
-    $ sudo -u mysql rm -rf /var/backups/mariadb
+    $ sudo mkdir -p /var/backups/mariadb/full
+    $ sudo -u mysql rm -rf /var/backups/mariadb/full
+    $ sudo chown -R mysql:mysql /var/backups/mariadb
 
 
-Backup Users Profile
-^^^^^^^^^^^^^^^^^^^^
+Datbase User
+^^^^^^^^^^^^
 
-Let's create a user profile on the database server, with all needed privileges
+Let's create a databse user on the server, with all needed privileges
 to perform the backups.
-
-Create a safe password with :doc:`Diceware </desktop/secrets/passphrases>`::
-
-
-    $ xkcdpass
-    **** **** **** **** **** ****
 
 ::
 
+    $ pwgen --secure 32 1
+    ********
     $ mysql -u root -p
-    
+
+
+.. code-block:: sql
+
     mysql> CREATE USER 'mariabackup'@'localhost' \
-                IDENTIFIED BY '**** **** **** **** **** ****';
-    
+                IDENTIFIED BY '********';
+
     mysql> GRANT RELOAD, PROCESS, LOCK TABLES, REPLICATION CLIENT \
                 ON *.* TO 'mariabackup'@'localhost';
-    
+
     mysql> FLUSH PRIVILEGES;
-    
+
     mysql> exit
 
 
@@ -128,11 +127,17 @@ Configuration Options File
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Let's create a configuration file
-:file:`/etc/mysql/mariadb.conf.d/MariaBackup.cnf` to store all the options in a
+:file:`/etc/mysql/conf.d/MariaBackup.cnf` to store all the options in a
 "[mariabackup]" section.
 
+.. note::
 
-.. literalinclude:: /server/config-files//etc/mysql/mariadb.conf.d/MariaBackup.cnf
+    Despite this being a MariaDB specific configuration file, it needs to be
+    stored in /etc/mysql/conf.d/ as [mariadb] is not recognized by mariabackup,
+    the file would never be inlcuded otherwise. See MDEV-21298
+
+
+.. literalinclude:: /server/config-files//etc/mysql/conf.d/MariaBackup.cnf
     :language: ini
 
 
@@ -147,22 +152,25 @@ database server.
 .. note::
 
     Note the space at the beginning of the following command-line. This inhibts
-    the storage of the command and password in the shells command-line history. 
+    the storage of the command and password in the shells command-line history.
 
 ::
 
     $  sudo -u mysql mariabackup --backup \
-        --target-dir=/var/backups/mariadb/ \
-        --user=mariabackup --password=********
+        --target-dir=/var/backups/mariadb/full \
 
 
 When Mariabackup runs, it issues a global lock to prevent data from changing
 during the backup process and ensure a consistent record. If it encounters
 statements still in the process of executing, it waits until they complete
-before setting the lock. 
+before setting the lock.
 
-[00] 2020-06-02 04:16:11 Connecting to MySQL server host: localhost
-[00] 2020-06-02 04:16:22 completed OK!
+.. code-block:: txt
+
+    [00] 2020-06-02 04:16:11 Connecting to MySQL server host: localhost
+    ...
+    [00] 2020-06-02 04:16:22 completed OK!
+
 
 
 Restoring a Full Backup
@@ -174,11 +182,9 @@ With Mariabackup database restoration is a two-step process.
 Preparation
 ^^^^^^^^^^^
 
-
-
 ::
 
-    $ mariabackup --prepare 
+    $ mariabackup --prepare
 
 
 Copy Back
@@ -186,5 +192,5 @@ Copy Back
 
 ::
 
-    $ mariabackup --copy-back 
+    $ mariabackup --copy-back
 
