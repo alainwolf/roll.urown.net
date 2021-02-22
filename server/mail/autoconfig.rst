@@ -53,7 +53,7 @@ TLS Certificates
 Since the webserver provding the auto-configuration data, will be accessed under
 the hosted domain name, it needs valid certificates for every hosted domain.
 
-In a :doc:`dehydrated domains.txt </server/letsencrypt>` configuration file,
+In a :doc:`dehydrated domains.txt </server/dehydrated>` configuration file,
 this should looks as follows:
 
 .. code-block:: text
@@ -150,7 +150,7 @@ TLS Certificates
 Since the webserver provding the auto-configuration data, will be accessed under
 the hosted domain name, it needs valid certificates for every hosted domain.
 
-In a :doc:`dehydrated domains.txt </server/letsencrypt>` configuration file,
+In a :doc:`dehydrated domains.txt </server/dehydrated>` configuration file,
 this should looks as follows:
 
 .. code-block:: text
@@ -236,7 +236,7 @@ The downside to this is, that you need TLS certificates, not only for all these
 hostnames, but also all these hostnames in all domains, which have their mail
 sevices hosted here.
 
-In a :doc:`dehydrated domains.txt </server/letsencrypt>` configuration file,
+In a :doc:`dehydrated domains.txt </server/dehydrated>` configuration file,
 this should will as follows:
 
 .. code-block:: text

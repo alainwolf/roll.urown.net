@@ -10,7 +10,7 @@ Prerequisites
 -------------
 
  * Yubico installed and setup as described in :doc:`index`.
- * GnuPG installed and configured as in :doc:`/desktop/secretes/gpg/index`.
+ * GnuPG installed and configured as in :doc:`/desktop/secrets/gpg/index`.
 
 
 Additional Software

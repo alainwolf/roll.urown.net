@@ -128,7 +128,7 @@ Web Server
 TLS Certificates
 ^^^^^^^^^^^^^^^^
 
-We use :doc:`dehydrated </server/letsencrypt>` to request additional
+We use :doc:`dehydrated </server/dehydrated>` to request additional
 certificates for the HTTPS policy server.
 
 Add the following lines to :file:`/etc/dehydrated/domains.txt`

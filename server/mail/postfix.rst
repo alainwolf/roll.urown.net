@@ -20,7 +20,7 @@ Prerequisites
     * :doc:`/server/clamav`
     * :doc:`/server/mail/rspamd`
     * :doc:`/server/dns/unbound`
-    * :doc:`/server/letsencrypt`
+    * :doc:`/server/dehydrated`
 
 
 Install Software

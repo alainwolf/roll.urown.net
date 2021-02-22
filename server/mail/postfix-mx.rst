@@ -21,7 +21,7 @@ Prerequisites
     * :doc:`/server/dns/unbound`
     * :doc:`/server/mariadb/index`
     * :doc:`/server/mail/rspamd`
-    * :doc:`/server/letsencrypt`
+    * :doc:`/server/dehydrated`
     * :doc:`/server/mail/mta-sts`
 
 
