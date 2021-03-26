@@ -24,3 +24,5 @@ Contents:
    ca_crl
    ca_ocsp_responder
    x509
+   ca_hsm
+
