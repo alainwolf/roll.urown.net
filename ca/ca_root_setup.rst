@@ -28,16 +28,11 @@ structure is defined within the OpenSSL configuration file.
 
 ::
 
+    # paranoid umask because we are creating private keys
+    $ umask 077
     $ cd /media/$USER/safe_storage
     $ mkdir -p example.net.ca/root-ca/{certreqs,certs,crl,newcerts,private}
     $ cd example.net.ca/root-ca
-
-
-The directory used to store private keys should not be accessible to others:
-
-::
-
-    $ chmod 700 private
 
 
 Some data files are needed to keep track of issued certificates, their
@@ -79,8 +74,20 @@ Make sure that the OpenSSL configuration file for the **root CA** is active::
 Generate CSR and new Key
 ------------------------
 
-The following command creates a new key and a certificate signing request for
-the root::
+The following commands create either a new password protected EC or RSA key and
+additionally a certificate signing request for the root::
+
+    # eliptic curves have smaller key sizes and a similar security level
+    $ openssl ecparam -genkey -name secp384r1 | openssl ec -aes256 -out private/root-ca.key.pem
+    read EC key
+    writing EC key
+    Enter PEM pass phrase:
+    Verifying - Enter PEM pass phrase:
+
+    $ openssl req -new -key private/root-ca.key.pem -out root-ca.req.pem
+    Enter pass phrase for root-ca.key.pem:
+
+Or RSA::
 
     $ openssl req -new -out root-ca.req.pem
     Generating a 4096 bit RSA private key
