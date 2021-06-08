@@ -1,17 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Install Nginx from source
-# Last update: June 14, 2019
+# Last update: Apr 14, 2021
 #
 # Set version numbers
-export NGX_VERSION="1.17.0"       # Nginx - https://nginx.org/en/CHANGES (May 21, 2019)
-export OPENSSL_VERSION="1.1.1c"   # OpenSSL - https://github.com/openssl/openssl/releases (May 28, 2019)
-export FANCYINDEX_VERSION="0.4.3" # Fancy Index Module - https://github.com/aperezdc/ngx-fancyindex/releases (Jul 3, 2018)
+export NGX_VERSION="1.19.10"      # Nginx - https://nginx.org/en/CHANGES (Apr 13 2021)
+export OPENSSL_VERSION="1.1.1k"   # OpenSSL - https://github.com/openssl/openssl/releases (Mar 25, 2021)
+export FANCYINDEX_VERSION="0.5.1" # Fancy Index Module - https://github.com/aperezdc/ngx-fancyindex/releases (Oct 26, 2020)
 export NCP_VERSION="2.3"          # Nginx Cache Purge Module - https://github.com/FRiCKLE/ngx_cache_purge/releases (Dec 23, 2014)
 export NHM_VERSION="0.33"         # Nginx Headers More Module - https://github.com/openresty/headers-more-nginx-module/releases (Nov 4, 2017)
-export NGINX_DEBIAN_RULES="https://roll.urown.net/_downloads/9d49aaa527a8924fff40649b3c2183b9/rules"
+export NGINX_DEBIAN_RULES="file:///home/wolf/Downloads/rules"
 export SRC_DIR
 SRC_DIR=$(mktemp -d --suffix=_ngx_src_${NGX_VERSION})
+#SRC_DIR="/usr/local/src/nginx-$NGX_VERSION"
 
 # Exit on errors
 set -e
@@ -20,13 +21,14 @@ set -e
 set -u
 
 # Update repositories
-sudo apt update
+sudo apt-get --yes update
 
 # Get all the stuff needed for building nginx and modules
-sudo apt install autoconf build-essential devscripts git \
+sudo apt-get --yes install autoconf build-essential devscripts git \
         libgd-dev libgeoip-dev libpcre3 libpcre3-dev libxslt1-dev libxml2-dev \
-        python-dev python2.7 unzip zlib1g-dev
-sudo apt build-dep nginx
+        python-dev unzip zlib1g-dev
+#sudo apt-get --yes install build-essential git software-properties-common apt-transport-https ufw
+sudo apt-get --yes build-dep nginx
 
 # Prepare source code directory
 mkdir -p "$SRC_DIR"
@@ -34,14 +36,14 @@ mkdir -p "$SRC_DIR"
 #chmod u+rwx ${SRC_DIR}
 
 # Source Code for Nginx
-cd "$SRC_DIR"
-apt source nginx
+cd "$SRC_DIR" || exit 1
+apt-get --yes source nginx
 
 # Source Code for OpenSSL
 cd "$SRC_DIR"
 wget https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz
 wget https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz.asc
-gpg2 --verify openssl-${OPENSSL_VERSION}.tar.gz.asc
+gpg --verify openssl-${OPENSSL_VERSION}.tar.gz.asc
 tar -xzvf openssl-${OPENSSL_VERSION}.tar.gz
 rm openssl-${OPENSSL_VERSION}.tar.gz
 
@@ -91,7 +93,7 @@ wget -O ngx-fancyindex-${FANCYINDEX_VERSION}.tar.gz \
 tar -xzf ngx-fancyindex-${FANCYINDEX_VERSION}.tar.gz
 
 # Debian Package configuration from roll.urown.net
-wget -O /tmp/nginx_debian_rules "${NGINX_DEBIAN_RULES}"
+curl --output /tmp/nginx_debian_rules "${NGINX_DEBIAN_RULES}"
 cp --backup /tmp/nginx_debian_rules "${SRC_DIR}/nginx-${NGX_VERSION}/debian/rules"
 chmod +x "${SRC_DIR}/nginx-${NGX_VERSION}/debian/rules"
 
@@ -106,18 +108,23 @@ debchange "Added 3rd-party headers-more module ${NHM_VERSION}"
 debchange 'Removed mail module'
 debchange 'Removed stream module'
 
-# Build the package
 cd "${SRC_DIR}/nginx-${NGX_VERSION}"
-dpkg-buildpackage -rfakeroot -Tclean
-dpkg-buildpackage -rfakeroot -uc -b
+
+# Clean the source
+dpkg-buildpackage --root-command=fakeroot --rules-target=clean
+
+# Build the package
+dpkg-buildpackage --root-command=fakeroot --build=binary
 
 # Ready to install
 cd "$SRC_DIR"
-ls -lth ${SRC_DIR}/*.deb
+ls -lth "${SRC_DIR}/nginx_${NGX_VERSION}-1~$( lsb_release -sc )ubuntu1_amd64.deb" \
+    "${SRC_DIR}/nginx-dbg_${NGX_VERSION}-1~$( lsb_release -sc )ubuntu1_amd64.deb"
+
 echo "Done and ready to install, please run:"
 echo "  ********************************************************************************* "
-echo "  sudo dpkg --install ${SRC_DIR}/nginx_${NGX_VERSION}-1~bionicubuntu1_amd64.deb     "
-echo "  sudo dpkg --install ${SRC_DIR}/nginx-dbg_${NGX_VERSION}-1~bionicubuntu1_amd64.deb "
-echo "  sudo apt-mark hold nginx nginx-dbg                                                "
+sudo dpkg --install "${SRC_DIR}/nginx_${NGX_VERSION}-1~$( lsb_release -sc )ubuntu1_amd64.deb"
+sudo dpkg --install "${SRC_DIR}/nginx-dbg_${NGX_VERSION}-1~$( lsb_release -sc )ubuntu1_amd64.deb"
+sudo apt-mark hold nginx nginx-dbg
 echo "  sudo rm -rf ${SRC_DIR}                                                            "
 echo "  ********************************************************************************* "

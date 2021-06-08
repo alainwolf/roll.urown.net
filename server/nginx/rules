@@ -161,7 +161,7 @@ install:
 	mkdir -p $(INSTALLDIR)/usr/lib/nginx/modules
 	mkdir -p $(INSTALLDIR)/usr/share/doc/nginx
 	install -m 644 debian/CHANGES $(INSTALLDIR)/usr/share/doc/nginx/changelog
-	install -m 644 debian/nginx.vh.default.conf $(INSTALLDIR)/etc/nginx/conf.d/default.conf
+	install -m 644 debian/nginx.default.conf $(INSTALLDIR)/etc/nginx/conf.d/default.conf
 	ln -s /usr/lib/nginx/modules $(INSTALLDIR)/etc/nginx/modules
 
 binary-indep: build post-build install
