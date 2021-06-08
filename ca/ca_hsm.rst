@@ -109,6 +109,28 @@ Button in its password generator.
 .. image:: KeePassXC_HEX_Password.png
 
 
+User PIN
+^^^^^^^^
+
+The User PIN is needed for all Nitrokey HSM operations.
+IT can be 6 to 8 digits long and should only contain numbers.
+
+The default factory-set SO-PIN on Nitrokey HSM devices is **"123456"**.
+
+You need to change that to your own secret PIN. Six digits should be
+sufficient, as it will be blocked after the third attempt with a wrong PIN.
+
+If blocked, the SO PIN is needed to unblock it.
+
+You can chage the user PIN by either providing the existing or factory-set one:
+
+Select :menuselection:`Token --> Change PIN` from the menu in XCA.
+
+Or you can set a new user PIN rigtht away by providing the SO PIN:
+
+Select :menuselection:`Token --> Init PIN` from the menu in XCA.
+
+
 
 
 References
