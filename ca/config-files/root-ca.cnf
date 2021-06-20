@@ -83,8 +83,6 @@ subjectKeyIdentifier    = hash
 subjectAltName          = @subject_alt_name
 authorityKeyIdentifier  = keyid:always
 issuerAltName           = issuer:copy
-authorityInfoAccess     = @auth_info_access
-crlDistributionPoints   = crl_dist
 
 #
 # Intermediate CA Certificate Extensions
