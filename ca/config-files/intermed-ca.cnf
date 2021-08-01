@@ -95,7 +95,6 @@ commonName              = example.net Intermediate Certification Authority
 #
 # Server Certificate Extensions
 [ server_ext ]
-basicConstraints        = CA:FALSE
 keyUsage                = critical, digitalSignature, keyEncipherment
 extendedKeyUsage        = critical, serverAuth, clientAuth
 subjectKeyIdentifier    = hash
@@ -107,7 +106,6 @@ crlDistributionPoints   = crl_dist
 #
 # Client Certificate Extensions
 [ client_ext ]
-basicConstraints        = CA:FALSE
 keyUsage                = critical, digitalSignature
 extendedKeyUsage        = critical, clientAuth
 subjectKeyIdentifier    = hash
@@ -119,7 +117,6 @@ crlDistributionPoints   = crl_dist
 #
 # User Certificate Extensions
 [ user_ext ]
-basicConstraints        = CA:FALSE
 keyUsage                = critical, digitalSignature
 extendedKeyUsage        = critical, clientAuth, emailProtection
 subjectKeyIdentifier    = hash
