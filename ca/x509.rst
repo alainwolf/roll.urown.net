@@ -180,7 +180,7 @@ cRLSign
 ^^^^^^^
 
 The public key of this certificate can be used to verify signatures of
-certificate reudation lists (CRLs).
+certificate revocation lists (CRLs).
 
 Mandatory for certificate authorities.
 
