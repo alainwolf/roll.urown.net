@@ -38,7 +38,7 @@ cert_opt                = no_pubkey
 copy_extensions         = copy
 crl_extensions          = crl_ext
 default_crl_days        = 30
-default_md              = sha256
+default_md              = sha384
 preserve                = no
 email_in_dn             = no
 policy                  = policy
@@ -72,7 +72,7 @@ emailAddress            = supplied
 default_bits            = 3072
 default_keyfile         = private/intermed-ca.key
 encrypt_key             = yes
-default_md              = sha256
+default_md              = sha384
 string_mask             = utf8only
 utf8                    = yes
 prompt                  = no
@@ -95,7 +95,6 @@ commonName              = example.net Intermediate Certification Authority
 #
 # Server Certificate Extensions
 [ server_ext ]
-basicConstraints        = CA:FALSE
 keyUsage                = critical, digitalSignature, keyEncipherment
 extendedKeyUsage        = critical, serverAuth, clientAuth
 subjectKeyIdentifier    = hash
@@ -107,7 +106,6 @@ crlDistributionPoints   = crl_dist
 #
 # Client Certificate Extensions
 [ client_ext ]
-basicConstraints        = CA:FALSE
 keyUsage                = critical, digitalSignature
 extendedKeyUsage        = critical, clientAuth
 subjectKeyIdentifier    = hash
@@ -119,7 +117,6 @@ crlDistributionPoints   = crl_dist
 #
 # User Certificate Extensions
 [ user_ext ]
-basicConstraints        = CA:FALSE
 keyUsage                = critical, digitalSignature
 extendedKeyUsage        = critical, clientAuth, emailProtection
 subjectKeyIdentifier    = hash

@@ -29,16 +29,11 @@ structure is defined within the OpenSSL configuration file:
 
 ::
 
+    # paranoid umask because we are creating private keys
+    $ umask 077
     $ cd /media/$USER/safe_storage
     $ mkdir -p example.net.ca/intermed-ca/{certreqs,certs,crl,newcerts,private}
     $ cd example.net.ca/intermed-ca
-
-
-The directory used to store private keys should not be accessible to others:
-
-::
-
-    $ chmod 700 private
 
 
 Some data files are needed to keep track of issued certificates, their
@@ -79,12 +74,24 @@ Switch the OpenSSL configuration to the Intermediate CA::
 Generate CSR and new Key
 ------------------------
 
+Once again, you may choose between an EC and an RSA key.
 The RSA private key of the intermediate signing certificate needs to be 3072
-bits strong. As this is considered safe for the next 8 years (up to 2023). It
-also should be made write-protected and private and have a strong password.
+bits strong. As this is considered safe for the next 8 years (up to 2023).
 
 Make a new Certificate Signing Request (CSR) for the intermediate signing
 authority::
+
+    # eliptic curves have smaller key sizes and a similar security level
+    $ openssl ecparam -genkey -name secp384r1 | openssl ec -aes256 -out private/intermed-ca.key.pem
+    read EC key
+    writing EC key
+    Enter PEM pass phrase:
+    Verifying - Enter PEM pass phrase:
+
+    $ openssl req -new -key private/intermed-ca.key.pem -out intermed-ca.req.pem
+    Enter pass phrase for intermed-ca.key.pem:
+
+Or RSA::
 
     $ openssl req -new -out intermed-ca.req.pem
     Generating a 3072 bit RSA private key
