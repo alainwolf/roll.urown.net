@@ -54,7 +54,7 @@ driver = mysql
 #     option_file         - Read options from the given file instead of
 #                           the default my.cnf location
 #     option_group        - Read options from the given group (default: client)
-# 
+#
 #   You can connect to UNIX sockets by using host: host=/var/run/mysql.sock
 #   Note that currently you can't use spaces in parameters.
 #
@@ -72,10 +72,11 @@ connect = host=127.0.0.1 dbname=mailserver user=mailuser password=********
 # Default password scheme.
 #
 # List of supported schemes is in
-# http://wiki2.dovecot.org/Authentication/PasswordSchemes
+# https://doc.dovecot.org/configuration_manual/authentication/password_schemes/
 #
 #default_pass_scheme = MD5
-default_pass_scheme = SHA512-CRYPT
+#default_pass_scheme = SHA512-CRYPT
+default_pass_scheme = ARGON2ID
 
 # passdb query to retrieve the password. It can return fields:
 #   password - The user's password. This field must be returned.
@@ -95,7 +96,7 @@ default_pass_scheme = SHA512-CRYPT
 #   %u = entire user@domain
 #   %n = user part of user@domain
 #   %d = domain part of user@domain
-# 
+#
 # Note that these can be used only as input to SQL query. If the query outputs
 # any of these substitutions, they're not touched. Otherwise it would be
 # difficult to have e.g. usernames containing '%' characters.
