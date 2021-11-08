@@ -1,0 +1,15 @@
+[Unit]
+Description=LibreTranslate WSGI with Gunicorn and Nginx
+Requires=libretranslate.socket
+After=network.target
+
+[Service]
+PIDFile=/run/powerdns-admin/pid
+User=libretranslate
+Group=www-data
+WorkingDirectory=/var/lib/libretranslate/LibreTranslate
+Environment="PATH=/var/lib/libretranslate/LibreTranslate/env/bin"
+ExecStart=/var/lib/libretranslate/LibreTranslate/env/bin/gunicorn --workers 3 --bind unix:libretranslate.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target

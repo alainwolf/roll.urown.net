@@ -1,0 +1,8 @@
+[Unit]
+Description=LibreTranslate Socket
+
+[Socket]
+ListenStream=/var/lib/libretranslate/LibreTranslate/libretranslate.sock
+
+[Install]
+WantedBy=sockets.target

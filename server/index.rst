@@ -46,7 +46,7 @@ Contents:
    bitcoin/index
    pgp-keyserver
    pgp-wks
-
+   translate
 
 Recommended reading:
 `Ubuntu Server Guide <https://help.ubuntu.com/14.04/serverguide/index.html>`_
