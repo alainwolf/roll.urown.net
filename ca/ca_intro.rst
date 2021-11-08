@@ -126,12 +126,13 @@ Root Signing Key
 ^^^^^^^^^^^^^^^^
 
 The private key of the certificate authority root certificate must be protected
-and stored safely. Save it on a encrypted USB Storage key or Smartcard and store
-that USB key in a safe location. Depending on your safety requirements, a bank-
-safe or other trusted third-party is recommended. In the best of all cases, you
-won't need to access the root key again for the next five years. Access to this
-key is only needed if you lose control over the intermediate signing key or if
-you need to make substantial changes to your Certificate Authority.
+and stored safely on at least two different types of media in different physical
+locations. Save it on a encrypted USB Storage key or Smartcard and store that
+USB key in a safe location. Depending on your safety requirements, a bank- safe
+or other trusted third-party is recommended. In the best of all cases, you won't
+need to access the root key again for the next five years. Access to this key is
+only needed if you lose control over the intermediate signing key or if you need
+to make substantial changes to your Certificate Authority.
 
 
 Intermediate Signing Key
