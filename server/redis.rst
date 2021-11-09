@@ -350,7 +350,7 @@ Make a copy of the pre-installed service file :file:`/lib/systemd/system/redis-s
     case.
 
 
-Edit the file :file:`/etc/systemd/system/redis-server.service`, as follows:
+Edit the file :file:`/etc/systemd/system/redis-server@.service`, as follows:
 
 .. literalinclude:: config-files/etc/systemd/system/redis-server@.service
     :language: ini

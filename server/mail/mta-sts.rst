@@ -214,6 +214,30 @@ Configuration is stored in the file :file:`/etc/mta-sts-daemon.yml`:
             timeout: 4
 
 
+Service Dependencies
+^^^^^^^^^^^^^^^^^^^^
+
+Since we cache the TLS policies for Postfix in a Redis server, we want the Redis
+cache to be up and running, before the MTA-STS service starts. To make the
+`postfix-mta-sts-resolver.service` dependent on the
+`redis-server@postfix-tls.service`::
+
+    $ sudo cp /lib/systemd/system/rspamd.service /etc/systemd/system/
+
+Edit the file :file:`/etc/systemd/system/postfix-mta-sts-resolver.service` add
+the following lines to the **Unit** section:
+
+.. code-block:: ini
+   :emphasize-lines: 5-6
+
+    [Unit]
+    Description=Provide MTA-STS policy map to Postfix
+    Documentation=man:mta-sts-daemon(1) man:mta-sts-daemon.yml(5)
+    Before=postfix.service
+    BindsTo=redis-server@postfix-tls.service
+    After=redis-server@postfix-tls.service
+
+
 Postfix Configuration
 ^^^^^^^^^^^^^^^^^^^^^
 
