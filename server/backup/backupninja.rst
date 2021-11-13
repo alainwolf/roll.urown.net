@@ -68,7 +68,7 @@ Configuration
 --------------
 
 The main configuration is stored in :download:`/etc/backupninja.conf
-<config-files/etc//backupninja/backupninja.conf>`, while the different backup
+</server/config-files/etc//backupninja/backupninja.conf>`, while the different backup
 tasks are found in the directory :file:`/etc/backup.d`.
 
 There is a helper application to aid in the configuratoion of all this::
@@ -79,7 +79,7 @@ There is a helper application to aid in the configuratoion of all this::
 What how and where to backup
 ----------------------------
 
-The file :download:`/etc/backup.d/90.dup <config-files/etc/backupninja/90.dup>`
+The file :download:`/etc/backup.d/90.dup </server/config-files/etc/backupninja/90.dup>`
 has all  the meat.
 
 Duplicity encrypts all backup-files before transferring to the remote storage:

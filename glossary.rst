@@ -6,7 +6,6 @@ Glossary
 .. glossary::
     :sorted:
 
-
     3DES
 
         `Triple DES (3DES) <https://en.wikipedia.org/wiki/3DES>`_ is the common
@@ -408,6 +407,24 @@ Glossary
         names using :term:`Domain Name System Security Extensions` (:term:`DNSSEC`).
         It is proposed in :RFC:`6698` as a way to authenticate TLS client and server
         entities without a :term:`Certificate Authority` (CA).
+
+
+    Data deduplication
+
+        In computing,
+        `data deduplication <https://en.wikipedia.org/wiki/Data_deduplication>`_
+        is a technique for eliminating duplicate copies of repeating data.
+        Thereby dramatically reducing the required storage space. It can also be
+        applied to network data transfers to reduce the number of bytes that
+        must be transferred.
+
+        The deduplication process cuts the data to be stored into equal sized
+        'chunks'. These chunks are then compared to other chunks already stored
+        earlier. Whenever a match occurs, the new chunk is replaced with a small
+        reference that points to the already stored chunk, instead of storing it
+        again. Given that the same byte pattern may occur dozens, hundreds, or
+        even thousands of times (depending on the used chunk size), the amount
+        of data that must be stored or transferred can be greatly reduced.
 
 
     Delegation-Signing

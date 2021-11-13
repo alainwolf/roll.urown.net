@@ -22,7 +22,7 @@ Contents:
    serial-console
    server-ups
    wireguard
-   server-backup
+   backup/index
    server-tls
    ciphers
    dehydrated
