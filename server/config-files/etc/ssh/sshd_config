@@ -1,6 +1,19 @@
+# ******************************************************************************
+#
 # SSH server configuration file
+#
+# OpenSSH_8.2p1 - Ubuntu 20.04 LTS Server
 # See the sshd_config(5) manpage for details
+# ******************************************************************************
 
+# Include the specified configuration file(s)
+# Included files will override any options defined furher below
+Include /etc/ssh/sshd_config.d/*.conf
+
+
+# -------------------------------------
+# Network and Protocol
+# -------------------------------------
 # On which TCP ports we listen for SSH client connections
 Port 63508
 
@@ -8,21 +21,29 @@ Port 63508
 #ListenAddress ::
 #ListenAddress 0.0.0.0
 
+
+# -------------------------------------
+# Server Authentication
+# -------------------------------------
+
 # HostKeys for protocol version 2 - by order of preference
 HostKey /etc/ssh/ssh_host_ed25519_key
 HostKey /etc/ssh/ssh_host_rsa_key
 
+# The host key algorithms that the server will offer
+HostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com
 
-#
-# Authentication
-#
+
+# -------------------------------------
+# Client and User Authentication
+# -------------------------------------
 
 # Root login is not allowed for auditing reasons.
 # Regular user logins combined with "sudo" ensures a clear audit track.
 PermitRootLogin no
 #PermitRootLogin without-password
 
-# Only public key based logins are allowed -password based logins are disabled.
+# Only public-key based logins are allowed. Disables password based logins.
 AuthenticationMethods publickey
 
 # Don't allow challenge-response passwords
@@ -39,20 +60,30 @@ UsePAM yes
 # Don't print /etc/motd when a user logs in
 PrintMotd no
 
+# Only users who are member of the following groups are allowed to login
+AllowGroups sshlogin
 
-#
-# Ciphers suite selections
-#
 
-# Key Exchange
-KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+# -------------------------------------
+# Ciphers Suites Selections
+# -------------------------------------
+
+# Key Exchange (KEX) Algorithms
+KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512
 
 # Symmetric ciphers
-Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
 
 # Message authentication
-MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com
 
+
+# -------------------------------------
+# Allowed Client Features
+# -------------------------------------
+
+# Whether X11 forwarding is permitted
+X11Forwarding no
 
 # Allow client to pass locale environment variables
 AcceptEnv LANG LC_*
@@ -63,4 +94,3 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 # Remove any existing Unix-domain socket file for local or remote port
 # forwarding before creating a new one. The default is no.
 StreamLocalBindUnlink yes
-

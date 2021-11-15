@@ -176,10 +176,11 @@ Glossary
 
         `The Advanced Encryption Standard (AES)
         <https://en.wikipedia.org/wiki/Advanced_Encryption_Standard>`_ is a is a
-        symmetric-key algorithm for the encryption of electronic data established by a
-        U.S. Governement institution (NIST) in 2001. AES has been adopted by the U.S.
-        government for top secret information and is used worldwide today. It
-        supersedes the :term:`Data Encryption Standard` (DES).
+        symmetric-key algorithm for the encryption of electronic data
+        established by a U.S. Governement institution (:term:`NIST`) in 2001.
+        AES has been adopted by the U.S. government for top secret information
+        and is used worldwide today. It supersedes the
+        :term:`Data Encryption Standard` (DES).
 
 
     AES-NI
@@ -619,18 +620,40 @@ Glossary
 
     DSA
     Digital Signature Algorithm
+
         `The Digital Signature Algorithm (DSA) <https://en.wikipedia.org/wiki/Digital_Signature_Algorithm>`_
-        is a Federal Information Processing Standard for digital signatures.
-        In August 1991 the National Institute of Standards and Technology
-        (:term:`NIST`) proposed DSA for use in their Digital Signature
-        Standard (DSS) and adopted it 1994 in its :term:`FIPS` standards
-        specification. Four revisions to the initial specification have been
-        released in 1996, 2000, 2009 and in 2013.
+        is a United States Federal Information Processing Standard for digital
+        signatures. In August 1991 the :term:`National Institute of Standards
+        and Technology` (NIST) proposed DSA for use in their
+        :term:`Digital Signature Standard` (:term:`DSS`) and adopted it 1994 in
+        its :term:`FIPS` standards specification. Four revisions to the initial
+        specification have been released in 1996, 2000, 2009 and in 2013.
 
         DSA is covered by a U.S. Patent and attributed to a former NSA
         employee. The patent was given to the United States, and NIST has made
         it available worldwide royalty-free. DSA is a variant of the ElGamal
         signature scheme.
+
+    Digital Signature Standard
+    DSS
+
+        The
+        `Digital Signature Standard (DSS) <https://en.wikipedia.org/wiki/Digital_Signature_Standard>`_
+        is a United States Federal Information Processing Standard specifying a
+        suite of algorithms that can be used to generate digital signatures
+        established by the :term:`National Institute of Standards and Technology`
+        (NIST) in 1994. Four revisions to the initial specification have been
+        released: :term:`FIPS` 186-1 in 1996, FIPS 186-2 in 2000, FIPS 186-3 in
+        2009, and FIPS 186-4 in 2013.
+
+        It defines the :term:`Digital Signature Algorithm` (DSA), contains a
+        definition of :term:`RSA` signatures based on the definitions contained
+        within :term:`PKCS #1` version 2.1 and in American National Standard
+        X9.31 with some additional requirements, and contains a definition of
+        the :term:`Elliptic Curve Digital Signature Algorithm` based on the
+        definition provided by American National Standard X9.62 with some
+        additional requirements and some recommended elliptic curves. It also
+        approves the use of all three algorithms.
 
     DSM
     DiskStation Manager

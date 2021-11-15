@@ -6,164 +6,98 @@ SSH
 
 .. note::
 
-    The following is valid for *OpenSSH_7.6p1 Ubuntu-4, OpenSSL 1.0.2n  7 Dec 2017* 
-    as shipped with *Ubuntu 18.04.1 LTS "Bionic Beaver"*
-
-
-SSH Server
-----------
-
-.. warning::
-
-    Please be advised that any change in the SSH-Settings of your server might
-    cause problems connecting to the server or starting/reloading the SSH-Daemon
-    itself. So every time you configure your SSH-Settings on a remote server via
-    SSH itself, ensure that you have a second open connection to the server,
-    which you can use to reset or adapt your changes!
-
-
-Re-create Server Keys
-^^^^^^^^^^^^^^^^^^^^^
-
-After we improved our systems :doc:`/server/entropy`, its time to discard the
-old SSH server keys, who have been created by the Ubuntu server installation
-process, with a
-`fresh set <http://manpages.ubuntu.com/manpages/trusty/en/man1/ssh-keygen.1.html>`_
-
-Note that we only create *ed25519* and *RSA* keys. Other types are not
-recommended.
-
-The supported key types depend on the SSH software version. Both client and
-server must support it. You can check which key types are supported by your
-version of OpenSSH with the command :file:`ssh -Q key`.
-
-::
-
-    cd /etc/ssh
-    sudo rm ssh_host_*key*
-    sudo ssh-keygen -t ed25519 -f ssh_host_ed25519_key
-    sudo ssh-keygen -t rsa -b 4096 -f ssh_host_rsa_key
-
-
-.. note::
-
-    Don't forget to re-distribute the new server public keys to any SSH clients
-    you connect to from this host.
-
-
-To create DNS server records of you key::
-
-    ssh-keygen -r host.example.net -f ssh_host_ed25519_key.pub
-    ssh-keygen -r host.example.net -f ssh_host_rsa_key
-
-
-Server Configuration File
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The server settings are stored in :file:`/etc/ssh/sshd_config`.
-Change according to the example below.
-
-The complete configuration file described here is available for
-:download:`download <config-files/etc/ssh/sshd_config>` also.
-
-
-Network and Protocol Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-By changing the default TCP listening port, we avoid thousands of malicious
-login attempts every day.
-
-.. note::
-
-    Changing the TCP listening port **is not a security feature**, but keeps
-    our logs more readable by avoiding this kind of junk.
-
-
-It also helps, if you have multiple servers in your LAN behind a NAT.
-
-The following small bash shell script will choose a random TCP port, which is
-unlikely to interfere with other services on your server::
-
-    $ shuf -i 49152-65535 -n 1
-    63508
-
-
-Add this port to your configuration:
-
-.. literalinclude:: config-files/etc/ssh/sshd_config
-    :language: ini
-    :end-before: # HostKeys
-
-
-Server Keys
-^^^^^^^^^^^
-
-They point to our newly created set of *ed25519* and *RSA* host keys:
-
-.. literalinclude:: config-files/etc/ssh/sshd_config
-    :language: ini
-    :start-after: #ListenAddress 0.0.0.0
-    :end-before: # Authentication
-
-
-Authentication Settings
-^^^^^^^^^^^^^^^^^^^^^^^
-
-The *root* user is not allowed at all to login remotely. Others need their SSH
-public-key installed.
-
-Password logins are not allowed.
-
-.. literalinclude:: config-files/etc/ssh/sshd_config
-    :language: ini
-    :start-after: HostKey /etc/ssh/ssh_host_rsa_key
-    :end-before: # Ciphers suite selections
+    The following is valid for **OpenSSH_8.2p1** as shipped with **Ubuntu
+    20.04.3 LTS "Focal Fossa"**
 
 
 Ciphers Suites
-^^^^^^^^^^^^^^
+--------------
 
 Similar to our :doc:`ciphers` we limit our SSH server to a safe and
 recommended set of encryption algorithms and set preferences as which ones are
 preferred over others.
 
-
 .. note::
 
-    The supported cipher suites are highly dependent on the SSH software. Both
-    client and server must support it.
+    The supported cipher suites depend on the used SSH software and version.
+    Clients and servers must both share a common set of supported ciphers
+    suites.
 
 
-**Key exchange:**
+Host Key Algorithms
+^^^^^^^^^^^^^^^^^^^
 
-You can check which key exchange algorithms are supported by your version of
+You can get a list of host key algorithms supported by your version of OpenSSH
+with the command::
+
+    $ ssh -Q key
+
+Recommended:
+    * ssh-ed25519
+    * ssh-ed25519-cert-v01
+    * sk-ssh-ed25519
+    * sk-ssh-ed25519-cert-v01
+
+Good algorithms, but weak implementation:
+    * rsa-sha2-256
+    * rsa-sha2-256-cert-v01
+    * rsa-sha2-512
+    * rsa-sha2-512-cert-v01
+
+Avoid :term:`NIST` P-curves:
+    * ecdsa-sha2-nistp256
+    * ecdsa-sha2-nistp256-cert-v01
+    * ecdsa-sha2-nistp384
+    * ecdsa-sha2-nistp384-cert-v01
+    * ecdsa-sha2-nistp521
+    * ecdsa-sha2-nistp521-cert-v01
+    * sk-ecdsa-sha2-nistp256
+    * sk-ecdsa-sha2-nistp256-cert-v01
+
+Don't use :term:`DSA` (aka DSS) and :term:`SHA-1`:
+    * ssh-dss
+    * ssh-dss-cert-v01
+    * ssh-rsa
+    * ssh-rsa-cert-v01
+
+
+Key exchange (KEX)
+^^^^^^^^^^^^^^^^^^
+
+You can get a list of key exchange algorithms supported by your version of
 OpenSSH with the command::
 
     $ ssh -Q kex
 
 
 Recommended:
-    * curve25519-sha256@libssh.org
+    * curve25519-sha256
     * diffie-hellman-group-exchange-sha256
 
-Avoid if better alternatives are available:
+Probably OK:
+    * diffie-hellman-group16-sha512
+    * diffie-hellman-group18-sha512
+
+Good Algorithm, but weak implementation:
+    * diffie-hellman-group14-sha256
+
+Avoid NIST-curves if better alternatives are available:
     * ecdh-sha2-nistp521
     * ecdh-sha2-nistp384
     * ecdh-sha2-nistp256
 
-Unknown, but probably OK:
-    * curve25519-sha256
-    * diffie-hellman-group14-sha256
-    * diffie-hellman-group16-sha512
-    * diffie-hellman-group18-sha512
-
-Don't use:
+Don't use SHA-1:
     * diffie-hellman-group1-sha1
     * diffie-hellman-group14-sha1
     * diffie-hellman-group-exchange-sha1
 
+Experimental post-quantum hybrid key exchange methods based on Streamlined NTRU Prime coupled with X25519:
+    * sntrup4591761x25519-sha512@
+    * sntrup761x25519-sha512
 
-**Symmetric ciphers:**
+
+Symmetric ciphers
+^^^^^^^^^^^^^^^^^
 
 You can check which symmetric ciphers are supported by your version of
 OpenSSH with the command::
@@ -178,12 +112,12 @@ Recommended:
     * aes256-gcm@openssh.com
     * aes128-gcm@openssh.com
 
-Avoid if better alternatives are available:
+Avoid CTR algorithms, if better alternatives are available:
     * aes256-ctr
     * aes192-ctr
     * aes128-ctr
 
-Don't use:
+Don't use 3DES and CBC algorithms:
     * 3des-cbc, see :term:`3DES`
     * aes128-cbc
     * aes192-cbc
@@ -191,7 +125,8 @@ Don't use:
     * rijndael-cbc@lysator.liu.se
 
 
-**Message authentication (MAC):**
+Message Authentication (MAC)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can check which message integrity codes are supported by your version of
 OpenSSH with the command::
@@ -199,12 +134,12 @@ OpenSSH with the command::
     $ ssh -Q mac
 
 
-Preferred:
+Preferred Ecrypt-then-MAC (ETM):
     * hmac-sha2-512-etm@openssh.com
     * hmac-sha2-256-etm@openssh.com
     * umac-128-etm@openssh.com
 
-Recommended:
+Avoid if possible (weaker then ETM):
     * hmac-sha2-512
     * hmac-sha2-256
     * umac-128@openssh.com
@@ -222,60 +157,42 @@ Don't use:
     * umac-64-etm@openssh.com
 
 
-.. literalinclude:: config-files/etc/ssh/sshd_config
-    :language: ini
-    :start-after: PrintMotd
-    :end-before: # Allow client to pass locale environment variables
+Server Keys
+-----------
+
+After we improved our systems :doc:`/server/entropy`, its time to discard the
+old SSH server keys, who have been created by the Ubuntu server installation
+process, with a
+`fresh set <https://manpages.ubuntu.com/manpages/focal/en/man1/ssh-keygen.1.html>`_
+
+Note that we only create *ed25519* and *RSA* keys. Other types are not
+recommended.
+
+The supported key types depend on the SSH software version. Both client and
+server must support it. You can check which key types are supported by your
+version of OpenSSH with the command :file:`ssh -Q key`.
+
+::
+
+    $ sudo rm  /etc/ssh/ssh_host_*key*
+    $ sudo  ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
+    $ sudo  ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
 
 
-Other Settings
-^^^^^^^^^^^^^^
+.. note::
 
-.. literalinclude:: config-files/etc/ssh/sshd_config
-    :language: ini
-    :start-after: MACs hmac-sha2-512-etm@openssh.com
-
-   
-Restart SSH Server
-^^^^^^^^^^^^^^^^^^
-
-After the new host keys and server configurations are in place, restart the SSH
-server::
-
-    $ sudo systemctl reload ssh
+    Don't forget to re-distribute the new server public keys to any SSH clients
+    you connect to from this host.
 
 
+To output DNS server records of you keys::
 
-SSH Client
-----------
-
-There will be SSH connections out of the server to other SSH servers (i.e. for
-storing backups or accessing remote files). In that case, the server-system acts
-as a client to a remote SSH server. Therefore also a "server" needs a well
-configured SSH client.
-
-
-Client Configuration File
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The system-wide default client settings are stored in
-:file:`/etc/ssh/ssh_config`. Change according to the example below:
-
-.. code-block:: sh
-
-    # Github sometimes needs diffie-hellman-group-exchange-sha1
-    Host github.com
-        KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
-
-    Host *
-        HostKeyAlgorithms ssh-ed25519-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ssh-ed25519,ssh-rsa
-        KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
-        Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
-        MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+    $ ssh-keygen -r host.example.net -f ssh_host_rsa_key.pub
+    $ ssh-keygen -r host.example.net -f ssh_host_ed25519_key.pub
 
 
 Client Keys
-^^^^^^^^^^^
+-----------
 
 As with the SSH server keys, we generate a fresh set of *ed25519* and *RSA*
 client keys for our own user-profile::
@@ -306,6 +223,151 @@ connections out of this system::
     connect to from this host.
 
 
+SSH Server Configuration
+------------------------
+
+Allowed User Group
+^^^^^^^^^^^^^^^^^^
+
+Create a user-group which later will be used to control who can access the
+server trough SSH::
+
+    $ groupadd sshlogin
+
+
+Don't forget to add yourself::
+
+    $ sudo adduser $USER sshlogin
+
+
+Server Configuration File
+-------------------------
+
+The server settings are stored in :file:`/etc/ssh/sshd_config`.
+Change according to the example below.
+
+The complete configuration file described here is available for
+:download:`download <config-files/etc/ssh/sshd_config>` also.
+
+
+Include Files
+^^^^^^^^^^^^^
+
+.. literalinclude:: config-files/etc/ssh/sshd_config
+    :language: ini
+    :start-after: # Include the specified configuration file(s)
+    :end-before: # Network and Protocol
+
+
+Network and Protocol Settings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By changing the default TCP listening port, we avoid thousands of malicious
+login attempts every day.
+
+.. note::
+
+    Changing the TCP listening port **is not a security feature**, but keeps
+    our logs more readable by avoiding this kind of junk.
+
+
+It also helps, if you have multiple servers in your LAN behind a NAT.
+
+The following bash shell command will return a random TCP port number, which is
+unlikely to interfere with other services on your server::
+
+    $ shuf -i 49152-65535 -n 1
+    63508
+
+
+Add this port to your configuration:
+
+.. literalinclude:: config-files/etc/ssh/sshd_config
+    :language: ini
+    :start-after: Include /etc/ssh/sshd_config.d/*.conf
+    :end-before: # Server Authentication
+
+
+Server Authentication
+^^^^^^^^^^^^^^^^^^^^^
+
+They point to our newly created set of *ed25519* and *RSA* host keys:
+
+.. literalinclude:: config-files/etc/ssh/sshd_config
+    :language: ini
+    :start-after: #ListenAddress 0.0.0.0
+    :end-before: # Client and User Authentication
+
+
+Client and User Authentication
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. The *root* user is not allowed at all to login remotely.
+2. Users need a properly installed a SSH public-key.
+3. Other type of authentication, like passwords, are not allowed.
+4. Only members of the specified user-group are allowed.
+
+.. literalinclude:: config-files/etc/ssh/sshd_config
+    :language: ini
+    :start-after: HostKeyAlgorithms
+    :end-before: # Ciphers Suites Selections
+
+
+Ciphers Suites Selections
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: config-files/etc/ssh/sshd_config
+    :language: ini
+    :start-after: AllowGroups sshlogin
+    :end-before: # Allowed Client Features
+
+
+Other Settings
+^^^^^^^^^^^^^^
+
+.. literalinclude:: config-files/etc/ssh/sshd_config
+    :language: ini
+    :start-after: MACs hmac-sha2-512-etm@openssh.com
+
+
+Restart SSH Server
+------------------
+
+.. warning::
+
+    Please be advised that any change in the SSH-Settings of your server might
+    cause problems connecting to the server or starting/reloading the SSH-Daemon
+    itself. So every time you configure your SSH-Settings on a remote server via
+    SSH itself, ensure that you have a second open connection to the server,
+    which you can use to reset or adapt your changes!
+
+After the new host keys and server configurations are in place, restart the SSH
+server::
+
+    $ sudo systemctl reload ssh
+
+
+SSH Client Configuration
+------------------------
+
+There will be SSH connections out of the server to other SSH servers (i.e. for
+storing backups or accessing remote files). In that case, the server-system acts
+as a client to a remote SSH server. Therefore also a "server" needs a well
+configured SSH client.
+
+The system-wide default client settings are stored in
+:file:`/etc/ssh/ssh_config`. Change according to the example below:
+
+.. code-block:: sh
+
+    Host *
+        HostKeyAlgorithms ssh-ed25519-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ssh-ed25519,ssh-rsa
+        KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+        Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+        MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+        UseRoaming no
+
+
 SSH and DNS
 -----------
 
@@ -325,9 +387,7 @@ update your server public keys on all clients.
 As of now RSA and ed25519 keys can both be published in DNS according to the
 IANA assignments `DNS SSHFP Resource Record Parameters
 <https://www.iana.org/assignments/dns-sshfp-rr-parameters/dns-sshfp-rr-parameters.xhtml>`_.
-But OpenSSH isn't ready to read and check ed25519 fingerprints from DNS. The
-message "Error calculating host key fingerprint." will be displayed and keys
-need to be manually accepted.
+
 
 Prerequisites
 ^^^^^^^^^^^^^
@@ -351,9 +411,9 @@ for publishing in DNS::
 The first line shows the SHA-1 fingerprint and the second line the SHA-256
 fingerprint of our RSA key.
 
-
-If you use PowerDNS server with the  :doc:`Poweradmin web interface
-</server/dns/powerdns-admin>`, add the SHA-256 record as follows:
+If you use PowerDNS server with the
+:doc:`Poweradmin web interface </server/dns/powerdns-admin>`, add the SHA-256
+record as follows:
 
 ===================== ===== ============================================
 Name                  Type  Content
@@ -361,20 +421,25 @@ Name                  Type  Content
 server                SSHFP 1 2 466b................................e409
 ===================== ===== ============================================
 
+Don't add any SHA-1 reocrds.
+
 
 Testing
 -------
 
-The `CryptCheck website <https://tls.imirhil.fr/ssh/>`_ has an online SSH
-test.
+The `SSH Audit <https://www.ssh-audit.com/>`_ website audits the configuration
+of any SSH server or client and highlights the areas needing improvement.
 
+The `CryptCheck website <https://tls.imirhil.fr/ssh/>`_ has an online SSH server
+test.
 
 
 References
 ----------
 
 * `Ubuntu Manpage: sshd_config — OpenSSH SSH daemon configuration file
-  <http://manpages.ubuntu.com/manpages/bionic/en/man5/sshd_config.5.html>`_
-* `Secure Secure Shell <https://stribika.github.io/2015/01/04/secure-secure-shell.html>`_
-* `BetterCrypto OpenSSH <https://bettercrypto.org/static/applied-crypto-hardening.pdf#section.2.2>`_
+  <https://manpages.ubuntu.com/manpages/focal/en/man5/sshd_config.5.html>`_
+* `Ubuntu Manpage: ssh_config — OpenSSH client configuration file
+  <https://manpages.ubuntu.com/manpages/focal/en/man5/ssh_config.5.html>`_
+* `SSH Hardening Guides <https://www.ssh-audit.com/hardening_guides.html>`_
 * `MozillaWiki - Security/Guidelines/OpenSSH <https://wiki.mozilla.org/Security/Guidelines/OpenSSH>`_
