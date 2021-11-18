@@ -4,7 +4,8 @@ Firewall
 Software Installation
 ---------------------
 
-Ubuntu dekstop clients and servers have Uncomplicated Firewall (UFW) already installed, but not enabled by default.
+Ubuntu dekstop clients and servers have Uncomplicated Firewall (UFW) already
+installed, but not enabled by default.
 
 
 Firewall Configuration
@@ -56,5 +57,7 @@ Enabling UFW
 References
 ----------
 
- * `UFW <https://help.ubuntu.com/community/UFW>`_
+* `Firewall <https://ubuntu.com/server/docs/security-firewall>`_ in the Ubuntu Server Documentation
+* `UncomplicatedFirewall <https://wiki.ubuntu.com/UncomplicatedFirewall>_` in the Ubuntu Wiki
+* `UFW <https://help.ubuntu.com/community/UFW>`_ in the Ubuntu Community Documentation
 
