@@ -1,5 +1,5 @@
-Rspamd
-======
+Rspamd Spam Filter
+==================
 
 .. image:: rspamd-logo.*
     :alt: Rspamd Logo
@@ -16,7 +16,7 @@ free and open-source spam filtering system.
 Topology
 --------
 
-In this example we run 3 mail servers. 
+In this example we run 3 mail servers.
 
 .. code-block:: text
 
@@ -28,10 +28,10 @@ In this example we run 3 mail servers.
                |    Rspamd         |
                +-------------------+
                   |             |
-                 VPN           VPN 
+                 VPN           VPN
                   |             |
     +----------------+       +----------------+
-    |  Dolores (MX)  |       |   Maeve (MX)   |    
+    |  Dolores (MX)  |       |   Maeve (MX)   |
     |                |       |                |
     |    Postfix     |--VPN--|    Postfix     |
     |    Rspamd      |       |    Rspamd      |
@@ -41,7 +41,7 @@ In this example we run 3 mail servers.
 Mail Access Server (MAS)
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Charlotte**, in our home network, is where our mailboxes are stored and 
+**Charlotte**, in our home network, is where our mailboxes are stored and
 where mail clients connect to.
 
 Rspamd on **Charlotte** scans outgoing mails for viruses, increases user
@@ -57,10 +57,10 @@ classifying mails as spam or ham in the future.
 Mail Exchangers (MX)
 ^^^^^^^^^^^^^^^^^^^^
 
-**Dolores** and **Maeve**, running on cheap cloud hosting providers outside of 
+**Dolores** and **Maeve**, running on cheap cloud hosting providers outside of
 our home network, are the :term:`MX` hosts responsible for receiving incoming
-mails for our domains. With Rspamd installed there, incoming mail is analyzed 
-at the edge and can be rejected if it is unsolicited, unwanted or dangerous 
+mails for our domains. With Rspamd installed there, incoming mail is analyzed
+at the edge and can be rejected if it is unsolicited, unwanted or dangerous
 before entering our network.
 
 
@@ -94,7 +94,7 @@ Installation
 
 Rspamd is not available in the Ubuntu packages repository, but the Rspamd
 project
-`provides its own software package repository <https://www.rspamd.com/downloads.html>`_ 
+`provides its own software package repository <https://www.rspamd.com/downloads.html>`_
 for various Linux and BSD UNIX distributions::
 
     $ wget -O- https://rspamd.com/apt-stable/gpg.key | sudo apt-key add -
@@ -112,7 +112,7 @@ Configuration
 After the installation, a lot of configuration files are found in
 :file:`/etc/rspamd`.
 
-These configuration files use the 
+These configuration files use the
 `Universal Configuration Language (UCL) <https://www.rspamd.com/doc/configuration/ucl.html>`_.
 The syntax is somewhat similar to Nginx and JSON.
 
@@ -144,7 +144,7 @@ Workers
 Proxy Worker
 ^^^^^^^^^^^^
 
-The `proxy worker <https://rspamd.com/doc/workers/rspamd_proxy.html>`_ 
+The `proxy worker <https://rspamd.com/doc/workers/rspamd_proxy.html>`_
 interacts with the MTA (postfix) via the :term:`milter` protocol.
 
 As a new message arrives, the MTA hands the mail over to the Rspamd proxy for
@@ -222,8 +222,8 @@ Rspamd to find similar messages. Unlike normal hashes, these structures are
 targeted to hide small differences between text patterns allowing to find
 common messages quickly.
 
-Rspamd uses the 
-`fuzzy storage worker <https://rspamd.com/doc/workers/fuzzy_storage.html>`_ 
+Rspamd uses the
+`fuzzy storage worker <https://rspamd.com/doc/workers/fuzzy_storage.html>`_
 to store these hashes and allows to block spam mass mails based on user’s
 feedback that specifies message reputation.
 
@@ -296,13 +296,57 @@ Nginx Integration
 ^^^^^^^^^^^^^^^^^
 
 
+Razor and Pyzor Integration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Create the :file:`/etc/rspamd/local.d/external_services.conf`
+
+.. code-block:: nginx
+
+    # default pyzor settings
+    pyzor {
+        servers = "127.0.0.1:5953"
+    }
+
+    # default razor settings
+    razor {
+        servers = "127.0.0.1:11342"
+    }
+
+
+
 Configuration Syntax Check
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
-    $ rspamadm configtest 
+    $ rspamadm configtest
     syntax OK
+
+
+Systemd Sevice Dependencies
+---------------------------
+
+Since our Rspamd server we use various Redis databases to store data, we want
+the Redis cache to be up and running, before the Rspamd service starts. To make
+the `rspamd.service` dependent on the `redis-server@rspamd.service`, the
+`redis-server@rspamd-bayes.service` and the
+`redis-server@rspamd-fuzzy.service`::
+
+    $ sudo cp /lib/systemd/system/rspamd.service /etc/systemd/system/
+
+Edit the file :file:`/etc/systemd/system/rspamd.service` add
+the following lines to the **Unit** section:
+
+.. code-block:: ini
+   :emphasize-lines: 5-6
+
+    [Unit]
+    Description=rapid spam filtering system
+    After=nss-lookup.target network-online.target
+    Documentation=https://rspamd.com/doc/
+    BindsTo=redis-server@rspamd.service redis-server@rspamd-bayes.service redis-server@rspamd-fuzzy.service
+    After=redis-server@rspamd.service redis-server@rspamd-bayes.service redis-server@rspamd-fuzzy.service
 
 
 Reference
