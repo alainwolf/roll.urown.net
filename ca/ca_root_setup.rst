@@ -199,8 +199,8 @@ Steps to re-include the root certificate in Ubuntu as trusted
 
     $ sudo mkdir -p /usr/local/share/ca-certificates/example.net
     $ cd /usr/local/share/ca-certificates/example.net/
-    $ sudo cp ./root-ca.crt \
-        example.net_Root_Certification_Authority.cert.pem
+    $ sudo cp ./root-ca.pem \
+        example.net_Root_Certification_Authority.cert.crt
     $ sudo dpkg-reconfigure ca-certificates
 
 
