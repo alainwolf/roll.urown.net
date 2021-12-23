@@ -26,12 +26,12 @@ Yubikey Registration
 ---------------------
 
 A mappings file needs to be created and filled with the users registered U2F
-keys. 
+keys.
 
 There is a command-line tool to help with registration process. Replace
 **USERNAME** with the name of the user, which belongs to the Yubikey::
 
-  $ sudo pamu2fcfg -uUSERNAME >> /etc/u2f_mappings
+    $ sudo pamu2fcfg -u${USERNAME} >> /etc/u2f_mappings
 
 
 Nothing will happen in your console, but your Yubikey should start to blink as
@@ -39,13 +39,17 @@ it wants to be touched now. Touch it, the command exits, and the file
 :file:`/etc/u2f_mappings` will contain the necessary challenges for the Yubikey
 belonging to that user.
 
+If you a have a second key::
+
+    $ sudo pamu2fcfg -n >> /etc/u2f_mappings
+
 
 Configuration
 -------------
 
 Create a a new PAM service file :file:`/etc/pam.d/u2f`::
 
-  $ echo "auth sufficient pam_u2f.so authfile=/etc/u2f_mappings debug" > sudo tee /etc/pam.d/u2f
+  $ echo "auth sufficient pam_u2f.so cue authfile=/etc/u2f_mappings debug" > sudo tee /etc/pam.d/u2f
 
 
 This tells the PAM module that it can look up information about each users U2F
@@ -85,6 +89,9 @@ Open the PAM service file :file:`/etc/pam.d/gdm-password` and the following line
 	@include common-auth
 
 
+Do the same with :file:`/etc/pam.d/login` and :file:`/etc/pamd.d/polkit-1`.
+
+
 Lock the Desktop with Yubikey
 -----------------------------
 
@@ -112,7 +119,7 @@ different product ID.
 
 .. note::
 
-    Note that The USB product ID will change depending on which of the 
+    Note that The USB product ID will change depending on which of the
     features on your Yubikey have been enabled with **Yubikey Manager**.
 
 Let's create an udev rule for this specific device with the file
