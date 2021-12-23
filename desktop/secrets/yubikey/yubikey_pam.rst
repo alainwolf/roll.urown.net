@@ -89,7 +89,7 @@ Open the PAM service file :file:`/etc/pam.d/gdm-password` and the following line
 	@include common-auth
 
 
-Do the same with :file:`/etc/pam.d/login` and :file:`/etc/pamd.d/polkit-1`.
+Do the same with :file:`/etc/pam.d/login` and :file:`/etc/pam.d/polkit-1`.
 
 
 Lock the Desktop with Yubikey
