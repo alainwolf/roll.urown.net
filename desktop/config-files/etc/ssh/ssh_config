@@ -1,0 +1,90 @@
+# ************************************************************************
+# System-Wide SSH Client Configuration
+# ************************************************************************
+
+Include /etc/ssh/ssh_config.d/*.conf
+
+Host *
+
+    # ----------------------------------------------
+    # Ciphers suite selection
+    # See https://sshaudit.com hardening guide
+    # ----------------------------------------------
+
+    # Ciphers allowed and their order of preference
+    Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+
+    # Host key algorithms that the client wants to use in order of preference
+    HostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-512-cert-v01@openssh.com
+
+    # KEX (Key Exchange) algorithms allowed
+    KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256
+
+    # MAC (message authentication code) algorithms in order of preference.
+    MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com
+
+    # Key types that will be used for public key authentication
+    PubkeyAcceptedKeyTypes ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-512-cert-v01@openssh.com
+
+
+    # ----------------------------------------------
+    # Network Connection
+    # ----------------------------------------------
+
+    # Try to share multiple sessions over a single network connection
+    #ControlMaster auto
+    #ControlPath /run/user/%i/ssh-control-%C.sock
+
+    # Keep the control connection open for 5 minutes
+    #ControlPersist 300
+
+    # Seconds to wait for the server to answer alive messages
+    #ServerAliveInterval 15
+
+    # Number of missed server alive messages, before disconnecting
+    #ServerAliveCountMax 3
+
+
+    # --------------------------------------------------
+    # Server Authentication
+    # --------------------------------------------------
+
+    # Verify the remote key using DNS and SSHFP resource records
+    # Note: This implies that we can always trust our DNS resolver and providers,
+    # wherever we are connecting from!
+    VerifyHostKeyDNS yes
+
+    # Keep the known_hosts file unreadable
+    HashKnownHosts yes
+
+    # Accept and store new and additional hostkeys sent by the server
+    UpdateHostKeys yes
+
+    # Also check and store the servers IP address along the hostnane in the
+    # known_hosts file.
+    CheckHostIP yes
+
+
+    # --------------------------------------------------
+    # Client and User Authentication
+    # --------------------------------------------------
+
+    # Don't attempt GSSAPI authentication
+    GSSAPIAuthentication no
+
+    # Don't allow password authentication
+    PasswordAuthentication no
+
+    # Order of authentication methods to try with the server
+    PreferredAuthentications publickey
+
+
+    # --------------------------------------------------
+    # Allowed Client Features
+    # --------------------------------------------------
+
+    # Which variables from the local environ(7) should be sent to the server
+    SendEnv LANG LC_*
+
+
+# -*- mode: ssh_config; indent-tabs-mode: nil; tab-width: 4; -*-

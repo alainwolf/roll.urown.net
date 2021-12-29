@@ -1638,9 +1638,13 @@ Glossary
         Sender Policy Framework is defined in :rfc:`7208` dated April 2014 as a
         "proposed standard".
 
-
     SSH
-        TBD.
+
+        `Secure Shell (SSH) <https://en.wikipedia.org/wiki/Secure_Shell>_` is a
+        cryptographic network protocol for operating network services securely
+        over an unsecured network. Typical applications include remote
+        command-line, login, and remote command execution, but any network
+        service can be secured with SSH.
 
     SSID
     Service Set Identifier

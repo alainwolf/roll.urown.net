@@ -1,10 +1,13 @@
-Secure-Shell
-============
+SSH - Secure Shell
+==================
 
 .. image:: openssh-logo.*
     :alt: OpenSSH Logo
     :align: right
     :width: 300px
+
+.. contents::
+  :local:
 
 `OpenSSH <https://www.openssh.com/>`_ is the premier connectivity tool for
 remote login with the :term:`SSH` protocol. It encrypts all traffic to eliminate
@@ -37,7 +40,7 @@ available under a BSD-style license.
 SSH Server
 ----------
 
-On Ubuntu Desktop the SSH server is not there pre-installed::
+On Ubuntu Desktop the SSH server is not installed by default::
 
     $ sudo apt install ssh molly-guard
 
@@ -47,11 +50,8 @@ For configuration, see our :doc:`SSH server configuration </server/ssh-server>`.
 SSH Client
 ----------
 
-Client Configuration File
--------------------------
-
-System Configuration
-^^^^^^^^^^^^^^^^^^^^
+System-Wide Client Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
 
@@ -66,45 +66,22 @@ The system-wide default client settings are stored in
 `ssh_config(5) <https://manpages.ubuntu.com/manpages/focal/en/man5/ssh_config.5.html>`_
 man page.
 
-Its easier to maintain and distribute, if you use your own include-file in the
-:file:`/etc/ssh/ssh_config.d/` directory.
+.. literalinclude:: ../config-files/etc/ssh/ssh_config
+
+In case you where wondering about the `HashKnownHosts` options, I suggest
+reading `Joey’s Blog about this <https://blog.joeyhewitt.com/2013/12/openssh-hashknownhosts-a-bad-idea/>`_
+
+Specific settings for certain domains and networks, like your own, friends or
+customers might be better placed in their onwn files for easier maintenance and
+distribution. Tha's what the "Include" statement and the
+:file:`/etc/ssh/ssh_config.d/` directory are for.
 
 Create a file like :file:`/etc/ssh/ssh_config.d/example.net.conf` and make
 changes according your needs:
 
-.. code-block:: ini
+.. literalinclude:: ../config-files/etc/ssh/ssh_config.d/local.conf
 
-    #
-    # ssh client system-wide configuration file for example.net.
-    #
-
-    # Verify the remote key using DNS and SSHFP resource records
-    # Note: This implies that we can always trust our DNS resolver and providers,
-    # wherever we are connecting from!
-    VerifyHostKeyDNS Yes
-
-    #
-    # Our servers custom SSH ports
-    #
-    Host dolores.example.net
-        Port 63508
-
-    Host maeve.example.net
-        Port 49208
-
-    # Synology NAS servers allow only admin and root users to the SSH
-    # terminal service. All other users are restricted to SFTP.
-    # The SSH terminal service and the SFTP-server might listen to different TCP
-    # ports.
-
-    # SSH terminal service (root and admin connect here):
-    Match Host teddy.home.example.net User admin,root
-        Port 58849
-
-    # SFTP service (all others connect here):
-    Match Host teddy.home.example.net User *
-        Port 50990
-
+.. literalinclude:: ../config-files/etc/ssh/ssh_config.d/example.net.conf
 
 
 User Configuration
@@ -118,22 +95,22 @@ In the file :file:`~/.ssh/config` you can customize your client (like specific
 user names) or add 3rd-party systems which are not covered by system-wide
 settings:
 
+.. literalinclude:: ../config-files/.ssh/config
+
+Again we create several include files for different networks.
+
+In the file :file:`~/.ssh/config.d/local.conf` we set options for discoverable
+hosts in our LAN:
+
+.. literalinclude:: ../config-files/.ssh/config.d/local.conf
+
+The file :file:`~/.ssh/config.d/example.net.conf` contains settings for our own
+servers:
+
+.. literalinclude:: ../config-files/.ssh/config.d/example.net.conf
+
 .. code-block:: ini
 
-    # Keep host names readable in my known_hosts file.
-    HashKnownHosts No
-
-    # The OpenWrt router in my home LAN
-    Host arnold.home.example.net
-        User root
-
-    # The open source media center (OSMC/Kodi) on my RaspberryPi
-    Host charlotte.home.example.net
-        User osmc
-
-    # Some hosts have GPG Agent sockets setup for some users
-    Match Host dolores.example.net,maeve.example.net User john
-        RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
 
 
     #
@@ -153,8 +130,6 @@ settings:
         VerifyHostKeyDNS No
 
 
-In case you where wondering about the `HashKnownHosts` options, I suggest
-reading `Joey’s Blog about this <https://blog.joeyhewitt.com/2013/12/openssh-hashknownhosts-a-bad-idea/>`_
 
 
 OpenSSH Trust in DNSSEC
