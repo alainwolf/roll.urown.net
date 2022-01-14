@@ -134,7 +134,8 @@ Let's create a configuration file
 
     Despite this being a MariaDB specific configuration file, it needs to be
     stored in /etc/mysql/conf.d/ as [mariadb] is not recognized by mariabackup,
-    the file would never be inlcuded otherwise. See MDEV-21298
+    the file would never be inlcuded otherwise. See
+    `MDEV-21298 <https://jira.mariadb.org/browse/MDEV-21298>_`
 
 
 .. literalinclude:: /server/config-files//etc/mysql/conf.d/MariaBackup.cnf
