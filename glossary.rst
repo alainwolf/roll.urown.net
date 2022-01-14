@@ -1640,7 +1640,7 @@ Glossary
 
     SSH
 
-        `Secure Shell (SSH) <https://en.wikipedia.org/wiki/Secure_Shell>_` is a
+        `Secure Shell (SSH) <https://en.wikipedia.org/wiki/Secure_Shell>`_ is a
         cryptographic network protocol for operating network services securely
         over an unsecured network. Typical applications include remote
         command-line, login, and remote command execution, but any network

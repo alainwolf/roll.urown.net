@@ -69,7 +69,7 @@ man page.
 .. literalinclude:: ../config-files/etc/ssh/ssh_config
 
 In case you where wondering about the `HashKnownHosts` options, I suggest
-reading `Joey’s Blog about this <https://blog.joeyhewitt.com/2013/12/openssh-hashknownhosts-a-bad-idea/>`_
+reading `Joey’s [former] Blog about this <https://web.archive.org/web/20210127000513/https://blog.joeyhewitt.com/2013/12/openssh-hashknownhosts-a-bad-idea/>`_
 
 Specific settings for certain domains and networks, like your own, friends or
 customers might be better placed in their onwn files for easier maintenance and

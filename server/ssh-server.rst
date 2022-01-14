@@ -434,6 +434,127 @@ The `CryptCheck website <https://tls.imirhil.fr/ssh/>`_ has an online SSH server
 test.
 
 
+System Administration over SSH
+-------------------------------
+
+Since we have now working SSH agent forwarding on our own fully trusted systems,
+we can take the advantage and solve one if the most annoying system
+administration problems. In theory system administration should be done in the
+following way:
+
+ * Don't use passwords.
+ * Don't allow root login.
+ * Use sudo for adminstative tasks.
+
+In practice this is rarely the case:
+
+    * Administrators use SSH keys to login on the remote system, but then need a
+      password for executing `sudo` operations.
+    * `sudo` is configured to execute administrative task with "NOPASSWD"
+    * Administrators login as `root` to edit and transfer files remotely.
+
+The
+`PAM SSH Agent Authentication module <https://github.com/jbeverly/pam_ssh_agent_auth>`_
+permits PAM authentication via your keyring in a forwarded ssh-agent.
+
+    This module can be used to provide authentication for anything run locally
+    that supports PAM. It was written specifically with the intention of
+    permitting authentication for sudo without password entry, and also has been
+    proven useful for use with su as an alternative to wheel.
+
+
+Installation
+^^^^^^^^^^^^
+
+The PAM module is installable from the Ubuntu sofware repositories::
+
+    $ sudo apt install libpam-ssh-agent-auth
+
+
+Configuration
+^^^^^^^^^^^^^
+
+.. Warning::
+
+    Whenever you work on the PAM configuration of your system, there is a risk
+    of locking yourself out!
+
+    * Login as `root` user if you change configurations for `sudo`.
+    * Use `sudo` if you change configurations for `login`.
+    * Make sure any `@include` file exists and is not creating any errors.
+
+
+Open the ::file:`/etc/sudoers` file using the following method::
+
+    $ sudo visudo
+
+Then change it as follows:
+
+.. code-block::
+    :emphasize-lines: 14,15
+
+    #
+    # This file MUST be edited with the 'visudo' command as root.
+    #
+    # Please consider adding local content in /etc/sudoers.d/ instead of
+    # directly modifying this file.
+    #
+    # See the man page for details on how to write a sudoers file.
+    #
+    Defaults        editor=/usr/bin/nano
+    Defaults        env_reset
+    Defaults        mail_badpass
+    Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+
+    # Required by pam_ssh_agent_auth
+    Defaults        env_keep += "SSH_AUTH_SOCK"
+
+
+The configuration is described in its manpage
+`pam_ssh_agent_auth(8) <https://manpages.ubuntu.com/manpages/focal/en/man8/pam_ssh_agent_auth.8.html>`_.
+
+Create the file :file:`/etc/pamd.d/ssh-agent-auth`:
+
+.. code-block::
+
+    #
+    # pam_ssh_agent_auth - PAM module for granting permissions based on SSH agent requests
+    #
+    auth sufficient pam_ssh_agent_auth.so file=/etc/secuurity/authorized_keys
+
+This can then be included in other PAM configurations, where needed.
+
+Edit the file :file:`/etc/pamd.d/sudo`:
+
+.. code-block::
+    :emphasize-lines: 6
+
+    #%PAM-1.0
+
+    session    required   pam_env.so readenv=1 user_readenv=0
+    session    required   pam_env.so readenv=1 envfile=/etc/default/locale user_readenv=0
+    @include u2f
+    @include ssh-agent-auth
+    @include common-auth
+    @include common-account
+    @include common-session-noninteractive
+
+
+Also add it towards the end of the file :file:`/etc/pamd.d/su`:
+
+.. code-block::
+    :emphasize-lines: 5
+
+    ...
+    # The standard Unix authentication modules, used with
+    # NIS (man nsswitch) as well as normal /etc/passwd and
+    # /etc/shadow entries.
+    @include ssh-agent-auth
+    @include common-auth
+    @include common-account
+    @include common-session
+
+
 References
 ----------
 
