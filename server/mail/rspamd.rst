@@ -148,8 +148,9 @@ The `proxy worker <https://rspamd.com/doc/workers/rspamd_proxy.html>`_
 interacts with the MTA (postfix) via the :term:`milter` protocol.
 
 As a new message arrives, the MTA hands the mail over to the Rspamd proxy for
-scanning. The Rspamd proxy passes the message on to a Rspamd scanner (normal worker).
-Multiple scanners can be defined for fail-over or load-balancing purposes.
+scanning. The Rspamd proxy passes the message on to a Rspamd scanner (normal
+worker). Multiple scanners can be defined for fail-over or load-balancing
+purposes.
 
 We define the locally running Rspamd scanner as default scanner and scanners
 running on other servers as remote fail-overs.
@@ -159,7 +160,8 @@ the only instance connecting here.
 
 The proxy worker listens on TCP port **11332**.
 
-Create or modify the file :download:`/etc/rspamd/local.d/worker-proxy.inc </server/config-files/etc/rspamd/worker-proxy.inc>`:
+Create or modify the file :download:
+`/etc/rspamd/local.d/worker-proxy.inc </server/config-files/etc/rspamd/worker-proxy.inc>`:
 
 .. literalinclude:: /server/config-files/etc/rspamd/worker-proxy.inc
     :language: nginx
@@ -171,13 +173,15 @@ Normal Worker
 The `normal worker <https://rspamd.com/doc/workers/normal.html>`_ is the
 daemon process, which does the scanning. Its configuration is rather simple.
 
-Apart from "localhost", this workers also listens to the Wireguard VPN interface
-for incoming connections. With this other mail servers Rspamd proxy workers,
-can use this scanner as fail-over.
+Apart from "localhost", this workers also listens to the Wireguard VPN
+interface for incoming connections. With this other mail servers Rspamd proxy
+workers, can use this scanner as fail-over.
 
 The normal worker listens on TCP port **11333**.
 
-Create or modify the file :download:`/etc/rspamd/local.d/worker-normal.inc </server/config-files/etc/rspamd/worker-normal.inc>`:
+Create or modify the file
+:download:
+`/etc/rspamd/local.d/worker-normal.inc </server/config-files/etc/rspamd/worker-normal.inc>`:
 
 .. literalinclude:: /server/config-files/etc/rspamd/worker-normal.inc
     :language: nginx
@@ -208,7 +212,8 @@ generate the hash::
     $2$ozqwiewyd5uym7cdbr7jo6xxg8yuqsee$sk4h4y6geqmqzqo15d6zfti8q5x8cxrnjbbngsrfqd999je95ddy
 
 
-Create or modify the file :download:`/etc/rspamd/local.d/worker-controller.inc </server/config-files/etc/rspamd/worker-controller.inc>`:
+Create or modify the file
+:download:`/etc/rspamd/local.d/worker-controller.inc </server/config-files/etc/rspamd/worker-controller.inc>`:
 
 .. literalinclude:: /server/config-files/etc/rspamd/worker-controller.inc
     :language: nginx
@@ -245,7 +250,8 @@ has no default configuration. Therefore the configuration file is kept in the
 
 **Master**:
 
-Create or modify the file :download:`/etc/rspamd/override.d/worker-fuzzy.inc </server/config-files/etc/rspamd/worker-fuzzy.inc>`:
+Create or modify the file
+:download:`/etc/rspamd/override.d/worker-fuzzy.inc </server/config-files/etc/rspamd/worker-fuzzy.inc>`:
 
 .. literalinclude:: /server/config-files/etc/rspamd/worker-fuzzy.inc
     :language: nginx
@@ -301,7 +307,7 @@ Razor and Pyzor Integration
 
 Create the :file:`/etc/rspamd/local.d/external_services.conf`
 
-.. code-block:: nginx
+.. code-block::
 
     # default pyzor settings
     pyzor {

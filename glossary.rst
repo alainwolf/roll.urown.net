@@ -1375,6 +1375,45 @@ Glossary
         several versions, with version 3 (**POP3**) being the current standard.
 
 
+    PKCS
+    Public-Key Cryptography Standards
+
+        `PKCS <https://en.wikipedia.org/wiki/PKCS>`_ stands for "Public Key
+        Cryptography Standards". These are a group of public-key cryptography
+        standards devised and published by RSA Security LLC, starting in the
+        early 1990s. The company published the standards to promote the use of
+        the cryptography techniques to which they had patents, such as the RSA
+        algorithm, the Schnorr signature algorithm and several others. Though
+        not industry standards (because the company retained control over them),
+        some of the standards in recent years[when?] have begun to move into the
+        "standards-track" processes of relevant standards organizations such as
+        the IETF and the PKIX working-group.
+
+
+    PKCS #1
+    RSA Cryptography Standard
+
+        See :rfc:`8017`. Defines the mathematical properties and format of
+        RSA public and private keys (ASN.1-encoded in clear-text), and the
+        basic algorithms and encoding/padding schemes for performing RSA
+        encryption, decryption, and producing and verifying signatures.
+
+    PKCS #11
+    Cryptographic Token Interface
+        Also known as "Cryptoki". An API defining a generic interface to
+        cryptographic tokens (see also hardware security module). Often used in
+        single sign-on, public-key cryptography and disk encryption systems. RSA
+        Security has turned over further development of the PKCS #11 standard to
+        the OASIS PKCS 11 Technical Committee. See also :term:`PKCS`.
+
+    PKCS #15
+    Cryptographic Token Information Format Standard
+        Defines a standard allowing users of cryptographic tokens to identify
+        themselves to applications, independent of the application's Cryptoki
+        implementation (PKCS #11) or other API. RSA has relinquished
+        IC-card-related parts of this standard to ISO/IEC 7816-15. See also
+        :term:`PKCS`.
+
     QAM
         TBD
 

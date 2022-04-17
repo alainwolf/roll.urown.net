@@ -49,49 +49,49 @@ Not available as apt package:
   - PHP module exif (built-in of php-fpm)
   - PHP module pcntl (provided by php-cli)
 
-    PHP module fileinfo (highly recommended, enhances file analysis performance)
-    PHP module bz2 (recommended, required for extraction of apps)
-    PHP module intl (increases language translation performance and fixes sorting of non-ASCII characters)
-    PHP module bcmath (for passwordless login)
-    PHP module gmp (for passwordless login)
-    PHP module exif (for image rotation in pictures app)
-    PHP module apcu (for memory caching)
-    PHP module memcached
-    PHP module redis (for Transactional File Locking)
-    PHP module imagick (for preview generation)
-    ffmpeg (for preview generation)
-    LibreOffice (for preview generation)
-    PHP module pcntl (enables command interruption by pressing ctrl-c)
+  - PHP module fileinfo (highly recommended, enhances file analysis performance)
+  - PHP module bz2 (recommended, required for extraction of apps)
+  - PHP module intl (increases language translation performance and fixes sorting of non-ASCII characters)
+  - PHP module bcmath (for passwordless login)
+  - PHP module gmp (for passwordless login)
+  - PHP module exif (for image rotation in pictures app)
+  - PHP module apcu (for memory caching)
+  - PHP module memcached
+  - PHP module redis (for Transactional File Locking)
+  - PHP module imagick (for preview generation)
+  - ffmpeg (for preview generation)
+  - LibreOffice (for preview generation)
+  - PHP module pcntl (enables command interruption by pressing ctrl-c)
 
 php-fpm has the following built.in:
-    Core
-    date
-    filter
-    hash
-    libxml
-    openssl
-    pcre
-    Reflection
-    session
-    sodium
-    SPL
-    standard
-    zlib.
+  - Core
+  - date
+  - filter
+  - hash
+  - libxml
+  - openssl
+  - pcre
+  - Reflection
+  - session
+  - sodium
+  - SPL
+  - standard
+  - zlib.
 
 php-commn Provides:
-    php-calendar,
-    php-ctype,
-    php-exif,
-    php-ffi,
-    php-fileinfo,
-    php-ftp,
-    php-iconv,
-    php-pdo,
-    php-phar,
-    php-posix,
-    php-shmop,
-    php-sockets,
-    php-sysvmsg,
-    php-sysvsem,
-    php-sysvshm,
-    php-tokenizer,
+  - php-calendar,
+  - php-ctype,
+  - php-exif,
+  - php-ffi,
+  - php-fileinfo,
+  - php-ftp,
+  - php-iconv,
+  - php-pdo,
+  - php-phar,
+  - php-posix,
+  - php-shmop,
+  - php-sockets,
+  - php-sysvmsg,
+  - php-sysvsem,
+  - php-sysvshm,
+  - php-tokenizer,

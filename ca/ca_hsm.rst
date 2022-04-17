@@ -8,8 +8,8 @@ These modules traditionally come in the form of a plug-in card or an external
 device that attaches directly to a computer or network server. A hardware
 security module contains one or more secure cryptoprocessor chips.
 
-In this guide we will use a Nitrokey HSM for our Certificate Authority to create
-and store the CA's private keys and perfrom the necessary cryptographic
+In this guide we will use a Nitrokey HSM for our Certificate Authority to
+create and store the CA's private keys and perfrom the necessary cryptographic
 operations like signing certificates.
 
 This way private keys are kept safe on the hardware security hardware device.
@@ -27,8 +27,9 @@ Software Installation
 Ubuntu Software Packages
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **OpenSC** - Smart card utilities with support for :term:`PKCS#15` compatible cards
-* **opensc-pkcs11** - :term:`PKCS#11` module for OpenSC.
+* **OpenSC** - Smart card utilities with support for :term:`PKCS #15` compatible
+  cards
+* **opensc-pkcs11** - :term:`PKCS #11` module for OpenSC.
 * **libengine-pkcs11-openssl** - OpenSSL engine for PKCS#11 modules
 * **xca** - x509 Certification Authority management tool based on QT
 
@@ -76,8 +77,8 @@ The Nitrokey HSM device needs to be initialized as first step.
 
 This will erase all keys, certificates and data elements on the HSM device.
 
-Initialization requires the SO (Security Officer) PIN. Nitrokey HSM devices have
-a default factory-set SO-PIN set to **"3537363231383830"**.
+Initialization requires the SO (Security Officer) PIN. Nitrokey HSM devices
+have a default factory-set SO-PIN set to **"3537363231383830"**.
 
 Select :menuselection:`Token --> Init Security token` in the menu. You will be
 asked for the SO PIN, where you have to enter the default factory set.

@@ -1,0 +1,81 @@
+#! /bin/sh
+#
+# This script should be called by upssched via the CMDSCRIPT directive.
+#
+# Here is a quick example to show how to handle a bunch of possible
+# timer names with the help of the case structure.
+#
+# This script may be replaced with another program without harm.
+#
+# The first argument passed to your CMDSCRIPT is the name of the timer
+# from your AT lines.
+
+case $1 in
+
+online)
+    logger -t upssched-cmd "The UPS is back on online power."
+    message="$(printf "Note: Power supply to UPS %s has been restored." "$UPSNAME")"
+    /usr/bin/create_notification -s news "${message}"
+    /usr/bin/notifier
+    ;;
+
+onbatt)
+    logger -t upssched-cmd "Online power failure. The UPS $UPSNAME is running on battery!"
+    message="$(printf "Warning: UPS %s experienced a power failure and is now running on battery!" "$UPSNAME")"
+    /usr/bin/create_notification -s error "${message}"
+    /usr/bin/notifier
+    ;;
+
+lowbatt)
+    logger -t upssched-cmd "The UPS battery is running low!"
+    message="$(printf "Critical: The battery of UPS %s is running low!" "$UPSNAME")"
+    /usr/bin/create_notification -s error "${message}"
+    /usr/bin/notifier
+    ;;
+
+fsd)
+    logger -t upssched-cmd "UPS is being shutdown by the master."
+    message="$(printf "Warning: The UPS %s has been forced to shutdown now!" "$UPSNAME")"
+    /usr/bin/create_notification -s restart "${message}"
+    /usr/bin/notifier
+    ;;
+
+commok)
+    logger -t upssched-cmd "Communications with the UPS has been (re-)established."
+    message="$(printf "Note: Communications with the UPS %s has been (re-)established." "$UPSNAME")"
+    /usr/bin/create_notification -s news "${message}"
+    /usr/bin/notifier
+    ;;
+
+commbad)
+    logger -t upssched-cmd "Communications with the UPS has been lost."
+    message="$(printf "Warning: Communications with the UPS %s has been lost!" "$UPSNAME")"
+    /usr/bin/create_notification -s error "${message}"
+    /usr/bin/notifier
+    ;;
+
+shutdown)
+    logger -t upssched-cmd "The system is being shutdown!"
+    message="$(printf "Critical: The system is shutting down now!")"
+    /usr/bin/create_notification -s restart "${message}"
+    /usr/bin/notifier
+    ;;
+
+replbatt)
+    logger -t upssched-cmd "The UPS battery is failing and needs to be replaced!"
+    message="$(printf "Warning: The UPS battery in the UPS %s is failing and needs to be replaced!" "$UPSNAME")"
+    /usr/bin/create_notification -s error "${message}"
+    /usr/bin/notifier
+    ;;
+
+nocomm)
+    logger -t upssched-cmd "The UPS is not responding!"
+    message="$(printf "Warning: The UPS %s is not repsonding!" "$UPSNAME")"
+    /usr/bin/create_notification -s error "${message}"
+    /usr/bin/notifier
+    ;;
+
+*)
+    logger -t upssched-cmd "Unrecognized command: $1"
+    ;;
+esac
