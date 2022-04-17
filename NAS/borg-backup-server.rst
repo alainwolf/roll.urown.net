@@ -61,27 +61,28 @@ Allow "full control" for *borg-backup* user and group to the shared folder.
 
 Open a SSH terminal session with the root user::
 
-	$ ssh root@nas.lan
+    $ ssh root@nas.lan
 
 
 Create the directory for SSH public keys in the "borg-backup" home folder and
 adjust permissions to allow password-less logins::
 
-	$ mkdir -p /var/services/homes/borg-backup/.ssh
-	$ touch /var/services/homes/borg-backup/.ssh/authorized_keys
-	$ chown -R borg-backup:borg-backup /var/services/homes/borg-backup
-	$ chmod 0700 /var/services/homes/borg-backup
-	$ chmod 0700 /var/services/homes/borg-backup/.ssh
-	$ chmod 0600 /var/services/homes/borg-backup/.ssh/*
+    $ mkdir -p /var/services/homes/borg-backup/.ssh
+    $ touch /var/services/homes/borg-backup/.ssh/authorized_keys
+    $ chown -R borg-backup:borg-backup /var/services/homes/borg-backup
+    $ chmod 0700 /var/services/homes/borg-backup
+    $ chmod 0700 /var/services/homes/borg-backup/.ssh
+    $ chmod 0600 /var/services/homes/borg-backup/.ssh/*
 
 
 Client Setup
 ------------
 
 After SSH public keys are obtained from BorgBackup clients, they need to be
-setup using ssh forced commands to point to this clients repository as follows::
+setup using ssh forced commands to point to this clients repository as
+follows::
 
-	command="/usr/local/bin/borg serve --restrict-to-path /volume1/BorgBackup/" ssh-ed25519 AAAAC3...
+    command="/usr/local/bin/borg serve --restrict-to-path /volume1/BorgBackup/" ssh-ed25519 AAAAC3...
 
 This way any client-connection authenticated with this SSH key is only allowed
 to issue the borg server command.
