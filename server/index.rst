@@ -47,6 +47,7 @@ Contents:
    pgp-keyserver
    pgp-wks
    translate
+   git-server
 
 Recommended reading:
 `Ubuntu Server Guide <https://help.ubuntu.com/14.04/serverguide/index.html>`_

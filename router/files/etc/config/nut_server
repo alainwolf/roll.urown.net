@@ -1,0 +1,82 @@
+#
+# OpenWrt Luci configuration for the Network UPS Tools Dameon
+#
+
+# NUT device driver for APC Back-UPS
+# provides the 'apc' UPS device to clients
+config driver 'apc'
+	option driver 'usbhid-ups'
+	option port 'auto'
+	option vendorid '051d'
+	option productid '0002'
+	option serial '000000000000'
+	option maxreport 'true'
+	option desc '"APC Back-UPS RS 900G"'
+
+# A virtual copy fo the 'apc' device
+# which emulates a Synology NAS with attached UPS
+config driver 'ups'
+	option port 'apc@localhost'
+	option driver 'dummy-ups'
+	option desc '"Emulated Synology UPS"'
+
+# Administration user profile for control and configuration
+# of the connected UPS device
+config user
+	option username 'admin'
+	option password '********'
+	option upsmon 'master'
+    option actions 'set fsd'
+	list instcmd 'beeper.disable'
+	list instcmd 'beeper.enable'
+	list instcmd 'beeper.mute'
+	list instcmd 'beeper.off'
+	list instcmd 'beeper.on'
+	list instcmd 'load.off'
+	list instcmd 'load.off.delay'
+	list instcmd 'shutdown.reboot'
+	list instcmd 'shutdown.stop'
+	list instcmd 'test.battery.start.deep'
+	list instcmd 'test.battery.start.quick'
+	list instcmd 'test.battery.stop'
+	list instcmd 'test.panel.start'
+	list instcmd 'test.panel.stop'
+
+# User profile for the this local OpenWrt router monitor
+# Note: As a "master" he will tell other clients and the USP device itself when
+# to shutdown
+config user
+	option username 'router'
+	option password '********'
+	option upsmon 'master'
+
+# User profile for the OpenWrt collectd statistics package
+config user
+	option username 'collectd'
+	option password '********'
+	option upsmon 'slave'
+
+# Sample user profile for a remote server connecting here
+config user
+	option username 'server'
+	option password '********'
+	option upsmon 'slave'
+
+# Hardwired user profile and password used by all Synoolgy NAS devices to
+# connect with the emulated Synology NAS defined above
+config user
+	option username 'monuser'
+	option password 'secret'
+	option upsmon 'slave'
+
+# Run the driver as root, to avoid various NUT USB driver issues.
+config driver_global 'driver_global'
+	option user 'root'
+
+# Listen on all interfaces (local and remote)
+config listen_address
+	option address '0.0.0.0'
+
+config upsd 'upsd'
+
+# -*- mode: TXT; indent-tabs-mode: nil; tab-width: 4; -*-

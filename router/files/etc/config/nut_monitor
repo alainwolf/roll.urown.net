@@ -1,0 +1,28 @@
+#
+# OpenWrt Luci configuration for the Network UPS Tools Monitor
+#
+
+# Set various defaults
+config upsmon 'upsmon'
+    option runas nutmon
+    option minsupplies '1'
+    option shutdowncmd '/usr/sbin/nutshutdown'
+    option notifycmd '/usr/sbin/upssched'
+    list defaultnotify 'SYSLOG'
+    list defaultnotify 'EXEC'
+    option pollfreq '5'
+    option pollfreqalert '5'
+    option hostsync '15'
+    option deadtime '15'
+    option powerdownflags '/var/run/killpower'
+    option finaldelay '5'
+
+# Master user profile to use while connecting to the local NUT dameon
+config master
+    option upsname 'apc'
+    option powervalue '1'
+    option hostname 'localhost'
+    option username 'router'
+    option password '********'
+
+# -*- mode: TXT; indent-tabs-mode: nil; tab-width: 4; -*-

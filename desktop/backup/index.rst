@@ -1,8 +1,8 @@
 Backup
 ======
 
-This is how to setup a backup **client** on a personal computer. For a how-to to
-backup a server see :doc:`server backup </server/server-backup>`.
+This is how to setup a backup **client** on a personal computer. For a how-to
+to backup a server see :doc:`server backup </server/backup/index>`.
 
 .. contents::
     :depth: 1
@@ -59,7 +59,8 @@ This ensures that ...
 
  * System configuration data backups are made anytime the system is powered on.
  * System administrators don't have access to user data backups.
- * User data backups are only made when a user is actively working on the system.
+ * User data backups are only made when a user is actively working on the
+   system.
  * Encrypted home directories are only backed up when its user is logged in.
  * Users don't have access to system configuration backups.
  * Multiple users on a system can't access each others backup data.
@@ -70,8 +71,8 @@ Scheduling
 
 Backups can be made several times a day.
 
-By using systemd-timers instead of cron-jobs, the Ubuntu Desktop system does not
-need to be running at a specific time.
+By using systemd-timers instead of cron-jobs, the Ubuntu Desktop system does
+not need to be running at a specific time.
 
 If the system is running on AC power and connected to a network either by
 Ethernet cable or Wi-Fi a fresh backup is made a few minutes after startup and
@@ -79,7 +80,7 @@ at any desired interval after that. In the case of user data backups, whenever
 the user has logged in.
 
 In any other case the backup will made the next time all these conditions are
-met. 
+met.
 
 If the system was running on battery or not connected trough a unmetered
 network, it will try again the next time.
@@ -103,11 +104,13 @@ Encryption
 Backup data is client-side encrypted and uses two-factor authentication.
 This ensures that ...
 
- * Backup data can be moved and stored anywhere (i.e on untrusted cloud storage);
+ * Backup data can be moved and stored anywhere (i.e on untrusted cloud
+   storage);
  * In order to access the backup data, a user must know the password AND needs
    to have the key-file in his possession;
 
-On modern Intel/AMD 64-bit CPUs **BLAKE2b-256** is recommended over **SHA-256**.
+On modern Intel/AMD 64-bit CPUs **BLAKE2b-256** is recommended over
+**SHA-256**.
 
 
 Prerequisites
@@ -115,7 +118,7 @@ Prerequisites
 
  * Its assumed a working :doc:`/NAS/borg-backup-server` has been prepared to
    receive the backup data.
- * Your personal computer is setup to 
+ * Your personal computer is setup to
    :doc:`send out mails on its own </desktop/send-mail>`.
 
 
@@ -126,8 +129,8 @@ Installation
 Ubuntu 20.04 (focal) or later
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-As of the time of this writing (May 2020), Ubuntu 20.04 LTS has both packages in
-fairly up-to-date versions:
+As of the time of this writing (May 2020), Ubuntu 20.04 LTS has both packages
+in fairly up-to-date versions:
 
  * Borgbackup version 1.1.11 (latest)
  * Borgmatic version 1.5.1 (latest is 1.5.4)

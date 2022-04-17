@@ -31,14 +31,17 @@ retrieve data fast in memory:
     * Ratelimit plugin uses Redis to store limits buckets;
     * Greylisting module stores data and meta hashes inside Redis;
     * DMARC module can save DMARC reports inside Redis keys;
-    * Replies plugin requires Redis to save message ids hashes for outgoing messages;
-    * IP score plugin uses Redis to store data about AS, countries and networks reputation;
+    * Replies plugin requires Redis to save message ids hashes for outgoing
+    messages;
+    * IP score plugin uses Redis to store data about AS, countries and
+    networks reputation;
     * Multimap module can use Redis as readonly database for maps;
     * MX Check module uses Redis for caching;
  #. :doc:`mail/rspamd` statistics module to store Bayes tokens;
  #. :doc:`mail/rspamd` storage for fuzzy hashes;
- #. Postfix TLS policies of domains who publish a :doc:`/server/mail/mta-sts` policy;
- #. :doc:`nextcloud-server` for transactional file locking;
+ #. Postfix TLS policies of domains who publish a :doc:`/server/mail/mta-sts`
+    policy;
+ #. :doc:`nextcloud/index` for transactional file locking;
 
 For Rspamd we set up a master/slave replication. This way all mail servers can
 share their knowledge about connecting SMTP servers and spaminess of messages.
@@ -168,9 +171,11 @@ We use the default file as template::
 
 Things to do here:
 
- * Comment out any "bind" statements, as they are defined in the instance configuration files;
+ * Comment out any "bind" statements, as they are defined in the instance
+   configuration files;
  * Comment out any "unixsocket" statements.
- * Turn off protected mode, as we will use networking and password protection later;
+ * Turn off protected mode, as we will use networking and password protection
+   later;
 
 ::
 

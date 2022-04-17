@@ -42,21 +42,60 @@ Backup Your Keys!
 Backup is very important. If you lose your private key or the passphrase for
 it, everything encrypted will not be recoverable.
 
-Backups of your private keys and key-rings should be stored on a encrypted USB
-drive along with other important and protected files, like your KeepassXC
-password database, your personal TLS certificates and private keys and the ones
-of your servers.
+Backups of your private keys and key-rings should be stored on a
+:doc:`encrypted USB drive </desktop/luks>` along with other important and
+protected files, like your KeepassXC password database, your personal TLS
+certificates and SSH private keys.
 
-::
+The following steps assume, your safe storage is mounted on
+:file:`/media/${USER}/SafeStorage`::
 
-    # Export all public keys from your keyring
-    $ gpg2 --output /media/user/SafeStorage/pubring.asc \
-        --export-options=export-local-sigs,export-sensitive-revkeys \
-        --armor --export
-    # Export your private keys from your keyring
-    $ gpg2 --output /media/user/SafeStorage/secring.asc \
-        --armor --export-secret-key
+    # Create a backup directory on the safe storage::
+    $ mkdir /media/${USER}/SafeStorage/OpenPGP
+
+    # Which key you wnat to backup
+    export GPGKEY=0x0123456789ABCDEF
+
+    # Export your Private Key
+    $ gpg --verbose --export-options backup --armor \
+        --output /media/${USER}/SafeStorage/OpenPGP/${$GPGKEY}.private.asc \
+        --export-secret-keys $GPGKEY
+
+    # Export your public key
+    gpg --verbose --export-options backup --armor \
+        --output /media/${USER}/SafeStorage/OpenPGP/${$GPGKEY}.asc \
+         --export $GPGKEY
+
     # Export your personal trust settings, towards other peoples keys
-    $ gpg2 --export-ownertrust > /media/user/SafeStorage/gpg-ownertrust-db.txt
+    $ gpg --verbose --export-ownertrust \
+        > /media/${USER}/SafeStorage/OpenPGP/OwnerTrust.db
+
+    # Backup your revocation certificates
+    $ cp --archive --verbose --interactive \
+         ~/.gnupg/openpgp-revocs.d /media/${USER}/SafeStorage/OpenPGP/
 
 
+Restoring Private and Public Keys
+---------------------------------
+
+The following steps assume, your safe storage is mounted on
+:file:`/media/${USER}/SafeStorage`::
+
+    # Which key you wnat to restore
+    export GPGKEY=0x0123456789ABCDEF
+
+    # Import your public key
+    gpg --verbose --import-options restore --armor \
+        --import /media/${USER}/SafeStorage/OpenPGP/${$GPGKEY}.asc \
+
+    # Import your private key
+    $ gpg --verbose --import-options restore --armor \
+        --import /media/${USER}/SafeStorage/OpenPGP/${$GPGKEY}.private.asc \
+
+    # Import your personal trust settings
+    $ gpg --verbose --import-ownertrust \
+        < /media/${USER}/SafeStorage/OpenPGP/OwnerTrust.db
+    $ gpg --verbose --check-trustdb
+
+    # Set your own key as ulimatetly trusted
+    $ gpg --edit-key $GPGKEY

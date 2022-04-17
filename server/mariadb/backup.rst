@@ -109,17 +109,14 @@ to perform the backups.
     $ mysql -u root -p
 
 
-.. code-block:: sql
+.. code-block::
 
-    mysql> CREATE USER 'mariabackup'@'localhost' \
-                IDENTIFIED BY '********';
-
-    mysql> GRANT RELOAD, PROCESS, LOCK TABLES, REPLICATION CLIENT \
-                ON *.* TO 'mariabackup'@'localhost';
-
-    mysql> FLUSH PRIVILEGES;
-
-    mysql> exit
+    CREATE USER 'mariabackup'@'localhost' \
+        IDENTIFIED BY '********';
+    GRANT RELOAD, PROCESS, LOCK TABLES, REPLICATION CLIENT \
+        ON *.* TO 'mariabackup'@'localhost';
+    FLUSH PRIVILEGES;
+    exit
 
 
 
@@ -166,7 +163,7 @@ during the backup process and ensure a consistent record. If it encounters
 statements still in the process of executing, it waits until they complete
 before setting the lock.
 
-.. code-block:: txt
+.. code-block:: text
 
     [00] 2020-06-02 04:16:11 Connecting to MySQL server host: localhost
     ...
