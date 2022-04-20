@@ -38,6 +38,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.ifconfig',
+    'sphinx_last_updated_by_git',
     'sphinx_rtd_theme',
 ]
 
@@ -56,7 +57,7 @@ master_doc = 'index'
 # General information about the project.
 project = 'Roll Your Own Network'
 author = 'Alain Wolf & contributors'
-copyright = '2014, 2022, Creative Commons Attribution-ShareAlike 4.0 International License'
+copyright = '2014, 2022 Alain Wolf & contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -111,6 +112,8 @@ pygments_style = 'solarizeddark'
 #keep_warnings = False
 
 todo_include_todos = True
+
+git_last_updated_timezone = 'Europe/Zurich'
 
 # -- Options for HTML output ----------------------------------------------
 
