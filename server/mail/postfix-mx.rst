@@ -62,8 +62,8 @@ General Mail Server Setttings
     :end-before: # Trusted (allowed to relay) Networks Maps
 
 
- Trusted Networks Maps
-^^^^^^^^^^^^^^^^^^^^^^
+Trusted Networks Maps
+^^^^^^^^^^^^^^^^^^^^^
 
 .. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
     :language: ini
