@@ -12,24 +12,26 @@ The master is our home server located behind a router and firewall. He has a
 private LAN IPv4 address (behind NAT with a dynamic public address) and a fixed
 global IPv6 address.
 
-The slave is a virtual server of a cloud provider at a remote data-center with a
-direct Internet connection and a fixed public IPs for each IPv4 and IPv6.
+The slave is a virtual server of a cloud provider at a remote data-center with
+a direct Internet connection and a fixed public IPs for each IPv4 and IPv6.
 
 Master and slave servers run MariaDB server version 10.2.x.
 
 We will replicate the two **InnoDB** databases **pdns** and **vimbadmin**.
 
-**pdns** is our :doc:`PowerDNS </server/dns/powerdns>` database so we don't rely
-on :term:`AXFR` for updating our domain servers.
+**pdns** is our :doc:`PowerDNS </server/dns/powerdns>` database so we don't
+rely on :term:`AXFR` for updating our domain servers.
 
 **vimbadmin** is contains our virtual mailboxes and aliases, so our
-:doc:`/server/mail/postfix` can check incoming mail for valid recipients
+:doc:`/server/mail/postfix-mta` can check incoming mail for valid recipients
 addresses.
 
 Since part of setup is to provide DNS services it must be itself independent
-from any DNS address resolving. All connections use numerical IP addresses only.
+from any DNS address resolving. All connections use numerical IP addresses
+only.
 
-Since the public IPv4 address can change anytime and can not be resolves trough DNS, we use IPv6 exclusively.
+Since the public IPv4 address can change anytime and can not be resolves
+trough DNS, we use IPv6 exclusively.
 
 ======== ========= ====== ====================
 Name     Server-ID Role   Global IPv6
