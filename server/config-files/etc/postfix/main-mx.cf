@@ -1,0 +1,368 @@
+# **********************************************************************
+# Postfix MX Server Configuration for for maeve.example.net
+# Postfix version 3.4.13
+# ****************************************************************************
+#
+# See /usr/share/postfix/main.cf.dist for a commented version
+# See https://www.postfix.org/postconf.5.html
+#
+# Reload server after chnages:
+#     'sudo systemctl reload postfix.service'
+# **********************************************************************
+
+
+# ------------------------------------------------------------
+# General Mail Server Setttings
+# ------------------------------------------------------------
+
+# Disable backwards-compatibility safety net
+compatibility_level = 2
+
+# What is my domainname?
+mydomain = example.net
+
+# What is my hostname (FQDN)?
+myhostname = maeve.${mydomain}
+
+# What characters in a recipient address separate users from extensions?
+recipient_delimiter = +-
+
+# Should I refuse mails with non-standard FROM or RCPT address formats?
+strict_rfc821_envelopes = yes
+
+# What domains do I receive mail for?
+mydestination =
+
+# What trouble do I need to report to a human (postmaster)?
+notify_classes = bounce, 2bounce, data, delay, resource, software
+
+# After how long should I notify if mail-delivery is delayed?
+delay_warning_time = 6h
+confirm_delay_cleared = yes
+
+# Do I need to notify local users of new mail?
+biff = no
+
+# What is the maximum message size (in bytes)?
+# 25 Mebibytes = 26,214,400 Bytes
+message_size_limit = 26214400
+
+# Whats the size limit of mailboxes?
+mailbox_size_limit = 0
+
+
+# ------------------------------------------------------------
+# Trusted (allowed to relay) Networks Maps
+# ------------------------------------------------------------
+
+# Which clients do I trust and will relay mail to other domains?
+mynetworks = cidr:${config_directory}/mynetworks.cidr
+
+
+# ------------------------------------------------------------
+# Local & Virtual (Relay) Domains and Aliases Maps
+# ------------------------------------------------------------
+
+local_recipient_maps =
+
+# Where do I forward local system messages?
+alias_maps = $alias_database
+
+# How do I lookup alias of local mail addresses?
+virtual_alias_maps = hash:${config_directory}/virtual
+
+# How can I lookup virtual mail-domains to relay?
+relay_domains = mysql:${config_directory}/sql/relay_domains_maps.cf
+
+# How do I lookup individual mailbox addresses of virtual mail-domains to relay?
+relay_recipient_maps = mysql:${config_directory}/sql/relay_mailbox_maps.cf
+                       mysql:${config_directory}/sql/relay_alias_maps.cf
+
+
+# ------------------------------------------------------------
+# Relayed and Outgoing Mail Transport Maps
+# ------------------------------------------------------------
+
+local_transport = error:local mail delivery is disabled
+
+# How do I relay mail for allowed (virtual) domains?
+transport_maps = mysql:${config_directory}/sql/relay_transport_maps.cf
+
+
+# ------------------------------------------------------------
+# TCP/IP Protocols Settings
+#
+# Changes made here need a full server restart:
+#     'sudo systemctl restart postfix.service'
+# ------------------------------------------------------------
+
+# On which interfaces / IP addresses do I listen for inbound connections?
+inet_interfaces =
+
+    # Localhost
+    127.0.0.1, [::1],
+
+    # maeve.example.net
+    198.51.100.7,
+    2001:db8:48d1::1,
+
+    # maeve.vpn.example.net
+    10.195.171.142,
+    fdc1:d89e:b128:6a04::7de4
+
+# Digital Ocean blocks SMTP traffic over IPv6 at their network level.
+#smtp_address_preference = ipv4
+
+
+# ------------------------------------------------------------
+# General TLS Settings
+#
+# Ciphers suites to use in different situations.
+# Note: While using non-mandatory opportunistic encryption,
+# its preferable to use bad encryption, then no encrpytion
+# at all.
+# ------------------------------------------------------------
+
+# Generated 2020-12-13, Mozilla Guideline v5.6,
+# Postfix 3.4.13, OpenSSL 1.1.1f, old configuration
+# https://ssl-config.mozilla.org/
+tls_low_cipherlist = ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA256:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA
+
+# What ciphers suites do I use for mandatory ecnryption?
+# Generated 2020-12-13, Mozilla Guideline v5.6,
+# Postfix 3.4.13, OpenSSL 1.1.1f, intermediate configuration
+tls_medium_cipherlist = ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+
+# What ciphers suites do I use when I am high?
+# The Postfix built-in defaults are okay here.
+#tls_high_cipherlist = aNULL:-aNULL:HIGH:@STRENGTH
+
+# Let the server select the used cipher, to possibly avoid the bad ones, which
+# we support but would like to avoid.
+tls_preempt_cipherlist = yes
+
+# What OpenSSL options do I enable?
+tls_ssl_options = NO_COMPRESSION
+                  NO_RENEGOTIATION
+                  NO_SESSION_RESUMPTION_ON_RENEGOTIATION
+
+
+# ---------------------------------------------------------
+# SMTP TLS Client Settings
+# ---------------------------------------------------------
+
+# What DNS lookup methods do I use for outgoing SMTP sessions?
+smtp_dns_support_level = dnssec
+
+# Which default TLS policy applies when connecting to other SMTP servers?
+smtp_tls_security_level = dane
+
+# Which default TLS policy applies when the hostname of a domain was received by
+# insecure DNS MX query?
+smtp_tls_dane_insecure_mx_policy = dane
+
+# Where do I lookup domain specific TLS policies when sending mail?
+smtp_tls_policy_maps =
+    mysql:${config_directory}/sql/tls-policy.cf
+    socketmap:inet:127.0.0.1:8461:postfix
+
+# Which TLS protocols do I use for opportunistic TLS policies?
+# ("may", "dane")?
+smtp_tls_protocols = !SSLv2, !SSLv3
+
+# Which cipher list do I use for opportunistic TLS policies?
+# ("may", "dane")
+smtp_tls_ciphers = medium
+
+# Which ciphers I have to exclude for opportunistic TLS policies?
+# ("may", "dane")
+smtp_tls_exclude_ciphers = aNULL, eNULL, EXPORT, RC4, DES, SSLv2, MD5
+
+# Which TLS protocols do I use for mandatory TLS policies?
+# ("encrypt", "dane-only", "verify", "secure")
+smtp_tls_mandatory_protocols = $smtp_tls_protocols, !TLSv1, !TLSv1.1
+
+# Which cipher list do I use for mandatory TLS policies?
+# ("encrypt", "dane-only", "verify", "secure")
+smtp_tls_mandatory_ciphers = medium
+
+# Which ciphers I have to exclude for mandatory TLS policies?
+# ("encrypt", "dane-only", "verify", "secure")
+smtp_tls_mandatory_exclude_ciphers = ${smtp_tls_exclude_ciphers}, SHA1
+
+# Where are CA files stored to verify TLS certificates?
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+
+# Where do I find trusted CA certificates to verify SMTP server certificates?
+smtp_tls_CApath = /etc/ssl/certs
+
+# Files containing TLS private keys, certificates and issueing intermediate CA
+smtp_tls_chain_files =
+     /etc/letsencrypt/live/${myhostname}-ecdsa/keycertchain.pem
+     /etc/letsencrypt/live/${myhostname}-rsa/keycertchain.pem
+
+# Where do I cache outgoing SMTP TLS sessions?
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+# Should I make a note if I encounter servers who offer encryption?
+smtp_tls_note_starttls_offer = yes
+
+# How much of the outgoing TLS transactions should I log?
+smtp_tls_loglevel = 1
+
+
+# ---------------------------------------------------------
+# SMTPD TLS Server Settings
+# ---------------------------------------------------------
+
+# Is TLS encryption required for incoming connections?
+smtpd_tls_security_level = may
+
+# Do I refuse password authentication over unencrypted connections?
+smtpd_tls_auth_only = yes
+
+# Which TLS protocols do I accept for opportunistic TLS policies?
+# ("may")
+smtpd_tls_protocols = $smtp_tls_protocols
+
+# Which cipher list do I accept for opportunistic TLS policies?
+# ("may")
+smtpd_tls_ciphers = $smtp_tls_ciphers
+
+# Which ciphers I don't accept for opportunistic TLS policies?
+# ("may")
+smtpd_tls_exclude_ciphers = $smtp_tls_exclude_ciphers
+
+# Which TLS protocols do I use for mandatory TLS policies?
+# ("encrypt")
+smtpd_tls_mandatory_protocols = $smtp_tls_mandatory_protocols
+
+# Which cipher list do I accept for mandatory TLS policies?
+# ("encrypt")
+smtpd_tls_mandatory_ciphers = $smtp_tls_mandatory_ciphers
+
+# Which ciphers I don't accept for mandatory TLS policies?
+# ("encrypt")
+smtpd_tls_mandatory_exclude_ciphers = $smtp_tls_mandatory_exclude_ciphers
+
+# What security grade do I use for ephemeral elliptic-curve Diffie-Hellman
+# (EECDH) key exchange?
+smtpd_tls_eecdh_grade = ultra
+
+# Where are CA files stored to verify TLS certificates?
+smtpd_tls_CAfile = $smtp_tls_CAfile
+
+# Where do I find trusted CA certificates to verify SMTP server certificates?
+smtpd_tls_CApath = $smtp_tls_CApath
+
+# Where do I get Diffie-Hellmann key-exchange (DHE) parameters from?
+# (for perfect forward secrecy)
+# https://github.com/internetstandards/dhe_groups
+# not actually 1024 bits, this applies to all DHE >= 1024 bits
+smtpd_tls_dh1024_param_file = /etc/ssl/dhe_groups/ffdhe4096.pem
+
+# Files containing TLS private keys, certificates and issueing intermediate CA
+smtpd_tls_chain_files = ${smtp_tls_chain_files}
+
+# Where do I cache incoming SMTP TLS sessions?
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+
+# How long do I cache incoming TLS sessions?
+smtpd_tls_session_cache_timeout = 24h
+
+# Should I ask connecting clients for their own certificate?
+smtpd_tls_ask_ccert = yes
+
+# Should I include protocol and cipher used in the "Received:" message headers?
+smtpd_tls_received_header = yes
+
+# How much of the incoming TLS transactions should I log?
+smtpd_tls_loglevel = 1
+
+
+# ------------------------------------------------------------
+# SMTPD Server Relay Restrictions
+# ------------------------------------------------------------
+
+# What message digest algorithm do I use to verify relay client certificates?
+smtpd_tls_fingerprint_digest = sha256
+
+# Where do I lookup public-key fingerprints of allowed relay client certificates?
+relay_clientcerts = hash:${config_directory}/relay_clientcerts
+
+# What restrictions apply to relayed mails?
+smtpd_relay_restrictions =
+    permit_mynetworks
+    reject_unauth_destination
+
+
+# ------------------------------------------------------------
+# SMTPD Server Restrictions
+# ------------------------------------------------------------
+
+# What restrictins apply to connecting clients?
+smtp_client_restrictions =
+    permit_mynetworks
+    check_client_access hash:${meta_directory}/without_ptr
+    reject_unknown_client_hostname
+
+# Are connecting clients required to greet me properly before anything else?
+smtpd_helo_required = yes
+
+# What restrictins apply to SMTP HELO greetings
+smtpd_helo_restrictions =
+    permit_mynetworks
+    reject_invalid_helo_hostname
+    reject_non_fqdn_helo_hostname
+    reject_unknown_helo_hostname
+
+# What restrictins apply to any mail sender address?
+smtp_sender_restrictions =
+    permit_mynetworks
+    reject_unlisted_sender
+
+# What restrictins apply to any mail recipient address?
+smtpd_recipient_restrictions =
+    reject_non_fqdn_recipient
+    reject_unknown_recipient_domain
+
+# What restrictins apply to mail content?
+smtpd_data_restrictions = reject_unauth_pipelining
+
+
+# ---------------------------------------------------------
+# Spam Filter (Milter) and DKIM Mail Message Signing
+# ---------------------------------------------------------
+
+# Milter (mail filter) application(s) for new mail arriving via SMTP.
+# Note: UNIX Socket files are relative to '/var/spool/postfix'
+smtpd_milters =
+    #inet:localhost:11332
+    unix:/rspamd/rspamd_proxy.sock
+
+# Milter (mail filter) application(s) for new mail injected locally.
+# Note: UNIX Socket files are relative to '/var/spool/postfix'
+non_smtpd_milters =
+    #inet:localhost:11332
+    unix:/rspamd/rspamd_proxy.sock
+
+milter_mail_macros =  i {mail_addr} {client_addr} {client_name} {auth_authen}
+
+# Default action when a Milter (mail filter) application is unavailable.
+milter_default_action = tempfail
+
+
+# ------------------------------------------------------------
+# SOFT BOUNCE - Set to while debugging delivery issues
+# ------------------------------------------------------------
+#
+# The soft_bounce parameter provides a limited safety net for
+# testing.  When soft_bounce is enabled, mail will remain queued that
+# would otherwise bounce. This parameter disables locally-generated
+# bounces, and prevents the SMTP server from rejecting mail permanently
+# (by changing 5xx replies into 4xx replies). However, soft_bounce
+# is no cure for address rewriting mistakes or mail routing mistakes.
+#
+#soft_bounce = no
+
+# -*- mode: ini; tab-width: 4; indent-tabs-mode:nil  -*-

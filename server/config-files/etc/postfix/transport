@@ -1,0 +1,54 @@
+# **********************************************************************
+# Postfix Transport Map for MTA Server lapidus.urown.net
+# Postfix version 3.4.13
+# **********************************************************************
+#
+# https://manpages.ubuntu.com/manpages/focal/en/man5/transport.5.html
+#
+# Run the following after changing this file:
+#   $ cd /etc/postfix && sudo postmap transport"
+#
+
+
+# Postfix version 3.4. and older only allow one destination per line.
+
+# Mails for our hosted mail.domains (and subdomains) are to be sent to the
+# local Dovecot server.
+example.net    lmtp:unix:private/dovecot-lmtp
+.example.net   lmtp:unix:private/dovecot-lmtp
+example.org    lmtp:unix:private/dovecot-lmtp
+.example.org   lmtp:unix:private/dovecot-lmtp
+example.com    lmtp:unix:private/dovecot-lmtp
+.example.com   lmtp:unix:private/dovecot-lmtp
+
+# Microsoft refuses to accept mails from dolores.example.net
+# because its in a cheap and frequently abused cloud providers network.
+microsoft.com   relay:[maeve.vpn.exmple.net]:25
+/.*@hotmail.*/i relay:[maeve.vpn.exmple.net]:25
+/.*@outlook.*/i relay:[maeve.vpn.exmple.net]:25
+/.*@live.*/i    relay:[maeve.vpn.exmple.net]:25
+/.*@msn.*/i     relay:[maeve.vpn.exmple.net]:25
+
+# Some 3rd-party domains which use Microsoft as Mail-Provider
+devolo.ch       relay:[maeve.vpn.exmple.net]:25
+mgb.ch          relay:[maeve.vpn.exmple.net]:25
+mtn.com         relay:[maeve.vpn.exmple.net]:25
+vitudurum.com   relay:[maeve.vpn.exmple.net]:25
+yourmile.ch     relay:[maeve.vpn.exmple.net]:25
+
+# Mailbox.org refuses to accept mails from dolores.exmaple.net because its
+# listed in Spamhaus XBL
+mailbox.org     relay:[dolores.vpn.example.net]
+
+# All others
+*               relay:[dolores.vpn.example.net]:25
+
+# Since our outgoing SMTP servers are also our MX hosts, postfix get these by
+# looking at our onw MX records.
+#*               smtp:example.net
+
+# Postfix version 3.5+ and newer allow multiple nexthop destinations per line.
+# Multiple entries can be set in comma or space separated list.
+# *   relay:[dolores.vpn.example.net]:25, relay:[maeve.vpn.exmple.net]:25
+
+#-*- mode: properties; tab-width: 4; indent-tabs-mode:nil  -*-

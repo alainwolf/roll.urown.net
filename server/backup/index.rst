@@ -56,8 +56,9 @@ The local backup can be used to restore data that has been lost on the server
 (e.g. user error, server storage issues). The remote location backup is kept in
 case the local backup storage is unavailable to, in case of fire or theft.
 
-The Borg developers recommend to use distinct backup tasks for each destination,
-as opposed to just copy the backed up data from one destination to the other.
+The Borg developers recommend to use distinct backup tasks for each
+destination, as opposed to just copy the backed up data from one destination
+to the other.
 
 In this document the storage servers will be called as `local-nas.example.net`
 and `remote-nas.example.net`.
@@ -158,7 +159,8 @@ Backup data is client-side encrypted and uses two-factor authentication.
 
 This ensures that ...
 
- * Backup data can be moved and stored anywhere (i.e on untrusted cloud storage);
+ * Backup data can be moved and stored anywhere (i.e on untrusted cloud
+   storage);
  * In order to access the backup data, a user must know the password AND needs
    to have the key-file in his possession;
 
@@ -175,8 +177,8 @@ Prerequisites
 
  * Its assumed a working :doc:`/NAS/borg-backup-server` has been prepared to
    receive the backup data.
- * Your personal computer is setup to
-   :doc:`send out mails on its own </desktop/send-mail>`.
+ * The server is setup to
+   :doc:`send out mails on its own </desktop/postfix-null>`.
 
 
 .. toctree::

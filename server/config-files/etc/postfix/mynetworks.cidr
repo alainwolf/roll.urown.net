@@ -1,0 +1,43 @@
+# **********************************************************************
+# Postfix Trusted Networks for MTA Server lapidus.urown.net
+# Postfix version 3.4.13
+# **********************************************************************
+#  The list of "trusted" remote SMTP clients that have more privileges than
+#  "strangers".
+#
+#  In particular, "trusted" SMTP clients are allowed to relay mail through
+#  Postfix. See the smtpd_relay_restrictions parameter description in the
+#  postconf(5) manual.
+#
+#  http://www.postfix.org/postconf.5.html#mynetworks
+# **********************************************************************
+
+# IPv4 localhost
+127.0.0.0/8 OK
+
+# IPv6 localhost
+[::1]/128 OK
+
+# IPv6 link-local
+[fe80::]/64 OK
+
+# Host charlotte.example.net, Home, Frankfurt, Germany
+172.27.88.10 OK
+2001:db8:3414:6b1d::10 OK
+
+# dolores.example.net, Hetzner, San Francisco, USA
+203.0.113.54 OK
+
+# maeve.example.net, Rackspace, London, UK
+198.51.100.7 OK
+2001:db8:48d1::1 OK
+
+# Home LAN, Frankfurt, Germany
+172.27.88.0/24 OK
+2001:db8:3414::/48 OK
+
+# WireGuard VPN
+10.195.171.0/24 OK
+fdc1:d89e:b128:6a04::/64 OK
+
+#-*- mode: properties; tab-width: 4; indent-tabs-mode:nil  -*-

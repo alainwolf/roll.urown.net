@@ -38,7 +38,8 @@ The installation creates the following items:
  * The user and group **dovenull** to process mail server logins.
  * The directory :file:`/etc/dovecot`
  * The main configuration file :file:`/etc/dovecot/dovecot.conf`
- * Various other configuration files in the directory :file:`/etc/dovecot/conf.d`
+ * Various other configuration files in the directory
+   :file:`/etc/dovecot/conf.d`
  * The Ubuntu Upstart service configuration :file:`/etc/init/dovecot.conf`
 
 Other example configuration files are found in the
@@ -113,7 +114,7 @@ How to connect to the database server and what username and password to use:
     :lines: 34,70
 
 The database-name, user and password are identical to what you have set in
-:file:`/etc/postfix/mysql-virtual-mailbox-maps.cf` for :doc:`postfix`.
+:file:`/etc/postfix/mysql-virtual-mailbox-maps.cf` for :doc:`postfix-mta`.
 
 
 Password Scheme
@@ -149,8 +150,8 @@ Services
 --------
 
 The file :download:`/etc/dovecot/conf.d/10-master.conf
-</server/config-files/etc/dovecot/conf.d/10-master.conf>` defines the properties
-of the services Dovecot provides to other hosts.
+</server/config-files/etc/dovecot/conf.d/10-master.conf>` defines the
+properties of the services Dovecot provides to other hosts.
 
 We use Dovecot to provide the following services:
 
@@ -196,7 +197,9 @@ To allow our |MTA| Postfix to deliver mails to mailboxes trough the Dovecot
     :lines: 48-53
 
 The configuration file
-:download:`/etc/dovecot/conf.d/20-lmtp.conf </server/config-files/etc/dovecot/conf.d/20-lmtp.conf>` holds settings specific to the |LMTP| service.
+:download:`/etc/dovecot/conf.d/20-lmtp.conf
+</server/config-files/etc/dovecot/conf.d/20-lmtp.conf>`
+holds settings specific to the |LMTP| service.
 
 We load the Dovecot :term:`Sieve` plugin.
 
@@ -317,26 +320,25 @@ Authentication
 --------------
 
 The file :download:`/etc/dovecot/conf.d/10-auth.conf
-</server/config-files/etc/dovecot/conf.d/10-auth.conf>` defines how users logins
-are processed.
+</server/config-files/etc/dovecot/conf.d/10-auth.conf>` defines how users
+logins are processed.
 
 .. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-auth.conf
     :language: ini
     :start-after: #auth_ssl_username_from_cert = no
     :end-before: ##
 
-Disable login for system users and enable the MySQL user database, by commenting
-out the first line with a hashtag and activating the *auth- sql.conf.ext* line
-with a exclamation mark:
+Disable login for system users and enable the MySQL user database, by
+commenting out the first line with a hashtag and activating the *auth-
+sql.conf.ext* line with a exclamation mark:
 
 .. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-auth.conf
     :language: bash
     :start-after: # <doc/wiki/UserDatabase.txt>
 
-The now included file
-:download:`/etc/dovecot/conf.d/auth-sql.conf.ext
-</server/config-files/etc/dovecot/auth-sql.conf.ext>` contains references to the
-database configuration file.
+The now included file :download:`/etc/dovecot/conf.d/auth-sql.conf.ext
+</server/config-files/etc/dovecot/auth-sql.conf.ext>` contains references to
+the database configuration file.
 
 First where (hashed) paswords are retrieved for authenticating users:
 
@@ -356,12 +358,12 @@ but are all the same for all our users according to the values in **args**.
 
 The **args** values are translated as follows:
 
- *  The system user profile and group used who accesses the mailbox directory is
-    **vmail**.
+ * The system user profile and group used who accesses the mailbox directory
+    is **vmail**.
 
- *  Mailboxes are stored in the directory :file:`/var/vmail/%d/%n/` where **%d**
-    will be replaces by the domain name (e.g. example.net) and %n will be
-    replaced by the user name.
+ * Mailboxes are stored in the directory :file:`/var/vmail/%d/%n/` where
+    **%d** will be replaces by the domain name (e.g. example.net) and %n will
+    be replaced by the user name.
 
  *  **allow_all_users=yes**, is to allow mail delivery, also for mails to users
     not found yet in the database.
@@ -373,10 +375,9 @@ This basically means, that mails for **user@example.net** will be stored in the
 Mailbox Locations
 -----------------
 
-In the file
-:download:`/etc/dovecot/conf.d/10-mail.conf
-</server/config-files/etc/dovecot/conf.d/10-mail.conf>` we set up parameters for
-our virtual mailboxes.
+In the file :download:`/etc/dovecot/conf.d/10-mail.conf
+</server/config-files/etc/dovecot/conf.d/10-mail.conf>` we set up parameters
+for our virtual mailboxes.
 
 .. literalinclude:: /server/config-files/etc/dovecot/conf.d/10-mail.conf
     :language: bash
@@ -400,10 +401,10 @@ storing various types of mails:
     * Junk
     * Trash
 
-We can tell Dovecot to create these folders automatically, if they don't already
-exists, on users login. The user will also be subcribed to them, depending on
-settings. If a user accidentely deletes one of these folders, they will be
-re-created automatically on the next login.
+We can tell Dovecot to create these folders automatically, if they don't
+already exists, on users login. The user will also be subcribed to them,
+depending on settings. If a user accidentely deletes one of these folders,
+they will be re-created automatically on the next login.
 
 :download:`/etc/dovecot/conf.d/15-mailboxes.conf
 </server/config-files/etc/dovecot/conf.d/15-mailboxes.conf>`.
@@ -423,14 +424,14 @@ clients like Thunderbird or Outlook, but also with their browser on webmail
 clients.
 
 Classic client-side mail filter-rules don't cut it anymore. Mail has to be
-categorized and filtered on the server on delivery, to provide a consistent view
-accross all clients.
+categorized and filtered on the server on delivery, to provide a consistent
+view accross all clients.
 
 :term:`Sieve` is a basic script language to manage mail on the server, by
-triggering simple actions (move to folder, delete, mark as read, etc.), based on
-message attributes like sender or recipient, spam-flags, mailing-listss,
-headers, etc. The famous "Out-of Office" or "Vacation" auto-answer is a typical
-use case.
+triggering simple actions (move to folder, delete, mark as read, etc.), based
+on message attributes like sender or recipient, spam-flags, mailing-listss,
+headers, etc. The famous "Out-of Office" or "Vacation" auto-answer is a
+typical use case.
 
 The ManageSieve server allows administrators to define a set of sieve-scripts
 for all accounts on the server, but also lets users to manage their own mail
@@ -467,8 +468,8 @@ Sieve is also used to intergrate Dovecot nicely with the RSPAMD Spamfilter:
     * Mail marked as Spam by RSPAMD is moved to the Junk folder, instead of the
       Inbox.
     * When a user moves a message from any folder to the Junk folder, that
-      message is passed on to RSPAMD as training data to improve its reliablitly
-      in detecting spam.
+      message is passed on to RSPAMD as training data to improve its
+      reliablitly in detecting spam.
     * When a user is movin a message out of the Junk folder, its also passed on
       to RSPAMD for training to reduce false postives.
 

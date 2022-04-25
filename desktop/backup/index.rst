@@ -119,7 +119,7 @@ Prerequisites
  * Its assumed a working :doc:`/NAS/borg-backup-server` has been prepared to
    receive the backup data.
  * Your personal computer is setup to
-   :doc:`send out mails on its own </desktop/send-mail>`.
+   :doc:`send out mails on its own </desktop/postfix-null>`.
 
 
 Installation

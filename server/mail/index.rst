@@ -12,9 +12,9 @@ Mail Servers
     rspamd
     dovecot
     sieve
-    postfix
+    postfix-mta
     postfix-mx
-    postfix_smarthost
+    postfix-tls-policies
     mta-sts
     vimbadmin
     rainloop

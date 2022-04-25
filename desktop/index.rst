@@ -15,7 +15,7 @@ Contents:
 
    secrets/index
    network/index
-   send-mail
+   postfix-null
    anacron
    backup/index
    firefox

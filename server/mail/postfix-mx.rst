@@ -48,56 +48,57 @@ The documentation website has `a page dedicated to main.cf
 configuration paramter.
 
 The whole file, as presented below, is also provided for download at
-:download:`/server/config-files/etc/postfix/mx-main.cf` here.
+:download:`/server/config-files/etc/postfix/main-mx.cf` here.
 
-General Settings
-^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
+General Mail Server Setttings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
     :language: ini
     :linenos:
     :lineno-match:
     :start-at: # General Mail Server Setttings
-    :end-before: # Local Aliases Map
+    :end-before: # Trusted (allowed to relay) Networks Maps
 
 
-Local Aliases Map
-^^^^^^^^^^^^^^^^^
+ Trusted Networks Maps
+^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
     :language: ini
     :linenos:
     :lineno-match:
-    :start-at: # Local Aliases Map
-    :end-before: # Virtual Relay Maps
+    :start-at: # Trusted (allowed to relay) Networks Maps
+    :end-before: # Local & Virtual (Relay) Domains and Aliases Maps
 
 
-Virtual Relay Maps
-^^^^^^^^^^^^^^^^^^
+Local & Virtual Domains and Aliases Maps
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
     :language: ini
     :linenos:
     :lineno-match:
-    :start-at: # Virtual Relay Maps
-    :end-before: # Mail Queue Settings
+    :start-at: # Local & Virtual (Relay) Domains and Aliases Maps
+    :end-before: # Relayed and Outgoing Mail Transport Maps
 
 
-Mail Queue Settings
-^^^^^^^^^^^^^^^^^^^
+Relayed and Outgoing Mail Transport Maps
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
     :language: ini
     :linenos:
     :lineno-match:
-    :start-at: # Mail Queue Settings
+    :start-at: # Relayed and Outgoing Mail Transport Maps
     :end-before: # TCP/IP Protocols Settings
 
 
 TCP/IP Protocols Settings
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
     :language: ini
     :linenos:
     :lineno-match:
@@ -108,64 +109,63 @@ TCP/IP Protocols Settings
 General TLS Settings
 ^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
     :language: ini
     :linenos:
     :lineno-match:
     :start-at: # General TLS Settings
-    :end-before: # SMTP Client Settings
+    :end-before: # SMTP TLS Client Settings
 
 
-SMTP Client Settings
-^^^^^^^^^^^^^^^^^^^^
-
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
-    :language: ini
-    :linenos:
-    :lineno-match:
-    :start-at: # SMTP Client Settings
-    :end-before: # SMTP Server Settings
-
-
-SMTP Server Settings
-^^^^^^^^^^^^^^^^^^^^^^
-
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
-    :language: ini
-    :linenos:
-    :lineno-match:
-    :start-at: # SMTP Server Settings
-    :end-before: # SMTP Relay Restrictions
-
-
-SMTP Relay Restrictions
-^^^^^^^^^^^^^^^^^^^^^^^
-
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
-    :language: ini
-    :linenos:
-    :lineno-match:
-    :start-at: # SMTP Relay Restrictions
-    :end-before: # SMTP Server Restrictions
-
-
-SMTP Server Restrictions
+SMTP TLS Client Settings
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
     :language: ini
     :linenos:
     :lineno-match:
-    :start-at: # SMTP Server Restrictions
-    :end-before: # Mail Filters (Milters)
+    :start-at: # SMTP TLS Client Settings
+    :end-before: # SMTPD TLS Server Settings
 
 
-Mail Filters (Milters)
-^^^^^^^^^^^^^^^^^^^^^^
+SMTPD TLS Server Settings
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/postfix/mx-main.cf
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
     :language: ini
     :linenos:
     :lineno-match:
-    :start-at: # Mail Filters (Milters)
+    :start-at: # SMTPD TLS Server Settings
+    :end-before: # SMTPD Server Relay Restrictions
 
+
+SMTPD Server Relay Restrictions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
+    :language: ini
+    :linenos:
+    :lineno-match:
+    :start-at: # SMTPD Server Relay Restrictions
+    :end-before: # SMTPD Server Restrictions
+
+
+SMTPD Server Restrictions
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
+    :language: ini
+    :linenos:
+    :lineno-match:
+    :start-at: # SMTPD Server Restrictions
+    :end-before: # Spam Filter (Milter) and DKIM Mail Message Signing
+
+
+Spam Filter (Milter) and DKIM Mail Message Signing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: /server/config-files/etc/postfix/main-mx.cf
+    :language: ini
+    :linenos:
+    :lineno-match:
+    :start-at: # Spam Filter (Milter) and DKIM Mail Message Signing

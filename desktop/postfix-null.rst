@@ -1,5 +1,5 @@
-Personal Mail Server
-====================
+System Mails
+============
 
 Usually personal computers are not set up to send mail out on their own.
 
@@ -16,23 +16,24 @@ This works only if the system is able to send out mails.
 Null Client
 -----------
 
-We want our personal computer to send out mails on its own, but not receive any,
-or deliver mails to its local user accounts.
+We want our personal computer to send out mails on its own, but not receive
+any, or deliver mails to its local user accounts.
 
-This particular configuration is called a A **null client** and can be described
-as follows:
+This particular configuration is called a A **null client** and can be
+described as follows:
 
  * It never receives any mail from the network
- * It can only send mail out to a mail gateway/smart-host. 
- * It does not deliver any mail locally. All mails are sent to outside mail accounts.
+ * It can only send mail out to a mail gateway/smart-host.
+ * It does not deliver any mail locally. All mails are sent to outside mail
+   accounts.
 
-In the following example, our personal workstation will be called **torres**. 
-We have purchased an set-up our own domain **example.net**. 
-We call our mail-server **mail.example.net**. 
+In the following example, our personal workstation will be called **torres**.
+We have purchased an set-up our own domain **example.net**. We call our
+mail-server **mail.example.net**.
 
-This mail server accepts only mails from registered mail accounts who login with
-their full mail address and password on the SMTP submission server running on
-port 587.
+This mail server accepts only mails from registered mail accounts who login
+with their full mail address and password on the SMTP submission server
+running on port 587.
 
 The connection needs to be encrypted by TLS.
 
@@ -42,8 +43,8 @@ Prerequisites
 Mail-Server Account
 ^^^^^^^^^^^^^^^^^^^
 
-Like your desktop mail client any other client, **torres** will need to login 
-(as "torres@example.net"), before being allowed to deliver mails on 
+Like your desktop mail client any other client, **torres** will need to login
+(as "torres@example.net"), before being allowed to deliver mails on
 **mail.example.net**.
 
 We therefore create a mail account for it on our mail server.
@@ -129,9 +130,9 @@ Rerouting Local Mails
 ^^^^^^^^^^^^^^^^^^^^^
 
 Notification and warning mails created by system programs (like cronjobs) are
-usually sent to local profiles like "root", "webmaster" or other local Unix user
-profiles. Since these are local profiles, their mail address is just a user id,
-there is no "@" and there is no domain part.
+usually sent to local profiles like "root", "webmaster" or other local Unix
+user profiles. Since these are local profiles, their mail address is just a
+user id, there is no "@" and there is no domain part.
 
 Local mail is delivered by storing it in a mailbox the users home directory,
 where it never ever will be found or read, since these "user" accounts are not
@@ -141,13 +142,14 @@ We want these mails to be re-routed to mailboxes owned by real humans stored on
 remote mail-servers. To yourself, the owner or the person responsible for this
 computer.
 
-To re-route all mails to one single address, we can use a 
-:term:`Regular Expression`. Regular expression need to be defined in a map file, 
-for Postfix to interpret it.
+To re-route all mails to one single address, we can use a
+:term:`Regular Expression`. Regular expression need to be defined in a map
+file, for Postfix to interpret it.
 
-So instead of the usual :file:`/etc/aliases` file, we create a virtual alias 
-table with regular expression in the map file 
-:download:`/etc/postfix/virtual_alias <config-files/etc/postfix/virtual_alias>`.
+So instead of the usual :file:`/etc/aliases` file, we create a virtual alias
+table with regular expression in the map file
+:download:`/etc/postfix/virtual_alias
+<config-files/etc/postfix/virtual_alias>`.
 
 .. literalinclude:: config-files/etc/postfix/virtual_alias
     :language: ini
@@ -167,9 +169,10 @@ changes have been made to :file:`/etc/postfix/virtual_alias`:
 Main Configuration File
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Fortunately a "null client" needs very little configuration. Just a few of lines
-in the file :download:`/etc/postfix/main.cf <config-files/etc/postfix/main.cf>` 
-are enough:
+Fortunately a "null client" needs very little configuration. Just a few of
+lines in the file
+:download:`/etc/postfix/main.cf <config-files/etc/postfix/main.cf>` are
+enough:
 
 .. literalinclude:: config-files/etc/postfix/main.cf
     :language: ini

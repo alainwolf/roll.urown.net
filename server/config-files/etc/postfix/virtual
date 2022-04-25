@@ -1,0 +1,44 @@
+# *****************************************************************************
+# virtual - Postfix virtual alias table
+# *****************************************************************************
+#
+# The  optional  virtual(5)  alias table rewrites recipient addresses for
+# all local, all virtual, and all  remote  mail  destinations.   This  is
+# unlike  the  aliases(5) table which is used only for local(8) delivery.
+# This feature is implemented in the  Postfix  cleanup(8)  daemon  before
+# mail is queued.
+#
+# Virtual  aliasing  is  recursive; to terminate recursion for a specific
+# address, alias that address to itself.
+#
+# Virtual aliasing is applied only to recipient envelope  addresses,  and
+# does  not  affect message headers.  Use canonical(5) mapping to rewrite
+# header and envelope addresses in general.
+#
+# See https://www.postfix.org/virtual.5.html
+#
+# This is a hash-type indexed Postfix lookup table.
+# The Postfix main configuration file /etc/postfix/main.ch includes this file as
+# follows:
+#   virtual_alias_maps = hash:${config_directory}/virtual
+#
+# Update the database after changing this file with the following commands:
+#   $ cd /etc/postfix
+#   $ sudo postmap virtual
+# *****************************************************************************
+
+# Redirect mail for local users of this host to example.net
+abuse       abuse@example.net
+clamav      admin@example.net
+daemon      admin@example.net
+hostmaster  hostmaster@example.net
+list        postmaster@example.net
+postmaster  postmaster@example.net
+root        admin@example.net
+security    admin@example.net
+support     admin@example.net
+webmaster   webmaster@example.net
+john        john@alainwolf.ch
+www-data    webmaster@example.net
+
+#-*- mode: ini; tab-width: 4; indent-tabs-mode:nil  -*-
