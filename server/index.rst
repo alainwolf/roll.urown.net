@@ -35,7 +35,7 @@ Contents:
    nginx/index
    php-fpm
    uwsgi
-   owncloud-server
+   nextcloud/index
    ebooks
    prosody
    videocon/index

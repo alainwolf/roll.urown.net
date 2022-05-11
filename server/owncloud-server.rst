@@ -1,3 +1,5 @@
+:orphan:
+
 .. image:: ownCloud-logo.*
     :alt: ownCloud Logo
     :align: right
