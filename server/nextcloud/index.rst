@@ -11,5 +11,4 @@ Contents:
    :maxdepth: 1
 
    nextcloud_prerequesites
-   nextcloud_php_config
    nextcloud_nginx_config
