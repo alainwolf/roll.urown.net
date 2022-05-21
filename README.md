@@ -16,11 +16,11 @@ provided by [Read the Docs](https://readthedocs.org/).
 
 ### Install
 
-    $ pip3 install --upgrade --user \
+    pip3 install --upgrade --user \
         sphinx \
+        sphinx-last-updated-by-git \
         sphinx-rtd-theme \
-        pygments-style-solarized \
-        sphinx-last-updated-by-git
+        pygments-solarized-style
 
 ### Clone
 
