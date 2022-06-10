@@ -1232,12 +1232,13 @@ Glossary
 
 
     MTA-STS
+    SMTP MTA Strict Transport Security
         SMTP Mail Transfer Agent Strict Transport Security (MTA-STS) is a
         mechanism enabling mail service providers to declare their ability to
         receive Transport Layer Security (:term:`TLS`) secure :term:`SMTP`
         connections, and to specify whether sending SMTP servers should refuse
         to deliver to MX hosts that do not offer TLS with a trusted server
-        certificate.
+        certificate. MTA-STS is described in :rfc:`8461`.
 
 
     MU-MIMO

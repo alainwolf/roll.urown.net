@@ -291,19 +291,19 @@ Create or modify the file
 
 
 Postfix Integration
-^^^^^^^^^^^^^^^^^^^
+-------------------
 
 
 Dovecot Integration
-^^^^^^^^^^^^^^^^^^^^
+-------------------
 
 
 Nginx Integration
-^^^^^^^^^^^^^^^^^
+-----------------
 
 
 Razor and Pyzor Integration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------
 
 Create the :file:`/etc/rspamd/local.d/external_services.conf`
 
@@ -322,7 +322,7 @@ Create the :file:`/etc/rspamd/local.d/external_services.conf`
 
 
 Configuration Syntax Check
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 
 ::
 
