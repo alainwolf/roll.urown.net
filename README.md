@@ -18,9 +18,10 @@ provided by [Read the Docs](https://readthedocs.org/).
 
     pip3 install --upgrade --user \
         sphinx \
-        sphinx-last-updated-by-git \
         sphinx-rtd-theme \
-        pygments-solarized-style
+        pygments-solarized-style \
+        sphinxnotes-strike \
+        sphinx-last-updated-by-git
 
 ### Clone
 
