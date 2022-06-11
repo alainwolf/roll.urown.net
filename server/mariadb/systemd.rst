@@ -27,16 +27,16 @@ custom Systemd service configuration options.
 .. code-block:: ini
 
     [Unit]
-    After=wg-quick@wg0.service
-    BindsTo=wg-quick@wg0.service
+    After=sys-devices-virtual-net-wg0.device
+    BindsTo=sys-devices-virtual-net-wg0.device
 
 
-The line :code:`After=wg-quick@wg0.service` ensures that
-:code:`wg-quick@wg0.service` is fully started up before the
-:code:`mariadb.service` is started.
+The line :code:`After=sys-devices-virtual-net-wg0.device` ensures that the
+:code:`wg0` VPN network interface is up before the :code:`mariadb.service` is
+started.
 
-The line :code:`BindsTo=wg-quick@wg0.service` ensures that if the Wireguard
-service is stopped, the MariaDB database server will be stopped too.
+The line :code:`BindsTo=wg0` ensures that if the WireGuard network interface
+goes down , the MariaDB database server will be stopped too.
 
 After you save and exit of the editor, the file will be saved as
 :file:`/etc/systemd/system/mariadb.service.d/override.conf` and Systemd will

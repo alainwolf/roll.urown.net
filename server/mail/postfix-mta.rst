@@ -590,6 +590,53 @@ By default, logging is sent to syslogd(8) or postlogd(8); when the standard
 error stream is connected to a terminal, logging is sent there as well.
 
 
+Systemd Service Dependencies
+----------------------------
+
+Our Postfix MTA depends on various other services, we want to ensure that
+Postfix is always able to connect to them while running:
+
+    * Wireguard VPN network interface
+    * MariaDB database server
+    * Rspamd Spam Filter
+    * ClamAV virus scanner
+    * Postfix MTA-STS resolver
+
+The Systemd services file for the Postfix server
+:file:`/lib/systemd/system/postfix@.service` is created as part of the software
+package installation. The recommended method is to create a Systemd
+override-file and not change anything in the provided service file, as it
+would be lost on software package updates.
+
+You can create a override file easily with the help of the
+:command:`systemctl` command::
+
+    $ sudo systemctl edit postfix@.service
+
+This will start your editor with an empty file, where you can add your own
+custom Systemd service configuration options.
+
+.. code-block:: ini
+
+    [Unit]
+    After=sys-devices-virtual-net-wg0.device
+    After=mariadb.service rspamd.service clamav-daemon.service postfix-mta-sts-resolver.service
+    BindsTo=sys-devices-virtual-net-wg0.device mariadb.service
+
+The configuration statement :code:`After=mariadb.service` ensures that
+:code:`mariadb.service` is fully started up before the :code:`postfix@.service`
+is started.
+
+The line :code:`BindsTo=mariadb.service` ensures that if the Database
+service is stopped, the PowerDNS server will be stopped too.
+
+After you save and exit of the editor, the file will be saved as
+:file:`/etc/systemd/system/postfix@.service.d/override.conf` and Systemd will
+reload its configuration::
+
+    systemctl show postfix@.service |grep -E "After=|BindsTo="
+
+
 References
 ----------
 

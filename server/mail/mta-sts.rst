@@ -22,7 +22,7 @@ DNSSEC.
 In addition, MTA-STS introduces a mechanism for failure reporting and a
 report-only mode, enabling progressive roll-out and auditing for compliance.
 
-MTA-STS was is decsibed in :rfc:`8461`.
+MTA-STS was is described in :rfc:`8461`.
 
 
 DNS Records
@@ -171,7 +171,7 @@ mail servers trough replication.
 Installation
 ^^^^^^^^^^^^
 
-The Postifix MTA-STS Resolver is available in the Ubuntu software package
+The Postfix MTA-STS Resolver is available in the Ubuntu software package
 repository::
 
     $ sudo apt install postfix-mta-sts-resolver
@@ -220,22 +220,25 @@ Service Dependencies
 Since we cache the TLS policies for Postfix in a Redis server, we want the Redis
 cache to be up and running, before the MTA-STS service starts. To make the
 `postfix-mta-sts-resolver.service` dependent on the
-`redis-server@postfix-tls.service`::
+`redis-server@postfix-tls.service`.
 
-    $ sudo cp /lib/systemd/system/rspamd.service /etc/systemd/system/
+You can create a Systemd override file easily with the help of the
+:command:`systemctl` command::
 
-Edit the file :file:`/etc/systemd/system/postfix-mta-sts-resolver.service` add
-the following lines to the **Unit** section:
+    $ sudo systemctl edit postfix-mta-sts-resolver.service
+
+This will start your editor with an empty file, where you can add your own
+custom Systemd service configuration options.
 
 .. code-block:: ini
-   :emphasize-lines: 5-6
 
     [Unit]
-    Description=Provide MTA-STS policy map to Postfix
-    Documentation=man:mta-sts-daemon(1) man:mta-sts-daemon.yml(5)
-    Before=postfix.service
-    BindsTo=redis-server@postfix-tls.service
     After=redis-server@postfix-tls.service
+    BindsTo=redis-server@postfix-tls.service
+
+After you save and exit of the editor, the file will be saved as
+:file:`/etc/systemd/system/postfix-mta-sts-resolver.service.d/override.conf`
+and Systemd will reload its configuration.
 
 
 Postfix Configuration

@@ -330,29 +330,32 @@ Configuration Syntax Check
     syntax OK
 
 
-Systemd Sevice Dependencies
----------------------------
+Systemd Service Dependencies
+----------------------------
 
 Since our Rspamd server we use various Redis databases to store data, we want
 the Redis cache to be up and running, before the Rspamd service starts. To make
 the `rspamd.service` dependent on the `redis-server@rspamd.service`, the
 `redis-server@rspamd-bayes.service` and the
-`redis-server@rspamd-fuzzy.service`::
+`redis-server@rspamd-fuzzy.service`.
 
-    $ sudo cp /lib/systemd/system/rspamd.service /etc/systemd/system/
+You can create a Systemd override file easily with the help of the
+:command:`systemctl` command::
 
-Edit the file :file:`/etc/systemd/system/rspamd.service` add
-the following lines to the **Unit** section:
+    $ sudo systemctl edit rspamd.service
+
+This will start your editor with an empty file, where you can add your own
+custom Systemd service configuration options.
 
 .. code-block:: ini
-   :emphasize-lines: 5-6
 
     [Unit]
-    Description=rapid spam filtering system
-    After=nss-lookup.target network-online.target
-    Documentation=https://rspamd.com/doc/
-    BindsTo=redis-server@rspamd.service redis-server@rspamd-bayes.service redis-server@rspamd-fuzzy.service
     After=redis-server@rspamd.service redis-server@rspamd-bayes.service redis-server@rspamd-fuzzy.service
+    BindsTo=redis-server@rspamd.service redis-server@rspamd-bayes.service redis-server@rspamd-fuzzy.service
+
+After you save and exit of the editor, the file will be saved as
+:file:`/etc/systemd/system/rspamd.service.d/override.conf` and Systemd will
+reload its configuration.
 
 
 Reference

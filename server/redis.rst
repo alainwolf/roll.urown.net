@@ -1,9 +1,11 @@
-Redis
-=====
-
 .. image:: redis-logo.*
     :alt: Redis Logo
     :align: right
+
+Redis
+=====
+.. contents::
+    :local:
 
 `Redis <https://redis.io/>`_ is a fast and persistent key-value database with
 a network interface.
@@ -341,7 +343,62 @@ Systemd Services
 ^^^^^^^^^^^^^^^^
 
 Systemd has a built in support to automatically start multiple instances of a
-service. This needs only a couple of small changes in the service file.
+service. The service file :file:`/lib/systemd/system/redis-server@.service`
+installed by the software package already contains everything to start a
+separate service instance for each :file:`redis-*.conf` file found in the
+:file:`/etc/redis/` directory.
+
+However, since some of our Redis instances are set to replicate their data
+over the WireGuard VPN to other servers, we need to make sure that the VPN
+interface is up and running, before these Redis server instances are started.
+
+The following Redis instances replicate data over the VPN:
+
+    * postfix-tls
+    * rspamd
+    * rspamd-bayes
+    * rspamd-fuzzy
+
+You can create a Systemd override file easily with the help of the
+:command:`systemctl` command::
+
+    $ sudo systemctl edit redis-server@postfix-tls.service
+
+This will start your editor with an empty file, where you can add your own
+custom Systemd service configuration options.
+
+.. code-block:: ini
+
+    [Unit]
+    After=sys-devices-virtual-net-wg0.device
+    BindsTo=sys-devices-virtual-net-wg0.device
+
+    [Service]
+    ProtectSystem=full
+
+The line :code:`After=sys-devices-virtual-net-wg0.device` ensures that
+:code:`wg0` network interface is up before the postfix-tls Redis server
+instance is started.
+
+The line :code:`BindsTo=sys-devices-virtual-net-wg0.device` ensures that if
+the :code:`wg0` network interface goes down, this Redis server instance will
+be stopped too.
+
+Since we don’t use any clustering features of Redis, we can restrict the
+systemd services a bit, by keeping the configuration read-only. this is what
+the line :code:`ProtectSystem=full` does.
+
+
+After you save and exit the editor (CTRL+X, Y), the file will be saved as
+:file:`/etc/systemd/system/mariadb.service.d/override.conf` and Systemd will
+reload its configuration.
+
+Repeat the procedure for the Rspamd Redis server instances::
+
+    $ sudo systemctl edit redis-server@rspamd.service
+    $ sudo systemctl edit redis-server@rspamd-bayes.service
+    $ sudo systemctl edit redis-server@rspamd-fuzzy.service
+
 
 Make a copy of the pre-installed service file :file:`/lib/systemd/system/redis-server@.service`::
 
@@ -379,8 +436,6 @@ readable by the **redis** user. I.e. after you edited the configuration files
 as root::
 
     $ sudo chown -Rc redis:redis /etc/redis
-    $ sudo systemctl daemon-reload
-    $ sudo systemctl restart redis-server.service
 
 
 References

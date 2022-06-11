@@ -86,8 +86,49 @@ The following happens during installation:
         * :file:`/etc/powerdns/pdns.d/pdns.local.gmysql.conf`
 
     * A user and group *pdns* is created.
-    * A system service :file:`/etc/init.d/pdns` is created and started.
+    * A Systemd service :file:`/lib/systemd/system/pdns.service` is created
+      and started.
 
+
+Systemd Service Dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Since we use MariaDB as database backend for PowerDNS, we want to ensure that
+PowerDNS is always able to connect to the database server before running.
+
+The Systemd services file for the PowerDNS server
+:file:`/lib/systemd/system/pdns.service` is created as part of the software
+package installation. The recommended method is to create a Systemd
+override-file and not change anything in the provided service file, as it
+would be lost on software package updates.
+
+You can create a override file easily with the help of the
+:command:`systemctl` command::
+
+    $ sudo systemctl edit pdns.service
+
+This will start your editor with an empty file, where you can add your own
+custom Systemd service configuration options.
+
+.. code-block:: ini
+
+    [Unit]
+    BindsTo=mariadb.service
+
+
+The configuration statement :code:`After=mariadb.service` ensures that
+:code:`mariadb.service` is fully started up before the :code:`pdns.service` is
+started. It is already included in the service file installed by the software
+package.
+
+The line :code:`BindsTo=mariadb.service` ensures that if the Database
+service is stopped, the PowerDNS server will be stopped too.
+
+After you save and exit of the editor, the file will be saved as
+:file:`/etc/systemd/system/pdns.service.d/override.conf` and Systemd will
+reload its configuration::
+
+    systemctl show pdns.service |grep -E "After=|BindsTo="
 
 DNS Server Database
 -------------------

@@ -572,3 +572,42 @@ Create the simple shell script :file:`/usr/local/bin/dovecot-quota-warning`::
 Make it executable::
 
     $ chmod +x /usr/local/bin/dovecot-quota-warning
+
+Service Dependencies
+--------------------
+
+Since we use MariaDB as database backend for Dovecot, we want to ensure that
+Dovecot is always able to connect to the database server while running.
+
+The Systemd services file for the Dovecot server
+:file:`/lib/systemd/system/dovecot.service` is created as part of the software
+package installation. The recommended method is to create a Systemd
+override-file and not change anything in the provided service file, as it
+would be lost on software package updates.
+
+You can create a override file easily with the help of the
+:command:`systemctl` command::
+
+    $ sudo systemctl edit dovecot.service
+
+This will start your editor with an empty file, where you can add your own
+custom Systemd service configuration options.
+
+.. code-block:: ini
+
+    [Unit]
+    After=mariadb.service
+    BindsTo=mariadb.service
+
+The configuration statement :code:`After=mariadb.service` ensures that
+:code:`mariadb.service` is fully started up before the :code:`dovecot.service`
+is started.
+
+The line :code:`BindsTo=mariadb.service` ensures that if the Database
+service is stopped, the PowerDNS server will be stopped too.
+
+After you save and exit of the editor, the file will be saved as
+:file:`/etc/systemd/system/dovecot.service.d/override.conf` and Systemd will
+reload its configuration::
+
+    systemctl show dovecot.service |grep -E "After=|BindsTo="
