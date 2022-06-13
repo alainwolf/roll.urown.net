@@ -27,7 +27,7 @@ custom Systemd service configuration options.
 .. code-block:: ini
 
     [Unit]
-    After=sys-devices-virtual-net-wg0.device
+    After=sys-devices-virtual-net-wg0.device unbound.service
     BindsTo=sys-devices-virtual-net-wg0.device
 
 

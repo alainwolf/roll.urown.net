@@ -350,6 +350,7 @@ custom Systemd service configuration options.
 .. code-block:: ini
 
     [Unit]
+    After=unbound.service
     After=redis-server@rspamd.service redis-server@rspamd-bayes.service redis-server@rspamd-fuzzy.service
     BindsTo=redis-server@rspamd.service redis-server@rspamd-bayes.service redis-server@rspamd-fuzzy.service
 
