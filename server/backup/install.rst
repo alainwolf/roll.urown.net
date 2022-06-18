@@ -1,20 +1,6 @@
 Installation
 ============
 
-Ubuntu Software Packages
-------------------------
-
-As of the time of this writing (May 2022), Ubuntu 20.04 LTS has outdated
-versions of its software packages:
-
- * Borgbackup version 1.1.15 (latest is 1.2.0)
- * Borgmatic version 1.5.1 (latest is 1.6.0)
-
-To install using Ubuntu package manager::
-
-    $ sudo apt install borgbackup borgmatic
-
-
 Python Package Installer (PIP)
 ------------------------------
 
@@ -28,8 +14,7 @@ See the `Borg installation documentation
     libacl1-dev libacl1 \
     libssl-dev \
     liblz4-dev libzstd-dev libxxhash-dev \
-    build-essential \
-    pkg-config python3-pkgconfig
+    build-essential
 
 
 Borg Installation
@@ -37,8 +22,7 @@ Borg Installation
 
 Install Borg using PIP::
 
-    $ sudo pip install --upgrade pip setuptools wheel
-    $ sudo pip install --upgrade pkgconfig
+    $ sudo pip install --upgrade pip setuptools wheel pkgconfig
     $ sudo pip install --upgrade borgbackup
 
 This installs as a systemwide usable software in to :file:`/usr/local/bin/`,
@@ -67,8 +51,8 @@ Upgrade Using PIP
 
 To upgrade Borg and Borgmatic to a new version later, run the following::
 
-    $ sudo pip install --upgrade borgbackup
-    $ sudo pip install --upgrade borgmatic
+    $ sudo pip install --upgrade pip setuptools wheel pkgconfig
+    $ sudo pip install --upgrade borgbackup borgmatic
 
 
 After Updating
@@ -108,6 +92,19 @@ might suggest some things to do, after software upgrades::
     $ sudo borgmatic -c /etc/borgmatic/remote-nas.yaml \
         borg compact --cleanup-commits
 
+
+Ubuntu Software Packages
+------------------------
+
+As of the time of this writing (June 2022), Ubuntu 20.04 LTS has outdated
+versions of its software packages:
+
+ * Borgbackup version 1.1.15 (latest is 1.2.1)
+ * Borgmatic version 1.5.1 (latest is 1.6.3)
+
+To install using Ubuntu package manager::
+
+    $ sudo apt install borgbackup borgmatic
 
 References
 ----------

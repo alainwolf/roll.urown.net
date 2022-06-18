@@ -281,9 +281,25 @@ consistency:
     # repository, "archives" checks all of the archives, "data" verifies the integrity
     # of the data within the archives, and "extract" does an extraction dry-run of the
     # most recent archive. Note that "data" implies "archives".
-    # checks:
+    checks:
         # - repository
         # - archives
+
+        # Check repository consistency once a week
+        - name: repository
+          frequency: 1 week
+
+        # Check the last 14 archies every 2 weeks
+        - name: archives
+          frequency: 2 weeks
+
+        # Do an extraction dry-run of the most recent archive every month.
+        - name: extract
+          frequency: 1 month
+
+        # Verify the integrity of the data within the archives every 3 months.
+        - name: data
+          frequency: 3 months
 
     # Paths to a subset of the repositories in the location section on which to run
     # consistency checks. Handy in case some of your repositories are very large, and
@@ -292,8 +308,8 @@ consistency:
     # check_repositories:
         # - user@backupserver:sourcehostname.borg
 
-    # Restrict the number of checked archives to the last n. Applies only to the "archives" check. Defaults to checking all archives.
-    # check_last: 3
+    # Only check the last 14 archives when doing "archives" consistency checks.
+    check_last: 14
 
     # When performing the "archives" check, only consider archive names starting with
     # this prefix. Borg placeholders can be used. See the output of
@@ -351,8 +367,7 @@ hooks:
     # occurs during a "prune", "create", or "check" action or an associated
     # before/after hook.
     on_error:
-        # - echo "Error during prune/create/check."
-        - /usr/local/bin/borgmatic-notify "{configuration_filename} {repository} {error} {output}"
+        - /usr/local/bin/borgmatic-notify "{configuration_filename}" "{repository}" "{error}" "{output}"
 
     # List of one or more PostgreSQL databases to dump before creating a backup,
     # run once per configuration file. The database dumps are added to your source
