@@ -7,7 +7,7 @@ Network Design
 Networks, subnets, port, and corresponding access rules and rights are already
 complex and get more complex, the more servers and services are added.
 :doc:`/server/wireguard` add another layer on top of all that and changes all
-all these already hard to grasp parts. Therefore a clear design concept is
+of these already hard to grasp parts. Therefore a clear design concept is
 needed for reference as we go one.
 
 .. note::
