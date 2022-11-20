@@ -113,9 +113,9 @@ The following script is inspired by the ArchLinux wiki, to be placed in
 .. literalinclude:: ../config-files/etc/NetworkManager/dispatcher.d/10-update-timesyncd
 
 
-Make it executable by the **root** user only::
+Make it executable and writable by the **root** user only::
 
-    $ chmod 0764 /etc/NetworkManager/dispatcher.d/10-update-timesyncd
+    $ chmod 0744 /etc/NetworkManager/dispatcher.d/10-update-timesyncd
 
 References
 ----------
