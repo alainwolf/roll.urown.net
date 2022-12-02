@@ -29,9 +29,10 @@ A mappings file needs to be created and filled with the users registered U2F
 keys.
 
 There is a command-line tool to help with registration process. Replace
-**USERNAME** with the name of the user, which belongs to the Yubikey::
+:code:`${USERNAME}` with the name of the user, which belongs to the Yubikey,
+if it's not your own::
 
-    $ sudo pamu2fcfg -u${USERNAME} >> /etc/u2f_mappings
+    $ pamu2fcfg -u${USERNAME} | sudo tee /etc/security/u2f_mappings
 
 
 Nothing will happen in your console, but your Yubikey should start to blink as
@@ -41,7 +42,7 @@ belonging to that user.
 
 If you a have a second key::
 
-    $ sudo pamu2fcfg -n >> /etc/u2f_mappings
+    $ pamu2fcfg -n | sudo tee -a /etc/security/u2f_mappings
 
 
 Configuration
@@ -49,7 +50,7 @@ Configuration
 
 Create a a new PAM service file :file:`/etc/pam.d/u2f`::
 
-  $ echo "auth sufficient pam_u2f.so cue authfile=/etc/u2f_mappings debug" > sudo tee /etc/pam.d/u2f
+  $ echo "auth sufficient pam_u2f.so cue authfile=/etc/security/u2f_mappings debug" > sudo tee /etc/pam.d/u2f
 
 
 This tells the PAM module that it can look up information about each users U2F
@@ -80,7 +81,7 @@ Going Live
 
 Open the PAM service file :file:`/etc/pam.d/u2f` again and remove the **debug** string::
 
-	$ echo "auth sufficient pam_u2f.so authfile=/etc/u2f_mappings" | sudo tee /etc/pam.d/u2f
+	$ echo "auth sufficient pam_u2f.so authfile=/etc/security/u2f_mappings" | sudo tee /etc/pam.d/u2f
 
 
 Open the PAM service file :file:`/etc/pam.d/gdm-password` and the following line before the “@include common-auth” line::
