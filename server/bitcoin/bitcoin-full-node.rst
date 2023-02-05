@@ -21,7 +21,7 @@ Bitcoin to continue to grow. This document describes how you can help and what
 helping will cost you.
 
 The full node will be reachable over IPv4, IPv6 and as :doc:`Hidden Service
-</server/tor/tor-hidden-service>` over the Tor network.
+</server/tor/tor-onion-services>` over the Tor network.
 
 
 .. contents:: \
