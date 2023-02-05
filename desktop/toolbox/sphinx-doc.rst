@@ -7,5 +7,4 @@ Brandl and licensed under the BSD license.
 
 ::
 
-	$ pip3 install --upgrade --user sphinx sphinx-rtd-theme pygments-style-solarized
-
+	$ pip3 install --upgrade --user sphinx sphinx-rtd-theme pygments-solarized-style
