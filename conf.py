@@ -58,7 +58,7 @@ master_doc = 'index'
 # General information about the project.
 project = 'Roll Your Own Network'
 author = 'Alain Wolf & contributors'
-copyright = '2014, 2022 Alain Wolf & contributors'
+copyright = '2014, 2023 Alain Wolf & contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -115,6 +115,10 @@ pygments_style = 'solarizeddark'
 todo_include_todos = True
 
 git_last_updated_timezone = 'Europe/Zurich'
+
+# https://manpages.ubuntu.com/manpages/jammy/en/man5/locale.5.html
+manpages_url = 'https://manpages.ubuntu.com/manpages/jammy/en/man{section}/{page}.{section}.html'
+
 
 # -- Options for HTML output ----------------------------------------------
 
