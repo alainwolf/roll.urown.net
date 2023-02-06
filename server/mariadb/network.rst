@@ -28,9 +28,9 @@ UNIX Sockets & TCP/IP
 
 
 Edit the relevant sections of the file
-:download:`/etc/mysql/my.cnf </server/config-files/etc/mysql/my.cnf>`
+:download:`/etc/mysql/my.cnf </server/config-files/etc/mysql/mariadb.cnf>`
 as follows:
 
-.. literalinclude:: /server/config-files/etc/mysql//my.cnf
+.. literalinclude:: /server/config-files/etc/mysql/mariadb.cnf
     :language: ini
     :lines: 10,15-20,22,50-73

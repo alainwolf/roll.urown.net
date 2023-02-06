@@ -35,13 +35,16 @@ Service Customization
 ^^^^^^^^^^^^^^^^^^^^^
 
 The service unit file is installed in :file:`/lib/systemd/system/mariab.service`.
-Custom options should be applied by copying the original unit file to
-:file:`/etc/systemd/system/`::
+Custom options should be applied using overrides::
 
-    $ sudo cp /lib/systemd/system/mariab.service /etc/systemd/system/
-    $ sudo nano /etc/systemd/system/mariab.service
-    $ systemctl dameon-reload
-    $ systemctl restart mariadb.service
+    $ sudo edit mariab.service
+
+::
+
+    # etc/systemd/system/mariadb.service.d/override.conf
+    [Unit]
+    After=sys-devices-virtual-net-wg0.device unbound.service
+    BindsTo=sys-devices-virtual-net-wg0.device
 
 
 mysqld_safe
@@ -71,10 +74,10 @@ Main Configuration
 
 
 The main configuration file is
-:download:`/etc/mysql/my.cnf</server/config-files/etc/mysql/my.cnf>`:
+:download:`/etc/mysql/mariadb.cnf </server/config-files/etc/mysql/mariadb.cnf>`:
 
 
-.. literalinclude:: /server/config-files/etc/mysql/my.cnf
+.. literalinclude:: /server/config-files/etc/mysql/mariadb.cnf
     :language: ini
 
 
@@ -114,7 +117,7 @@ Use *UTF-8* instead of *Latin1* as default for the server and clients.
 
 Open :file:`/etc/mysql/my.cnf` and uncomment the three UTF-8 lines.
 
-.. literalinclude:: /server/config-files/etc/mysql/my.cnf
+.. literalinclude:: /server/config-files/etc/mysql/mariadb.cnf
     :language: ini
     :lines: 10-15,22,43-48
 
