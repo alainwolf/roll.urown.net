@@ -80,8 +80,8 @@ Public Key Algorithm Nr. Status
 RSAMD5                 1 Forbidden
 DSA                    3 Optional
 RSASHA1                5 Mandatory
-RSASHA256              8 Recommended
 RSASHA1-NSEC3-SHA1     6 Recommended
+RSASHA256              8 Recommended
 RSASHA512             10 Recommended
 ECC-GOST              12 Optional
 ECDSAP256SHA256       13 Recommended
@@ -90,7 +90,24 @@ ED25519               15 Optional
 ED448                 16 Optional
 ==================== === ===========
 
-See :RFC:`6944`.
+======= ===================== ================= ====================
+Number  Mnemonics             DNSSEC Signing    DNSSEC Validation
+======= ===================== ================= ====================
+      1 RSAMD5                MUST NOT          MUST NOT
+      3 DSA                   MUST NOT          MUST NOT
+      5 RSASHA1               NOT RECOMMENDED   MUST
+      6 DSA-NSEC3-SHA1        MUST NOT          MUST NOT
+      7 RSASHA1-NSEC3-SHA1    NOT RECOMMENDED   MUST
+      8 RSASHA256             MUST              MUST
+     10 RSASHA512             NOT RECOMMENDED   MUST
+     12 ECC-GOST              MUST NOT          MAY
+     13 ECDSAP256SHA256       MUST              MUST
+     14 ECDSAP384SHA384       MAY               RECOMMENDED
+     15 ED25519               RECOMMENDED       RECOMMENDED
+     16 ED448                 MAY               RECOMMENDED
+======= ===================== ================= ====================
+
+See :del:`RFC 6944` and :rfc:`8624`.
 
 See `DNS Security Algorithm Numbers <https://www.iana.org/assignments/dns-sec-alg-numbers/dns-sec-alg-numbers.xhtml#dns-sec-alg-numbers-1>`_
 
