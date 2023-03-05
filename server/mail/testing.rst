@@ -117,12 +117,18 @@ Mail Message
     > 250 2.1.5 Ok
     DATA
     > 354 End data with <CR><LF>.<CR><LF>
-    From: john@torres.example.net
-    Subject: Test message!
+    Message-ID: <8b16a38d-20dd-25eb-fa2b-8603e8e9f68c@example.net>
+    Date: Sun, 3 Jul 2022 20:58:50 +0200
+    MIME-Version: 1.0
+    Subject: Test Message
+    To: John Doe <john@example.net>
+    Content-Language: en-US
+    From: John Doe <john@torres.example.net>
+    Subject: Test Message
 
     Hi,
 
-    This is a test message!
+    This is a test message.
 
     Best,
     Widmore
