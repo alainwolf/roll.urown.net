@@ -20,8 +20,8 @@ provided by [Read the Docs](https://readthedocs.org/).
         sphinx \
         sphinx-rtd-theme \
         pygments-solarized-style \
-        sphinxnotes-strike \
-        sphinx-last-updated-by-git
+        pygments-openssl ansible-pygments pygments-redis  \
+        sphinxnotes-strike sphinx-last-updated-by-git sphinx-rtd-dark-mode
 
 ### Clone
 

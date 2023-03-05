@@ -40,7 +40,8 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
-    'sphinxnotes.strike'
+    'sphinxnotes.strike',
+    'sphinx_rtd_dark_mode'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -356,7 +357,7 @@ texinfo_documents = [
 epub_title = 'roll.urown.net'
 epub_author = 'roll.urown.net'
 epub_publisher = 'roll.urown.net'
-epub_copyright = '2014, 2021, roll.urown.net'
+epub_copyright = '2014, 2023 Alain Wolf & contributors'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = 'roll.urown.net'

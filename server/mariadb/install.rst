@@ -7,24 +7,73 @@ from the project, instead of the
 in the Ubuntu software package repository, we add
 `their own repository <https://mariadb.org/download/>`_ to your system.
 
-Get the release key::
+Get the release signing keys::
 
-    $ curl --silent https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | \
-        sudo tee /etc/apt/keyrings/mariadb.gpg > /dev/null
+    $ curl --silent https://supplychain.mariadb.com/MariaDB-Server-GPG-KEY \
+        | gpg --dearmor | \
+        sudo tee /etc/apt/keyrings/MariaDB-Server.gpg > /dev/null
 
-Add the software package source::
+    $ curl --silent https://supplychain.mariadb.com/MariaDB-MaxScale-GPG-KEY \
+        | gpg --dearmor | \
+        sudo tee /etc/apt/keyrings/MariaDB-MaxScale.gpg > /dev/null
 
-    $ DIST=$( lsb_release -sc )
+    $ curl --silent https://supplychain.mariadb.com/MariaDB-Enterprise-GPG-KEY \
+        | gpg --dearmor | \
+        sudo tee /etc/apt/keyrings/MariaDB-Enterprise.gpg > /dev/null
 
-::
 
-    # /etc/apt/sources.list.d/mariadb.sources
-    Types: deb deb-src
-    URIs: https://mirror.mva-n.net/mariadb/repo/10.10/ubuntu
+Create a source file:
+
+ .. code-block:: bash
+    :caption: /etc/apt/sources.list.d/mariadb.sources
+    :name: mariadb.sources
+    :linenos:
+
+    # MariaDB Server
+    # To use a different major version of the server, or to pin to a specific minor
+    # version, change URI below.
+    Types: deb
+    URIs: https://dlm.mariadb.com/repo/mariadb-server/10.11/repo/ubuntu
     Suites: jammy
     Components: main
-    Arch: amd64
-    Signed-By: /etc/apt/keyrings/mariadb.gpg
+    Architectures: amd64 arm64
+    Signed-By: /etc/apt/keyrings/MariaDB-Server.gpg
+
+    # MariaDB MaxScale
+    # To use the latest stable release of MaxScale, use "latest" as the version
+    # To use the latest beta (or stable if no current beta) release of MaxScale, use
+    # "beta" as the version
+    Types: deb
+    URIs: https://dlm.mariadb.com/repo/maxscale/latest/apt
+    Suites: jammy
+    Components: main
+    Architectures: amd64 arm64
+    Signed-By: /etc/apt/keyrings/MariaDB-MaxScale.gpg
+
+    # MariaDB Tools
+    # MariaDB Tools are a collection of advanced command-line tools.
+    Types: deb
+    URIs: http://downloads.mariadb.com/Tools/ubuntu
+    Suites: jammy
+    Components: main
+    Architectures: amd64
+    Signed-By: /etc/apt/keyrings/MariaDB-Enterprise.gpg
+
+    # -*- mode: debsources; indent-tabs-mode: nil; tab-width: 4; -*-
+
+
+Create a preferences file to give the packages from the MariaDB repositories
+the highest priority, in order to avoid conflicts with packages from OS and
+other repositories:
+
+ .. code-block:: text
+    :caption: /etc/apt/preferences.d/mariadb.pref
+    :name: mariadb.pref
+    :linenos:
+
+    Package: *
+    Pin: origin dlm.mariadb.com
+    Pin-Priority: 1000
 
 
 Update the software repository cache::
@@ -56,4 +105,4 @@ Installation::
         Docs: man:mariadbd(8)
                 https://mariadb.com/kb/en/library/systemd/
 
-We therefore can begin with its :doc:`extensive configuration task <config>`::
+We therefore can begin with its :doc:`extensive configuration task <config>`.
