@@ -2,7 +2,7 @@
     :alt: Nextcloud Logo
     :align: right
 
-Netxcloud
+Nextcloud
 =========
 
 Contents:
@@ -10,5 +10,6 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
-   nextcloud_prerequesites
+   nextcloud_prerequisites
+   nextcloud_php_config
    nextcloud_nginx_config
