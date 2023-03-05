@@ -14,6 +14,7 @@ Contents:
    :maxdepth: 1
 
    install/install
+   server-basics
    entropy
    ssh-server
    tools
