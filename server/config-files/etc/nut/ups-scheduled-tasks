@@ -1,9 +1,9 @@
-#!/usr/bin/env sh
+#! /bin/sh
 #
 # SSH connection settings
-_REMOTE_SSH_HOST='somehost.example.com'
-_REMOTE_SSH_USER='nut'
-_SSH_KEY='/etc/nut/ssh/id_rsa'
+SSH_HOST='ap.example.net'
+SSH_USER='nut'
+SSH_KEY='/etc/nut/ssh/id_rsa'
 
 case $1 in
     onbatt)
@@ -11,63 +11,63 @@ case $1 in
         echo -e "Warning: UPS $UPSNAME experienced a power failure and is now running on battery!" \
         | mail -s"Warning: $message" root
         remote_cmd="log warning message=\"${message}\""
-        ssh $_REMOTE_SSH_HOST -l $_REMOTE_SSH_USER -i $_SSH_KEY $remote_cmd
+        ssh $SSH_HOST -l $SSH_USER -i $SSH_KEY $remote_cmd
         ;;
     online)
         message="Power restored on UPS $UPSNAME"
         echo -e "Power on UPS $UPSNAME has been restored." \
         | mail -s"$message" root
         remote_cmd="log info message=\"${message}\""
-        ssh REMOTE_$SSH_HOST -l REMOTE_$_REMOTE_SSH_USER -i $_SSH_KEY $remote_cmd
+        ssh $SSH_HOST -l $SSH_USER -i $SSH_KEY $remote_cmd
         ;;
     lowbatt)
         message="Low battery on UPS ${UPSNAME}!"
         echo -e "Warning: UPS $UPSNAME is low on battery! All connected Systems will be shut down soon." \
         | mail -s"Warning: $message" root
         remote_cmd="log warning message=\"${message}\""
-        ssh $_REMOTE_SSH_HOST -l $_REMOTE_SSH_USER -i $_SSH_KEY $remote_cmd
+        ssh $SSH_HOST -l $SSH_USER -i $SSH_KEY $remote_cmd
         ;;
     fsd)
         message="Forced Shutdown from UPS ${UPSNAME}!"
         echo -e "Warning: All Systems connected to UPS $UPSNAME will be shut down now!" \
         | mail -s"Warning: $message" root
         remote_cmd="log error message=\"${message}\" ; beep 0.5 ; delay 4000ms ; beep 0.5 ; system shutdown!"
-        ssh $_REMOTE_SSH_HOST -l $_REMOTE_SSH_USER -i $_SSH_KEY $remote_cmd
+        ssh $SSH_HOST -l $SSH_USER -i $SSH_KEY $remote_cmd
         ;;
     commok)
         message="Communications restored with UPS $UPSNAME"
         echo -e "Communications with UPS $UPSNAME have been restored." \
         | mail -s"$message" root
         remote_cmd="log info message=\"${message}\""
-        ssh $_REMOTE_SSH_HOST -l $_REMOTE_SSH_USER -i $_SSH_KEY $remote_cmd
+        ssh $SSH_HOST -l $SSH_USER -i $SSH_KEY $remote_cmd
         ;;
     commbad)
         message=""
         echo -e "Warning: Lost communications with UPS ${UPSNAME}!" \
         | mail -s"Warning: Lost communications with UPS ${UPSNAME}!" root
         remote_cmd="log warning message=\"${message}\""
-        ssh $_REMOTE_SSH_HOST -l $_REMOTE_SSH_USER -i $_SSH_KEY $remote_cmd
+        ssh $SSH_HOST -l $SSH_USER -i $SSH_KEY $remote_cmd
         ;;
     shutdown)
         message="System $HOST is shutting down now!"
         echo -e "Warning: System $HOST is shutting down now!" \
         | mail -s"Warning: $message" root
         remote_cmd="log warning message=\"${message}\""
-        ssh $_REMOTE_SSH_HOST -l $_REMOTE_SSH_USER -i $_SSH_KEY $remote_cmd
+        ssh $SSH_HOST -l $SSH_USER -i $SSH_KEY $remote_cmd
         ;;
     replbatt)
         message="Replace battery on UPS ${UPSNAME}!"
         echo -e "Warning: The UPS $UPSNAME needs to have its battery replaced!" \
         | mail -s"Warning: $message" root
         remote_cmd="log warning message=\"${message}\""
-        ssh $_REMOTE_SSH_HOST -l $_REMOTE_SSH_USER -i $_SSH_KEY $remote_cmd
+        ssh $SSH_HOST -l $SSH_USER -i $SSH_KEY $remote_cmd
         ;;
     nocomm)
         message="The UPS $UPSNAME can’t be contacted for monitoring!"
         echo -e "Warning: The UPS $UPSNAME can’t be contacted for monitoring!" \
         | mail -s"Warning: $message" root
         remote_cmd="log warning message=\"${message}\""
-        ssh $_REMOTE_SSH_HOST -l $_REMOTE_SSH_USER -i $_SSH_KEY $remote_cmd
+        ssh $SSH_HOST -l $SSH_USER -i $SSH_KEY $remote_cmd
         ;;
     *)
         logger -t ups-scheduled-tasks "Unrecognized command: $1"
