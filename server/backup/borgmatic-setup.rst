@@ -4,11 +4,27 @@ Borgmatic Setup
 Local Backup Configuration
 --------------------------
 
+Create directories::
+
+    $ sudo mkdir -p /etc/borgmatic
+    $ sudo mkdir -p /etc/borg/{keys,security,ssh} /var/lib//borg /var/cache/borg
+
+
+Create SSH keys::
+
+    $ sudo ssh-keygen -t ed25519 -f /etc/borg/ssh/id_ed25519 -N ''
+
+
+Create the repository encryption passphrase::
+
+    $ xkcdpass -n7
+
+
 Generate borgmatic configuration files for the local backup destination::
 
     $ sudo generate-borgmatic-config --destination /etc/borgmatic/local-nas.yaml
 
-This generates a sample configuration files
+This generates a sample configuration file
 :file:`/etc/borgmatic/local-nas.yaml` which then can be customized.
 
 
@@ -125,10 +141,10 @@ Local Network Location
 Initialize the the local network repository::
 
         $ sudo borgmatic init --config /etc/borgmatic/local-nas.yaml \
-            --encryption repokey-blake2 keyfile-blake2
+            --encryption keyfile-blake2
 
 The keyfile will be created and stored in the directory set by the configuration
-setting **borg_keys_directory**. If you didn't change the exmple provided above,
+setting **borg_keys_directory**. If you didn't change the example provided above,
 you should find it in the :file:`/etc/borg/keys/` directory.
 
 
@@ -138,7 +154,7 @@ Remote Network Location
 Initialize the the remote network repository::
 
         $ sudo borgmatic init --config /etc/borgmatic/remote-nas.yaml \
-            --encryption repokey-blake2 keyfile-blake2
+            --encryption keyfile-blake2
 
 
 Safeguard Keys and Passwords

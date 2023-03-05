@@ -10,11 +10,8 @@ Borg Prerequisites
 See the `Borg installation documentation
 <https://borgbackup.readthedocs.io/en/1.2-maint/installation.html#dependencies>`_::
 
-    $ sudo apt-get install python3 python3-dev python3-pip python3-virtualenv \
-    libacl1-dev libacl1 \
-    libssl-dev \
-    liblz4-dev libzstd-dev libxxhash-dev \
-    build-essential
+    $ sudo apt install build-essential python3-dev python3-pip \
+        libacl1 libacl1-dev libssl-dev liblz4-dev libzstd-dev libxxhash-dev
 
 
 Borg Installation
@@ -22,8 +19,9 @@ Borg Installation
 
 Install Borg using PIP::
 
-    $ sudo pip install --upgrade pip setuptools wheel pkgconfig
-    $ sudo pip install --upgrade borgbackup
+    $ sudo pip install --upgrade pip
+    $ sudo pip setuptools wheel pkgconfig
+    $ sudo pip install borgbackup
 
 This installs as a systemwide usable software in to :file:`/usr/local/bin/`,
 usable by the system (root, systemd, cron etc.) and users alike.

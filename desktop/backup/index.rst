@@ -9,6 +9,8 @@ to backup a server see :doc:`server backup </server/backup/index>`.
     :local:
     :backlinks: top
 
+Further Reading:
+
 .. toctree::
    :maxdepth: 1
 
@@ -37,7 +39,9 @@ Borgmatic
 ---------
 
 .. image:: borgmatic-logo.*
-    :alt: borgmatic logo
+    :alt: Borgmatic logo
+    :width: 200px
+    :height: 200px
     :align: right
 
 
@@ -46,6 +50,18 @@ frontend to automate borg backup on servers and workstations. Protect your
 files with client-side encryption. Backup your databases too. Monitor it all
 with integrated third-party services.
 
+Vorta
+-----
+
+.. image:: vorta-logo.*
+    :alt: Vorta logo
+    :width: 200px
+    :height: 200px
+    :align: right
+
+`Vorta <https://vorta.borgbase.com/>`_ is a backup client for macOS and Linux
+desktops. It integrates the mighty Borg Backup with your favorite desktop
+environment to protect your data from disk failure, ransomware and theft.
 
 Considerations
 --------------
@@ -125,41 +141,53 @@ Prerequisites
 Installation
 ------------
 
-
-Ubuntu 20.04 (focal) or later
+Ubuntu 22.04 (jammy) or later
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-As of the time of this writing (May 2020), Ubuntu 20.04 LTS has both packages
-in fairly up-to-date versions:
+As of the time of this writing (January 2023), Ubuntu 22.04 LTS has these
+packages versions:
 
- * Borgbackup version 1.1.11 (latest)
- * Borgmatic version 1.5.1 (latest is 1.5.4)
+ * BorgBackup version 1.2.0 (latest is 1.2.3, `released on Dec 24, 2022 <https://github.com/borgbackup/borg/releases>`_).
+ * Borgmatic version 1.5.20 (latest is 1.7.5, `released on Nov 27, 2022 <https://projects.torsion.org/borgmatic-collective/borgmatic/releases>`_).
+ * Vorta version 0.8.3 (latest is 0.8.10, `released on Jan 22, 2023 <https://github.com/borgbase/vorta/releases>`_).
+
+BorgBackup also
+`shows you the current status <https://borgbackup.readthedocs.io/en/stable/installation.html#distribution-package>`_
+of various packages compared to the official release.
 
 To install using Ubuntu package manager::
 
-    $ sudo apt install borgbackup borgmatic
-
-
-
-Ubuntu 19.10 (eoan) or earlier
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Older versions of Ubuntu either don't have these packages in their repository,
-or they are hopelessly outdated.
-
- * Borgbackup (xenial 1.0.2, 1.0.12), (bionic 1.1.5), (eoan 1.1.10)
- * Borgmatic (since Ubuntu 19.10, version 1.2.11)
+    $ sudo apt install borgbackup borgmatic vorta
 
 You can use this also on newer systems if you want to make sure to have the
 latest and greatest version. But remember that with this method, updates will
 not be installed automatically.
 
+From Source Using Python PIP
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Use Python PIP::
 
-    $ sudo pip3 install --upgrade borgbackup borgmatic
+    $ sudo apt install python3 python3-dev python3-pip python3-virtualenv \
+        libacl1-dev libacl1 \
+        libssl-dev \
+        liblz4-dev libzstd-dev libxxhash-dev \
+        build-essential
+    $ sudo apt install libfuse-dev fuse
+    $ sudo pip install --upgrade pip setuptools wheel
+    $ sudo pip install --upgrade pkgconfig
+    $ sudo pip install --upgrade borgbackup[llfuse]
+    $ sudo pip install --upgrade borgmatic vorta
+    $ cd /tmp
+    $ git clone https://github.com/borgbackup/borg.git borg
+    $ sudo mkdir -p /usr/local/share/man/man1
+    $ sudo install -D -m 0644 ./borg/docs/man/borg*.1* /usr/local/share/man/man1/borg.1
+    $ sudo mandb
+    $ wget https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/com.borgbase.Vorta.desktop
+    $ sudo mv ./com.borgbase.Vorta.desktop /usr/local/share/applications/vorta.desktop
 
 
-This installs as a systemwide usable software in to :file:`/usr/local/bin/`,
+This installs as a system-wide usable software in to :file:`/usr/local/bin/`,
 usable by the system (root, systemd, cron etc.) and users alike.
 
 To install updates just repeat the installation command above.
