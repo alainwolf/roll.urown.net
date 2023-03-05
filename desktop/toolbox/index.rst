@@ -26,6 +26,7 @@ Contents:
    pomodoro
    networking-toolbox
    winbox
+   webp
 
 
 
