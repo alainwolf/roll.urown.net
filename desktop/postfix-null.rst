@@ -40,25 +40,6 @@ The connection needs to be encrypted by TLS.
 Prerequisites
 -------------
 
-Mail-Server Account
-^^^^^^^^^^^^^^^^^^^
-
-Like your desktop mail client any other client, **torres** will need to login
-(as "torres@example.net"), before being allowed to deliver mails on
-**mail.example.net**.
-
-We therefore create a mail account for it on our mail server.
-
-Create a mail account password for the mail account **torres@example.net**::
-
-    $ pwgen --secure 32 1
-    ********
-
-`Create a mail account </server/mail/virtual.html#adding-a-mailbox>`_ for your
-workstation on your mail server. You can use the mail servers
-:doc:`/server/mail/vimbadmin` for that.
-
-
 Installation
 ------------
 
@@ -80,30 +61,53 @@ The installation process will ask you a series of questions:
 Unfortunately the "null client" configuration we need here is not in the list.
 Therefore we have to choose: "No configuration" here.
 
+If you are installing on a Raspberry Pi running Debian::
+
+    sudo apt install libsasl2-modules
+
 
 Postfix Configuration
 ---------------------
 
-Make a copy of the sample configuration file::
+Create an empty Postfix configuration file::
 
-    $ sudo cp /etc/postfix/main.cf.proto /etc/postfix/main.cf
+    $ sudo touch /etc/postfix/main.cf
 
 
-Set the group for postfix to run tasks in :file:`/etc/postfix/main.cf`::
+Main Configuration File
+^^^^^^^^^^^^^^^^^^^^^^^
 
-    # setgid_group: The group for mail submission and queue management
-    # commands.  This must be a group name with a numerical group ID that
-    # is not shared with other accounts, not even with the Postfix account.
-    #
-    setgid_group = postdrop
+Fortunately a "null client" needs very little configuration. Just a few of
+lines in the file
+:download:`/etc/postfix/main.cf <config-files/etc/postfix/main.cf>` are
+enough:
 
+.. literalinclude:: config-files/etc/postfix/main.cf
+    :language: ini
+    :linenos:
+
+
+Or you coould set those with command-lines using `postconf`::
+
+    sudo postconf compatibility_level=3.6
+    sudo postconf myhostname=$(hostname -f)
+    sudo postconf inet_interfaces=loopback-only
+    sudo postconf mydestination=
+    sudo postconf virtual_alias_maps=regexp:/etc/postfix/virtual_alias
+    sudo postconf relayhost=[mail.example.net]:submission
+    sudo postconf smtp_sasl_auth_enable=yes
+    sudo postconf smtp_sasl_security_options=noanonymous
+    sudo postconf smtp_sasl_password_maps=hash:/etc/postfix/smtp_password
+    sudo postconf smtp_tls_security_level=secure
+    sudo postconf smtp_tls_CAfile=/etc/ssl/certs/ca-certificates.crt
+    sudo postconf smtp_tls_loglevel=1
 
 Client Authentication
 ^^^^^^^^^^^^^^^^^^^^^
 
-As mentioned before, for the central mail server **mail.example.net**, our
-workstation is just another mail client, which needs to login before being
-allowed to send any mails.
+Like your desktop mail client any other client, **torres** will need to login
+(as "torres@example.net"), before being allowed to deliver mails on
+**mail.example.net**.
 
 This is how we tell our workstation to login on the remote server
 **mail.example.net**.
@@ -114,16 +118,34 @@ The format is
 
     `<SMTP server> <user-name>:<password>`
 
-::
+Create a mail account password for the mail account **torres@example.net**::
 
-    mail.example.net torres@example.net:********
+    $ SMTP_PASSWORD="$(pwgen --secure 32 1)"
+    $ echo "mail.urown.net torres@example.net:${SMTP_PASSWORD}" |sudo tee /etc/postfix/smtp_password
+    ********
 
+Note the displayed password, you will need it to setup the account on the
+mail-server later.
 
 After that update the relevant postfix database and protect it::
 
-    $ sudo postmap /etc/postfix/smtp_password
+    $ sudo postmap hash:/etc/postfix/smtp_password
     $ sudo chown root:root /etc/postfix/smtp_password*
     $ sudo chmod 0600 /etc/postfix/smtp_password*
+
+
+Mail-Server Account
+^^^^^^^^^^^^^^^^^^^
+
+As mentioned before, for the central mail server **mail.example.net**, our
+workstation is just another mail client, which needs to login before being
+allowed to send any mails.
+
+We therefore create a mail account for it on our mail server.
+
+`Create a mail account </server/mail/virtual.html#adding-a-mailbox>`_ for your
+workstation on your mail server. You can use the mail servers
+:doc:`/server/mail/vimbadmin` for that.
 
 
 Rerouting Local Mails
@@ -166,21 +188,6 @@ changes have been made to :file:`/etc/postfix/virtual_alias`:
     $ sudo postmap /etc/postfix/virtual_alias
 
 
-Main Configuration File
-^^^^^^^^^^^^^^^^^^^^^^^
-
-Fortunately a "null client" needs very little configuration. Just a few of
-lines in the file
-:download:`/etc/postfix/main.cf <config-files/etc/postfix/main.cf>` are
-enough:
-
-.. literalinclude:: config-files/etc/postfix/main.cf
-    :language: ini
-    :linenos:
-
-
-
-
 Configuration Check
 ^^^^^^^^^^^^^^^^^^^
 
@@ -189,9 +196,15 @@ Configuration Check
     $ sudo postfix check
 
 
-Reload Postfix
---------------
+Restart Postfix
+---------------
 
 ::
 
-    sudo systemctl reload-or-restart postfix.service
+    sudo systemctl restart postfix.service
+
+
+Send a test Mail::
+
+    echo "Hello World" | mail -s "Test Message" root
+

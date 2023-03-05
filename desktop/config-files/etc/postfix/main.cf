@@ -1,13 +1,7 @@
 # See /usr/share/postfix/main.cf.dist for a commented, more complete version
 
-# Debian specific:  Specifying a file name will cause the first
-# line of that file to be used as the name.  The Debian default
-# is /etc/mailname.
-# Where do mails I send out come from?
-myorigin = /etc/mailname
-
 # Disable backwards compatibility
-compatibility_level=2
+compatibility_level = 3.6
 
 # Fully qualified domain name of this host
 myhostname = torres.example.net
@@ -33,13 +27,11 @@ smtp_sasl_password_maps = hash:/etc/postfix/smtp_password
 
 # Do I need to verify remote SMTP servers certificate?
 smtp_tls_security_level = secure
-smtp_tls_secure_cert_match = nexthop
 
 # Where are CA files stored to verify TLS certificates?
 smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 
-# Do I need to log TLS certificate validation results?
+# Should I log TLS certificate validation results?
 smtp_tls_loglevel = 1
-
 
 #-*- mode: ini; tab-width: 4; indent-tabs-mode:nil  -*-
