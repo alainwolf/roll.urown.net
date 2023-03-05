@@ -239,5 +239,5 @@ References
 ----------
 
  * `GnuPG Howto's: The GnuPG Smartcard How-To <https://gnupg.org/howtos/card-howto/en/smartcard-howto.html>`_
-
  * `Yubico Support: Using Your YubiKey with OpenPGP <https://support.yubico.com/support/solutions/articles/15000006420-using-your-yubikey-with-openpgp>`_
+ * `drduh's Guide to using YubiKey for GPG and SSH <https://github.com/drduh/YubiKey-Guide>`_
