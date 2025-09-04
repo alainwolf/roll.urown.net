@@ -22,16 +22,16 @@ Create the repository encryption passphrase::
 
 Generate borgmatic configuration files for the local backup destination::
 
-    $ sudo generate-borgmatic-config --destination /etc/borgmatic/local-nas.yaml
+    $ sudo generate-borgmatic-config --destination /etc/borgmatic/config.yaml
 
 This generates a sample configuration file
-:file:`/etc/borgmatic/local-nas.yaml` which then can be customized.
+:file:`/etc/borgmatic/config.yaml` which then can be customized.
 
 
 What to Backup
 ^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/borgmatic/local-nas.yaml
+.. literalinclude:: /server/config-files/etc/borgmatic/config.yaml
     :language: yaml
     :end-before: # Any paths matching these patterns are excluded
 
@@ -39,7 +39,7 @@ What to Backup
 What NOT to Backup
 ^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/borgmatic/local-nas.yaml
+.. literalinclude:: /server/config-files/etc/borgmatic/config.yaml
     :language: yaml
     :start-after: # - /etc/borgmatic/patterns
     :end-before: # borgmatic_source_directory: /tmp/borgmatic
@@ -48,7 +48,7 @@ What NOT to Backup
 Where Backup Data is Stored
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/borgmatic/local-nas.yaml
+.. literalinclude:: /server/config-files/etc/borgmatic/config.yaml
     :language: yaml
     :start-after: # borgmatic_source_directory
     :end-before: # Repository storage options. See
@@ -57,16 +57,16 @@ Where Backup Data is Stored
 How to Store the Backups
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/borgmatic/local-nas.yaml
+.. literalinclude:: /server/config-files/etc/borgmatic/config.yaml
     :language: yaml
-    :start-after: - ssh://borg@local-nas.example.net
+    :start-after: # borgmatic_source_directory: /tmp/borgmatic
     :end-before: # Retention policy for how many backups to keep
 
 
 For How Long Backups are Stored
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/borgmatic/local-nas.yaml
+.. literalinclude:: /server/config-files/etc/borgmatic/config.yaml
     :language: yaml
     :start-after: # check: --save-space
     :end-before: # Consistency checks to run after backups
@@ -75,7 +75,7 @@ For How Long Backups are Stored
 How Backup Data is Verified
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/borgmatic/local-nas.yaml
+.. literalinclude:: /server/config-files/etc/borgmatic/config.yaml
     :language: yaml
     :start-after: prefix: '{hostname}-'
     :end-before: # Options for customizing borgmatic's own output and logging
@@ -84,7 +84,7 @@ How Backup Data is Verified
 What To Do Before and After
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/borgmatic/local-nas.yaml
+.. literalinclude:: /server/config-files/etc/borgmatic/config.yaml
     :language: yaml
     :start-after: # color: false
     :end-before: to execute when an exception
@@ -94,7 +94,7 @@ What To Do Before and After
 What To Do on Errors
 ^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: /server/config-files/etc/borgmatic/local-nas.yaml
+.. literalinclude:: /server/config-files/etc/borgmatic/config.yaml
     :language: yaml
     :start-after: # - echo "Finished checks."
     :end-before: List of one or more PostgreSQL databases
@@ -104,9 +104,9 @@ What To Do on Errors
 Remote Backup Configuration
 ---------------------------
 
-Copy the configuration file :file:`local-nas.yaml` to :file:`remonte-nas.yaml`::
+Copy the configuration file :file:`config.yaml` to :file:`remonte-nas.yaml`::
 
-    $ sudo cp /etc/borgmatic/local-nas.yaml /etc/borgmatic/remote-nas.yaml
+    $ sudo cp /etc/borgmatic/config.yaml /etc/borgmatic/remote-nas.yaml
 
 Change the repository to the remote location in the copied file:
 
@@ -140,7 +140,7 @@ Local Network Location
 
 Initialize the the local network repository::
 
-        $ sudo borgmatic init --config /etc/borgmatic/local-nas.yaml \
+        $ sudo borgmatic init --config /etc/borgmatic/config.yaml \
             --encryption keyfile-blake2
 
 The keyfile will be created and stored in the directory set by the configuration
