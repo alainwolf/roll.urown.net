@@ -1,0 +1,33 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+# Security problems and vulnearabilites on roll.urown.net
+# should be reeported as follows:
+
+# Our security address, where you can reach us.
+Contact: mailto:security@brtx.net
+
+# Please encrypt any communication with the the following PGP key
+Encryption: openpgp4fpr:449AED5115509CE548EB1A61483242E0AE96047A
+Encryption: https://keys.openpgp.org/vks/v1/by-fingerprint/449AED5115509CE548EB1A61483242E0AE96047A
+
+# Languages we speak.
+Preferred-Languages: en, de
+
+# Our security policy and bug bounty program.
+Policy: https://openbugbounty.org/bugbounty/earthling/
+
+# This information is only valid until the following date
+Expires: 2026-09-04T10:54:08+00:00
+
+# Where you can get the latest version of this document
+Canonical: https://roll.urown.net/.well-known/security.txt
+-----BEGIN PGP SIGNATURE-----
+
+iNUEARYKAH0WIQQrlS6wIGEORR79PTM7yAX8qM/AWAUCaLmCaF8UgAAAAAAuAChp
+c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0MkI5
+NTJFQjAyMDYxMEU0NTFFRkQzRDMzM0JDODA1RkNBOENGQzA1OAAKCRA7yAX8qM/A
+WCwiAP93ecjN7S3BaSt1V6xGl24BcXt6HL1lnrgqvkeeO+dtXwEAnZQo0kSCAapn
+ESxP3FvHXiFPuysqyXnFeMGJWAjYngg=
+=8kAW
+-----END PGP SIGNATURE-----
