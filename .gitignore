@@ -2,3 +2,6 @@
 _build/*
 publish.sh
 .vscode/*
+.venv/
+venv/
+env/

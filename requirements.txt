@@ -1,0 +1,55 @@
+# *****************************************************************************
+# Required Python Packages for the Sphyinx Doc site roll.urwn.net
+# *****************************************************************************
+
+
+# ---------------------------------------------------------
+# Prerequisites
+pytz
+# ---------------------------------------------------------
+
+
+# ---------------------------------------------------------
+# Sphinx and related
+# ---------------------------------------------------------
+sphinx
+
+
+# ---------------------------------------------------------
+# Sphinx Themes
+# ---------------------------------------------------------
+sphinx_rtd_theme
+sphinx-rtd-dark-mode
+pygments-solarized-style
+
+
+# ---------------------------------------------------------
+# Pygments Syntax Highlighting
+# ---------------------------------------------------------
+pygments-openssl
+ansible-pygments
+pygments-redis
+
+
+# ---------------------------------------------------------
+# Pygments Extensions
+# ---------------------------------------------------------
+sphinxnotes-strike
+sphinx-last-updated-by-git
+
+# sphinx-copybutton
+# sphinxext-opengraph
+# sphinx-design
+# sphinxext-rediraffe
+# sphinxext-autodoc-typehints
+# sphinxext-mathjax
+# sphinxext-autosectionlabel
+# sphinxext-viewcode
+# sphinxext-intersphinx
+# sphinxext-todo
+# sphinxext-githubpages
+# sphinxext-autodoc
+# sphinxext-napoleon
+# sphinxext-autosummary
+# sphinxext-ifconfig
+# sphinxext-imgconverter

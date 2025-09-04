@@ -14,22 +14,36 @@ provided by [Read the Docs](https://readthedocs.org/).
 
 ## To roll your own
 
-### Install
-
-    pip3 install --upgrade --user \
-        sphinx \
-        sphinx-rtd-theme \
-        pygments-solarized-style \
-        pygments-openssl ansible-pygments pygments-redis  \
-        sphinxnotes-strike sphinx-last-updated-by-git sphinx-rtd-dark-mode
-
 ### Clone
 
-    git clone https://github.com/alainwolf/roll.urown.net.git
+```bash
+git clone https://github.com/alainwolf/roll.urown.net.git
+cd roll.urown.net
+```
+
+### Install
+
+Install the Sphinx Python packages into a virtual environment.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
 ### Roll
 
-    cd roll.urown.net
-    make
+```bash
+make
+```
 
-© Copyright 2014, 2022, roll.urown.net - Creative Commons Attribution-ShareAlike 4.0 International License.
+### Update
+
+```bash
+pip install --upgrade pip
+source .venv/bin/activate
+pip install --upgrade -r requirements.txt
+```
+
+
+© Copyright 2014, 2025, roll.urown.net - Creative Commons Attribution-ShareAlike 4.0 International License.

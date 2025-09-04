@@ -59,7 +59,7 @@ master_doc = 'index'
 # General information about the project.
 project = 'Roll Your Own Network'
 author = 'Alain Wolf & contributors'
-copyright = '2014, 2023 Alain Wolf & contributors'
+copyright = '2014, 2025 Alain Wolf & contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -82,7 +82,12 @@ language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = [
+    '_build',
+    '.git',
+    '.trunk',
+    '.venv',
+]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -138,7 +143,7 @@ html_theme_options = {
   'prev_next_buttons_location' : 'both',
   'style_external_links': True,
   'vcs_pageview_mode': 'edit',
-};
+}
 
 html_context = {
   'display_github': True,
@@ -149,7 +154,7 @@ html_context = {
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# html_theme_path = [sphinx_rtd_theme.get_html_theme_path()] # WARNING: Calling get_html_theme_path is deprecated. If you are calling it to define html_theme_path, you are safe to remove that code.
 #html_theme_path = [solar_theme.theme_path]
 
 # The base URL which points to the root of the HTML documentation. It is used
@@ -422,7 +427,7 @@ epub_exclude_files = ['search.html']
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+# intersphinx_mapping = {'https://docs.python.org/': None}
 
 # A string of reStructuredText that will be included at the end of every source
 # file that is read.
