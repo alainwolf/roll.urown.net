@@ -38,9 +38,6 @@ Disable Gnome SmartCard Login
 	screen of Ubuntu will only allow SmartCard login.
 
 
-As soon as the system detects the YubiKey as a SmartCard, the login und lock
-screen of Ubuntu will only allow SmartCard login.
-
 To disable this behavior, disable ScmartCard logins in Gnome settings as
 follows::
 
