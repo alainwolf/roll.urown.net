@@ -48,6 +48,24 @@ GnuPG should now be able to access the Yubikey Neo as a smart card::
 	General key info..:[none]
 
 
+`scdaemon`` Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `scdaemon` needs to be configured to play nicely along other applications
+accessing the YubiKey.
+
+Edit or create the file :download:`/desktop/config-files/gnupg/scdaemon.conf`
+as follows:
+
+.. literalinclude:: /desktop/config-files/gnupg/scdaemon.conf
+
+Restart the `pcscd` and `scdaemon` services::
+
+	$ sudo systemctl restart pcscd
+	$ gpgconf --kill scdaemon
+	$ gpgconf --launch scdaemon
+
+
 Setup the Yubikey NEO
 ---------------------
 

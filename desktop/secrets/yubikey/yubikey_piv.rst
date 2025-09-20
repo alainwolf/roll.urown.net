@@ -26,7 +26,27 @@ Additional Software
 
 ::
 
-    $ sudo apt install yubikey-piv-manager opensc
+    $ sudo apt install yubikey-piv-manager opensc libengine-pkcs11-openssl
+
+
+Disable Gnome SmartCard Login
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. note::
+
+	As soon as the system detects the YubiKey as a SmartCard, the login und lock
+	screen of Ubuntu will only allow SmartCard login.
+
+
+As soon as the system detects the YubiKey as a SmartCard, the login und lock
+screen of Ubuntu will only allow SmartCard login.
+
+To disable this behavior, disable ScmartCard logins in Gnome settings as
+follows::
+
+    $ gsettings set \
+        org.gnome.login-screen \
+        enable-smartcard-authentication false
 
 
 Setup the Yubikey
