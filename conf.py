@@ -431,81 +431,81 @@ epub_exclude_files = ['search.html']
 
 # A string of reStructuredText that will be included at the end of every source
 # file that is read.
-rst_epilog = """
+# rst_epilog = """
 
-.. |publicDomain|     replace:: example.net
-.. |privateDomain|    replace:: lan
+# .. |publicDomain|     replace:: example.net
+# .. |privateDomain|    replace:: lan
 
-.. |publicIPv4|       replace:: 198.51.100.240
+# .. |publicIPv4|       replace:: 198.51.100.240
 
-.. |IPv4Subnet|       replace:: 192.0.2.0/24
-.. |IPv6Subnet|       replace:: |IPv6Prefix|/64
-.. |IPv6Prefix|       replace:: 2001:db8:c0de\:\:
+# .. |IPv4Subnet|       replace:: 192.0.2.0/24
+# .. |IPv6Subnet|       replace:: |IPv6Prefix|/64
+# .. |IPv6Prefix|       replace:: 2001:db8:c0de\:\:
 
-.. |SIPserverIPv4|    replace:: 192.0.2.27
-.. |SIPserverIPv6|    replace:: 2001:db8::27
+# .. |SIPserverIPv4|    replace:: 192.0.2.27
+# .. |SIPserverIPv6|    replace:: 2001:db8::27
 
-.. |CAsiteIPv4|         replace:: 192.0.2.28
-.. |CAsiteIPv6|         replace:: 2001:db8:face::28
+# .. |CAsiteIPv4|         replace:: 192.0.2.28
+# .. |CAsiteIPv6|         replace:: 2001:db8:face::28
 
-.. |ownCloudIP4|      replace:: 192.0.2.29
-.. |ownCloudIP6|      replace:: 2001:db8:face::29
+# .. |ownCloudIP4|      replace:: 192.0.2.29
+# .. |ownCloudIP6|      replace:: 2001:db8:face::29
 
-.. |HTTPserverIPv4|   replace:: 192.0.2.30
+# .. |HTTPserverIPv4|   replace:: 192.0.2.30
 
-.. |BOOKserverIPv4|   replace:: 192.0.2.33
-.. |BOOKserverIPv6|   replace:: 2001:db8:1::33
+# .. |BOOKserverIPv4|   replace:: 192.0.2.33
+# .. |BOOKserverIPv6|   replace:: 2001:db8:1::33
 
 
-.. |OPDSserverIPv4|   replace:: 192.0.2.34
-.. |OPDSserverIPv6|   replace:: 2001:db8::34
+# .. |OPDSserverIPv4|   replace:: 192.0.2.34
+# .. |OPDSserverIPv6|   replace:: 2001:db8::34
 
-.. |BitTorrentServerIPv4|   replace:: 192.0.2.36
-.. |BitTorrentServerIPv6|   replace:: 2001:db8:1::36
+# .. |BitTorrentServerIPv4|   replace:: 192.0.2.36
+# .. |BitTorrentServerIPv6|   replace:: 2001:db8:1::36
 
-.. |XMPPIPv4|         replace:: 192.0.2.35
-.. |XMPPIPv6|         replace:: 2001:db8:face::35
+# .. |XMPPIPv4|         replace:: 192.0.2.35
+# .. |XMPPIPv6|         replace:: 2001:db8:face::35
 
-.. |KeyServerIPv4|    replace:: 192.0.2.37
-.. |KeyServerIPv6|    replace:: 2001:db8::37
+# .. |KeyServerIPv4|    replace:: 192.0.2.37
+# .. |KeyServerIPv6|    replace:: 2001:db8::37
 
-.. |BitcoinIPv4|      replace:: 192.0.2.39
-.. |BitcoinIPv6|      replace:: 2001:db8::39
+# .. |BitcoinIPv4|      replace:: 192.0.2.39
+# .. |BitcoinIPv6|      replace:: 2001:db8::39
 
-.. |mailserverIPv4|   replace:: 192.0.2.40
-.. |mailserverIPv6|   replace:: 2001:db8::40
+# .. |mailserverIPv4|   replace:: 192.0.2.40
+# .. |mailserverIPv6|   replace:: 2001:db8::40
 
-.. |DNSMasterIPv6|    replace:: 2001:db8:2::41
+# .. |DNSMasterIPv6|    replace:: 2001:db8:2::41
 
-.. |DNSSlaveAIPv4|    replace:: 198.51.100.41
-.. |DNSSlaveAIPv6|    replace:: 2001:db8:f00d::41
-.. |DNSSlaveBIPv4|    replace:: 203.0.113.41
-.. |DNSSlaveBIPv6|    replace:: 2001:db8:idea::41
-.. |DNSSlaveCIPv4|    replace:: 198.18.249.0.41
-.. |DNSSlaveCIPv6|    replace:: 2001:db8:face::41
+# .. |DNSSlaveAIPv4|    replace:: 198.51.100.41
+# .. |DNSSlaveAIPv6|    replace:: 2001:db8:f00d::41
+# .. |DNSSlaveBIPv4|    replace:: 203.0.113.41
+# .. |DNSSlaveBIPv6|    replace:: 2001:db8:idea::41
+# .. |DNSSlaveCIPv4|    replace:: 198.18.249.0.41
+# .. |DNSSlaveCIPv6|    replace:: 2001:db8:face::41
 
-.. |DnsResolverAIPv4|  replace:: 192.0.2.43
-.. |DnsResolverAIPv6|  replace:: 2001:db8::43
+# .. |DnsResolverAIPv4|  replace:: 192.0.2.43
+# .. |DnsResolverAIPv6|  replace:: 2001:db8::43
 
-.. |TorClientIPv4|    replace:: 192.0.2.48
-.. |TorClientIPv6|    replace:: 2001:db8::48
-.. |TorServerIPv4|    replace:: 192.0.2.49
-.. |TorServerIPv6|    replace:: 2001:db8::49
+# .. |TorClientIPv4|    replace:: 192.0.2.48
+# .. |TorClientIPv6|    replace:: 2001:db8::48
+# .. |TorServerIPv4|    replace:: 192.0.2.49
+# .. |TorServerIPv6|    replace:: 2001:db8::49
 
-.. |DnsResolverBIPv4|  replace:: 192.0.2.51
-.. |DnsResolverBIPv6|  replace:: 2001:db8::51
+# .. |DnsResolverBIPv4|  replace:: 192.0.2.51
+# .. |DnsResolverBIPv6|  replace:: 2001:db8::51
 
-.. |IMAP| replace::    :abbr:`IMAP (Internet Message Access Protocol)`
-.. |LDA| replace::     :abbr:`LDA (Local Delivery Agent)`
-.. |LMTP| replace::    :abbr:`LMTP (Local Mail Delivery Protocol)`
-.. |MDA| replace::     :abbr:`LDA (Mail Delivery Agent)`
-.. |MSA| replace::     :abbr:`MSA (Mail Submission Agent)`
-.. |MTA| replace::     :abbr:`MTA (Message Transfer Agent)`
-.. |MUA| replace::     :abbr:`MUA (Mail User Agent)`
-.. |SMTP| replace::    :abbr:`SMTP (Simple Mail Transport Protocol)`
-.. |TLS| replace::     :abbr:`TLS (Transport Layer Security)`
-.. |XMPP| replace::    :abbr:`XMPP (Extensible Messageing and Presence Protocol)`
-.. |software-center| image:: /scbutton-free-200px.*
-.. |software-center2| image:: /software-center-icon-48.*
+# .. |IMAP| replace::    :abbr:`IMAP (Internet Message Access Protocol)`
+# .. |LDA| replace::     :abbr:`LDA (Local Delivery Agent)`
+# .. |LMTP| replace::    :abbr:`LMTP (Local Mail Delivery Protocol)`
+# .. |MDA| replace::     :abbr:`LDA (Mail Delivery Agent)`
+# .. |MSA| replace::     :abbr:`MSA (Mail Submission Agent)`
+# .. |MTA| replace::     :abbr:`MTA (Message Transfer Agent)`
+# .. |MUA| replace::     :abbr:`MUA (Mail User Agent)`
+# .. |SMTP| replace::    :abbr:`SMTP (Simple Mail Transport Protocol)`
+# .. |TLS| replace::     :abbr:`TLS (Transport Layer Security)`
+# .. |XMPP| replace::    :abbr:`XMPP (Extensible Messageing and Presence Protocol)`
+# .. |software-center| image:: /scbutton-free-200px.*
+# .. |software-center2| image:: /software-center-icon-48.*
 
-"""
+# """
