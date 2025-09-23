@@ -34,16 +34,24 @@ Disable Gnome SmartCard Login
 
 .. note::
 
-	As soon as the system detects the YubiKey as a SmartCard, the login und lock
-	screen of Ubuntu will only allow SmartCard login.
+	As soon as you have installed `opensc` and the system detects your YubiKey
+    as a SmartCard, the login und lock screen of Ubuntu will only allow
+    SmartCard login.
 
 
 To disable this behavior, disable ScmartCard logins in Gnome settings as
 follows::
 
+    $ sudo -u gdm env -u XDG_RUNTIME_DIR -u DISPLAY DCONF_PROFILE=gdm \
+        dbus-run-session gsettings set org.gnome.login-screen \
+            enable-smartcard-authentication false
+
     $ gsettings set \
         org.gnome.login-screen \
         enable-smartcard-authentication false
+
+The first command is for the login screen, the second one for your user
+session.
 
 
 Setup the Yubikey
