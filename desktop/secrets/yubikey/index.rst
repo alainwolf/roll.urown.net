@@ -23,14 +23,18 @@ Yubico provides a software package repository on Launchpad::
     $ sudo apt update
 
 
-Yubico Authenticator
-^^^^^^^^^^^^^^^^^^^^
+Yubico Authenticator Desktop
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A graphical desktop tool for generating Open
 AuTHentication (OATH) event-based HOTP and time-based TOTP one-time password
 codes, that are often used as a 2nd-factor for two-factor authentication::
 
-    $ sudo apt install yubioath-desktop
+    $ cd ~/Downloads
+    $ wget https://developers.yubico.com/yubioath-flutter/Releases/yubico-authenticator-latest-linux.tar.gz
+    $ tar xvf yubico-authenticator-latest-linux.tar.gz
+    $ mv yubico-authenticator-* ~/.local/bin/Yubico-Authenticator
+    $ ~/.local/bin/Yubico-Authenticator/desktop_integration.sh --install
 
 
 Yubikey personalization Tool
