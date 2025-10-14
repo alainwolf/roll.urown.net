@@ -23,12 +23,25 @@ IP Addresses
 The server will need a dedicated private IPv4 address and global IPv6 address.
 See :doc:`/server/network`.
 
-Troughout this document we will use **192.0.2.41** as IPv4 address and
-**2001:db8::41** as IPv6 address.
+Troughout this document we will use following IP Addresses for demonstration.
 
-Also you need to know your public IPv4 address on your gateway. In this document
-we will use **198.51.100.240** as an example address.
+.. list-table:: IP Addresses
+   :header-rows: 1
 
+   * - Type
+     - Host
+     - IPv4
+     - IPv6
+   * - Master
+     - dns01
+     - 192.0.2.41
+     - 2001:db8::41
+   * - Slave
+     - dns02
+     - 192.0.2.42
+     - 2001:db8::42
+
+In the real world a DNS slave would be on entirely another subnet.
 
 Firewall-Gateway
 ^^^^^^^^^^^^^^^^
@@ -65,25 +78,46 @@ messages and transfer zones from the master over IPv6.
 Software Installation
 ---------------------
 
-The PowerDNS server software is in the Ubuntu software package repository. We
-install the server and the MySQL database backend.
+The PowerDNS server software is in the Ubuntu software package repository. But there is not always the latest version available.
+If this is the case, you can use the PowerDNS repository, to get the latest version.
+
+We install the authoritative server. (you need sudo/root permissions for these tasks)
+
+Create the file :file:`/etc/apt/sources.list.d/pdns.list` with this content:
+
+ATTENTION: Please visit: https://repo.powerdns.com/ and replace **ubuntu**, **focal** and **-auth-44** to fit your distribution.
 
 ::
 
-    $ sudo apt-get install pdns-server pdns-backend-mysql
+    deb [arch=amd64] http://repo.powerdns.com/ubuntu focal-auth-44 main
 
-You will be asked for the password of the MySQL root user, so the database can
-be created.
+And this to  :file:`/etc/apt/preferences.d/pdns`: Now you use the packages from the powerdns repository.
+
+.. code-block:: shell
+
+    Package: pdns-*
+    Pin: origin repo.powerdns.com
+    Pin-Priority: 600
+
+
+and execute the following commands, to install the powerdns-server:
+
+.. code-block:: shell
+
+    curl https://repo.powerdns.com/FD380FBB-pub.asc | sudo apt-key add -
+    sudo apt-get update
+    sudo apt-get install pdns-server pdns-backend-mysql
+
+for further information see: https://repo.powerdns.com/.
 
 The following happens during installation:
 
     * The following configuration file are created:
 
         * :file:`/etc/powerdns/pdns.conf`.
+        * :file:`/etc/powerdns/named.conf`.
+        * :file:`/etc/powerdns/pdns.d/bind.conf`
         * :file:`/etc/default/pdns`.
-        * :file:`/etc/powerdns/pdns.d/pdns.local.conf`
-        * :file:`/etc/powerdns/pdns.d/pdns.simplebind.conf`
-        * :file:`/etc/powerdns/pdns.d/pdns.local.gmysql.conf`
 
     * A user and group *pdns* is created.
     * A Systemd service :file:`/lib/systemd/system/pdns.service` is created
@@ -133,7 +167,7 @@ reload its configuration::
 DNS Server Database
 -------------------
 
-All our DNS data will stored in a MySQL database.
+All our DNS data will stored in a MariaDB database.
 
 
 Remove BIND Backend
@@ -141,42 +175,38 @@ Remove BIND Backend
 
 By default PowerDNS uses BIND style zone-files to store DNS data.
 
-As only one backend can be active at any time and we installed the MySQL backend,
-we need to remove the default "simple BIND backend". This is done simply by
+We need to remove the default "BIND backend". This is done simply by
 deleting its configuration file.
 
 ::
 
-    $ sudo rm /etc/powerdns/pdns.d/pdns.simplebind.conf
+    $ sudo rm /etc/powerdns/pdns.d/bind.conf
 
 
 Database Server
 ^^^^^^^^^^^^^^^
 
 The following setting needs to changed in
-:download:`/etc/powerdns/pdns.d/pdns.local.gmysql.conf <config/pdns.local.gmysql.conf>`:
+:download:`/etc/powerdns/pdns.d/mariadb.conf <config/mariadb.conf>`:
 
-.. literalinclude:: config/pdns.local.gmysql.conf
+.. literalinclude:: config/mariadb.conf
     :language: ini
 
 
 Preparing the database
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Create a new emtpy database called **pdns** on the MySQL server::
+Create a new emtpy database called **pdns** on the MySQL server
+::
 
-    $ mysqladmin -u root -p create pdns
+    $ mysql -u root -p 
+    CREATE DATABASE pdns;
 
-
-Create a database user for PowerDNS-server to access the database::
-
-    $ mysql -u root -p
-
+Create a database user for PowerDNS-server to access the database:
 
 .. code-block:: mysql
 
-    GRANT SELECT ON pdns.* TO 'pdns'@'127.0.0.1'
-        IDENTIFIED BY '********';
+    GRANT ALL ON pdns.* TO 'pdns'@'localhost' IDENTIFIED BY '********';
     FLUSH PRIVILEGES;
     EXIT;
 
@@ -194,61 +224,72 @@ To create this table structures in our new PowerDNS database::
     $ mysql -u root -p pdns < powerdns.sql
 
 
-Configuration
+Master Server
 -------------
 
 The following settings need to be changed in
-:download:`/etc/powerdns/pdns.conf <config/pdns.conf>`:
+:download:`/etc/powerdns/pdns.conf <config/pdns-master.conf>`:
 
 REST API
 ^^^^^^^^
+
+This is only requiered, if you want to make changes through the API, or use PowerDNS-Admin.
 
 Create a random string to be used as API key to access the server by
 other apps::
 
     $ pwgen -cns 64 1
 
-
-.. literalinclude:: config/pdns.conf
+.. literalinclude:: config/pdns-master.conf
     :language: ini
-    :lines: 50-68
+    :lines: 42-52
+
+.. literalinclude:: config/pdns-master.conf
+    :language: ini
+    :lines: 629-664
+
+Don't forget: if you want to use the API from any other host then localhost, add / change `webserver-address` and `webserver-allow-from`.
 
 
 Allowed Zone Transfers
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/pdns.conf
-    :language: ini
-    :start-after: #only-notify=
-    :end-before: # allow-recursion
+Add here all your slave servers IP.
 
+.. literalinclude:: config/pdns-master.conf
+    :language: ini
+    :start-after: # 8bit-dns=no
+    :end-before: # allow-dnsupdate-from
 
 
 Enable Zone Transfers
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/pdns.conf
+.. literalinclude:: config/pdns-master.conf
     :language: ini
-    :start-after: # default-soa-name=
-    :end-before: # disable-tcp
+    :start-after: # direct-dnskey=no
+    :end-before: # disable-axfr-rectify
 
 
-Server IP Address
-^^^^^^^^^^^^^^^^^
+Server IP Address (Optional)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/pdns.conf
+Replace this with your IPv4, and (optional) IPv6 address.
+
+.. literalinclude:: config/pdns-master.conf
     :language: ini
     :start-after: # load-modules=
-    :end-before: # local-port
+    :end-before: # local-address-nonexist-fail
 
+Don't use `local-ipv6`, it's deprecated!
 
 Act as Master Server
 ^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: config/pdns.conf
+.. literalinclude:: config/pdns-master.conf
     :language: ini
-    :start-after: loglevel=
-    :end-before: # max-queue-length
+    :start-after: # lua-records-exec-limit=
+    :end-before: # max-cache-entries
 
 
 Source Address
@@ -261,110 +302,144 @@ The slave servers, will not accept any NOTIFY messages, if they are not coming
 from the defined master server of a domain. Here is how we tell PowerDNS to use
 its dedicated IPv4 and IPv6 addresses for outgoing connections:
 
-.. literalinclude:: config/pdns.conf
+.. literalinclude:: config/pdns-master.conf
     :language: ini
-    :start-after: # queue-limit=
-    :end-before: # receiver-threads
+    :start-after: # query-cache-ttl=20
+    :end-before: # query-logging Hint backends that queries should be logged
 
 
 Server Restart
---------------
+^^^^^^^^^^^^^^^^^
 
 ::
 
-    $ sudo service pdns restart
+    $ sudo systemctl restart pdns.service
 
 
-
-Import Zone-Files
-^^^^^^^^^^^^^^^^^
-
-If you already have zone files, from previous DNS servers or 3rd-party
-providers, you can import them as follows::
-
-    $ zone2sql --zone=example.net.zone \
-               --zone-name=example.net \
-               --gmysql --transactions --verbose \
-               > example.net.zone.sql
-    1 domains were fully parsed, containing 49 records
-    $ mysql -u root -p pdns < example.net.zone.sql
-    Enter password:
-
-And done. Very easy.
-
-
-Secondary Server
+Secondary Server(s)
 ----------------
 
-Let's assume our master server has the IP address **2001:db8::41** and the new
-slave will have the IP address **2001:db8::42**.
-
-In the real world a DNS slave would be on entirely another subnet.
-
 To set up a PowerDNS as secondary slave DNS server.
+
+In this guide we use PowerDNS `Supermaster <https://doc.powerdns.com/authoritative/modes-of-operation.html#supermaster-automatic-provisioning-of-slaves>`__ functionality.
+
 
 Install MariaDB and PowerDNS
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-See above. Also add the MySQL tables as above.
+See above, run everything in the `DNS Server Database`_ section
 
-Copy the  configuration file from the master and change following things:
-
+Download the config for the slave :download:`/etc/powerdns/pdns.conf <config/pdns-slave.conf>`, or make the following changes to the default config:
 
 Slave Server IP Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: ini
-
-    #################################
-    # local-address Local IP address to which we bind
-    #
-    local-address=192.0.2.42
-
-    #################################
-    # local-ipv6    Local IP address to which we bind
-    #
-    local-ipv6=2001:db8::42
+.. literalinclude:: config/pdns-slave.conf
+    :language: ini
+    :start-after: # load-modules=
+    :end-before: # local-address-nonexist-fail
 
 
 Setup PowerDNS as a Slave
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: ini
+Enable slave functionality:
 
-    #################################
-    # master    Act as a master
-    #
-    master=no
+.. literalinclude:: config/pdns-slave.conf
+    :language: ini
+    :start-after: # signing-threads=3
+    :end-before: # slave-cycle-interval
 
+.. literalinclude:: config/pdns-slave.conf
+    :language: ini
+    :start-after: # socket-dir=
+    :end-before: # tcp-control-address
 
-.. code-block:: ini
+Allow notify from master server.
 
-    #################################
-    # slave Act as a slave
-    #
-    slave=yes
+.. literalinclude:: config/pdns-slave.conf
+    :language: ini
+    :start-after: # allow-dnsupdate-from=
+    :end-before: # allow-unsigned-notify
+
+Configure supermaster on slave server (in mysql).
+
+.. code-block:: mysql
+
+    USE pdns;
+    INSERT INTO supermasters (ip, nameserver, account) VALUES ("192.0.2.41", "ns01", "");
 
 
 Restart the slave server::
 
-    $ sudo service pdns restart
+    $ sudo systemctl restart pdns.service
+
+
+Add a Domain and Recrods
+------------------------
+
+You need to do that only on the Master Server.
+
+Import existing Zone-Files
+^^^^^^^^^^^^^^^^^
+
+If you already have zone files, from previous DNS servers or 3rd-party
+providers, you can import them as follows::
+
+    $ zone2sql --zone=example.de.zone \
+               --zone-name=example.de \
+               --gmysql --transactions --verbose \
+               > example.de.zone.sql
+    1 domains were fully parsed, containing 49 records
+    $ mysql -u root -p pdns < example.de.zone.sql
+    Enter password:
+
+or
+
+Create a sample Zones
+^^^^^^^^^^^^^^^^^^^^^
+
+Make sure, this is the first domain you add, else you need to change the `domain_id` in `INSERT INTO records` statements.
+
+.. code-block:: mysql
+
+    USE pdns;
+
+    INSERT INTO domains (name, type, account) values ('example.de', 'MASTER', 'example');
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','localhost admin.example.de 1 10380 3600 604800 3600','SOA', 86400, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','dns01','NS',86400, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','dns02','NS',86400, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','192.0.1.10','A',120, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'mail.example.de','192.0.1.12','A',120, NULL);
+
+    INSERT INTO records (domain_id, name, content, type,ttl,prio)
+    VALUES (1,'example.de','mail.example.de','MX',120,25);
+
+
+And done. Very easy.
 
 
 Add Domain Record on Slave Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Open a MySQL database server sesssion::
+This happens automatic, because we use superslave :-)
 
-    slave$ mysql -u root -p pdns
+Notifications are sent default every 60 seconds. You can chagne this in :file:`/etc/powerdns/pdns.conf`
 
-
-Add the the domain along with the IP address of the master server as follows:
-
- .. code-block:: mysql
-
-    INSERT INTO `domains` (`name`, `master`, `type`)
-        VALUES('example.net', '2001:db8::41', 'SLAVE');
+.. literalinclude:: config/pdns-master.conf
+    :language: ini
+    :start-after: # slave=no
+    :end-before: # slave-renotify
 
 
 Add Slave Record on Master Server
@@ -379,24 +454,26 @@ Add a NS record and IP addresses of the new slave to the domain:
 
  .. code-block:: mysql
 
+    USE pdns;
+
     INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
         VALUES(
-            (SELECT `id` FROM `domains` WHERE `name` = 'example.net'),
-            'example.net',
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.de'),
+            'example.de',
             'NS',
-            'ns2.example.net'
+            'ns2.example.de'
     );
     INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
         VALUES(
-            (SELECT `id` FROM `domains` WHERE `name` = 'example.net'),
-            'ns2.example.net',
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.de'),
+            'ns2.example.de',
             'A',
             '192.0.2.42'
     );
     INSERT INTO `records` (`domain_id`, `name`, `type`, `content`)
         VALUES(
-            (SELECT `id` FROM `domains` WHERE `name` = 'example.net'),
-            'ns2.example.net',
+            (SELECT `id` FROM `domains` WHERE `name` = 'example.de'),
+            'ns2.example.de',
             'AAAA',
             '2001:db8::42'
     );
@@ -405,22 +482,25 @@ Add a NS record and IP addresses of the new slave to the domain:
 Delete a Domain
 ---------------
 
-Let say you want to remove the domain **example.org** completely.
+Let's say you want to remove the domain **example.de** completely.
 
  .. code-block:: mysql
 
+    USE pdns;
+
     DELETE FROM `domainmetadata` WHERE `domain_id` = (
-        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+        SELECT `id` FROM `domains` WHERE `name` = "example.de"
     );
     DELETE FROM `records` WHERE `domain_id` = (
-        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+        SELECT `id` FROM `domains` WHERE `name` = "example.de"
     );
     DELETE FROM `comments` WHERE `domain_id` = (
-        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+        SELECT `id` FROM `domains` WHERE `name` = "example.de"
     );
     DELETE FROM `cryptokeys` WHERE `domain_id` = (
-        SELECT `id` FROM `domains` WHERE `name` = "example.org"
+        SELECT `id` FROM `domains` WHERE `name` = "example.de"
     );
-    DELETE FROM `domains` WHERE `name` = "example.org";
+    DELETE FROM `domains` WHERE `name` = "example.de";
 
 This same procedure needs to be done on every master or slave sever.
+This happens **not** automatically with supermaster, you really need to do that on every master / slave server.
